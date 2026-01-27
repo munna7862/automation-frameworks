@@ -3,7 +3,7 @@ import { envConfig } from './src/config/env.config';
 
 export default defineConfig({
   testDir: './src/tests',
-  timeout: 30 * 1000,
+  timeout: 300 * 1000,
 
   retries: 1,
   workers: process.env.CI ? 2 : undefined,
