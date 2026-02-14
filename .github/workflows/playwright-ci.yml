@@ -43,9 +43,11 @@ jobs:
           node-version: 20.x
 
       - name: Install dependencies
+        working-directory: playwright-e2e
         run: npm ci
 
       - name: Install Playwright browsers
+        working-directory: playwright-e2e
         run: npx playwright install --with-deps
 
       - name: Run tests (sharded)
