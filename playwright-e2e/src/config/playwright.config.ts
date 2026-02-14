@@ -42,7 +42,18 @@ export default defineConfig({
 
   reporter: [
     ['html', { open: 'never' }],
-    ['list']
+    ['list'],
+    ['allure-playwright', {
+      resultsDir: path.resolve(__dirname, '../..', 'reports', 'allure-results'),
+      suiteTitle: 'Automation Test Suite',
+      detail: false,
+      environmentInfo: {
+        Environment: envConfig.env || 'INTEROP',
+        Suite: envConfig.SUITENAME || 'Default',
+        OS: process.platform,
+        NodeVersion: process.version
+      }
+    }]
   ],
 
   use: {
