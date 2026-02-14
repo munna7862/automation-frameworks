@@ -2,15 +2,15 @@ name: Playwright Automation CI
 
 on:
   workflow_dispatch:
-    inputs:
-      test-type:
-        description: Choose testing type
-        required: false
-        default: 'saucelabs'
-        type: choice
-        options:
-          - local
-          - saucelabs
+    # inputs:
+      # test-type:
+      #   description: Choose testing type
+      #   required: false
+      #   default: 'saucelabs'
+      #   type: choice
+      #   options:
+      #     - local
+      #     - saucelabs
   # push:
   #   branches: [ main ]
   # pull_request:
