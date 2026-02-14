@@ -69,6 +69,6 @@ jobs:
         with:
           name: playwright-report-${{ matrix.shard }}
           path: |
-            playwright-report
-            reports
-            logs
+            playwright-e2e/playwright-report
+            playwright-e2e/reports
+            playwright-e2e/logs
