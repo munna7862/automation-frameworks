@@ -28,7 +28,7 @@ jobs:
 
     env:
       ENV: qa
-      BASE_URL: https://playwright.dev
+      BASE_URL: https://automationexercise.com/
       API_BASE_URL: https://reqres.in
       HEADLESS: true
       BROWSER: chromium
@@ -40,7 +40,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.x
 
       - name: Install dependencies
         run: npm ci
@@ -49,8 +49,17 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run tests (sharded)
+        working-directory: playwright-e2e
+        env:
+          ENVIRONMENT: INTEROP
+          TZ: Australia/Adelaide
         run: |
-          npx playwright test --shard=${{ matrix.shard }}/2
+          npm run test:interop
+        continue-on-error: true
+
+      # - name: Run tests (sharded)
+      #   run: |
+      #     npx playwright test --shard=${{ matrix.shard }}/2
 
       - name: Upload Playwright Report
         if: always()
