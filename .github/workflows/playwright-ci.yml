@@ -2,107 +2,90 @@ name: Playwright Automation CI
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   test-type:
-    #     description: Choose testing type
-    #     required: false
-    #     default: 'saucelabs'
-    #     type: choice
-    #     options:
-    #       - local
-    #       - saucelabs
-  # push:
-  #   branches: [ main ]
-  # pull_request:
-  #   branches: [ main ]
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
+  # JOB 1: Run Sharded Tests
   test:
-    name: UI & API Automation
+    name: UI & API Automation (Shard ${{ matrix.shard }})
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2]
-
-    env:
-      ENV: qa
-      BASE_URL: https://automationexercise.com/
-      API_BASE_URL: https://reqres.in
-      HEADLESS: true
-      BROWSER: chromium
-
+        shard: [1, 2] # Set your desired number of shards
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20.x
-
+          node-version: 20
+      
       - name: Install dependencies
         working-directory: playwright-e2e
-        run: npm ci
-
-      - name: Install Playwright browsers
-        working-directory: playwright-e2e
-        run: npx playwright install --with-deps
+        run: |
+          npm ci
+          npx playwright install --with-deps
 
       - name: Run tests (sharded)
         working-directory: playwright-e2e
-        env:
-          ENVIRONMENT: INTEROP
-          TZ: Australia/Adelaide
-        run: |
-          npm run test:interop
+        run: npm run test:interop -- --shard=${{ matrix.shard }}/2
         continue-on-error: true
 
-      # - name: Run tests (sharded)
-      #   run: |
-      #     npx playwright test --shard=${{ matrix.shard }}/2
-
-      - name: Upload Playwright Report
+      # Upload individual results for merging later
+      - name: Upload Allure Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.shard }}
-          path: |
-            playwright-e2e/playwright-report
-            playwright-e2e/reports
-            playwright-e2e/logs
+          name: allure-results-${{ matrix.shard }}
+          path: playwright-e2e/reports/allure-results
+          retention-days: 1
 
-      - name: Checkout gh-pages Branch  
+  # JOB 2: Merge and Deploy
+  deploy-report:
+    name: Merge and Deploy Allure Report
+    needs: [test] # Wait for all shards to finish
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # 1. Download ALL results from all shards
+      - name: Download Allure Results
+        uses: actions/download-artifact@v4
+        with:
+          path: merged-results
+          pattern: allure-results-*
+          merge-multiple: true
+
+      # 2. Get history for trends
+      - name: Checkout gh-pages
         uses: actions/checkout@v4
+        continue-on-error: true
         with:
           ref: gh-pages
           path: gh-pages
 
+      # 3. Generate the single consolidated report
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
-        if: always()
         with:
-          allure_results: playwright-e2e/reports/allure-results
+          allure_results: merged-results
           gh_pages: gh-pages
-          allure_report: playwright-e2e/reports/allure-report
-          allure_history: playwright-e2e/reports/allure-history
+          allure_report: allure-report
+          allure_history: allure-history
           keep_reports: 7
           subfolder: AutomationReports/UI
 
-      # - name: Deploy report to Github Pages
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     personal_token: ${{ secrets.GH_PAGES_DEPLOY_TOKEN }}
-      #     publish_branch: gh-pages
-      #     publish_dir: playwright-e2e/reports/allure-history
-      #     keep_files: true
-
+      # 4. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
-        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: playwright-e2e/reports/allure-history
+          publish_dir: allure-history
           keep_files: true
