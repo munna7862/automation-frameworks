@@ -1,0 +1,1 @@
+[{"uid":"b1152d9a2be1b17b","name":"Testcase 1: Verify Home page loads","time":{"start":1771172655434,"stop":1771172655530,"duration":96},"status":"failed","severity":"normal"},{"uid":"81b19be1665b2e25","name":"Testcase 2: Verify Home page loads 2","time":{"start":1771172657856,"stop":1771172657981,"duration":125},"status":"failed","severity":"normal"}]
