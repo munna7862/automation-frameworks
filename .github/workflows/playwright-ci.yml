@@ -72,3 +72,37 @@ jobs:
             playwright-e2e/playwright-report
             playwright-e2e/reports
             playwright-e2e/logs
+
+      - name: Checkout gh-pages Branch  
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: playwright-e2e/reports/allure-results
+          gh_pages: gh-pages
+          allure_report: playwright-e2e/reports/allure-report
+          allure_history: playwright-e2e/reports/allure-history
+          keep_reports: 7
+          subfolder: AutomationReports/UI
+
+      # - name: Deploy report to Github Pages
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     personal_token: ${{ secrets.GH_PAGES_DEPLOY_TOKEN }}
+      #     publish_branch: gh-pages
+      #     publish_dir: playwright-e2e/reports/allure-history
+      #     keep_files: true
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: playwright-e2e/reports/allure-history
+          keep_files: true
