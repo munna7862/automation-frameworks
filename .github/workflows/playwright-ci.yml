@@ -58,6 +58,7 @@ jobs:
   # JOB 2: Merge and Deploy
   deploy-report:
     name: Deploy Allure Report
+    needs: [test]
     if: always()
     runs-on: ubuntu-latest
     steps:
