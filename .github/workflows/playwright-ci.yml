@@ -2,30 +2,20 @@ name: Playwright Automation CI
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   test-type:
-    #     description: Choose testing type
-    #     required: false
-    #     default: 'saucelabs'
-    #     type: choice
-    #     options:
-    #       - local
-    #       - saucelabs
   # push:
   #   branches: [ main ]
-  # pull_request:
-  #   branches: [ main ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
+  # JOB 1: Run Sharded Tests
   test:
     name: UI & API Automation
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2]
-
+    
     env:
       ENV: qa
       BASE_URL: https://automationexercise.com/
@@ -34,23 +24,18 @@ jobs:
       BROWSER: chromium
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20.x
-
+          node-version: 20
+      
       - name: Install dependencies
         working-directory: playwright-e2e
-        run: npm ci
+        run: |
+          npm ci
+          npx playwright install --with-deps
 
-      - name: Install Playwright browsers
-        working-directory: playwright-e2e
-        run: npx playwright install --with-deps
-
-      - name: Run tests (sharded)
+      - name: Run tests
         working-directory: playwright-e2e
         env:
           ENVIRONMENT: INTEROP
@@ -59,16 +44,62 @@ jobs:
           npm run test:interop
         continue-on-error: true
 
-      # - name: Run tests (sharded)
-      #   run: |
-      #     npx playwright test --shard=${{ matrix.shard }}/2
-
-      - name: Upload Playwright Report
+      # Explicitly upload the allure-results folder
+      # Ensure your playwright.config.ts is actually outputting to 'playwright-e2e/reports/allure-results'
+      - name: Upload Allure Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.shard }}
-          path: |
-            playwright-e2e/playwright-report
-            playwright-e2e/reports
-            playwright-e2e/logs
+         name: allure-results
+         path: playwright-e2e/reports/allure-results
+
+
+  # JOB 2: Merge and Deploy
+  deploy-report:
+    name: Deploy Allure Report
+    needs: [test]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Get history for trends
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      # 2. Download the artifact to a specific, known folder
+      - name: Download Allure Results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results # This creates a folder named 'allure-results' in the root
+
+      # 3. Generate the single consolidated report. Point the generator to the folder we just downloaded
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 7
+          subfolder: AutomationReports/UI
+
+      # 4. Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+          keep_files: true
+
+      # 5. Print GitHub Pages URL
+      - name: Print Report URL
+        run: |
+          REPO_NAME="${{ github.event.repository.name }}"
+          OWNER="${{ github.repository_owner }}"
+          echo "✅ Report published successfully!"
+          echo "📊 Report URL: https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/UI/${{ github.run_number }}"
