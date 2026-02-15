@@ -13,12 +13,12 @@ permissions:
 jobs:
   # JOB 1: Run Sharded Tests
   test:
-    name: UI & API Automation (Shard ${{ matrix.shard }})
+    name: UI & API Automation
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        shard: [1, 2] # Set your desired number of shards
+      # matrix:
+      #   shard: [1, 2] # Set your desired number of shards
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -31,9 +31,9 @@ jobs:
           npm ci
           npx playwright install --with-deps
 
-      - name: Run tests (sharded)
+      - name: Run tests
         working-directory: playwright-e2e
-        run: npm run test:interop -- --shard=${{ matrix.shard }}/2
+        run: npm run test:interop
         continue-on-error: true
 
       # Upload individual results for merging later
@@ -41,7 +41,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results-${{ matrix.shard }}
+          name: allure-results
           path: playwright-e2e/reports/allure-results
           retention-days: 1
 
@@ -89,3 +89,11 @@ jobs:
           publish_branch: gh-pages
           publish_dir: allure-history
           keep_files: true
+
+      # 5. Print GitHub Pages URL
+      - name: Print Report URL
+        run: |
+          REPO_NAME="${{ github.event.repository.name }}"
+          OWNER="${{ github.repository_owner }}"
+          echo "✅ Report published successfully!"
+          echo "📊 Report URL: https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/UI/${{ github.run_number }}"
