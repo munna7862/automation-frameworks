@@ -73,18 +73,17 @@ jobs:
       - name: Download Playwright Reports
         uses: actions/download-artifact@v4
         with:
-          path: allure-results-downloaded
-          pattern: playwright-report
-          merge-multiple: true
+          name: playwright-report
+          path: playwright-e2e/reports/allure-results
 
       # 3. Generate the single consolidated report
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
         with:
-          allure_results: merged-results
+          allure_results: playwright-e2e/reports/allure-results
           gh_pages: gh-pages
-          allure_report: allure-report
-          allure_history: allure-history
+          allure_report: playwright-e2e/reports/allure-report
+          allure_history: playwright-e2e/reports/allure-history
           keep_reports: 7
           subfolder: AutomationReports/UI
 
@@ -94,7 +93,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
+          publish_dir: playwright-e2e/reports/allure-history
           keep_files: true
 
       # 5. Print GitHub Pages URL
