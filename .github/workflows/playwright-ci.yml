@@ -2,8 +2,8 @@ name: Playwright Automation CI
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
 
 permissions:
   contents: write
@@ -15,10 +15,14 @@ jobs:
   test:
     name: UI & API Automation
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      # matrix:
-      #   shard: [1, 2] # Set your desired number of shards
+    
+    env:
+      ENV: qa
+      BASE_URL: https://automationexercise.com/
+      API_BASE_URL: https://reqres.in
+      HEADLESS: true
+      BROWSER: chromium
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -33,42 +37,45 @@ jobs:
 
       - name: Run tests
         working-directory: playwright-e2e
-        run: npm run test:interop
+        env:
+          ENVIRONMENT: INTEROP
+          TZ: Australia/Adelaide
+        run: |
+          npm run test:interop
         continue-on-error: true
 
       # Upload individual results for merging later
-      - name: Upload Allure Results
+      - name: Upload Playwright Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results
-          path: playwright-e2e/reports/allure-results
-          retention-days: 1
+          name: playwright-report
+          path: |
+            playwright-e2e/playwright-report
+            playwright-e2e/reports
+            playwright-e2e/logs
 
   # JOB 2: Merge and Deploy
   deploy-report:
-    name: Merge and Deploy Allure Report
-    needs: [test] # Wait for all shards to finish
+    name: Deploy Allure Report
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      
-      # 1. Download ALL results from all shards
-      - name: Download Allure Results
-        uses: actions/download-artifact@v4
-        with:
-          path: merged-results
-          pattern: allure-results-*
-          merge-multiple: true
-
-      # 2. Get history for trends
+      # 1. Get history for trends
       - name: Checkout gh-pages
         uses: actions/checkout@v4
         continue-on-error: true
         with:
           ref: gh-pages
           path: gh-pages
+
+      # 2. Download all Playwright reports
+      - name: Download Playwright Reports
+        uses: actions/download-artifact@v4
+        with:
+          path: allure-results-downloaded
+          pattern: playwright-report
+          merge-multiple: true
 
       # 3. Generate the single consolidated report
       - name: Generate Allure Report
