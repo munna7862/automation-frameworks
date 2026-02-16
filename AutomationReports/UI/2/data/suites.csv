@@ -1,0 +1,3 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","2035","Testcase 2: Verify Home page loads 2","","Mon Feb 16 17:49:04 UTC 2026","passed","Mon Feb 16 17:49:06 UTC 2026","","ui/Test_001_VerifyHomePage.spec.ts","",""
+"","2361","Testcase 1: Verify Home page loads","","Mon Feb 16 17:49:01 UTC 2026","passed","Mon Feb 16 17:49:04 UTC 2026","","ui/Test_001_VerifyHomePage.spec.ts","",""
