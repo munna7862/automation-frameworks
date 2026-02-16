@@ -1,4 +1,4 @@
-name: Playwright Automation CI
+name: Playwright Automation CI - Docker
 
 on:
   workflow_dispatch:
