@@ -1,4 +1,5 @@
-import { logger } from '@core/logger/logger';
+import { logger, errorLogger } from '@core/logger/logger';
+import * as allure from "allure-js-commons";
 
 export class CommonFunctions {
   // constructor(private page: Page, private context: BrowserContext) {}
@@ -11,6 +12,30 @@ export class CommonFunctions {
       logger.error(`FAIL ${sLogMessage} Failed!! Expected Value:: ${sExpectedValue} || Actual Value:: ${sActualValue}`);
     }
     return bValidation;
+  }
+
+  public async logMessage(sLogLevel: string, sMessage: string): Promise<void> {
+    const levelMap: Record<string, string> = {
+      'PASS': 'info',
+      'FAIL': 'error',
+      'INFO': 'info',
+      'WARN': 'warn'
+    };
+
+    const logLevel = levelMap[sLogLevel] || sLogLevel.toLowerCase();
+    const reportLevel = sLogLevel.toUpperCase();
+    const timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
+    
+    // Use errorLogger for failures to log to separate error file
+    if (sLogLevel === 'FAIL') {
+      errorLogger.log({ level: logLevel, message: sMessage });
+    }
+    
+    // Always log to main framework log
+    logger.log({ level: logLevel, message: sMessage });
+
+    const emoji = sLogLevel === 'PASS' ? '✅' : sLogLevel === 'FAIL' ? '❌' : '';
+    await allure.step(`${emoji} [${timestamp}] [${reportLevel}] ${sMessage}`, async () => { });
   }
 
 }
