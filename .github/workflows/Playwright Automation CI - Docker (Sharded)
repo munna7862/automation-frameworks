@@ -1,0 +1,98 @@
+name: Playwright Automation CI - Docker (Sharded)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  test-sharded:
+    name: UI & API Automation (Docker Shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
+
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.0-jammy
+
+    env:
+      ENV: qa
+      BASE_URL: https://automationexercise.com/
+      API_BASE_URL: https://reqres.in
+      HEADLESS: true
+      BROWSER: chromium
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        working-directory: playwright-e2e
+        run: |
+          npm ci
+
+      - name: Run shard
+        working-directory: playwright-e2e
+        env:
+          ENVIRONMENT: INTEROP
+          TZ: Australia/Adelaide
+        run: |
+          npx playwright test --config=src/config/playwright.config.ts --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        continue-on-error: true
+
+      - name: Upload shard Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-shard-${{ matrix.shardIndex }}
+          path: playwright-e2e/reports/allure-results
+
+  deploy-report:
+    name: Deploy Consolidated Allure Report
+    needs: [test-sharded]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Download all shard Allure Results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: allure-results-shard-*
+          path: allure-results
+          merge-multiple: true
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 7
+          subfolder: AutomationReports/UI
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+          keep_files: true
+
+      - name: Print Report URL
+        run: |
+          REPO_NAME="${{ github.event.repository.name }}"
+          OWNER="${{ github.repository_owner }}"
+          echo "✅ Report published successfully!"
+          echo "📊 Report URL: https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/UI/${{ github.run_number }}"
