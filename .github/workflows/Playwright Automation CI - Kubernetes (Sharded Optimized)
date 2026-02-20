@@ -1,0 +1,230 @@
+name: Playwright Automation CI - Kubernetes (Sharded Optimized)
+
+on:
+  workflow_dispatch:
+    inputs:
+      shards:
+        description: "Number of shards to run in parallel"
+        required: false
+        default: "16"
+      namespace:
+        description: "Kubernetes namespace for test jobs"
+        required: false
+        default: "sample"
+      k8s_secret_name:
+        description: "Kubernetes Secret name for env vars"
+        required: false
+        default: "playwright-env"
+      service_account:
+        description: "ServiceAccount for Job pods"
+        required: false
+        default: "default"
+      env:
+        description: "Target environment name"
+        required: false
+        default: "qa"
+      base_url:
+        description: "Base URL for UI tests"
+        required: false
+        default: "https://automationexercise.com/"
+      api_base_url:
+        description: "Base URL for API tests"
+        required: false
+        default: "https://reqres.in"
+      headless:
+        description: "Run browser in headless mode (true/false)"
+        required: false
+        default: "true"
+      browser:
+        description: "Browser name (chromium, firefox, webkit)"
+        required: false
+        default: "chromium"
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AKS_RESOURCE_GROUP: REPLACE_ME_RESOURCE_GROUP
+  AKS_CLUSTER_NAME: REPLACE_ME_CLUSTER_NAME
+
+jobs:
+  run-k8s-shards:
+    name: Run Playwright shards on Kubernetes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Set AKS Context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ env.AKS_RESOURCE_GROUP }}
+          cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+
+      - name: Create or update env secret
+        env:
+          NAMESPACE: ${{ github.event.inputs.namespace }}
+          SECRET_NAME: ${{ github.event.inputs.k8s_secret_name }}
+          ENV: ${{ github.event.inputs.env }}
+          BASE_URL: ${{ github.event.inputs.base_url }}
+          API_BASE_URL: ${{ github.event.inputs.api_base_url }}
+          HEADLESS: ${{ github.event.inputs.headless }}
+          BROWSER: ${{ github.event.inputs.browser }}
+        run: |
+          kubectl delete secret "$SECRET_NAME" -n "$NAMESPACE" --ignore-not-found
+          kubectl create secret generic "$SECRET_NAME" \
+            -n "$NAMESPACE" \
+            --from-literal=ENV="$ENV" \
+            --from-literal=BASE_URL="$BASE_URL" \
+            --from-literal=API_BASE_URL="$API_BASE_URL" \
+            --from-literal=HEADLESS="$HEADLESS" \
+            --from-literal=BROWSER="$BROWSER"
+
+      - name: Create shard jobs
+        env:
+          SHARDS: ${{ github.event.inputs.shards }}
+          NAMESPACE: ${{ github.event.inputs.namespace }}
+          SECRET_NAME: ${{ github.event.inputs.k8s_secret_name }}
+          SERVICE_ACCOUNT: ${{ github.event.inputs.service_account }}
+          REPO: ${{ github.repository }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          set -e
+          SHORT_SHA=${GIT_SHA:0:7}
+          for i in $(seq 1 "$SHARDS"); do
+            cat <<EOF | kubectl apply -n "$NAMESPACE" -f -
+            apiVersion: batch/v1
+            kind: Job
+            metadata:
+              name: pw-shard-${i}-${SHORT_SHA}
+              labels:
+                app: pw-shard
+                shard: "${i}"
+            spec:
+              ttlSecondsAfterFinished: 3600
+              backoffLimit: 0
+              template:
+                metadata:
+                  labels:
+                    app: pw-shard
+                    shard: "${i}"
+                spec:
+                  serviceAccountName: ${SERVICE_ACCOUNT}
+                  restartPolicy: Never
+                  containers:
+                    - name: runner
+                      image: mcr.microsoft.com/playwright:v1.58.0-jammy
+                      envFrom:
+                        - secretRef:
+                            name: ${SECRET_NAME}
+                      env:
+                        - name: SHARD_INDEX
+                          value: "${i}"
+                        - name: SHARD_TOTAL
+                          value: "${SHARDS}"
+                        - name: REPO
+                          value: "${REPO}"
+                        - name: REPO_NAME
+                          value: "${REPO_NAME}"
+                        - name: GIT_SHA
+                          value: "${GIT_SHA}"
+                      command: ["bash", "-lc"]
+                      args:
+                        - |
+                          set -e
+                          mkdir -p /work
+                          cd /work
+                          curl -L "https://github.com/${REPO}/archive/${GIT_SHA}.tar.gz" | tar -xz
+                          cd "${REPO_NAME}-${GIT_SHA}"
+                          cd playwright-e2e
+                          npm ci
+                          npx playwright test --config=src/config/playwright.config.ts --shard=${SHARD_INDEX}/${SHARD_TOTAL}
+            EOF
+          done
+
+      - name: Wait for all shards
+        env:
+          NAMESPACE: ${{ github.event.inputs.namespace }}
+        run: |
+          kubectl wait --for=condition=complete job -l app=pw-shard -n "$NAMESPACE" --timeout=120m || true
+
+      - name: Collect Allure results
+        env:
+          SHARDS: ${{ github.event.inputs.shards }}
+          NAMESPACE: ${{ github.event.inputs.namespace }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          set -e
+          SHORT_SHA=${GIT_SHA:0:7}
+          mkdir -p allure-results
+          for i in $(seq 1 "$SHARDS"); do
+            JOB_NAME="pw-shard-${i}-${SHORT_SHA}"
+            POD_NAME=$(kubectl get pods -n "$NAMESPACE" -l job-name="$JOB_NAME" -o jsonpath='{.items[0].metadata.name}')
+            kubectl cp -n "$NAMESPACE" "$POD_NAME:/work/${REPO_NAME}-${GIT_SHA}/playwright-e2e/reports/allure-results" "allure-results/shard-${i}" || true
+          done
+
+      - name: Upload merged Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+
+      - name: Cleanup shard jobs
+        if: always()
+        env:
+          NAMESPACE: ${{ github.event.inputs.namespace }}
+        run: |
+          kubectl delete job -l app=pw-shard -n "$NAMESPACE" --ignore-not-found
+
+  deploy-report:
+    name: Deploy Consolidated Allure Report
+    needs: [run-k8s-shards]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Download Allure Results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 7
+          subfolder: AutomationReports/UI
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+          keep_files: true
+
+      - name: Print Report URL
+        run: |
+          REPO_NAME="${{ github.event.repository.name }}"
+          OWNER="${{ github.repository_owner }}"
+          echo "✅ Report published successfully!"
+          echo "📊 Report URL: https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/UI/${{ github.run_number }}"
