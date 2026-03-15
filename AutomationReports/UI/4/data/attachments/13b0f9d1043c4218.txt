@@ -1,0 +1,16 @@
+[2026-03-15 18:20:43] INFO: 🚀 Making PATCH request to https://jsonplaceholder.typicode.com/posts/1
+[2026-03-15 18:20:43] INFO: 📤 Request Payload: {
+  "title": "Only title updated via PATCH"
+}
+[2026-03-15 18:20:43] INFO: ✅ PATCH update post 1 Success! Status: 200 OK
+[2026-03-15 18:20:43] INFO: 📥 Response Payload: {
+  "userId": 1,
+  "id": 1,
+  "title": "Only title updated via PATCH",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}
+[2026-03-15 18:20:43] INFO:  Response status Success !! Actual and Expected Values are:: 200
+[2026-03-15 18:20:43] INFO:  Patched post id Success !! Actual and Expected Values are:: 1
+[2026-03-15 18:20:43] INFO:  Patched post title Success !! Actual and Expected Values are:: Only title updated via PATCH
+[2026-03-15 18:20:43] INFO:  Patched post body is defined Success !! Actual and Expected Values are:: true
+[2026-03-15 18:20:43] INFO:  Patched post userId is defined Success !! Actual and Expected Values are:: true

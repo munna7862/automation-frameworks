@@ -1,0 +1,43 @@
+[2026-03-15 18:20:43] INFO: 🚀 Making POST request to https://jsonplaceholder.typicode.com/posts
+[2026-03-15 18:20:43] INFO: 📤 Request Payload: {
+  "userId": 1,
+  "title": "CRUD flow test title",
+  "body": "CRUD flow test body."
+}
+[2026-03-15 18:20:43] INFO: ✅ Create post in CRUD flow Success! Status: 201 Created
+[2026-03-15 18:20:43] INFO: 📥 Response Payload: {
+  "userId": 1,
+  "title": "CRUD flow test title",
+  "body": "CRUD flow test body.",
+  "id": 101
+}
+[2026-03-15 18:20:43] INFO:  CREATE response status Success !! Actual and Expected Values are:: 201
+[2026-03-15 18:20:43] INFO:  CREATE returned id (id: 101) Success !! Actual and Expected Values are:: true
+[2026-03-15 18:20:43] INFO:  CREATE response title Success !! Actual and Expected Values are:: CRUD flow test title
+[2026-03-15 18:20:43] INFO: 🚀 Making GET request to https://jsonplaceholder.typicode.com/posts/1
+[2026-03-15 18:20:43] INFO: ✅ Read existing post in CRUD flow Success! Status: 200 OK
+[2026-03-15 18:20:43] INFO: 📥 Response Payload: {
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}
+[2026-03-15 18:20:43] INFO:  READ response status Success !! Actual and Expected Values are:: 200
+[2026-03-15 18:20:43] INFO:  READ post id Success !! Actual and Expected Values are:: 1
+[2026-03-15 18:20:43] INFO: 🚀 Making PATCH request to https://jsonplaceholder.typicode.com/posts/1
+[2026-03-15 18:20:43] INFO: 📤 Request Payload: {
+  "title": "CRUD flow - updated title"
+}
+[2026-03-15 18:20:43] INFO: ✅ Patch post in CRUD flow Success! Status: 200 OK
+[2026-03-15 18:20:43] INFO: 📥 Response Payload: {
+  "userId": 1,
+  "id": 1,
+  "title": "CRUD flow - updated title",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}
+[2026-03-15 18:20:43] INFO:  PATCH response status Success !! Actual and Expected Values are:: 200
+[2026-03-15 18:20:43] INFO:  PATCH title updated Success !! Actual and Expected Values are:: CRUD flow - updated title
+[2026-03-15 18:20:43] INFO: 🚀 Making DELETE request to https://jsonplaceholder.typicode.com/posts/1
+[2026-03-15 18:20:43] INFO: ✅ Delete post in CRUD flow Success! Status: 200 OK
+[2026-03-15 18:20:43] INFO: 📥 Response Payload: {}
+[2026-03-15 18:20:43] INFO:  DELETE response status Success !! Actual and Expected Values are:: 200

@@ -1,0 +1,18 @@
+[2026-03-15 18:20:43] INFO: 🚀 Making PUT request to https://jsonplaceholder.typicode.com/posts/1
+[2026-03-15 18:20:43] INFO: 📤 Request Payload: {
+  "userId": 1,
+  "title": "Updated title via PUT",
+  "body": "Updated body content via PUT."
+}
+[2026-03-15 18:20:43] INFO: ✅ PUT update post 1 Success! Status: 200 OK
+[2026-03-15 18:20:43] INFO: 📥 Response Payload: {
+  "userId": 1,
+  "title": "Updated title via PUT",
+  "body": "Updated body content via PUT.",
+  "id": 1
+}
+[2026-03-15 18:20:43] INFO:  Response status Success !! Actual and Expected Values are:: 200
+[2026-03-15 18:20:43] INFO:  Updated post id Success !! Actual and Expected Values are:: 1
+[2026-03-15 18:20:43] INFO:  Updated post title Success !! Actual and Expected Values are:: Updated title via PUT
+[2026-03-15 18:20:43] INFO:  Updated post body Success !! Actual and Expected Values are:: Updated body content via PUT.
+[2026-03-15 18:20:43] INFO:  Updated post userId Success !! Actual and Expected Values are:: 1

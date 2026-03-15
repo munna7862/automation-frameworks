@@ -1,0 +1,4 @@
+[2026-03-15 18:20:43] INFO: 🚀 Making DELETE request to https://jsonplaceholder.typicode.com/posts/1
+[2026-03-15 18:20:43] INFO: ✅ Delete post 1 Success! Status: 200 OK
+[2026-03-15 18:20:43] INFO: 📥 Response Payload: {}
+[2026-03-15 18:20:43] INFO:  Delete response status Success !! Actual and Expected Values are:: 200

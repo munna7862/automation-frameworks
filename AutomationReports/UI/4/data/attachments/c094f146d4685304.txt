@@ -1,0 +1,11 @@
+[2026-03-15 18:20:43] INFO: 🚀 Making GET request to https://jsonplaceholder.typicode.com/posts/1
+[2026-03-15 18:20:43] INFO: ✅ Get post by id 1 Success! Status: 200 OK
+[2026-03-15 18:20:43] INFO: 📥 Response Payload: {
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}
+[2026-03-15 18:20:43] INFO:  Response status Success !! Actual and Expected Values are:: 200
+[2026-03-15 18:20:43] INFO:  Post id Success !! Actual and Expected Values are:: 1
+[2026-03-15 18:20:43] INFO:  Post has userId, title, body with correct types (userId: 1, title: string, body: string) Success !! Actual and Expected Values are:: true
