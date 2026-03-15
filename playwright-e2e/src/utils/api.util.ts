@@ -8,55 +8,6 @@ export class ApiUtil {
     this.objCommonFunctions = new CommonFunctions();
   }
 
-  public async processAPIRequest(method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE", url: string, data: any = null, headers: Record<string, string> = {}, logMessage: string, responseType: "data" | "status" | "headers" | "full" = "data"): Promise<any> {
-    try {
-
-      await this.objCommonFunctions.logMessage("INFO", `Sending ${method} request to ${url}`);
-      await this.objCommonFunctions.logMessage("INFO", `Request Payload: ${JSON.stringify(data)}`);
-      const config = {
-        method,
-        url,
-        headers: { "Content-Type": "application/json", ...headers },
-        ...(data && ["POST", "PUT", "PATCH"].includes(method) && { data }),
-      };
-      const response = await axios(config);
-      await this.objCommonFunctions.logMessage("INFO", `${logMessage} Success! Status: ${response.status}`);
-      await this.objCommonFunctions.logMessage("INFO", `Status Text: ${response.statusText}`);
-      await this.objCommonFunctions.logMessage("INFO", "Trace Id: " + response.headers['trace-id']);
-      await this.objCommonFunctions.logMessage("INFO", `Response Payload: ${JSON.stringify(response.data)}`);
-      return responseType === "full" ? response : response[responseType];
-    } catch (error: any) {
-      const errorDetails = error.response
-        ? `Error: ${error.response.status} ${error.response.statusText} | Response: ${JSON.stringify(error.response.data, null, 2)}`
-        : `Error: ${error.message}`;
-
-      await this.objCommonFunctions.logMessage("FAIL", `${logMessage} Failed! ${errorDetails}`);
-      // Always return a response-like object for negative cases
-      return {
-        status: error.response?.status?.toString() || "ERROR",
-        data: error.response?.data,
-        headers: error.response?.headers,
-      };
-    }
-  }
-
-  public async getBearerToken(authUrl: string = process.env.AUTH_URL as string, clientId: string = process.env.CLIENT_ID as string, clientSecret: string = process.env.CLIENT_SECRET as string, scope: string = process.env.SCOPE as string, realmId: string = process.env.REALM_ID as string): Promise<string> {
-    const url = "" + authUrl + "?realmId=" + realmId + "";
-    const requestData = new URLSearchParams({
-      client_id: clientId,
-      client_secret: clientSecret,
-      scope: scope,
-      grant_type: "client_credentials"
-    });
-    const headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
-    };
-
-    await this.objCommonFunctions.logMessage("INFO", `Fetching Bearer Token from ${url} with data: ${requestData.toString()}`);
-    const response = await this.processAPIRequest("POST", url, requestData, headers, "Fetching Bearer Token");
-    return response.access_token;
-  }
-
   /**
    * Enhanced method to make HTTP requests with better error handling and logging
    * Combines functionality from processAPIRequest with full method support
@@ -105,12 +56,35 @@ export class ApiUtil {
       // Return structured error response for better handling
       return {
         success: false,
-        status: error.response?.status?.toString() || "ERROR",
-        data: error.response?.data || null,
-        headers: error.response?.headers || {},
-        error: error.message
+        status: error.response?.status ?? null,
+        data: error.response?.data ?? null,
+        headers: error.response?.headers ?? {},
+        message: error.message
       };
     }
+  }
+
+  public async getBearerToken(authUrl: string = process.env.AUTH_URL as string, clientId: string = process.env.CLIENT_ID as string, clientSecret: string = process.env.CLIENT_SECRET as string, scope: string = process.env.SCOPE as string, realmId: string = process.env.REALM_ID as string): Promise<string> {
+    const url = "" + authUrl + "?realmId=" + realmId + "";
+    const requestData = new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      scope: scope,
+      grant_type: "client_credentials"
+    });
+    const headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+
+    await this.objCommonFunctions.logMessage("INFO", `Fetching Bearer Token from ${url} with data: ${requestData.toString()}`);
+    const response = await this.makeRequest({
+      method: "POST",
+      url,
+      data: requestData,
+      headers,
+      logMessage: "Fetching Bearer Token"
+    });
+    return response.access_token;
   }
 
 }

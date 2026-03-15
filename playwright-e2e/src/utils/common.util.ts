@@ -1,4 +1,5 @@
 import { logger, errorLogger } from '@core/logger/logger';
+import { expect } from '@playwright/test';
 import * as allure from "allure-js-commons";
 
 export class CommonFunctions {
@@ -6,11 +7,12 @@ export class CommonFunctions {
   public async compareTwoValues(sActualValue: any, sExpectedValue: any, sLogMessage: string): Promise<boolean> {
     let bValidation = false;
     if (sActualValue === sExpectedValue) {
-      logger.info(`PASS ${sLogMessage} Success !! Actual and Expected Values are:: ${sActualValue}`);
+      await this.logMessage('PASS', ` ${sLogMessage} Success !! Actual and Expected Values are:: ${sActualValue}`);
       bValidation = true;
     } else {
-      logger.error(`FAIL ${sLogMessage} Failed!! Expected Value:: ${sExpectedValue} || Actual Value:: ${sActualValue}`);
+      await this.logMessage('FAIL', ` ${sLogMessage} Failed!! Expected Value:: ${sExpectedValue} || Actual Value:: ${sActualValue}`);
     }
+    expect.soft(sActualValue, sLogMessage).toBe(sExpectedValue);
     return bValidation;
   }
 
