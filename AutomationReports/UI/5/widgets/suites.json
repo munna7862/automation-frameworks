@@ -1,0 +1,1 @@
+{"total":2,"items":[{"uid":"07c80984890278423c1f76b2f516d7cc","name":"api/Test_001_BasicCRUD.spec.ts","statistic":{"failed":0,"broken":0,"skipped":0,"passed":8,"unknown":0,"total":8}},{"uid":"83eca48637bdd5f9187d6311cb2e39e0","name":"ui/Test_001_VerifyHomePage.spec.ts","statistic":{"failed":0,"broken":0,"skipped":0,"passed":2,"unknown":0,"total":2}}]}

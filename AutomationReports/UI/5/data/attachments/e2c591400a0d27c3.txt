@@ -1,0 +1,6 @@
+[2026-03-15 19:23:25] INFO: Launching browser: chromium
+[2026-03-15 19:23:26] INFO: Test setup completed
+[2026-03-15 19:23:26] INFO: Verifying landing on Home Page
+[2026-03-15 19:23:26] INFO: Checking if Home Page label is visible
+[2026-03-15 19:23:26] INFO: Landed on Home Page successfully and Text is:  Home
+[2026-03-15 19:23:26] INFO: Test teardown completed

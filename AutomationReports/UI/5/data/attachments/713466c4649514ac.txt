@@ -1,0 +1,5 @@
+[2026-03-15 19:23:22] INFO: 🚀 Making GET request to https://jsonplaceholder.typicode.com/posts/99999
+[2026-03-15 19:23:23] ERROR: ❌ Get non-existent post 99999 Failed! Status: 404 Not Found | Response: {}
+[2026-03-15 19:23:23] ERROR: ❌ Get non-existent post 99999 Failed! Status: 404 Not Found | Response: {}
+[2026-03-15 19:23:23] INFO:  Error response success flag (success: false) Success !! Actual and Expected Values are:: true
+[2026-03-15 19:23:23] INFO:  Response status is 404 (status: 404) Success !! Actual and Expected Values are:: 404
