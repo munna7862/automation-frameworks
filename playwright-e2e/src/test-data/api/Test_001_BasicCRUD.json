@@ -1,0 +1,24 @@
+{
+  "resourcePath": "/posts",
+  "existingPostId": 1,
+  "nonExistentPostId": 99999,
+  "createPost": {
+    "userId": 1,
+    "title": "E2E test post title",
+    "body": "E2E test post body content for API automation."
+  },
+  "updatePost": {
+    "userId": 1,
+    "title": "Updated title via PUT",
+    "body": "Updated body content via PUT."
+  },
+  "patchPost": {
+    "title": "Only title updated via PATCH"
+  },
+  "crudFlowPost": {
+    "userId": 1,
+    "title": "CRUD flow test title",
+    "body": "CRUD flow test body."
+  },
+  "crudFlowUpdatedTitle": "CRUD flow - updated title"
+}
