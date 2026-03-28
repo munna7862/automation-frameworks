@@ -7,7 +7,7 @@ import testData from '../../test-data/api/Test_001_BasicCRUD.json';
 const commonUtil = new CommonFunctions();
 const POSTS_BASE_URL = `${envConfig.postsBaseUrl}${testData.resourcePath}`;
 
-test.describe('Posts API - CRUD Operations @api', () => {
+test.describe('Posts API - CRUD Operations', () => {
 
   test.describe('1. READ operations', () => {
 
