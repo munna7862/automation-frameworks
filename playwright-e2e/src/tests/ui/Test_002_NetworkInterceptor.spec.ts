@@ -8,7 +8,7 @@ test.describe('GitHub Search Tests', () => {
   const commonFunctions = new CommonFunctions();
 
   test('Testcase: Perform GitHub Search', async ({ }, testInfo) => {
-    await base.setup();
+    await base.setup({ enableNetworkCapture: true, networkCaptureMode: 'api-only' });
     const github = new GithubPage(base.page);
 
     await test.step('Navigate to GitHub Page', async () => {
@@ -27,6 +27,7 @@ test.describe('GitHub Search Tests', () => {
       let isNavigated = await commonFunctions.compareTwoValues(pageTitle.includes("Sign in to GitHub"), true, "Verifying if navigated to Sign In page successfully");
       expect(isNavigated).toBeTruthy();
     });
+    await base.page.waitForTimeout(3000); // Wait for a few seconds to ensure all network requests are captured
     await base.teardown(testInfo);
 
   });
