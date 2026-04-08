@@ -1,0 +1,254 @@
+name: performance-crud
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to run workflow on
+        required: true
+        default: main
+        type: string
+      thread_count:
+        description: Number of threads for the CRUD load test
+        required: true
+        default: "1"
+        type: string
+      iterations:
+        description: Number of loop iterations per thread
+        required: true
+        default: "10"
+        type: string
+
+env:
+  JMETER_VERSION: "5.6.3"
+  TEST_PLAN: "CRUDPerformanceTest"
+  JMETER_TEST_DIR: "jmeter"
+  RESULTS_DIR: "jmeter/Results"
+  REPORTS_DIR: "jmeter/Reports"
+  RESULTS_FILE: "jmeter/Results/CRUDPerformanceTest-results.jtl"
+  REPORT_DIR: "jmeter/Reports/CRUDPerformanceTest-report"
+  JMETER_LOG: "jmeter/Results/jmeter.log"
+
+jobs:
+  run-performance-test:
+    name: Run CRUD Performance Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    outputs:
+      test_status: ${{ steps.parse-results.outputs.test_status }}
+      total_samples: ${{ steps.parse-results.outputs.total_samples }}
+      failed_samples: ${{ steps.parse-results.outputs.failed_samples }}
+      success_rate: ${{ steps.parse-results.outputs.success_rate }}
+      avg_response_time: ${{ steps.parse-results.outputs.avg_response_time }}
+      report_ready: ${{ steps.detect-report.outputs.report_ready }}
+
+    steps:
+      - name: Checkout ${{ inputs.branch }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          fetch-depth: 1
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install JMeter
+        shell: bash
+        run: |
+          set -euxo pipefail
+          JMETER_ARCHIVE="apache-jmeter-${JMETER_VERSION}.tgz"
+          curl -fsSL "https://archive.apache.org/dist/jmeter/binaries/${JMETER_ARCHIVE}" -o "${RUNNER_TEMP}/${JMETER_ARCHIVE}"
+          tar -xzf "${RUNNER_TEMP}/${JMETER_ARCHIVE}" -C "${RUNNER_TEMP}"
+          echo "${RUNNER_TEMP}/apache-jmeter-${JMETER_VERSION}/bin" >> "${GITHUB_PATH}"
+
+      - name: Verify repository inputs
+        shell: bash
+        run: |
+          set -euxo pipefail
+          test -f "${JMETER_TEST_DIR}/Tests/${TEST_PLAN}.jmx"
+          test -f "${JMETER_TEST_DIR}/TestData/UserId.csv"
+
+      - name: Prepare result directories
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p "${RESULTS_DIR}" "${REPORTS_DIR}"
+
+      - name: Run JMeter test
+        id: run-test
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cd "${JMETER_TEST_DIR}"
+          jmeter -n \
+            -t "Tests/${TEST_PLAN}.jmx" \
+            -l "${GITHUB_WORKSPACE}/jmeter/Results/${TEST_PLAN}-results.jtl" \
+            -j "${GITHUB_WORKSPACE}/jmeter/Results/jmeter.log" \
+            -e -o "${GITHUB_WORKSPACE}/jmeter/Reports/${TEST_PLAN}-report" \
+            -JTHREAD_COUNT="${{ inputs.thread_count }}" \
+            -JITERATIONS="${{ inputs.iterations }}" \
+            -JCSV_FILE="${GITHUB_WORKSPACE}/jmeter/TestData/UserId.csv" \
+            -JRESULTS_FILE="${GITHUB_WORKSPACE}/jmeter/Results/${TEST_PLAN}-results.jtl"
+
+      - name: Parse results
+        id: parse-results
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESULT_FILE="${RESULTS_FILE}"
+
+          if [[ ! -f "${RESULT_FILE}" ]]; then
+            echo "test_status=ERROR" >> "${GITHUB_OUTPUT}"
+            echo "total_samples=0" >> "${GITHUB_OUTPUT}"
+            echo "failed_samples=0" >> "${GITHUB_OUTPUT}"
+            echo "success_rate=0.00" >> "${GITHUB_OUTPUT}"
+            echo "avg_response_time=0" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          TOTAL_SAMPLES=$(tail -n +2 "${RESULT_FILE}" | wc -l | tr -d ' ')
+          FAILED_SAMPLES=$(tail -n +2 "${RESULT_FILE}" | awk -F',' '$8=="false" {count++} END {print count+0}')
+
+          if [[ "${TOTAL_SAMPLES}" -eq 0 ]]; then
+            SUCCESS_RATE="0.00"
+            AVG_RESPONSE_TIME="0"
+          else
+            SUCCESS_RATE=$(awk -v total="${TOTAL_SAMPLES}" -v failed="${FAILED_SAMPLES}" 'BEGIN {printf "%.2f", ((total - failed) * 100) / total}')
+            AVG_RESPONSE_TIME=$(tail -n +2 "${RESULT_FILE}" | awk -F',' '{sum+=$2; count++} END {if (count > 0) printf "%.0f", sum / count; else print 0}')
+          fi
+
+          if awk "BEGIN {exit !(${FAILED_SAMPLES} == 0)}"; then
+            TEST_STATUS="PASSED"
+          else
+            TEST_STATUS="FAILED"
+          fi
+
+          echo "test_status=${TEST_STATUS}" >> "${GITHUB_OUTPUT}"
+          echo "total_samples=${TOTAL_SAMPLES}" >> "${GITHUB_OUTPUT}"
+          echo "failed_samples=${FAILED_SAMPLES}" >> "${GITHUB_OUTPUT}"
+          echo "success_rate=${SUCCESS_RATE}" >> "${GITHUB_OUTPUT}"
+          echo "avg_response_time=${AVG_RESPONSE_TIME}" >> "${GITHUB_OUTPUT}"
+
+      - name: Upload JMeter artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CRUDPerformanceTest-artifacts
+          path: |
+            ${{ env.RESULTS_DIR }}
+            ${{ env.REPORTS_DIR }}
+          retention-days: 14
+
+      - name: Upload GitHub Pages artifact
+        if: always() && hashFiles(format('{0}/index.html', env.REPORT_DIR)) != ''
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.REPORT_DIR }}
+
+      - name: Detect generated HTML report
+        id: detect-report
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f "${REPORT_DIR}/index.html" ]]; then
+            echo "report_ready=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "report_ready=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Publish workflow summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## CRUD Performance Test"
+            echo
+            echo "| Metric | Value |"
+            echo "| --- | --- |"
+            echo "| Test plan | ${TEST_PLAN}.jmx |"
+            echo "| Threads | ${{ inputs.thread_count }} |"
+            echo "| Iterations | ${{ inputs.iterations }} |"
+            echo "| Status | ${{ steps.parse-results.outputs.test_status }} |"
+            echo "| Total samples | ${{ steps.parse-results.outputs.total_samples }} |"
+            echo "| Failed samples | ${{ steps.parse-results.outputs.failed_samples }} |"
+            echo "| Success rate | ${{ steps.parse-results.outputs.success_rate }}% |"
+            echo "| Avg response time | ${{ steps.parse-results.outputs.avg_response_time }} ms |"
+            echo "| Report artifact | \`CRUDPerformanceTest-artifacts\` |"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+  publish-report:
+    name: Publish HTML Report
+    runs-on: ubuntu-latest
+    needs: run-performance-test
+    if: always() && needs.run-performance-test.outputs.report_ready == 'true'
+    permissions:
+      pages: write
+      id-token: write
+    outputs:
+      report_url: ${{ steps.deploy-pages.outputs.page_url }}
+
+    steps:
+      - name: Configure GitHub Pages
+        if: ${{ needs.run-performance-test.result != 'cancelled' }}
+        uses: actions/configure-pages@v5
+
+      - name: Deploy to GitHub Pages
+        id: deploy-pages
+        if: ${{ needs.run-performance-test.result != 'cancelled' }}
+        uses: actions/deploy-pages@v4
+
+      - name: Publish report link summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## HTML Report"
+            echo
+            if [[ -n "${{ steps.deploy-pages.outputs.page_url }}" ]]; then
+              echo "Report URL: ${{ steps.deploy-pages.outputs.page_url }}"
+            else
+              echo "Report URL: not published"
+            fi
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+  finalize:
+    name: Finalize Workflow
+    runs-on: ubuntu-latest
+    needs:
+      - run-performance-test
+      - publish-report
+    if: always()
+
+    steps:
+      - name: Print final report link
+        shell: bash
+        run: |
+          {
+            echo "## Final Result"
+            echo
+            echo "| Status | Value |"
+            echo "| --- | --- |"
+            echo "| Test status | ${{ needs.run-performance-test.outputs.test_status }} |"
+            echo "| Total samples | ${{ needs.run-performance-test.outputs.total_samples }} |"
+            echo "| Failed samples | ${{ needs.run-performance-test.outputs.failed_samples }} |"
+            echo "| Success rate | ${{ needs.run-performance-test.outputs.success_rate }}% |"
+            echo "| Avg response time | ${{ needs.run-performance-test.outputs.avg_response_time }} ms |"
+            if [[ -n "${{ needs.publish-report.outputs.report_url }}" ]]; then
+              echo "| Report link | ${{ needs.publish-report.outputs.report_url }} |"
+            else
+              echo "| Report link | Not available |"
+            fi
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Fail workflow when JMeter reported sample failures
+        if: ${{ needs.run-performance-test.outputs.test_status == 'FAILED' }}
+        shell: bash
+        run: |
+          echo "CRUD performance test completed with failed samples."
+          exit 1
