@@ -66,6 +66,11 @@ jobs:
           tar -xzf "${RUNNER_TEMP}/${JMETER_ARCHIVE}" -C "${RUNNER_TEMP}"
           echo "${RUNNER_TEMP}/apache-jmeter-${JMETER_VERSION}/bin" >> "${GITHUB_PATH}"
 
+      - name: Verify JMeter Installation
+        run: |
+          jmeter --version
+          ls -la /opt/jmeter/bin/
+
       - name: Verify repository inputs
         shell: bash
         run: |
@@ -187,6 +192,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: run-performance-test
     if: always() && needs.run-performance-test.outputs.report_ready == 'true'
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy-pages.outputs.page_url }}
     permissions:
       pages: write
       id-token: write
