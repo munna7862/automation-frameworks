@@ -66,11 +66,6 @@ jobs:
           tar -xzf "${RUNNER_TEMP}/${JMETER_ARCHIVE}" -C "${RUNNER_TEMP}"
           echo "${RUNNER_TEMP}/apache-jmeter-${JMETER_VERSION}/bin" >> "${GITHUB_PATH}"
 
-      - name: Verify JMeter Installation
-        run: |
-          jmeter --version
-          ls -la /opt/jmeter/bin/
-
       - name: Verify repository inputs
         shell: bash
         run: |
