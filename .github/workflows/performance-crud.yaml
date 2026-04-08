@@ -210,7 +210,7 @@ jobs:
 
           REPO_NAME="${{ github.event.repository.name }}"
           OWNER="${{ github.repository_owner }}"
-          REPORT_SOURCE="downloaded-artifacts/jmeter/Reports/CRUDPerformanceTest-report"
+          REPORT_SOURCE="$(find downloaded-artifacts -type f -path '*/CRUDPerformanceTest-report/index.html' | head -n 1 | xargs -r dirname)"
           REPORT_ROOT="gh-pages/AutomationReports/Performance/CRUD"
           RUN_DATE="$(date -u +%F)"
           CUTOFF_DATE="$(date -u -d "10 days ago" +%F)"
@@ -220,12 +220,15 @@ jobs:
           INDEX_FILE="${REPORT_ROOT}/index.html"
           REPORT_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Performance/CRUD/${RUN_FOLDER}/"
 
-          test -f "${REPORT_SOURCE}/index.html"
+          if [[ -z "${REPORT_SOURCE}" ]] || [[ ! -f "${REPORT_SOURCE}/index.html" ]]; then
+            echo "Unable to find CRUD HTML report under downloaded-artifacts"
+            find downloaded-artifacts -maxdepth 6 -type f | sort
+            exit 1
+          fi
 
           mkdir -p "gh-pages"
+          rm -rf "${TARGET_DIR}" "${LATEST_DIR}"
           mkdir -p "${TARGET_DIR}" "${LATEST_DIR}"
-          rm -rf "${TARGET_DIR}"/*
-          rm -rf "${LATEST_DIR}"/*
           cp -R "${REPORT_SOURCE}/." "${TARGET_DIR}/"
           cp -R "${REPORT_SOURCE}/." "${LATEST_DIR}/"
 
