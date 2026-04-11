@@ -1,0 +1,5 @@
+
+# jmeter
+allure-results
+.env*
+*log
