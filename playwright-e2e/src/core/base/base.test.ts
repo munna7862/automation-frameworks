@@ -28,7 +28,7 @@ export class BaseTest {
     }
 
     this.page = await this.context.newPage();
-    await this.page.goto(envConfig.baseUrl);
+    await this.page.goto(envConfig.buggyBooksUrl);
     logger.info('Test setup completed');
   }
 
