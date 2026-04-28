@@ -8,6 +8,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
     "rootDir": "src",
     "outDir": "dist",
     "types": ["node", "mocha", "@wdio/globals/types"],
@@ -19,6 +20,9 @@
       "@utils/*": ["./src/utils/*"],
       "@services/*": ["./src/services/*"]
     }
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
   },
   "include": ["src/**/*.ts", "src/**/*.json"]
 }
