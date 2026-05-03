@@ -16,6 +16,7 @@ interface SetupOptions {
 type TestFixtures = {
   signUpPage: SignUpPage;
   commonFunctions: CommonFunctions;
+  networkInterceptor: NetworkInterceptor;
 };
 
 export class BaseTest {
@@ -66,6 +67,23 @@ export class BaseTest {
 }
 
 export const test = base.extend<TestFixtures>({
+
+  networkInterceptor: async ({ context }, use, testInfo) => {
+    const interceptor = new NetworkInterceptor(context, 'api-only');
+    interceptor.start();
+    logger.info('Network interception enabled with mode: api-only');
+    await use(interceptor);
+    interceptor.stop();
+    const networkEntries = interceptor.getEntries();
+    const outputPath = testInfo.outputPath('network-log.json');
+    const networkLog = JSON.stringify(networkEntries, null, 2);
+    await writeFile(outputPath, networkLog, 'utf-8');
+    await testInfo.attach('network-log', {
+      body: Buffer.from(networkLog),
+      contentType: 'application/json'
+    });
+    logger.info(`Captured ${networkEntries.length} network calls. Artifact: ${outputPath}`);
+  },
 
   signUpPage: async ({ page }, use) => {
     await use(new SignUpPage(page));
