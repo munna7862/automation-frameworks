@@ -1,4 +1,4 @@
-import { BasePage } from '@core/base/base.page';
+import { BasePage } from '../core/base/base.page';
 import { Locator } from '@playwright/test';
 
 export class HomePage extends BasePage {

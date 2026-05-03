@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test';
-import { CommonFunctions } from '@utils/common.util';
+import { CommonFunctions } from '../../utils/common.util';
 
 export class BasePage extends CommonFunctions {
   private static readonly DEFAULT_TIMEOUT = 60000;

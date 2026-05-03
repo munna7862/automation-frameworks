@@ -1,5 +1,5 @@
-import { envConfig } from '@config/env.config';
-import { BasePage } from '@core/base/base.page';
+import { envConfig } from '../config/env.config';
+import { BasePage } from '../core/base/base.page';
 import { Locator } from '@playwright/test';
 
 export class GithubPage extends BasePage {

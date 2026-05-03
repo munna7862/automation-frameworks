@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { BaseTest } from '@core/base/base.test';
-import { GithubPage } from '@pages/github.page';
-import { CommonFunctions } from '@utils/common.util';
+import { BaseTest } from '../../core/base/base.test';
+import { GithubPage } from '../../pages/github.page';
+import { CommonFunctions } from '../../utils/common.util';
 
 test.describe('GitHub Search Tests', () => {
   const base = new BaseTest();

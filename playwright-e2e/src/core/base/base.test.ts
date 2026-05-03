@@ -1,6 +1,6 @@
 import { Browser, BrowserContext, Page, TestInfo } from '@playwright/test';
 import { BrowserFactory } from '../browser/browser.factory';
-import { envConfig } from '@config/env.config';
+import { envConfig } from '../../config/env.config';
 import { logger } from '../logger/logger';
 import { NetworkCaptureMode, NetworkInterceptor } from '../network/network.interceptor';
 import { writeFile } from 'fs/promises';

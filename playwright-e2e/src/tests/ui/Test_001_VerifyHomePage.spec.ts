@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
-import { BaseTest } from '@core/base/base.test';
-import { HomePage } from '@pages/home.page';
+import { BaseTest } from '../../core/base/base.test';
+import { HomePage } from '../../pages/home.page';
 
 test('Testcase 1: Verify Home page loads', async ({ }, testInfo) => {
   const base = new BaseTest();

@@ -1,5 +1,5 @@
 import { chromium, firefox, webkit, Browser } from '@playwright/test';
-import { envConfig } from '@config/env.config';
+import { envConfig } from '../../config/env.config';
 import { logger } from '../logger/logger';
 
 export class BrowserFactory {

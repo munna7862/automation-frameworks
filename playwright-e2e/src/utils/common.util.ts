@@ -1,4 +1,4 @@
-import { logger, errorLogger } from '@core/logger/logger';
+import { logger, errorLogger } from '../core/logger/logger';
 import { expect } from '@playwright/test';
 import * as allure from "allure-js-commons";
 
