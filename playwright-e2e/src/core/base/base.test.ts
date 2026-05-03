@@ -1,5 +1,6 @@
 import { logger } from '../logger/logger';
-import { SignUpPage } from '../../pages/signup.page';
+import { SignUpPage } from '../../pages/signup-login.page';
+import { CatalogPage } from '../../pages/catalog.page';
 import { CommonFunctions } from '../../utils/common.util';
 import { NetworkInterceptor } from '../network/network.interceptor';
 import { writeFile } from 'fs/promises';
@@ -7,6 +8,7 @@ import { test as base } from '@playwright/test';
 
 type TestFixtures = {
   signUpPage: SignUpPage;
+  catalogPage: CatalogPage;
   commonFunctions: CommonFunctions;
   networkInterceptor: NetworkInterceptor;
 };
@@ -32,6 +34,10 @@ export const test = base.extend<TestFixtures>({
 
   signUpPage: async ({ page }, use) => {
     await use(new SignUpPage(page));
+  },
+
+  catalogPage: async ({ page }, use) => {
+    await use(new CatalogPage(page));
   },
 
   commonFunctions: async ({ }, use) => {

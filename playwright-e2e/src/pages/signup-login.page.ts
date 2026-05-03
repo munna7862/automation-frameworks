@@ -1,5 +1,6 @@
 import { BasePage } from '../core/base/base.page';
 import { Locator } from '@playwright/test';
+import { CatalogPage } from './catalog.page';
 
 export class SignUpPage extends BasePage {
 
@@ -22,8 +23,8 @@ export class SignUpPage extends BasePage {
   private get btnCreateAccount(): Locator {
     return this.page.locator("//button[@type='submit']");
   }
-  private get lblCheckout(): Locator {
-    return this.page.locator("//a[text()='Checkout']");
+  private get btnSignIn(): Locator {
+    return this.page.locator("//button[@name='btn_submit_login_rnd']");
   }
 
   // Add methods to interact with the Sign Up page elements
@@ -51,11 +52,8 @@ export class SignUpPage extends BasePage {
     await this.doClick(this.btnCreateAccount, "Clicking on Create Account button");
   }
 
-  public async verifyCheckoutPage() {
-    await this.logMessage('INFO', "Verifying landing on Checkout Page");
-    let actualText = await this.doGetText(this.lblCheckout, "Checking if Checkout label is visible");
-    await this.logMessage('INFO', "Landed on Checkout Page successfully and Text is: " + actualText);
-    return actualText?.trim() === "Checkout"? true : false;
+  public async clickSignIn() {
+    await this.doClick(this.btnSignIn, "Clicking on Sign In button");
   }
 
   public async registerNewUser(fullName: string, username: string, password: string, confirmPassword: string) {
@@ -64,7 +62,16 @@ export class SignUpPage extends BasePage {
     await this.enterPassword(password);
     await this.enterConfirmPassword(confirmPassword);
     await this.clickCreateAccount();
-    return await this.verifyCheckoutPage();
+    const catalogPage = new CatalogPage(this.page);
+    return await catalogPage.verifyCheckoutPage();
+  }
+
+  public async login(username: string, password: string) {
+    await this.enterUsername(username);
+    await this.enterPassword(password);
+    await this.clickSignIn();
+    const catalogPage = new CatalogPage(this.page);
+    return await catalogPage.verifyCheckoutPage();
   }
 
 }
