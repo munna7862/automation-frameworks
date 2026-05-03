@@ -9,7 +9,7 @@ function loadTestSuite() {
   console.log(`USE_SPECIFIC_TESTS: ${envConfig.USE_SPECIFIC_TESTS}`);
   const specificTests = [
     "**/playwright-e2e/src/tests/ui/Test_001_RegisterUser.spec.ts",
-    // "**/playwright-e2e/src/tests/api/Test_001_BasicCRUD.spec.ts"
+    "**/playwright-e2e/src/tests/api/Test_001_BasicCRUD.spec.ts"
   ];
   if (envConfig.USE_SPECIFIC_TESTS === true) {
     console.log('Using specific test configuration');

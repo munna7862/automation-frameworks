@@ -8,7 +8,7 @@
     "generate-allure": "allure generate --clean reports/allure-results -o reports/allure-report",
     "open-allure": "allure open reports/allure-report",
     "report": "npm run generate-allure && npm run open-allure",
-    "clean-reports": "rimraf reports"
+    "clean-reports": "rimraf reports logs playwright-report"
   },
   "keywords": [],
   "author": "",

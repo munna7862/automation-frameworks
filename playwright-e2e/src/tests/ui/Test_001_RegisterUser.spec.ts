@@ -2,8 +2,9 @@ import { expect } from '@playwright/test';
 import { test } from '../../core/base/base.test';
 import { envConfig } from '../../config/env.config';
 
-test.describe('GitHub Search Tests', () => {
-  test('Testcase: Perform GitHub Search', async ({ signUpPage, commonFunctions, page }, testInfo) => {
+test.describe('Register New User', () => {
+  test('Testcase: Register New User', async ({ signUpPage, commonFunctions, page, networkInterceptor }) => {
+    // networkInterceptor fixture automatically captures network logs (no direct usage needed)
     await page.goto(envConfig.baseUrl);
 
     await test.step('Navigate to SignUp Page', async () => {
