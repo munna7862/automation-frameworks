@@ -4,7 +4,7 @@ dotenv.config();
 
 export const envConfig = {
   env: process.env.ENV || 'qa',
-  baseUrl: process.env.BASE_URL || "https://automationexercise.com/",
+  baseUrl: process.env.BASE_URL || "https://buggy-books-fe.onrender.com/",
   buggyBooksUrl: process.env.BUGGY_BOOKS_URL || "https://buggy-books-fe.onrender.com/",
   githubUrl: "https://github.com/",
   apiBaseUrl: process.env.API_BASE_URL!,

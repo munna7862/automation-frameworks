@@ -2,13 +2,21 @@ import { Browser, BrowserContext, Page, TestInfo } from '@playwright/test';
 import { BrowserFactory } from '../browser/browser.factory';
 import { envConfig } from '../../config/env.config';
 import { logger } from '../logger/logger';
+import { SignUpPage } from '../../pages/signup.page';
+import { CommonFunctions } from '../../utils/common.util';
 import { NetworkCaptureMode, NetworkInterceptor } from '../network/network.interceptor';
 import { writeFile } from 'fs/promises';
+import { test as base } from '@playwright/test';
 
 interface SetupOptions {
   enableNetworkCapture?: boolean;
   networkCaptureMode?: NetworkCaptureMode;
 }
+
+type TestFixtures = {
+  signUpPage: SignUpPage;
+  commonFunctions: CommonFunctions;
+};
 
 export class BaseTest {
   browser!: Browser;
@@ -28,7 +36,7 @@ export class BaseTest {
     }
 
     this.page = await this.context.newPage();
-    await this.page.goto(envConfig.buggyBooksUrl);
+    await this.page.goto(envConfig.baseUrl);
     logger.info('Test setup completed');
   }
 
@@ -56,3 +64,17 @@ export class BaseTest {
     logger.info('Test teardown completed');
   }
 }
+
+export const test = base.extend<TestFixtures>({
+
+  signUpPage: async ({ page }, use) => {
+    await use(new SignUpPage(page));
+  },
+
+  commonFunctions: async ({ }, use) => {
+    await use(new CommonFunctions());
+  }
+
+});
+
+
