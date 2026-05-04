@@ -27,12 +27,12 @@ export class CommonFunctions {
     const logLevel = levelMap[sLogLevel] || sLogLevel.toLowerCase();
     const reportLevel = sLogLevel.toUpperCase();
     const timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
-    
+
     // Use errorLogger for failures to log to separate error file
     if (sLogLevel === 'FAIL') {
       errorLogger.log({ level: logLevel, message: sMessage });
     }
-    
+
     // Always log to main framework log
     logger.log({ level: logLevel, message: sMessage });
 
@@ -40,4 +40,13 @@ export class CommonFunctions {
     await allure.step(`${emoji} [${timestamp}] [${reportLevel}] ${sMessage}`, async () => { });
   }
 
+  public generateRandomString(length: number): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  }
+  
 }

@@ -8,7 +8,8 @@ function loadTestSuite() {
   console.log(`Suite Name: ${suiteName}`);
   console.log(`USE_SPECIFIC_TESTS: ${envConfig.USE_SPECIFIC_TESTS}`);
   const specificTests = [
-    "**/playwright-e2e/src/tests/ui/Test_001_RegisterUser.spec.ts",
+    "**/playwright-e2e/src/tests/ui/UserManagement/Test_001_RegisterUser.spec.ts",
+    "**/playwright-e2e/src/tests/ui/UserManagement/Test_002_LoginWithExistingUser.spec.ts",
     "**/playwright-e2e/src/tests/api/Test_001_BasicCRUD.spec.ts"
   ];
   if (envConfig.USE_SPECIFIC_TESTS === true) {
@@ -18,7 +19,7 @@ function loadTestSuite() {
   else if (suiteName) {
     try {
       const suiteFilePath = path.join(__dirname, `../tests/TestSuites/${suiteName}.json`);
-      if (fs.existsSync(suiteFilePath)) { 
+      if (fs.existsSync(suiteFilePath)) {
         const suiteData = JSON.parse(fs.readFileSync(suiteFilePath, 'utf-8'));
         console.log(`Loading test suite: ${suiteName}`);
         return suiteData.testFiles || [];
@@ -60,10 +61,23 @@ export default defineConfig({
   use: {
     baseURL: envConfig.baseUrl,
     headless: envConfig.headless,
+    // viewport: { width: 1920, height: 1080 },
+    viewport: null,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure'
   },
-
+  projects: [
+    {
+      name: 'Google Chrome',
+      use: {
+        channel: 'chrome',
+        launchOptions: {
+          args: ['--disable-notifications', '--disable-infobars', '--disable-extensions', '--start-maximized'],
+        },
+        headless: envConfig.headless
+      }
+    }
+  ],
   outputDir: '../../reports/test-artifacts'
 });

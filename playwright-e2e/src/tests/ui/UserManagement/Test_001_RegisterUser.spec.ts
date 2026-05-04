@@ -1,11 +1,14 @@
 import { expect } from '@playwright/test';
-import { test } from '../../core/base/base.test';
-import { envConfig } from '../../config/env.config';
-import TestData from '../../test-data/ui/Test_001_RegisterUser.json';
+import { test } from '../../../core/base/base.test';
+import { envConfig } from '../../../config/env.config';
+import TestData from '../../../test-data/ui/UserManagement/Test_001_RegisterUser.json';
 
 test.describe('Register New User', () => {
+  let username: string, fullName: string;
   test('Testcase 1: Register New User', async ({ signUpPage, commonFunctions, page, networkInterceptor }) => {
     // networkInterceptor fixture automatically captures network logs (no direct usage needed)
+    username = TestData.USER_NAME + commonFunctions.generateRandomString(5);
+    fullName = TestData.FULL_NAME + commonFunctions.generateRandomString(5);
     await page.goto(envConfig.baseUrl);
 
     await test.step('Navigate to SignUp Page', async () => {
@@ -13,7 +16,7 @@ test.describe('Register New User', () => {
     });
 
     await test.step('Perform SignUp', async () => {
-      const isRegistered = await signUpPage.registerNewUser(TestData.FULL_NAME, TestData.USER_NAME, TestData.PASSWORD, TestData.PASSWORD);
+      const isRegistered = await signUpPage.registerNewUser(fullName, username, TestData.PASSWORD, TestData.PASSWORD);
       let isNavigated = await commonFunctions.compareTwoValues(isRegistered, true, "Verifying if user registered successfully");
       expect(isNavigated).toBeTruthy();
     });
@@ -26,7 +29,7 @@ test.describe('Register New User', () => {
 
     await test.step('Perform Login', async () => {
       await catalogPage.clickNavigateLink("Login");
-      const isLogin = await signUpPage.login(TestData.USER_NAME, TestData.PASSWORD);
+      const isLogin = await signUpPage.login(username, TestData.PASSWORD);
       let isNavigated = await commonFunctions.compareTwoValues(isLogin, true, "Verifying if user logged in successfully");
       expect(isNavigated).toBeTruthy();
     });
