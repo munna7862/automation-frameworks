@@ -8,6 +8,7 @@ function loadTestSuite() {
   console.log(`Suite Name: ${suiteName}`);
   console.log(`USE_SPECIFIC_TESTS: ${envConfig.USE_SPECIFIC_TESTS}`);
   const specificTests = [
+    "**/playwright-e2e/src/tests/ui/BookCatalog/Test_001_InitialCatalog.spec.ts",
     "**/playwright-e2e/src/tests/ui/UserManagement/Test_001_RegisterUser.spec.ts",
     "**/playwright-e2e/src/tests/ui/UserManagement/Test_002_LoginWithExistingUser.spec.ts",
     "**/playwright-e2e/src/tests/api/Test_001_BasicCRUD.spec.ts"

@@ -1,5 +1,5 @@
 import { BasePage } from '../core/base/base.page';
-import { Locator } from '@playwright/test';
+import { expect, Locator } from '@playwright/test';
 
 export class CatalogPage extends BasePage {
 
@@ -10,6 +10,14 @@ export class CatalogPage extends BasePage {
 
   private getNavigateLink(sLink: string): Locator {
     return this.page.locator(`//a[text()='${sLink}']`);
+  }
+
+  private get eleBooksCount(): Locator {
+    return this.page.locator("//table[@class='complex-item-box-alpha']");
+  }
+
+  private getpaginationButton(btnNumber: number): Locator {
+    return this.page.locator(`//button[@id='pagination-page-${btnNumber}']`);
   }
 
 
@@ -33,5 +41,29 @@ export class CatalogPage extends BasePage {
     await this.getNavigateLink("Login").waitFor({ state: 'visible', timeout: 5000 });
     return await this.doesElementExist(this.getNavigateLink("Login"), "Checking if Login link is visible on Catalog page");
   }
+
+  public async getBooksCount() {
+    await this.eleBooksCount.first().waitFor({ state: 'visible', timeout: 5000 });
+    let count = await this.eleBooksCount.count();
+    await this.logMessage('INFO', "Total Books displayed in Catalog page are: " + count);
+    return count;
+  }
+
+  public async clickPaginationButton(btnNumber: number) {
+    await this.doClick(this.getpaginationButton(btnNumber), `Clicking on Pagination button number ${btnNumber}`);
+    for (let i = 0; i < 5; i++) { // Retry mechanism to handle potential timing issues
+      await this.page.waitForTimeout(2000); // Wait before retrying
+      let buttonClass = await this.doGetAttribute(this.getpaginationButton(btnNumber), "class", `Checking if Pagination button number ${btnNumber} is active after click`);
+      await this.logMessage('INFO', `Pagination button number ${btnNumber} class attribute after click: ${buttonClass}`);
+      if (buttonClass && buttonClass.includes("active")) {
+        break; // Exit loop if button is active
+      }
+      else {
+        await this.logMessage('WARN', `Pagination button number ${btnNumber} is not active yet. Retrying... (${i + 1}/5)`);
+      }
+    }
+  }
+
 }
+
 
