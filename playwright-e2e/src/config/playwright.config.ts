@@ -11,7 +11,7 @@ function loadTestSuite() {
     "**/playwright-e2e/src/tests/ui/BookCatalog/Test_001_InitialCatalog.spec.ts",
     "**/playwright-e2e/src/tests/ui/UserManagement/Test_001_RegisterUser.spec.ts",
     "**/playwright-e2e/src/tests/ui/UserManagement/Test_002_LoginWithExistingUser.spec.ts",
-    "**/playwright-e2e/src/tests/api/Test_001_BasicCRUD.spec.ts"
+    "**/playwright-e2e/src/tests/api/Test_001_BooksApi.spec.ts"
   ];
   if (envConfig.USE_SPECIFIC_TESTS === true) {
     console.log('Using specific test configuration');
