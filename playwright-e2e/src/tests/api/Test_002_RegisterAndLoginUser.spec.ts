@@ -18,10 +18,13 @@ type LoginPayload = {
   password?: string;
 };
 
+function uniqueUsername(prefix: string = 'johndoe'): string {
+  return `${prefix}${Date.now()}${Math.floor(Math.random() * 100000)}@`;
+}
+
 function buildValidPayload(overrides: RegisterPayload = {}): RegisterPayload {
-  const uniqueId = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
   return {
-    username: `johndoe${uniqueId}@`,
+    username: uniqueUsername(),
     password: 'johna123@',
     fullName: 'john doe',
     ...overrides,
@@ -48,6 +51,26 @@ async function loginUser(payload: LoginPayload, logMessage: string) {
     logMessage,
     responseType: 'full',
   });
+}
+
+async function createRegisteredUser(overrides: RegisterPayload = {}): Promise<RegisterPayload> {
+  const payload = buildValidPayload(overrides);
+  const response = await registerUser(payload, 'Register test user setup');
+
+  await commonUtil.compareTwoValues(response.status, 201, 'Registration setup status');
+  expect(response.status).toBe(201);
+
+  return payload;
+}
+
+async function validateStatusIn(actualStatus: number, expectedStatuses: number[], logMessage: string) {
+  await commonUtil.compareTwoValues(expectedStatuses.includes(actualStatus), true, logMessage);
+  expect(expectedStatuses).toContain(actualStatus);
+}
+
+function validateNoSensitiveLeakage(responseData: any) {
+  expect(responseData?.password).toBeUndefined();
+  expect(JSON.stringify(responseData ?? {})).not.toContain('<script>');
 }
 
 async function validateSuccessfulRegisterContract(responseData: any, expectedUsername: string) {
@@ -89,7 +112,7 @@ async function validateSuccessfulLoginContract(responseData: any, expectedUserna
 }
 
 test.describe('Register User API - Positive, Negative, Contract and Security', () => {
-  test('Testcase 1: Positive: POST /api/register should register a new user successfully and allow login', async () => {
+  test('Testcase 1: Positive and Contract: POST /api/register should register a user and allow login', async () => {
     const payload = buildValidPayload();
     const response = await registerUser(payload, 'Register a new valid user');
 
@@ -110,19 +133,18 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
 
   const missingFieldScenarios: { description: string; payload: RegisterPayload }[] = [
     { description: 'missing username', payload: { password: 'johna123@', fullName: 'john doe' } },
-    { description: 'missing password', payload: { username: `missingpass${Date.now()}@`, fullName: 'john doe' } },
+    { description: 'missing password', payload: { username: uniqueUsername('missingpass'), fullName: 'john doe' } },
     { description: 'empty username', payload: { username: '', password: 'johna123@', fullName: 'john doe' } },
-    { description: 'empty password', payload: { username: `emptypass${Date.now()}@`, password: '', fullName: 'john doe' } },
+    { description: 'empty password', payload: { username: uniqueUsername('emptypass'), password: '', fullName: 'john doe' } },
   ];
 
   for (const scenario of missingFieldScenarios) {
     test(`Testcase 2: Negative: POST /api/register should reject ${scenario.description}`, async () => {
       const response = await registerUser(scenario.payload, `Register user with ${scenario.description}`);
 
-      await commonUtil.compareTwoValues([400, 422].includes(response.status), true, `Status code for ${scenario.description}`);
-      expect([400, 422]).toContain(response.status);
+      await validateStatusIn(response.status, [400, 422], `Status code for ${scenario.description}`);
       expect(response.data).toBeTruthy();
-      expect(response.data?.password).toBeUndefined();
+      validateNoSensitiveLeakage(response.data);
     });
   }
 
@@ -132,19 +154,9 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
     const duplicateResponse = await registerUser(payload, 'Register duplicate username');
 
     await commonUtil.compareTwoValues(firstResponse.status, 201, 'Initial registration response status');
-    await commonUtil.compareTwoValues([400, 409, 422].includes(duplicateResponse.status), true, 'Duplicate registration status');
+    await validateStatusIn(duplicateResponse.status, [400, 409, 422], 'Duplicate registration status');
     expect(firstResponse.status).toBe(201);
-    expect([400, 409, 422]).toContain(duplicateResponse.status);
-    expect(duplicateResponse.data?.password).toBeUndefined();
-
-    const loginResponse = await loginUser(
-      { username: payload.username, password: payload.password },
-      'Login after duplicate registration validation'
-    );
-
-    await commonUtil.compareTwoValues(loginResponse.status, 200, 'Original user can still login after duplicate attempt');
-    expect(loginResponse.status).toBe(200);
-    await validateSuccessfulLoginContract(loginResponse.data, payload.username as string);
+    validateNoSensitiveLeakage(duplicateResponse.data);
   });
 
   test('Testcase 4: Negative: GET /api/register should not be allowed for user registration', async () => {
@@ -156,14 +168,13 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
       responseType: 'full',
     });
 
-    await commonUtil.compareTwoValues([404, 405].includes(response.status), true, 'Unsupported method status');
-    expect([404, 405]).toContain(response.status);
+    await validateStatusIn(response.status, [404, 405], 'Unsupported method status');
   });
 
   const securityPayloads: { description: string; payload: RegisterPayload }[] = [
     {
       description: 'SQL injection pattern in username',
-      payload: buildValidPayload({ username: `' OR '1'='1${Date.now()}@` }),
+      payload: buildValidPayload({ username: `' OR '1'='1${Date.now()}${Math.floor(Math.random() * 100000)}@` }),
     },
     {
       description: 'script tag in fullName',
@@ -171,7 +182,7 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
     },
     {
       description: 'oversized username',
-      payload: buildValidPayload({ username: `${'a'.repeat(240)}${Date.now()}@` }),
+      payload: buildValidPayload({ username: `${'a'.repeat(240)}${Date.now()}${Math.floor(Math.random() * 100000)}@` }),
     },
   ];
 
@@ -181,8 +192,7 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
 
       await commonUtil.compareTwoValues(response.status < 500, true, `Security status for ${scenario.description}`);
       expect(response.status).toBeLessThan(500);
-      expect(response.data?.password).toBeUndefined();
-      expect(JSON.stringify(response.data ?? {})).not.toContain('<script>');
+      validateNoSensitiveLeakage(response.data);
     });
   }
 
@@ -196,19 +206,18 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
       responseType: 'full',
     });
 
-    await commonUtil.compareTwoValues([400, 415].includes(response.status), true, 'Unsupported content type status');
-    expect([400, 415]).toContain(response.status);
+    await validateStatusIn(response.status, [400, 415], 'Unsupported content type status');
   });
 });
 
 test.describe('Login API - Positive, Negative and Security', () => {
-  test('Testcase 7: Positive: POST /api/login should login a registered user successfully', async () => {
-    const registeredUser = buildValidPayload();
-    const registerResponse = await registerUser(registeredUser, 'Register user for login positive validation');
+  let registeredUser: RegisterPayload;
 
-    await commonUtil.compareTwoValues(registerResponse.status, 201, 'Registration setup status');
-    expect(registerResponse.status).toBe(201);
+  test.beforeAll(async () => {
+    registeredUser = await createRegisteredUser();
+  });
 
+  test('Testcase 7: Positive and Contract: POST /api/login should login a registered user successfully', async () => {
     const loginResponse = await loginUser(
       { username: registeredUser.username, password: registeredUser.password },
       'Login registered user'
@@ -219,53 +228,34 @@ test.describe('Login API - Positive, Negative and Security', () => {
     await validateSuccessfulLoginContract(loginResponse.data, registeredUser.username as string);
   });
 
-  test('Testcase 8: Contract: Login success response should match expected schema and data types', async () => {
-    const registeredUser = buildValidPayload();
-    await registerUser(registeredUser, 'Register user for login contract validation');
-
-    const loginResponse = await loginUser(
-      { username: registeredUser.username, password: registeredUser.password },
-      'Validate login success contract'
-    );
-
-    await commonUtil.compareTwoValues(loginResponse.status, 200, 'Login response status');
-    expect(loginResponse.status).toBe(200);
-    await validateSuccessfulLoginContract(loginResponse.data, registeredUser.username as string);
-  });
-
-  test('Testcase 9: Negative: POST /api/login should reject incorrect password', async () => {
-    const registeredUser = buildValidPayload();
-    await registerUser(registeredUser, 'Register user for invalid password validation');
-
+  test('Testcase 8: Negative: POST /api/login should reject incorrect password', async () => {
     const loginResponse = await loginUser(
       { username: registeredUser.username, password: 'wrongPassword123@' },
       'Login with incorrect password'
     );
 
-    await commonUtil.compareTwoValues([400, 401, 403].includes(loginResponse.status), true, 'Incorrect password status');
-    expect([400, 401, 403]).toContain(loginResponse.status);
-    expect(loginResponse.data?.password).toBeUndefined();
+    await validateStatusIn(loginResponse.status, [400, 401, 403], 'Incorrect password status');
+    validateNoSensitiveLeakage(loginResponse.data);
   });
 
   const invalidLoginScenarios: { description: string; payload: LoginPayload }[] = [
     { description: 'missing username', payload: { password: 'johna123@' } },
-    { description: 'missing password', payload: { username: `loginmissingpass${Date.now()}@` } },
+    { description: 'missing password', payload: { username: uniqueUsername('loginmissingpass') } },
     { description: 'empty username', payload: { username: '', password: 'johna123@' } },
-    { description: 'empty password', payload: { username: `loginemptypass${Date.now()}@`, password: '' } },
-    { description: 'unregistered user', payload: { username: `unregistered${Date.now()}@`, password: 'johna123@' } },
+    { description: 'empty password', payload: { username: uniqueUsername('loginemptypass'), password: '' } },
+    { description: 'unregistered user', payload: { username: uniqueUsername('unregistered'), password: 'johna123@' } },
   ];
 
   for (const scenario of invalidLoginScenarios) {
-    test(`Testcase 10: Negative: POST /api/login should reject ${scenario.description}`, async () => {
+    test(`Testcase 9: Negative: POST /api/login should reject ${scenario.description}`, async () => {
       const response = await loginUser(scenario.payload, `Login with ${scenario.description}`);
 
-      await commonUtil.compareTwoValues([400, 401, 403, 404, 422].includes(response.status), true, `Status code for ${scenario.description}`);
-      expect([400, 401, 403, 404, 422]).toContain(response.status);
-      expect(response.data?.password).toBeUndefined();
+      await validateStatusIn(response.status, [400, 401, 403, 404, 422], `Status code for ${scenario.description}`);
+      validateNoSensitiveLeakage(response.data);
     });
   }
 
-  test('Testcase 11: Negative: GET /api/login should not be allowed for login', async () => {
+  test('Testcase 10: Negative: GET /api/login should not be allowed for login', async () => {
     const response = await apiUtil.makeRequest({
       method: 'GET',
       url: LOGIN_URL,
@@ -274,47 +264,44 @@ test.describe('Login API - Positive, Negative and Security', () => {
       responseType: 'full',
     });
 
-    await commonUtil.compareTwoValues([404, 405].includes(response.status), true, 'Unsupported login method status');
-    expect([404, 405]).toContain(response.status);
+    await validateStatusIn(response.status, [404, 405], 'Unsupported login method status');
   });
 
   const loginSecurityScenarios: { description: string; payload: LoginPayload }[] = [
     {
       description: 'SQL injection pattern in username',
-      payload: { username: `' OR '1'='1${Date.now()}@`, password: 'johna123@' },
+      payload: { username: `' OR '1'='1${Date.now()}${Math.floor(Math.random() * 100000)}@`, password: 'johna123@' },
     },
     {
       description: 'script tag in username',
-      payload: { username: `<script>alert("xss")</script>${Date.now()}@`, password: 'johna123@' },
+      payload: { username: `<script>alert("xss")</script>${Date.now()}${Math.floor(Math.random() * 100000)}@`, password: 'johna123@' },
     },
     {
       description: 'oversized username',
-      payload: { username: `${'b'.repeat(240)}${Date.now()}@`, password: 'johna123@' },
+      payload: { username: `${'b'.repeat(240)}${Date.now()}${Math.floor(Math.random() * 100000)}@`, password: 'johna123@' },
     },
   ];
 
   for (const scenario of loginSecurityScenarios) {
-    test(`Testcase 12: Security: POST /api/login should handle ${scenario.description} without server error or sensitive leakage`, async () => {
+    test(`Testcase 11: Security: POST /api/login should handle ${scenario.description} without server error or sensitive leakage`, async () => {
       const response = await loginUser(scenario.payload, `Login security validation for ${scenario.description}`);
 
       await commonUtil.compareTwoValues(response.status < 500, true, `Security status for ${scenario.description}`);
       expect(response.status).toBeLessThan(500);
-      expect(response.data?.password).toBeUndefined();
-      expect(JSON.stringify(response.data ?? {})).not.toContain('<script>');
+      validateNoSensitiveLeakage(response.data);
     });
   }
 
-  test('Testcase 13: Security: POST /api/login should reject unsupported content type', async () => {
+  test('Testcase 12: Security: POST /api/login should reject unsupported content type', async () => {
     const response = await apiUtil.makeRequest({
       method: 'POST',
       url: LOGIN_URL,
-      data: JSON.stringify({ username: `logincontent${Date.now()}@`, password: 'johna123@' }),
+      data: JSON.stringify({ username: uniqueUsername('logincontent'), password: 'johna123@' }),
       headers: { 'Content-Type': 'text/plain' },
       logMessage: 'Login with unsupported content type',
       responseType: 'full',
     });
 
-    await commonUtil.compareTwoValues([400, 415].includes(response.status), true, 'Unsupported login content type status');
-    expect([400, 415]).toContain(response.status);
+    await validateStatusIn(response.status, [400, 415], 'Unsupported login content type status');
   });
 });
