@@ -1,0 +1,53 @@
+[2026-05-15 03:07:52] INFO: 🚀 Making GET request to https://reqres.in/api/books?page=-1&limit=10
+[2026-05-15 03:07:52] ERROR: ❌ Get books with invalid parameters: Negative page number Failed! Status: 401 Unauthorized | Response: {
+  "error": "missing_api_key",
+  "message": "The x-api-key header is required for this endpoint.",
+  "hint": "Send x-api-key for admin calls (/api/*) or Authorization: Bearer <token> for app-user calls (/app/*).",
+  "next_steps": [
+    "Go to app.reqres.in/api-keys to get your key",
+    "Add header: x-api-key: <your_key>",
+    "For app user endpoints, use Authorization: Bearer <session_token> instead"
+  ],
+  "docs_url": "https://app.reqres.in/docs#authentication",
+  "example_curl": "curl -H \"x-api-key: YOUR_API_KEY\" https://api.reqres.in/api/collections",
+  "_meta": {
+    "powered_by": "ReqRes",
+    "docs_url": "https://app.reqres.in/documentation",
+    "upgrade_url": "https://app.reqres.in/upgrade",
+    "example_url": "https://app.reqres.in/examples/notes-app",
+    "variant": "v1_a",
+    "message": "API key invalid or revoked. Create a new key in API Keys.",
+    "cta": {
+      "label": "Get a key",
+      "url": "https://app.reqres.in/api-keys"
+    },
+    "context": "invalid_key"
+  }
+}
+[2026-05-15 03:07:52] ERROR: ❌ Get books with invalid parameters: Negative page number Failed! Status: 401 Unauthorized | Response: {
+  "error": "missing_api_key",
+  "message": "The x-api-key header is required for this endpoint.",
+  "hint": "Send x-api-key for admin calls (/api/*) or Authorization: Bearer <token> for app-user calls (/app/*).",
+  "next_steps": [
+    "Go to app.reqres.in/api-keys to get your key",
+    "Add header: x-api-key: <your_key>",
+    "For app user endpoints, use Authorization: Bearer <session_token> instead"
+  ],
+  "docs_url": "https://app.reqres.in/docs#authentication",
+  "example_curl": "curl -H \"x-api-key: YOUR_API_KEY\" https://api.reqres.in/api/collections",
+  "_meta": {
+    "powered_by": "ReqRes",
+    "docs_url": "https://app.reqres.in/documentation",
+    "upgrade_url": "https://app.reqres.in/upgrade",
+    "example_url": "https://app.reqres.in/examples/notes-app",
+    "variant": "v1_a",
+    "message": "API key invalid or revoked. Create a new key in API Keys.",
+    "cta": {
+      "label": "Get a key",
+      "url": "https://app.reqres.in/api-keys"
+    },
+    "context": "invalid_key"
+  }
+}
+[2026-05-15 03:07:52] ERROR:  Status code should be 200 or 400 for invalid parameters: Negative page number Failed!! Expected Value:: true || Actual Value:: false
+[2026-05-15 03:07:52] ERROR:  Status code should be 200 or 400 for invalid parameters: Negative page number Failed!! Expected Value:: true || Actual Value:: false
