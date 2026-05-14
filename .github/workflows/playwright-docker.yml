@@ -38,7 +38,7 @@ jobs:
           ENVIRONMENT: INTEROP
           TZ: Australia/Adelaide
         run: |
-          npm run test --reporter=json
+          npm run test -- --reporter=json
         continue-on-error: true
 
       - name: Upload Test Results JSON
@@ -95,8 +95,6 @@ jobs:
             echo "- **Passed:** $PASSED" >> $GITHUB_STEP_SUMMARY
             echo "- **Failed:** $FAILED" >> $GITHUB_STEP_SUMMARY
             echo "- **Duration:** $(($DURATION / 1000)) seconds" >> $GITHUB_STEP_SUMMARY
-            echo "- **Environment:** ${{ env.ENV }}" >> $GITHUB_STEP_SUMMARY
-            echo "- **Browser:** ${{ env.BROWSER }}" >> $GITHUB_STEP_SUMMARY
             echo "- **Report Link:** https://$OWNER.github.io/$REPO_NAME/AutomationReports/UI/${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
           else
             echo "## Test Summary" >> $GITHUB_STEP_SUMMARY
