@@ -1,0 +1,58 @@
+[2026-05-15 03:06:39] INFO: 🚀 Making POST request to https://reqres.in/api/register
+[2026-05-15 03:06:39] INFO: 📤 Request Payload: {
+  "username": "johndoe177878019981190213@",
+  "password": "johna123@",
+  "fullName": "john doe"
+}
+[2026-05-15 03:06:40] ERROR: ❌ Register a new valid user Failed! Status: 401 Unauthorized | Response: {
+  "error": "missing_api_key",
+  "message": "The x-api-key header is required for this endpoint.",
+  "hint": "Send x-api-key for admin calls (/api/*) or Authorization: Bearer <token> for app-user calls (/app/*).",
+  "next_steps": [
+    "Go to app.reqres.in/api-keys to get your key",
+    "Add header: x-api-key: <your_key>",
+    "For app user endpoints, use Authorization: Bearer <session_token> instead"
+  ],
+  "docs_url": "https://app.reqres.in/docs#authentication",
+  "example_curl": "curl -H \"x-api-key: YOUR_API_KEY\" https://api.reqres.in/api/collections",
+  "_meta": {
+    "powered_by": "ReqRes",
+    "docs_url": "https://app.reqres.in/documentation",
+    "upgrade_url": "https://app.reqres.in/upgrade",
+    "example_url": "https://app.reqres.in/examples/notes-app",
+    "variant": "v1_a",
+    "message": "API key invalid or revoked. Create a new key in API Keys.",
+    "cta": {
+      "label": "Get a key",
+      "url": "https://app.reqres.in/api-keys"
+    },
+    "context": "invalid_key"
+  }
+}
+[2026-05-15 03:06:40] ERROR: ❌ Register a new valid user Failed! Status: 401 Unauthorized | Response: {
+  "error": "missing_api_key",
+  "message": "The x-api-key header is required for this endpoint.",
+  "hint": "Send x-api-key for admin calls (/api/*) or Authorization: Bearer <token> for app-user calls (/app/*).",
+  "next_steps": [
+    "Go to app.reqres.in/api-keys to get your key",
+    "Add header: x-api-key: <your_key>",
+    "For app user endpoints, use Authorization: Bearer <session_token> instead"
+  ],
+  "docs_url": "https://app.reqres.in/docs#authentication",
+  "example_curl": "curl -H \"x-api-key: YOUR_API_KEY\" https://api.reqres.in/api/collections",
+  "_meta": {
+    "powered_by": "ReqRes",
+    "docs_url": "https://app.reqres.in/documentation",
+    "upgrade_url": "https://app.reqres.in/upgrade",
+    "example_url": "https://app.reqres.in/examples/notes-app",
+    "variant": "v1_a",
+    "message": "API key invalid or revoked. Create a new key in API Keys.",
+    "cta": {
+      "label": "Get a key",
+      "url": "https://app.reqres.in/api-keys"
+    },
+    "context": "invalid_key"
+  }
+}
+[2026-05-15 03:06:40] ERROR:  Response status Failed!! Expected Value:: 201 || Actual Value:: 401
+[2026-05-15 03:06:40] ERROR:  Response status Failed!! Expected Value:: 201 || Actual Value:: 401
