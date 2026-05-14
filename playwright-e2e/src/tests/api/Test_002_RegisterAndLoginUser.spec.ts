@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { envConfig } from '../../config/env.config';
 import apiUtil from '../../utils/api.util';
 import { CommonFunctions } from '../../utils/common.util';
+import testData from '../../test-data/api/Test_002_RegisterAndLoginUser.json';
 
 const commonUtil = new CommonFunctions();
 const REGISTER_URL = `${envConfig.apiBaseUrl}/api/register`;
@@ -25,9 +26,54 @@ function uniqueUsername(prefix: string = 'johndoe'): string {
 function buildValidPayload(overrides: RegisterPayload = {}): RegisterPayload {
   return {
     username: uniqueUsername(),
-    password: 'johna123@',
-    fullName: 'john doe',
+    password: testData.defaultPassword,
+    fullName: testData.defaultFullName,
     ...overrides,
+  };
+}
+
+function normalizeDynamicUsername(candidate?: string): string | undefined {
+  if (!candidate) return candidate;
+  if (candidate.endsWith('_placeholder')) {
+    return uniqueUsername(candidate.replace('_placeholder', ''));
+  }
+  return candidate;
+}
+
+function normalizePayload<T extends { username?: string }>(payload: T): T {
+  const normalized = { ...payload };
+  if (typeof normalized.username === 'string') {
+    normalized.username = normalizeDynamicUsername(normalized.username);
+  }
+  return normalized;
+}
+
+function buildRegisterSecurityPayload(template: any): RegisterPayload {
+  if (template.field === 'username') {
+    return {
+      username:
+        template.payload.usernamePattern === 'oversized_username'
+          ? `${'a'.repeat(240)}${Date.now()}${Math.floor(Math.random() * 100000)}@`
+          : `${template.payload.usernamePattern}${Date.now()}${Math.floor(Math.random() * 100000)}@`,
+      password: testData.defaultPassword,
+      fullName: testData.defaultFullName,
+    };
+  }
+
+  return {
+    username: uniqueUsername('security'),
+    password: testData.defaultPassword,
+    fullName: template.payload.fullName,
+  };
+}
+
+function buildLoginSecurityPayload(template: any): LoginPayload {
+  return {
+    username:
+      template.payload.usernamePattern === 'oversized_username'
+        ? `${'b'.repeat(240)}${Date.now()}${Math.floor(Math.random() * 100000)}@`
+        : `${template.payload.usernamePattern}${Date.now()}${Math.floor(Math.random() * 100000)}@`,
+    password: template.payload.password,
   };
 }
 
@@ -78,7 +124,7 @@ async function validateSuccessfulRegisterContract(responseData: any, expectedUse
   await commonUtil.compareTwoValues(responseData !== null, true, 'Registration response is not null');
   await commonUtil.compareTwoValues(typeof responseData?.message, 'string', 'Message is a string');
   await commonUtil.compareTwoValues(typeof responseData?.username, 'string', 'Username is a string');
-  await commonUtil.compareTwoValues(responseData?.message, 'Registration successful', 'Registration message');
+  await commonUtil.compareTwoValues(responseData?.message, testData.messages.registrationSuccess, 'Registration message');
   await commonUtil.compareTwoValues(responseData?.username, expectedUsername, 'Registered username matches request');
   await commonUtil.compareTwoValues(
     JSON.stringify(Object.keys(responseData ?? {}).sort()),
@@ -87,7 +133,7 @@ async function validateSuccessfulRegisterContract(responseData: any, expectedUse
   );
 
   expect(responseData).toEqual({
-    message: 'Registration successful',
+    message: testData.messages.registrationSuccess,
     username: expectedUsername,
   });
 }
@@ -97,7 +143,7 @@ async function validateSuccessfulLoginContract(responseData: any, expectedUserna
   await commonUtil.compareTwoValues(responseData !== null, true, 'Login response is not null');
   await commonUtil.compareTwoValues(typeof responseData?.message, 'string', 'Login message is a string');
   await commonUtil.compareTwoValues(typeof responseData?.username, 'string', 'Login username is a string');
-  await commonUtil.compareTwoValues(responseData?.message, 'Login successful', 'Login message');
+  await commonUtil.compareTwoValues(responseData?.message, testData.messages.loginSuccess, 'Login message');
   await commonUtil.compareTwoValues(responseData?.username, expectedUsername, 'Logged in username matches request');
   await commonUtil.compareTwoValues(
     JSON.stringify(Object.keys(responseData ?? {}).sort()),
@@ -106,7 +152,7 @@ async function validateSuccessfulLoginContract(responseData: any, expectedUserna
   );
 
   expect(responseData).toEqual({
-    message: 'Login successful',
+    message: testData.messages.loginSuccess,
     username: expectedUsername,
   });
 }
@@ -131,18 +177,19 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
     await validateSuccessfulLoginContract(loginResponse.data, payload.username as string);
   });
 
-  const missingFieldScenarios: { description: string; payload: RegisterPayload }[] = [
-    { description: 'missing username', payload: { password: 'johna123@', fullName: 'john doe' } },
-    { description: 'missing password', payload: { username: uniqueUsername('missingpass'), fullName: 'john doe' } },
-    { description: 'empty username', payload: { username: '', password: 'johna123@', fullName: 'john doe' } },
-    { description: 'empty password', payload: { username: uniqueUsername('emptypass'), password: '', fullName: 'john doe' } },
-  ];
+  const missingFieldScenarios = testData.missingRegisterFieldScenarios.map((scenario) => ({
+    description: scenario.description,
+    payload: normalizePayload({
+      ...scenario.payload,
+      username: normalizeDynamicUsername(scenario.payload.username),
+    }),
+  }));
 
   for (const scenario of missingFieldScenarios) {
     test(`Testcase 2: Negative: POST /api/register should reject ${scenario.description}`, async () => {
       const response = await registerUser(scenario.payload, `Register user with ${scenario.description}`);
 
-      await validateStatusIn(response.status, [400, 422], `Status code for ${scenario.description}`);
+      await validateStatusIn(response.status, testData.negativeRegisterStatus, `Status code for ${scenario.description}`);
       expect(response.data).toBeTruthy();
       validateNoSensitiveLeakage(response.data);
     });
@@ -154,7 +201,7 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
     const duplicateResponse = await registerUser(payload, 'Register duplicate username');
 
     await commonUtil.compareTwoValues(firstResponse.status, 201, 'Initial registration response status');
-    await validateStatusIn(duplicateResponse.status, [400, 409, 422], 'Duplicate registration status');
+    await validateStatusIn(duplicateResponse.status, testData.duplicateRegisterStatus, 'Duplicate registration status');
     expect(firstResponse.status).toBe(201);
     validateNoSensitiveLeakage(duplicateResponse.data);
   });
@@ -168,23 +215,13 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
       responseType: 'full',
     });
 
-    await validateStatusIn(response.status, [404, 405], 'Unsupported method status');
+    await validateStatusIn(response.status, testData.unsupportedMethodStatus, 'Unsupported method status');
   });
 
-  const securityPayloads: { description: string; payload: RegisterPayload }[] = [
-    {
-      description: 'SQL injection pattern in username',
-      payload: buildValidPayload({ username: `' OR '1'='1${Date.now()}${Math.floor(Math.random() * 100000)}@` }),
-    },
-    {
-      description: 'script tag in fullName',
-      payload: buildValidPayload({ fullName: '<script>alert("xss")</script>' }),
-    },
-    {
-      description: 'oversized username',
-      payload: buildValidPayload({ username: `${'a'.repeat(240)}${Date.now()}${Math.floor(Math.random() * 100000)}@` }),
-    },
-  ];
+  const securityPayloads = testData.registerSecurityScenarios.map((scenario) => ({
+    description: scenario.description,
+    payload: buildRegisterSecurityPayload(scenario),
+  }));
 
   for (const scenario of securityPayloads) {
     test(`Testcase 5: Security: POST /api/register should handle ${scenario.description} without server error or sensitive leakage`, async () => {
@@ -206,7 +243,7 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
       responseType: 'full',
     });
 
-    await validateStatusIn(response.status, [400, 415], 'Unsupported content type status');
+    await validateStatusIn(response.status, testData.unsupportedContentTypeStatus, 'Unsupported content type status');
   });
 });
 
@@ -238,19 +275,19 @@ test.describe('Login API - Positive, Negative and Security', () => {
     validateNoSensitiveLeakage(loginResponse.data);
   });
 
-  const invalidLoginScenarios: { description: string; payload: LoginPayload }[] = [
-    { description: 'missing username', payload: { password: 'johna123@' } },
-    { description: 'missing password', payload: { username: uniqueUsername('loginmissingpass') } },
-    { description: 'empty username', payload: { username: '', password: 'johna123@' } },
-    { description: 'empty password', payload: { username: uniqueUsername('loginemptypass'), password: '' } },
-    { description: 'unregistered user', payload: { username: uniqueUsername('unregistered'), password: 'johna123@' } },
-  ];
+  const invalidLoginScenarios = testData.invalidLoginScenarios.map((scenario) => ({
+    description: scenario.description,
+    payload: normalizePayload({
+      ...scenario.payload,
+      username: normalizeDynamicUsername((scenario.payload as any).username),
+    }),
+  }));
 
   for (const scenario of invalidLoginScenarios) {
     test(`Testcase 9: Negative: POST /api/login should reject ${scenario.description}`, async () => {
       const response = await loginUser(scenario.payload, `Login with ${scenario.description}`);
 
-      await validateStatusIn(response.status, [400, 401, 403, 404, 422], `Status code for ${scenario.description}`);
+      await validateStatusIn(response.status, testData.invalidLoginStatus, `Status code for ${scenario.description}`);
       validateNoSensitiveLeakage(response.data);
     });
   }
@@ -264,23 +301,13 @@ test.describe('Login API - Positive, Negative and Security', () => {
       responseType: 'full',
     });
 
-    await validateStatusIn(response.status, [404, 405], 'Unsupported login method status');
+    await validateStatusIn(response.status, testData.unsupportedMethodStatus, 'Unsupported login method status');
   });
 
-  const loginSecurityScenarios: { description: string; payload: LoginPayload }[] = [
-    {
-      description: 'SQL injection pattern in username',
-      payload: { username: `' OR '1'='1${Date.now()}${Math.floor(Math.random() * 100000)}@`, password: 'johna123@' },
-    },
-    {
-      description: 'script tag in username',
-      payload: { username: `<script>alert("xss")</script>${Date.now()}${Math.floor(Math.random() * 100000)}@`, password: 'johna123@' },
-    },
-    {
-      description: 'oversized username',
-      payload: { username: `${'b'.repeat(240)}${Date.now()}${Math.floor(Math.random() * 100000)}@`, password: 'johna123@' },
-    },
-  ];
+  const loginSecurityScenarios = testData.loginSecurityScenarios.map((scenario) => ({
+    description: scenario.description,
+    payload: buildLoginSecurityPayload(scenario),
+  }));
 
   for (const scenario of loginSecurityScenarios) {
     test(`Testcase 11: Security: POST /api/login should handle ${scenario.description} without server error or sensitive leakage`, async () => {
@@ -296,12 +323,12 @@ test.describe('Login API - Positive, Negative and Security', () => {
     const response = await apiUtil.makeRequest({
       method: 'POST',
       url: LOGIN_URL,
-      data: JSON.stringify({ username: uniqueUsername('logincontent'), password: 'johna123@' }),
+      data: JSON.stringify({ username: uniqueUsername('logincontent'), password: testData.defaultPassword }),
       headers: { 'Content-Type': 'text/plain' },
       logMessage: 'Login with unsupported content type',
       responseType: 'full',
     });
 
-    await validateStatusIn(response.status, [400, 415], 'Unsupported login content type status');
+    await validateStatusIn(response.status, testData.unsupportedContentTypeStatus, 'Unsupported login content type status');
   });
 });

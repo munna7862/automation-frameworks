@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:interop": "cross-env ENVIRONMENT=INTEROP TZ=Australia/Adelaide npx playwright test --config=src/config/playwright.config.ts",
+    "test": "cross-env TZ=Australia/Adelaide npx playwright test --config=src/config/playwright.config.ts",
     "generate-allure": "allure generate --clean reports/allure-results -o reports/allure-report",
     "open-allure": "allure open reports/allure-report",
     "report": "npm run generate-allure && npm run open-allure",
-    "clean-reports": "rimraf reports logs playwright-report"
+    "clean-reports": "rimraf reports logs playwright-report test-results"
   },
   "keywords": [],
   "author": "",

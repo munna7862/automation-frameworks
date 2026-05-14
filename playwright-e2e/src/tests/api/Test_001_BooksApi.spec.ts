@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { envConfig } from '../../config/env.config';
 import apiUtil from '../../utils/api.util';
 import { CommonFunctions } from '../../utils/common.util';
+import testData from '../../test-data/api/Test_001_BooksApi.json';
 
 const commonUtil = new CommonFunctions();
 const BOOKS_URL = `${envConfig.apiBaseUrl}/api/books`;
@@ -37,7 +38,7 @@ test.describe('Books API - List and Security', () => {
   test('Testcase 1: GET /api/books?page=1&limit=8 - should return a paged book list with valid contract for page 1', async () => {
     const response = await apiUtil.makeRequest({
       method: 'GET',
-      url: `${BOOKS_URL}?page=1&limit=8`,
+      url: `${BOOKS_URL}?page=${testData.defaultPagination.page}&limit=${testData.defaultPagination.limit}`,
       headers: header,
       logMessage: 'Get paged books list',
       responseType: 'full',
@@ -49,8 +50,8 @@ test.describe('Books API - List and Security', () => {
     await commonUtil.compareTwoValues(typeof response.data?.page, 'number', 'Page is numeric');
     await commonUtil.compareTwoValues(typeof response.data?.totalPages, 'number', 'Total pages is numeric');
     await commonUtil.compareTwoValues(typeof response.data?.limit, 'number', 'Limit is numeric');
-    await commonUtil.compareTwoValues(response.data?.page, 1, 'Returned page is 1');
-    await commonUtil.compareTwoValues(response.data?.limit, 8, 'Returned limit is 8');
+    await commonUtil.compareTwoValues(response.data?.page, testData.defaultPagination.page, `Returned page is ${testData.defaultPagination.page}`);
+    await commonUtil.compareTwoValues(response.data?.limit, testData.defaultPagination.limit, `Returned limit is ${testData.defaultPagination.limit}`);
 
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data?.books)).toBeTruthy();
@@ -58,8 +59,8 @@ test.describe('Books API - List and Security', () => {
     expect(typeof response.data?.page).toBe('number');
     expect(typeof response.data?.totalPages).toBe('number');
     expect(typeof response.data?.limit).toBe('number');
-    expect(response.data?.page).toBe(1);
-    expect(response.data?.limit).toBe(8);
+    expect(response.data?.page).toBe(testData.defaultPagination.page);
+    expect(response.data?.limit).toBe(testData.defaultPagination.limit);
 
     const books = response.data?.books ?? [];
     await commonUtil.compareTwoValues(books.length > 0, true, `Books array contains ${books.length} entries`);
@@ -77,7 +78,7 @@ test.describe('Books API - List and Security', () => {
   test('Testcase 2: GET /api/books?page=2&limit=8 - should return a paged book list with valid contract for page 2', async () => {
     const response = await apiUtil.makeRequest({
       method: 'GET',
-      url: `${BOOKS_URL}?page=2&limit=8`,
+      url: `${BOOKS_URL}?page=${testData.page2Pagination.page}&limit=${testData.page2Pagination.limit}`,
       headers: header,
       logMessage: 'Get books for page 2',
       responseType: 'full',
@@ -89,8 +90,8 @@ test.describe('Books API - List and Security', () => {
     await commonUtil.compareTwoValues(typeof response.data?.page, 'number', 'Page is numeric');
     await commonUtil.compareTwoValues(typeof response.data?.totalPages, 'number', 'Total pages is numeric');
     await commonUtil.compareTwoValues(typeof response.data?.limit, 'number', 'Limit is numeric');
-    await commonUtil.compareTwoValues(response.data?.page, 2, 'Returned page is 2');
-    await commonUtil.compareTwoValues(response.data?.limit, 8, 'Returned limit is 8');
+    await commonUtil.compareTwoValues(response.data?.page, testData.page2Pagination.page, `Returned page is ${testData.page2Pagination.page}`);
+    await commonUtil.compareTwoValues(response.data?.limit, testData.page2Pagination.limit, `Returned limit is ${testData.page2Pagination.limit}`);
 
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data?.books)).toBeTruthy();
@@ -98,8 +99,8 @@ test.describe('Books API - List and Security', () => {
     expect(typeof response.data?.page).toBe('number');
     expect(typeof response.data?.totalPages).toBe('number');
     expect(typeof response.data?.limit).toBe('number');
-    expect(response.data?.page).toBe(2);
-    expect(response.data?.limit).toBe(8);
+    expect(response.data?.page).toBe(testData.page2Pagination.page);
+    expect(response.data?.limit).toBe(testData.page2Pagination.limit);
 
     const books = response.data?.books ?? [];
     await commonUtil.compareTwoValues(books.length > 0, true, `Books array contains ${books.length} entries`);
@@ -115,12 +116,7 @@ test.describe('Books API - List and Security', () => {
   });
 
   // Parameterized Pagination & Boundary Testing
-  const paginationScenarios = [
-    { page: 1, limit: 5, description: 'Standard page 1' },
-    { page: 2, limit: 5, description: 'Standard page 2' },
-    { page: 1, limit: 1, description: 'Minimum limit' },
-    { page: 9999, limit: 10, description: 'Exceeding total pages' },
-  ];
+  const paginationScenarios = testData.paginationScenarios;
 
   for (const scenario of paginationScenarios) {
     test(`Testcase 3: Pagination: ${scenario.description} (page=${scenario.page}, limit=${scenario.limit})`, async () => {
@@ -160,11 +156,7 @@ test.describe('Books API - List and Security', () => {
   });
 
   // Negative Testing - Invalid Query Parameters
-  const negativeScenarios = [
-    { query: 'page=abc&limit=10', description: 'String instead of number' },
-    { query: 'page=-1&limit=10', description: 'Negative page number' },
-    { query: 'page=1&limit=0', description: 'Zero limit' },
-  ];
+  const negativeScenarios = testData.negativeScenarios;
 
   for (const neg of negativeScenarios) {
     test(`Testcase 5: Negative: ${neg.description}`, async () => {
@@ -177,8 +169,8 @@ test.describe('Books API - List and Security', () => {
       });
 
       // Depending on API design, this should be 400 Bad Request or default to 200 with fallback values
-      await commonUtil.compareTwoValues([200, 400].includes(response.status), true, `Status code should be 200 or 400 for invalid parameters: ${neg.description}`);
-      expect([200, 400]).toContain(response.status);
+      await commonUtil.compareTwoValues(testData.allowedInvalidParameterStatus.includes(response.status), true, `Status code should be ${testData.allowedInvalidParameterStatus.join(' or ')} for invalid parameters: ${neg.description}`);
+      expect(testData.allowedInvalidParameterStatus).toContain(response.status);
     });
   }
 
@@ -206,10 +198,10 @@ test.describe('Books API - List and Security', () => {
       responseType: 'full'
     });
     await commonUtil.compareTwoValues(response.status, 200, 'Status code should be 200 when no query parameters are provided');
-    await commonUtil.compareTwoValues(response.data.length, 15, 'should provide all books');
+    await commonUtil.compareTwoValues(response.data.length, testData.expectedAllBooksCount, `should provide all books count ${testData.expectedAllBooksCount}`);
     await commonUtil.compareTwoValues(Array.isArray(response.data), true, 'Response should be an array');
     expect(response.status).toBe(200);
-    expect(response.data.length).toBe(15);
+    expect(response.data.length).toBe(testData.expectedAllBooksCount);
     expect(Array.isArray(response.data)).toBeTruthy();
   });
 

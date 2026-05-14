@@ -42,7 +42,7 @@ export default defineConfig({
   fullyParallel: false,  // Enable parallel execution
   timeout: 300 * 1000,
   retries: 1,
-  workers: process.env.CI ? 2 : undefined,
+  workers: process.env.CI ? 2 : 1,
 
   reporter: [
     ['html', { open: 'never' }],
