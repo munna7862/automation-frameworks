@@ -18,11 +18,11 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.58.0-jammy
 
     env:
-      ENV: qa
-      BASE_URL: https://automationexercise.com/
-      API_BASE_URL: https://reqres.in
+      ENV: INTEROP
+      BASE_URL: https://buggy-books-fe.onrender.com/
+      API_BASE_URL: https://buggy-books.onrender.com
       HEADLESS: true
-      BROWSER: chromium
+      BROWSER: chrome
 
     steps:
       - uses: actions/checkout@v4
