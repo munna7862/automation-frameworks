@@ -41,7 +41,7 @@ jobs:
           ENVIRONMENT: INTEROP
           TZ: Australia/Adelaide
         run: |
-          npm run test -- --reporter=json
+          npm run test --reporter=json
         continue-on-error: true
 
       # Upload test results JSON for summary
