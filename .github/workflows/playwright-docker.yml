@@ -38,15 +38,8 @@ jobs:
           ENVIRONMENT: INTEROP
           TZ: Australia/Adelaide
         run: |
-          npm run test -- --reporter=json
+          npm run test
         continue-on-error: true
-
-      - name: Upload Test Results JSON
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-json
-          path: playwright-e2e/results.json
 
       - name: Upload Allure Results
         if: always()
@@ -75,31 +68,9 @@ jobs:
           name: allure-results
           path: allure-results
 
-      - name: Download Test Results JSON
-        uses: actions/download-artifact@v4
-        with:
-          name: test-results-json
-          path: test-results-json
-
-      - name: Generate Test Summary
+      - name: Test Report
         run: |
-          if [ -f test-results-json/results.json ]; then
-            PASSED=$(jq '.suites | map(.specs | map(.tests | map(select(.results[0].status == "passed")) | length) | add) | add' test-results-json/results.json)
-            FAILED=$(jq '.suites | map(.specs | map(.tests | map(select(.results[0].status == "failed")) | length) | add) | add' test-results-json/results.json)
-            TOTAL=$((PASSED + FAILED))
-            DURATION=$(jq '.stats.duration' test-results-json/results.json)
-            OWNER="${{ github.repository_owner }}"
-            REPO_NAME="${{ github.event.repository.name }}"
-            echo "## Test Summary" >> $GITHUB_STEP_SUMMARY
-            echo "- **Total Tests:** $TOTAL" >> $GITHUB_STEP_SUMMARY
-            echo "- **Passed:** $PASSED" >> $GITHUB_STEP_SUMMARY
-            echo "- **Failed:** $FAILED" >> $GITHUB_STEP_SUMMARY
-            echo "- **Duration:** $(($DURATION / 1000)) seconds" >> $GITHUB_STEP_SUMMARY
-            echo "- **Report Link:** https://$OWNER.github.io/$REPO_NAME/AutomationReports/UI/${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "## Test Summary" >> $GITHUB_STEP_SUMMARY
-            echo "No test results found." >> $GITHUB_STEP_SUMMARY
-          fi
+          echo "- **Report Link:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/AutomationReports/UI/${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
