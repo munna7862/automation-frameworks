@@ -1,0 +1,11 @@
+[2026-05-15 15:15:05] INFO: 🚀 Making POST request to https://buggy-books.onrender.com/api/register
+[2026-05-15 15:15:05] INFO: 📤 Request Payload: {
+  "username": "security177882388116847547@",
+  "password": "johna123@"
+}
+[2026-05-15 15:15:06] INFO: ✅ Security validation for oversized username Success! Status: 201 Created
+[2026-05-15 15:15:06] INFO: 📥 Response Payload: {
+  "message": "Registration successful",
+  "username": "security177882388116847547@"
+}
+[2026-05-15 15:15:06] INFO:  Security status for oversized username Success !! Actual and Expected Values are:: true
