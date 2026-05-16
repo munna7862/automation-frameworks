@@ -104,7 +104,7 @@ jobs:
           echo "Running tests for: ${{ matrix.shard.folder }}"
           echo "Shard: ${{ matrix.shard.index }}/${{ matrix.shard.total }}"
           echo "Workers: ${{ matrix.shard.workers }}"
-          npx playwright test src/tests/${{ matrix.shard.folder }} --config=src/config/playwright.config.ts --shard=${{ matrix.shard.index }}/${{ matrix.shard.total }} --workers=${{ matrix.shard.workers }}
+          npx playwright test src/tests/${{ matrix.shard.folder }} --config=src/config/playwright.config.ts --workers=${{ matrix.shard.workers }}
         continue-on-error: true
 
       - name: Upload Allure Results
