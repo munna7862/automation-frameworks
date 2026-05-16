@@ -1,0 +1,13 @@
+[2026-05-17 00:59:34] INFO: Network interception enabled with mode: api-only
+[2026-05-17 00:59:34] INFO: Clicking on Login link
+[2026-05-17 00:59:34] INFO: Entering username: autoTestUserv7gqM
+[2026-05-17 00:59:34] INFO: Entering password: AutoTest@123
+[2026-05-17 00:59:34] INFO: Clicking on Sign In button
+[2026-05-17 00:59:35] INFO: Verifying landing on Checkout Page
+[2026-05-17 00:59:35] INFO: Checking if Checkout label is visible
+[2026-05-17 00:59:36] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-05-17 00:59:36] INFO:  Verifying if user logged in successfully Success !! Actual and Expected Values are:: true
+[2026-05-17 00:59:36] INFO: Clicking on Logout button
+[2026-05-17 00:59:37] INFO: Checking if Login link is visible on Catalog page - Element is visible
+[2026-05-17 00:59:37] INFO:  Verifying if user logged out successfully Success !! Actual and Expected Values are:: true
+[2026-05-17 00:59:39] INFO: Captured 4 network calls. Artifact: /__w/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/ui-UserManagement-Test_001-b0c52--Registered-User-and-Logout-Google-Chrome/network-log.json

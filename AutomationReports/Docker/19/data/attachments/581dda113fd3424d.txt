@@ -1,0 +1,2 @@
+[2026-05-17 00:59:13] INFO: Network interception enabled with mode: api-only
+[2026-05-17 00:59:19] INFO: Captured 1 network calls. Artifact: /__w/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/ui-BookCatalog-Test_001_In-796fe-y-Books-Count-in-pagination-Google-Chrome/network-log.json
