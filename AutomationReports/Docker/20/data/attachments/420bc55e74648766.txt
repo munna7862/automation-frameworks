@@ -1,0 +1,12 @@
+[2026-05-17 01:06:03] INFO: 🚀 Making POST request to https://buggy-books.onrender.com/api/login
+[2026-05-17 01:06:03] INFO: 📤 Request Payload: {
+  "username": "<script>alert(\"xss\")</script>177894575909872340@",
+  "password": "johna123@"
+}
+[2026-05-17 01:06:03] ERROR: ❌ Login security validation for script tag in username Failed! Status: 401 Unauthorized | Response: {
+  "error": "Unauthorized: Invalid credentials"
+}
+[2026-05-17 01:06:03] ERROR: ❌ Login security validation for script tag in username Failed! Status: 401 Unauthorized | Response: {
+  "error": "Unauthorized: Invalid credentials"
+}
+[2026-05-17 01:06:03] INFO:  Security status for script tag in username Success !! Actual and Expected Values are:: true

@@ -1,0 +1,12 @@
+[2026-05-17 01:05:56] INFO: Network interception enabled with mode: api-only
+[2026-05-17 01:05:56] INFO: Clicking on Sign Up link
+[2026-05-17 01:05:56] INFO: Entering full name: autoTestUserfRGz4
+[2026-05-17 01:05:56] INFO: Entering username: autoTestUserwZAS9
+[2026-05-17 01:05:56] INFO: Entering password: AutoTest@123
+[2026-05-17 01:05:56] INFO: Entering confirming password: AutoTest@123
+[2026-05-17 01:05:56] INFO: Clicking on Create Account button
+[2026-05-17 01:05:57] INFO: Verifying landing on Checkout Page
+[2026-05-17 01:05:57] INFO: Checking if Checkout label is visible
+[2026-05-17 01:05:58] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-05-17 01:05:58] INFO:  Verifying if user registered successfully Success !! Actual and Expected Values are:: true
+[2026-05-17 01:06:00] INFO: Captured 3 network calls. Artifact: /__w/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/ui-UserManagement-Test_001-cd0d1-estcase-1-Register-New-User-Google-Chrome/network-log.json
