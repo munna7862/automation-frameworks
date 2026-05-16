@@ -1,7 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../../../core/base/base.test';
-import { envConfig } from '../../../config/env.config';
-import TestData from '../../../test-data/ui/UserManagement/Test_002_LoginWithExistingUser.json';
+import { envConfig, getLoginCredentials } from '../../../config/env.config';
 import { CatalogPage } from '../../../pages/catalog.page';
 import { AuthUtility } from '../../../utils/auth.util';
 
@@ -13,7 +12,8 @@ test.describe('Login With Existing User', () => {
 
     await test.step('Perform Login', async () => {
       await catalogPage.clickNavigateLink("Login");
-      const isLogin = await signUpPage.login(TestData.USER_NAME, TestData.PASSWORD);
+      const { userName, password } = getLoginCredentials();
+      const isLogin = await signUpPage.login(userName, password);
       let isNavigated = await commonFunctions.compareTwoValues(isLogin, true, "Verifying if user logged in successfully");
       expect(isNavigated).toBeTruthy();
     });

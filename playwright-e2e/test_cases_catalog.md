@@ -11,7 +11,7 @@ This document provides a detailed list of test cases in English for the BuggyBoo
 | ID | Title | Description | Priority |
 |:---|:---|:---|:---|
 | **UI_AUTH_01** | Successful Registration | Navigate to `/register`, fill all fields with valid data, and submit. Verify redirect to Home and presence of username in navbar. | Smoke |
-| **UI_AUTH_02** | Login with Valid Credentials | Navigate to `/login`, enter `admin` / `password123`. Verify successful login and cookie persistence. | Smoke |
+| **UI_AUTH_02** | Login with Valid Credentials | Navigate to `/login`, enter credentials from `USER_NAME` / `PASSWORD` environment variables. Verify successful login and cookie persistence. | Smoke |
 | **UI_AUTH_03** | Login Validation Errors | Attempt login with wrong password. Verify error message "Unauthorized: Invalid credentials" appears. | Regression |
 | **UI_AUTH_04** | Password Strength Indicator | On Register page, type a simple password ("123") and verify label is "weak". Type a complex one and verify label is "strong". | Regression |
 | **UI_AUTH_05** | Logout Functionality | Click "Logout" in the navbar. Verify user is redirected to Login and cannot access the `/cart` page directly. | Smoke |

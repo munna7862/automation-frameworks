@@ -77,6 +77,8 @@ jobs:
       API_BASE_URL: https://buggy-books.onrender.com
       HEADLESS: ${{ github.event.inputs.headless }}
       BROWSER: chrome
+      USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      PASSWORD: ${{ secrets.E2E_PASSWORD }}
       TEST_SELECTION: ${{ github.event.inputs.test_selection || 'ALL' }}
       SHARD_INDEX: ${{ matrix.shard.index }}
       SHARD_TOTAL: ${{ matrix.shard.total }}
