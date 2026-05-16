@@ -1,0 +1,6 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","3776","Testcase 2: Login Using Saved Session Storage","Google Chrome","Sat May 16 15:03:52 UTC 2026","passed","Sat May 16 15:03:56 UTC 2026","Login With Existing User","ui/UserManagement/Test_002_LoginWithExistingUser.spec.ts","",""
+"","4560","Testcase 1: Login With Existing User","Google Chrome","Sat May 16 15:03:48 UTC 2026","passed","Sat May 16 15:03:52 UTC 2026","Login With Existing User","ui/UserManagement/Test_002_LoginWithExistingUser.spec.ts","",""
+"","4535","Testcase 1: Register New User","Google Chrome","Sat May 16 15:03:38 UTC 2026","passed","Sat May 16 15:03:43 UTC 2026","Register New User","ui/UserManagement/Test_001_RegisterUser.spec.ts","",""
+"","7418","Testcase: Verify Books Count in pagination","Google Chrome","Sat May 16 15:03:35 UTC 2026","passed","Sat May 16 15:03:43 UTC 2026","Initial Catalog","ui/BookCatalog/Test_001_InitialCatalog.spec.ts","",""
+"","4521","Testcase 2: Login With Registered User and Logout","Google Chrome","Sat May 16 15:03:43 UTC 2026","passed","Sat May 16 15:03:48 UTC 2026","Register New User","ui/UserManagement/Test_001_RegisterUser.spec.ts","",""
