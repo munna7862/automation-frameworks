@@ -1,3 +1,0 @@
-[2026-05-15 03:08:36] INFO: Network interception enabled with mode: api-only
-[2026-05-15 03:08:37] INFO: Clicking on Login link
-[2026-05-15 03:09:38] INFO: Captured 14 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/ui-UserManagement-Test_002-a2773--1-Login-With-Existing-User-Google-Chrome/network-log.json
