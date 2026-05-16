@@ -20,8 +20,21 @@ export class CatalogPage extends BasePage {
     return this.page.locator(`//button[@id='pagination-page-${btnNumber}']`);
   }
 
+  private get btnAddToCartFirstBook(): Locator {
+    return this.page.locator('#add-to-cart-1');
+  }
+
+  private get alertStatus(): Locator {
+    return this.page.getByRole('status');
+  }
+
 
   // Add methods to interact with the Sign Up page elements
+  public async navigateToCatalog(baseUrl: string): Promise<void> {
+    await this.logMessage('INFO', `Navigating to catalog page: ${baseUrl}`);
+    await this.page.goto(baseUrl);
+  }
+
   public async clickNavigateLink(sLink: string) {
     await this.doClick(this.getNavigateLink(sLink), `Clicking on ${sLink} link`);
   }
@@ -62,6 +75,24 @@ export class CatalogPage extends BasePage {
         await this.logMessage('WARN', `Pagination button number ${btnNumber} is not active yet. Retrying... (${i + 1}/5)`);
       }
     }
+  }
+
+  public async clickAddToCartForFirstBook(): Promise<void> {
+    await this.doClick(this.btnAddToCartFirstBook, "Clicking on Add to Cart button for first book");
+  }
+
+  public async getCartStatusMessage(): Promise<string> {
+    return await this.doGetText(this.alertStatus, "Getting add to cart status message");
+  }
+
+  public async waitForCartStatusMessage(expectedMessage: string): Promise<void> {
+    await this.logMessage('INFO', `Waiting for cart status message: ${expectedMessage}`);
+    await expect(this.page.getByRole('status').filter({ hasText: expectedMessage })).toBeVisible({ timeout: 60000 });
+    await this.logMessage('INFO', `Cart status message "${expectedMessage}" is visible`);
+  }
+
+  public async addFirstBookToCart(): Promise<void> {
+    await this.clickAddToCartForFirstBook();
   }
 
 }
