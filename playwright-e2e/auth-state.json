@@ -1,0 +1,25 @@
+{
+  "cookies": [
+    {
+      "name": "token",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNzc4OTEwMjA3LCJleHAiOjE3Nzg5MTM4MDd9.O17ec_ABGA2KKmpypVYFIfP7pjxI700nCEiFMPB4MsU",
+      "domain": "buggy-books.onrender.com",
+      "path": "/",
+      "expires": 1778913812.677816,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://buggy-books-fe.onrender.com",
+      "localStorage": [
+        {
+          "name": "authUser",
+          "value": "admin"
+        }
+      ]
+    }
+  ]
+}
