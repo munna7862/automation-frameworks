@@ -99,11 +99,12 @@ jobs:
         env:
           ENVIRONMENT: INTEROP
           TZ: Australia/Adelaide
+          TEST_FOLDER: ${{ matrix.shard.folder }}
         run: |
           echo "Running tests for: ${{ matrix.shard.folder }}"
           echo "Shard: ${{ matrix.shard.index }}/${{ matrix.shard.total }}"
           echo "Workers: ${{ matrix.shard.workers }}"
-          npx playwright test "src/tests/${{ matrix.shard.folder }}/**" --config=src/config/playwright.config.ts --shard=${{ matrix.shard.index }}/${{ matrix.shard.total }} --workers=${{ matrix.shard.workers }}
+          npx playwright test "src/tests/${{ matrix.shard.folder }}/**/*.spec.ts" --config=src/config/playwright.config.ts --shard=${{ matrix.shard.index }}/${{ matrix.shard.total }} --workers=${{ matrix.shard.workers }}
         continue-on-error: true
 
       - name: Upload Allure Results
