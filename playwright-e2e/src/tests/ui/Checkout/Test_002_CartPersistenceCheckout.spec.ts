@@ -5,14 +5,16 @@ import { envConfig, getLoginCredentials } from '../../../config/env.config';
 import { CartPage } from '../../../pages/cart.page';
 import { CheckoutPage } from '../../../pages/checkout.page';
 
-type CompleteBookPurchaseTestData = {
+type CartPersistenceCheckoutTestData = {
   book: {
     id: number;
   };
   payment: {
     firstName: string;
     lastName: string;
-    cardNumber: string;
+    invalidCardNumber: string;
+    validCardNumber: string;
+    retryAttempts: number;
   };
   expected: {
     addToCartMessage: string;
@@ -23,15 +25,16 @@ type CompleteBookPurchaseTestData = {
   };
 };
 
-const testDataPath = path.join(__dirname, '../../../test-data/ui/Checkout/Test_001_CompleteBookPurchase.json');
-const TestData = require(testDataPath) as CompleteBookPurchaseTestData;
+const testDataPath = path.join(__dirname, '../../../test-data/ui/Checkout/Test_002_CartPersistenceCheckout.json');
+const TestData = require(testDataPath) as CartPersistenceCheckoutTestData;
 
-test.describe('Complete Book Purchase', () => {
+test.describe('Cart Persistence Checkout', () => {
 
-  test('Testcase 1: Complete book purchase successfully', async ({ signUpPage, catalogPage, commonFunctions, page, networkInterceptor }) => {
+  test('Testcase 1: Complete checkout after cart persists across logout and login', async ({ signUpPage, catalogPage, commonFunctions, page, networkInterceptor }) => {
     // networkInterceptor fixture automatically captures network logs (no direct usage needed)
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
+    const { userName, password } = getLoginCredentials();
 
     await test.step('Navigate to Book Catalog', async () => {
       await catalogPage.navigateToCatalog(envConfig.baseUrl);
@@ -39,7 +42,6 @@ test.describe('Complete Book Purchase', () => {
 
     await test.step('Login with Existing User', async () => {
       await catalogPage.clickNavigateLink("Login");
-      const { userName, password } = getLoginCredentials();
       const isLogin = await signUpPage.login(userName, password);
       const isNavigated = await commonFunctions.compareTwoValues(isLogin, true, "Verifying if user logged in successfully");
       expect(isNavigated).toBeTruthy();
@@ -51,12 +53,30 @@ test.describe('Complete Book Purchase', () => {
       await catalogPage.clickNavigateLink("Catalog");
     });
 
-    await test.step('Add First Book to Cart', async () => {
+    await test.step('Add Book to Cart', async () => {
       await catalogPage.addBookToCart(TestData.book.id);
       await catalogPage.waitForCartStatusMessage(TestData.expected.addToCartMessage);
     });
 
-    await test.step('Review Cart', async () => {
+    await test.step('Review Cart Before Logout', async () => {
+      await cartPage.openCart();
+      expect(await cartPage.getCartItemText()).toContain(TestData.expected.bookPrice);
+      expect(await cartPage.getCartTotalText()).toContain(TestData.expected.cartTotal);
+    });
+
+    await test.step('Logout', async () => {
+      await catalogPage.clickLogout();
+      const isLogout = await commonFunctions.compareTwoValues(await catalogPage.isLoginVisible(), true, "Verifying if user logged out successfully");
+      expect(isLogout).toBeTruthy();
+    });
+
+    await test.step('Login Again with Existing User', async () => {
+      const isLogin = await signUpPage.login(userName, password);
+      const isNavigated = await commonFunctions.compareTwoValues(isLogin, true, "Verifying if user logged in successfully again");
+      expect(isNavigated).toBeTruthy();
+    });
+
+    await test.step('Verify Cart Persists After Login', async () => {
       await cartPage.openCart();
       expect(await cartPage.getCartItemText()).toContain(TestData.expected.bookPrice);
       expect(await cartPage.getCartTotalText()).toContain(TestData.expected.cartTotal);
@@ -67,8 +87,15 @@ test.describe('Complete Book Purchase', () => {
       await checkoutPage.waitForOrderTotalAmount(TestData.expected.checkoutTotal);
     });
 
-    await test.step('Complete Payment', async () => {
-      await checkoutPage.completePaymentSuccessfully(TestData.payment.firstName, TestData.payment.lastName, TestData.payment.cardNumber, TestData.expected.paymentSuccessMessage);
+    await test.step('Complete Payment After Correcting Card Number', async () => {
+      await checkoutPage.completePaymentAfterInvalidCardRetry(
+        TestData.payment.firstName,
+        TestData.payment.lastName,
+        TestData.payment.invalidCardNumber,
+        TestData.payment.validCardNumber,
+        TestData.expected.paymentSuccessMessage,
+        TestData.payment.retryAttempts
+      );
     });
 
     await test.step('Logout', async () => {

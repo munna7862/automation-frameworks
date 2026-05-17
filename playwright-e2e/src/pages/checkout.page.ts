@@ -47,6 +47,35 @@ export class CheckoutPage extends BasePage {
     await this.doClick(this.completePaymentButton, "Clicking on Complete Payment button");
   }
 
+  private async enterPaymentDetails(firstName: string, lastName: string, cardNumber: string): Promise<void> {
+    await this.enterFirstName(firstName);
+    await this.enterLastName(lastName);
+    await this.enterCardNumber(cardNumber);
+  }
+
+  private async clickCompletePaymentMultipleTimes(attempts: number): Promise<void> {
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+      await this.clickCompletePayment();
+    }
+  }
+
+  private async submitPaymentUntilConfirmation(expectedMessage: string, maxAttempts: number, successMessage: string): Promise<void> {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      await this.clickCompletePayment();
+
+      try {
+        await expect(this.orderConfirmationMessage).toContainText(expectedMessage, { timeout: 15000 });
+        await this.logMessage('INFO', successMessage);
+        return;
+      } catch (error: unknown) {
+        if (attempt === maxAttempts) {
+          throw error;
+        }
+        await this.logMessage('WARN', `Payment attempt ${attempt} did not complete successfully. Retrying payment.`);
+      }
+    }
+  }
+
   public async getOrderConfirmationMessage(): Promise<string> {
     await this.logMessage('INFO', "Getting order confirmation message");
     await this.orderConfirmationMessage.waitFor({ state: 'visible', timeout: 60000 });
@@ -59,23 +88,14 @@ export class CheckoutPage extends BasePage {
   }
 
   public async completePaymentSuccessfully(firstName: string, lastName: string, cardNumber: string, expectedMessage: string, maxAttempts: number = 3): Promise<void> {
-    await this.enterFirstName(firstName);
-    await this.enterLastName(lastName);
-    await this.enterCardNumber(cardNumber);
+    await this.enterPaymentDetails(firstName, lastName, cardNumber);
+    await this.submitPaymentUntilConfirmation(expectedMessage, maxAttempts, "Payment completed successfully and order confirmation message is displayed.");
+  }
 
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      await this.clickCompletePayment();
-
-      try {
-        await expect(this.orderConfirmationMessage).toContainText(expectedMessage, { timeout: 15000 });
-        await this.logMessage('INFO', "Payment completed successfully and order confirmation message is displayed.");
-        return;
-      } catch (error: unknown) {
-        if (attempt === maxAttempts) {
-          throw error;
-        }
-        await this.logMessage('WARN', `Payment attempt ${attempt} did not complete successfully. Retrying payment.`);
-      }
-    }
+  public async completePaymentAfterInvalidCardRetry(firstName: string, lastName: string, invalidCardNumber: string, validCardNumber: string, expectedMessage: string, retryAttempts: number = 3): Promise<void> {
+    await this.enterPaymentDetails(firstName, lastName, invalidCardNumber);
+    await this.clickCompletePaymentMultipleTimes(retryAttempts);
+    await this.enterCardNumber(validCardNumber);
+    await this.submitPaymentUntilConfirmation(expectedMessage, retryAttempts, "Payment completed successfully after correcting card number.");
   }
 }

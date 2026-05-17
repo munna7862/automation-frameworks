@@ -20,8 +20,8 @@ export class CatalogPage extends BasePage {
     return this.page.locator(`//button[@id='pagination-page-${btnNumber}']`);
   }
 
-  private get btnAddToCartFirstBook(): Locator {
-    return this.page.locator('#add-to-cart-1');
+  private getAddToCartButton(bookId: number): Locator {
+    return this.page.locator(`#add-to-cart-${bookId}`);
   }
 
   private get alertStatus(): Locator {
@@ -77,8 +77,8 @@ export class CatalogPage extends BasePage {
     }
   }
 
-  public async clickAddToCartForFirstBook(): Promise<void> {
-    await this.doClick(this.btnAddToCartFirstBook, "Clicking on Add to Cart button for first book");
+  public async clickAddToCartForBook(bookId: number): Promise<void> {
+    await this.doClick(this.getAddToCartButton(bookId), `Clicking on Add to Cart button for book id: ${bookId}`);
   }
 
   public async getCartStatusMessage(): Promise<string> {
@@ -91,10 +91,8 @@ export class CatalogPage extends BasePage {
     await this.logMessage('INFO', `Cart status message "${expectedMessage}" is visible`);
   }
 
-  public async addFirstBookToCart(): Promise<void> {
-    await this.clickAddToCartForFirstBook();
+  public async addBookToCart(bookId: number): Promise<void> {
+    await this.clickAddToCartForBook(bookId);
   }
 
 }
-
-

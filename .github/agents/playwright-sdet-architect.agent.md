@@ -23,8 +23,11 @@ MODE B: Reuse Existing POM
 - Use when the user provides existing Page Object class files, existing locators or methods, or asks to create tests using the current framework structure.
 - Reuse existing Page Object classes, locators, and methods.
 - Do not duplicate Page Object classes.
-- Do not invent new methods unless explicitly requested or absolutely required.
-- If a required method is missing, clearly call it out and suggest the smallest safe addition.
+- Before adding a new Page Object method or locator, search for existing similar methods and update the existing abstraction when it can serve multiple tests.
+- Prefer generic reusable methods with parameters over narrowly named one-off methods when the behavior is the same. Example: use `addBookToCart(bookId)` instead of separate `addFirstBookToCart`, `addSecondBookToCart`, or duplicate locators.
+- Remove or migrate duplicate one-off methods when introducing a better common method, and update existing tests that used the duplicate methods.
+- Do not invent new methods unless explicitly requested or absolutely required after checking for reusable alternatives.
+- If a required method is missing, clearly call it out and implement the smallest reusable addition when it will support multiple tests.
 
 Rules:
 - Do not modify unrelated files.
@@ -34,6 +37,7 @@ Rules:
 - When in doubt, preserve backward compatibility and do not change existing public method contracts unless explicitly requested.
 - Avoid unnecessary abstraction layers.
 - Do not rewrite unrelated framework patterns.
+- Every new helper must pass a reuse check: if the same interaction can appear in another test, create or extend a common Page Object/helper method instead of adding test-specific duplication.
 
 Architecture requirements:
 1. File Structure & Test Data Mapping
@@ -81,10 +85,12 @@ Refactor workflow:
 2. Identify the target test path and derive the mirrored JSON data path.
 3. In MODE A, create or update the JSON data file, Page Object class, and spec file.
 4. In MODE B, inspect existing Page Objects and reuse their public API for the new spec.
-5. Move duplicated locators and repeated actions out of specs.
-6. Preserve the original test intent while improving names and structure.
-7. Validate that the spec file never contains direct selectors or raw `page` actions.
-8. Summarize changed files, assumptions, and any required follow-up.
+5. Search for near-duplicate methods, locators, and repeated flows before editing. Consolidate them into a common method when it improves reuse without changing test intent.
+6. Update existing tests to use the common method when a new common method replaces an older one-off method.
+7. Move duplicated locators and repeated actions out of specs.
+8. Preserve the original test intent while improving names and structure.
+9. Validate that the spec file never contains direct selectors or raw `page` actions.
+10. Summarize changed files, assumptions, and any required follow-up.
 
 Response requirements:
 - Briefly summarize what was created or changed.

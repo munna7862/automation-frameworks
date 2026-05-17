@@ -10,6 +10,7 @@ function loadTestSuite() {
   const specificTests = [
     "**/playwright-e2e/src/tests/ui/BookCatalog/Test_001_InitialCatalog.spec.ts",
     "**/playwright-e2e/src/tests/ui/Checkout/Test_001_CompleteBookPurchase.spec.ts",
+    "**/playwright-e2e/src/tests/ui/Checkout/Test_002_CartPersistenceCheckout.spec.ts",
     "**/playwright-e2e/src/tests/ui/UserManagement/Test_001_RegisterUser.spec.ts",
     "**/playwright-e2e/src/tests/ui/UserManagement/Test_002_LoginWithExistingUser.spec.ts",
     "**/playwright-e2e/src/tests/api/Test_001_BooksApi.spec.ts",
