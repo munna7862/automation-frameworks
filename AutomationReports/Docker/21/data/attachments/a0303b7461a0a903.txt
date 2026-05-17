@@ -1,0 +1,11 @@
+[2026-05-17 14:05:21] INFO: 🚀 Making POST request to https://buggy-books.onrender.com/api/register
+[2026-05-17 14:05:21] INFO: 📤 Request Payload: {
+  "username": "security177899252012281136@",
+  "password": "johna123@"
+}
+[2026-05-17 14:05:22] INFO: ✅ Security validation for SQL injection pattern in username Success! Status: 201 Created
+[2026-05-17 14:05:22] INFO: 📥 Response Payload: {
+  "message": "Registration successful",
+  "username": "security177899252012281136@"
+}
+[2026-05-17 14:05:22] INFO:  Security status for SQL injection pattern in username Success !! Actual and Expected Values are:: true
