@@ -1,0 +1,15 @@
+[2026-07-17 20:54:20] INFO: Network interception enabled with mode: api-only
+[2026-07-17 20:54:20] INFO: Navigating to catalog page: https://buggy-books-fe.onrender.com/
+[2026-07-17 20:54:21] INFO: Clicking on Login link
+[2026-07-17 20:54:21] INFO: Entering username: admin
+[2026-07-17 20:54:21] INFO: Entering password: password123
+[2026-07-17 20:54:21] INFO: Clicking on Sign In button
+[2026-07-17 20:54:22] INFO: Verifying landing on Checkout Page
+[2026-07-17 20:54:22] INFO: Checking if Checkout label is visible
+[2026-07-17 20:54:22] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-07-17 20:54:22] INFO:  Verifying if user logged in successfully Success !! Actual and Expected Values are:: true
+[2026-07-17 20:54:22] INFO: Clicking on Cart link
+[2026-07-17 20:54:27] INFO: Clicking on Catalog link
+[2026-07-17 20:54:28] INFO: Clicking on Add to Cart button for book id: 2
+[2026-07-17 20:54:28] INFO: Waiting for cart status message: Added to cart!
+[2026-07-17 20:55:28] INFO: Captured 10 network calls. Artifact: /__w/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/ui-Checkout-Test_002_CartP-51a4b-sts-across-logout-and-login-Google-Chrome/network-log.json
