@@ -1,0 +1,8 @@
+[2026-07-17 21:05:44] INFO: Network interception enabled with mode: api-only
+[2026-07-17 21:05:44] INFO: Clicking on Login link
+[2026-07-17 21:05:44] INFO: Entering username: admin
+[2026-07-17 21:05:45] INFO: Entering password: password123
+[2026-07-17 21:05:45] INFO: Clicking on Sign In button
+[2026-07-17 21:05:45] INFO: Verifying landing on Checkout Page
+[2026-07-17 21:05:45] INFO: Checking if Checkout label is visible
+[2026-07-17 21:06:46] INFO: Captured 6 network calls. Artifact: /__w/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/ui-UserManagement-Test_002-a2773--1-Login-With-Existing-User-Google-Chrome/network-log.json

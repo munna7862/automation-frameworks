@@ -1,0 +1,6 @@
+[2026-07-17 21:05:41] INFO: 🚀 Making POST request to https://buggy-books.onrender.com/api/login
+[2026-07-17 21:05:41] INFO: 📤 Request Payload: "{\"username\":\"logincontent178428814187623640@\",\"password\":\"johna123@\"}"
+[2026-07-17 21:05:41] ERROR: ❌ Login with unsupported content type Failed! Status: 429 Too Many Requests | Response: "Too many requests, please try again later."
+[2026-07-17 21:05:41] ERROR: ❌ Login with unsupported content type Failed! Status: 429 Too Many Requests | Response: "Too many requests, please try again later."
+[2026-07-17 21:05:41] ERROR:  Unsupported login content type status Failed!! Expected Value:: true || Actual Value:: false
+[2026-07-17 21:05:41] ERROR:  Unsupported login content type status Failed!! Expected Value:: true || Actual Value:: false
