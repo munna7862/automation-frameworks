@@ -14,6 +14,7 @@ export class CheckoutPage extends BasePage {
   private readonly expiryInput: Locator;
   private readonly cvvInput: Locator;
   private readonly nextStepButton: Locator;
+  private readonly finalSubmitButton: Locator;
   private readonly orderConfirmationMessage: Locator;
 
   constructor(page: Page) {
@@ -27,7 +28,8 @@ export class CheckoutPage extends BasePage {
     this.expiryInput = this.page.locator('input[name="txt_exp_56"], input[placeholder="MM/YY"]');
     this.cvvInput = this.page.locator('input[name="txt_cvv_78"], input[placeholder="3 digits"]');
     this.nextStepButton = this.page.locator('button#wizard-next-btn');
-    this.orderConfirmationMessage = this.page.getByText(/Payment Successful! Thank you for your order\./i);
+    this.finalSubmitButton = this.page.getByRole('button', { name: 'Complete Payment' });
+    this.orderConfirmationMessage = this.page.locator('.payment-success-card');
   }
 
   public async getOrderTotalAmountText(): Promise<string> {
@@ -77,7 +79,11 @@ export class CheckoutPage extends BasePage {
   }
 
   public async clickFinalSubmit(): Promise<void> {
-    await this.doClick(this.nextStepButton, 'Clicking on final checkout submit button');
+    if (await this.doesElementExist(this.nextStepButton, 'Checking if Next Step button is visible')) {
+      await this.doClick(this.nextStepButton, 'Clicking on Next Step button on Payment page');
+    } else {
+      await this.doClick(this.finalSubmitButton, 'Clicking on Complete Payment button on Confirm page');
+    }
   }
 
   private async fillShippingDetails(firstName: string, lastName: string): Promise<void> {
@@ -95,9 +101,11 @@ export class CheckoutPage extends BasePage {
   }
 
   private async waitForConfirmationMessage(expectedMessage: string): Promise<void> {
-    const confirmationMessage = this.page.getByText(expectedMessage, { exact: false });
-    await this.logMessage('INFO', `Waiting for confirmation message: ${expectedMessage}`);
-    await expect(confirmationMessage).toBeVisible({ timeout: 60000 });
+    await this.logMessage('INFO', `Waiting for confirmation message containing: ${expectedMessage}`);
+    await expect(this.orderConfirmationMessage).toBeVisible({ timeout: 60000 });
+    const cardText = (await this.orderConfirmationMessage.textContent() || '').replace(/\s+/g, ' ');
+    expect(cardText).toContain('Payment Successful');
+    expect(cardText).toContain('Thank you for your order');
   }
 
   private async submitPaymentUntilConfirmation(expectedMessage: string, maxAttempts: number, successMessage: string): Promise<void> {
@@ -117,15 +125,16 @@ export class CheckoutPage extends BasePage {
   }
 
   public async getOrderConfirmationMessage(): Promise<string> {
-    await this.logMessage('INFO', 'Getting order confirmation message');
-    const confirmationMessage = this.page.getByText(/Payment Successful/i);
-    await confirmationMessage.waitFor({ state: 'visible', timeout: 60000 });
-    return await this.doGetText(confirmationMessage, 'Getting order confirmation message');
+    const text = await this.doGetText(this.orderConfirmationMessage, 'Getting order confirmation message');
+    return text.replace(/\s+/g, ' ').trim();
   }
 
   public async waitForOrderConfirmationMessage(expectedMessage: string): Promise<void> {
     await this.logMessage('INFO', `Waiting for order confirmation message: ${expectedMessage}`);
-    await expect(this.orderConfirmationMessage).toContainText(expectedMessage, { timeout: 60000 });
+    await expect(this.orderConfirmationMessage).toBeVisible({ timeout: 60000 });
+    const cardText = (await this.orderConfirmationMessage.textContent() || '').replace(/\s+/g, ' ');
+    expect(cardText).toContain('Payment Successful');
+    expect(cardText).toContain('Thank you for your order');
   }
 
   public async completePaymentSuccessfully(firstName: string, lastName: string, cardNumber: string, expectedMessage: string, maxAttempts: number = 3): Promise<void> {

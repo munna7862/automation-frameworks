@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test } from '../../../core/base/base.test';
+import { test } from '../../../core/base/base.fixture';
 import { envConfig } from '../../../config/env.config';
 import TestData from '../../../test-data/ui/BookCatalog/Test_001_InitialCatalog.json';
 
