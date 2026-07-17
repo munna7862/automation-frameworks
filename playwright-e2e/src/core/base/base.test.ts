@@ -5,6 +5,7 @@ import { CommonFunctions } from '../../utils/common.util';
 import { NetworkInterceptor } from '../network/network.interceptor';
 import { writeFile } from 'fs/promises';
 import { test as base } from '@playwright/test';
+import { captureFailureState } from './failure-hook';
 
 type TestFixtures = {
   signUpPage: SignUpPage;
@@ -45,5 +46,12 @@ export const test = base.extend<TestFixtures>({
   }
 
 });
+
+test.afterEach(async ({ page }, testInfo) => {
+  if (testInfo.status !== testInfo.expectedStatus) {
+    await captureFailureState(page, testInfo);
+  }
+});
+
 
 
