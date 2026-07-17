@@ -13,7 +13,7 @@ export class CatalogPage extends BasePage {
   }
 
   private get eleBooksCount(): Locator {
-    return this.page.locator("//table[@class='complex-item-box-alpha']");
+    return this.page.locator('.complex-item-box-alpha');
   }
 
   private getpaginationButton(btnNumber: number): Locator {
