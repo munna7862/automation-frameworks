@@ -1,0 +1,30 @@
+[2026-07-17 20:48:42] INFO: Network interception enabled with mode: api-only
+[2026-07-17 20:48:42] INFO: Navigating to catalog page: https://buggy-books-fe.onrender.com/
+[2026-07-17 20:48:43] INFO: Clicking on Login link
+[2026-07-17 20:48:43] INFO: Entering username: admin
+[2026-07-17 20:48:43] INFO: Entering password: password123
+[2026-07-17 20:48:43] INFO: Clicking on Sign In button
+[2026-07-17 20:48:44] INFO: Verifying landing on Checkout Page
+[2026-07-17 20:48:44] INFO: Checking if Checkout label is visible
+[2026-07-17 20:48:45] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-07-17 20:48:45] INFO:  Verifying if user logged in successfully Success !! Actual and Expected Values are:: true
+[2026-07-17 20:48:45] INFO: Clicking on Cart link
+[2026-07-17 20:48:50] INFO: Clicking on Catalog link
+[2026-07-17 20:48:50] INFO: Clicking on Add to Cart button for book id: 1
+[2026-07-17 20:48:50] INFO: Waiting for cart status message: Added to cart!
+[2026-07-17 20:48:51] INFO: Cart status message "Added to cart!" is visible
+[2026-07-17 20:48:51] INFO: Clicking on Cart link
+[2026-07-17 20:48:51] INFO: Getting cart item text
+[2026-07-17 20:48:51] INFO: Getting cart total text
+[2026-07-17 20:48:51] INFO: Clicking on cart total heading
+[2026-07-17 20:48:51] INFO: Clicking on Proceed to Checkout button
+[2026-07-17 20:48:51] INFO: Waiting for checkout order total amount: $10.99
+[2026-07-17 20:48:52] INFO: Entering first name: john
+[2026-07-17 20:48:52] INFO: Entering last name: cena
+[2026-07-17 20:48:52] INFO: Entering card number
+[2026-07-17 20:48:52] INFO: Clicking on Complete Payment button
+[2026-07-17 20:48:52] INFO: Payment completed successfully and order confirmation message is displayed.
+[2026-07-17 20:48:52] INFO: Clicking on Logout button
+[2026-07-17 20:48:52] INFO: Checking if Login link is visible on Catalog page - Element is visible
+[2026-07-17 20:48:52] INFO:  Verifying if user logged out successfully Success !! Actual and Expected Values are:: true
+[2026-07-17 20:48:52] INFO: Captured 10 network calls. Artifact: /__w/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/ui-Checkout-Test_001_Compl-3bb11--book-purchase-successfully-Google-Chrome/network-log.json
