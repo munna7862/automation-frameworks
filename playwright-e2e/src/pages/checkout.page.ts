@@ -2,28 +2,40 @@ import { BasePage } from '../core/base/base.page';
 import { expect, Locator, Page } from '@playwright/test';
 
 export class CheckoutPage extends BasePage {
+  private static readonly DEFAULT_SHIPPING_ADDRESS = '123 Buggy Lane';
+  private static readonly DEFAULT_SHIPPING_CITY = 'Stack City';
+
   private readonly checkoutSummary: Locator;
   private readonly firstNameInput: Locator;
   private readonly lastNameInput: Locator;
+  private readonly shippingAddressInput: Locator;
+  private readonly cityInput: Locator;
   private readonly cardNumberInput: Locator;
-  private readonly completePaymentButton: Locator;
+  private readonly expiryInput: Locator;
+  private readonly cvvInput: Locator;
+  private readonly nextStepButton: Locator;
   private readonly orderConfirmationMessage: Locator;
 
   constructor(page: Page) {
     super(page);
     this.checkoutSummary = this.page.getByRole('main');
-    this.firstNameInput = this.page.locator('input[name="txt_f1"]');
-    this.lastNameInput = this.page.locator('input[name="txt_f2"]');
-    this.cardNumberInput = this.page.locator('input[name="txt_c99"]');
-    this.completePaymentButton = this.page.getByRole('button', { name: 'Complete Payment' });
-    this.orderConfirmationMessage = this.page.getByRole('main');
+    this.firstNameInput = this.page.locator('input[name="txt_f1"], input[name="firstName"]');
+    this.lastNameInput = this.page.locator('input[name="txt_f2"], input[name="lastName"]');
+    this.shippingAddressInput = this.page.locator('input[name="txt_addr_12"], input[placeholder="123 Buggy Lane"]');
+    this.cityInput = this.page.locator('input[name="txt_city_34"], input[placeholder="Stack City"]');
+    this.cardNumberInput = this.page.locator('input[name="creditCard"], input[name="txt_c99"], input[placeholder="16-digit card number"]');
+    this.expiryInput = this.page.locator('input[name="txt_exp_56"], input[placeholder="MM/YY"]');
+    this.cvvInput = this.page.locator('input[name="txt_cvv_78"], input[placeholder="3 digits"]');
+    this.nextStepButton = this.page.locator('button#wizard-next-btn');
+    this.orderConfirmationMessage = this.page.getByText(/Payment Successful! Thank you for your order\./i);
   }
 
   public async getOrderTotalAmountText(): Promise<string> {
-    await this.logMessage('INFO', "Getting checkout order total amount");
+    await this.logMessage('INFO', 'Getting checkout order total amount');
     await this.checkoutSummary.waitFor({ state: 'visible', timeout: 60000 });
-    await this.logMessage('INFO', "Checkout summary is visible, retrieving total amount text is: " + (await this.checkoutSummary.textContent() ?? ''));
-    return await this.checkoutSummary.textContent() ?? '';
+    const text = await this.checkoutSummary.textContent() ?? '';
+    await this.logMessage('INFO', `Checkout summary is visible, retrieving total amount text is: ${text}`);
+    return text;
   }
 
   public async waitForOrderTotalAmount(expectedTotal: string): Promise<void> {
@@ -39,32 +51,60 @@ export class CheckoutPage extends BasePage {
     await this.doEnterText(this.lastNameInput, lastName, `Entering last name: ${lastName}`);
   }
 
+  public async enterShippingAddress(address: string): Promise<void> {
+    await this.doEnterText(this.shippingAddressInput, address, `Entering shipping address: ${address}`);
+  }
+
+  public async enterCity(city: string): Promise<void> {
+    await this.doEnterText(this.cityInput, city, `Entering city: ${city}`);
+  }
+
   public async enterCardNumber(cardNumber: string): Promise<void> {
-    await this.doEnterText(this.cardNumberInput, cardNumber, "Entering card number");
+    await this.doEnterText(this.cardNumberInput, cardNumber, 'Entering card number');
   }
 
-  public async clickCompletePayment(): Promise<void> {
-    await this.doClick(this.completePaymentButton, "Clicking on Complete Payment button");
+  public async enterExpiry(expiry: string): Promise<void> {
+    await this.doEnterText(this.expiryInput, expiry, `Entering card expiry: ${expiry}`);
   }
 
-  private async enterPaymentDetails(firstName: string, lastName: string, cardNumber: string): Promise<void> {
+  public async enterCvv(cvv: string): Promise<void> {
+    await this.doEnterText(this.cvvInput, cvv, `Entering card CVV: ${cvv}`);
+  }
+
+  public async clickNextStep(): Promise<void> {
+    await this.doClick(this.nextStepButton, 'Clicking on Next Step button');
+    await this.cardNumberInput.waitFor({ state: 'visible', timeout: 60000 });
+  }
+
+  public async clickFinalSubmit(): Promise<void> {
+    await this.doClick(this.nextStepButton, 'Clicking on final checkout submit button');
+  }
+
+  private async fillShippingDetails(firstName: string, lastName: string): Promise<void> {
     await this.enterFirstName(firstName);
     await this.enterLastName(lastName);
-    await this.enterCardNumber(cardNumber);
+    await this.enterShippingAddress(CheckoutPage.DEFAULT_SHIPPING_ADDRESS);
+    await this.enterCity(CheckoutPage.DEFAULT_SHIPPING_CITY);
+    await this.clickNextStep();
   }
 
-  private async clickCompletePaymentMultipleTimes(attempts: number): Promise<void> {
-    for (let attempt = 1; attempt <= attempts; attempt++) {
-      await this.clickCompletePayment();
-    }
+  private async fillPaymentDetails(cardNumber: string): Promise<void> {
+    await this.enterCardNumber(cardNumber);
+    await this.enterExpiry('12/30');
+    await this.enterCvv('123');
+  }
+
+  private async waitForConfirmationMessage(expectedMessage: string): Promise<void> {
+    const confirmationMessage = this.page.getByText(expectedMessage, { exact: false });
+    await this.logMessage('INFO', `Waiting for confirmation message: ${expectedMessage}`);
+    await expect(confirmationMessage).toBeVisible({ timeout: 60000 });
   }
 
   private async submitPaymentUntilConfirmation(expectedMessage: string, maxAttempts: number, successMessage: string): Promise<void> {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      await this.clickCompletePayment();
-
+      await this.clickFinalSubmit();
       try {
-        await expect(this.orderConfirmationMessage).toContainText(expectedMessage, { timeout: 15000 });
+        await this.waitForConfirmationMessage(expectedMessage);
         await this.logMessage('INFO', successMessage);
         return;
       } catch (error: unknown) {
@@ -77,9 +117,10 @@ export class CheckoutPage extends BasePage {
   }
 
   public async getOrderConfirmationMessage(): Promise<string> {
-    await this.logMessage('INFO', "Getting order confirmation message");
-    await this.orderConfirmationMessage.waitFor({ state: 'visible', timeout: 60000 });
-    return await this.doGetText(this.orderConfirmationMessage, "Getting order confirmation message");
+    await this.logMessage('INFO', 'Getting order confirmation message');
+    const confirmationMessage = this.page.getByText(/Payment Successful/i);
+    await confirmationMessage.waitFor({ state: 'visible', timeout: 60000 });
+    return await this.doGetText(confirmationMessage, 'Getting order confirmation message');
   }
 
   public async waitForOrderConfirmationMessage(expectedMessage: string): Promise<void> {
@@ -88,14 +129,19 @@ export class CheckoutPage extends BasePage {
   }
 
   public async completePaymentSuccessfully(firstName: string, lastName: string, cardNumber: string, expectedMessage: string, maxAttempts: number = 3): Promise<void> {
-    await this.enterPaymentDetails(firstName, lastName, cardNumber);
-    await this.submitPaymentUntilConfirmation(expectedMessage, maxAttempts, "Payment completed successfully and order confirmation message is displayed.");
+    await this.fillShippingDetails(firstName, lastName);
+    await this.fillPaymentDetails(cardNumber);
+    await this.submitPaymentUntilConfirmation(expectedMessage, maxAttempts, 'Payment completed successfully and order confirmation message is displayed.');
   }
 
   public async completePaymentAfterInvalidCardRetry(firstName: string, lastName: string, invalidCardNumber: string, validCardNumber: string, expectedMessage: string, retryAttempts: number = 3): Promise<void> {
-    await this.enterPaymentDetails(firstName, lastName, invalidCardNumber);
-    await this.clickCompletePaymentMultipleTimes(retryAttempts);
-    await this.enterCardNumber(validCardNumber);
-    await this.submitPaymentUntilConfirmation(expectedMessage, retryAttempts, "Payment completed successfully after correcting card number.");
+    await this.fillShippingDetails(firstName, lastName);
+    await this.enterCardNumber(invalidCardNumber);
+    await this.enterExpiry('12/30');
+    await this.enterCvv('123');
+    await this.clickFinalSubmit();
+    await this.logMessage('WARN', 'Invalid card entered; retrying with valid card number');
+    await this.fillPaymentDetails(validCardNumber);
+    await this.submitPaymentUntilConfirmation(expectedMessage, retryAttempts, 'Payment completed successfully after correcting card number.');
   }
 }

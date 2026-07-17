@@ -5,7 +5,7 @@
   "payment": {
     "firstName": "john",
     "lastName": "cena",
-    "cardNumber": "123456789012345678"
+    "cardNumber": "4532015112830366"
   },
   "expected": {
     "addToCartMessage": "Added to cart!",

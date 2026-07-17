@@ -6,7 +6,7 @@
     "firstName": "johv",
     "lastName": "cena",
     "invalidCardNumber": "123456789123467",
-    "validCardNumber": "12345678912346778",
+    "validCardNumber": "4532015112830366",
     "retryAttempts": 3
   },
   "expected": {
