@@ -1,0 +1,9 @@
+[2026-07-18 02:03:34] INFO: 🚀 Making POST request to https://buggy-books.onrender.com/api/login
+[2026-07-18 02:03:34] INFO: 📤 Request Payload: {
+  "username": "johndoe178430601308590116@",
+  "password": "wrongPassword123@"
+}
+[2026-07-18 02:03:34] ERROR: ❌ Login with incorrect password Failed! Status: 429 Too Many Requests | Response: "Too many requests, please try again later."
+[2026-07-18 02:03:34] ERROR: ❌ Login with incorrect password Failed! Status: 429 Too Many Requests | Response: "Too many requests, please try again later."
+[2026-07-18 02:03:34] ERROR:  Incorrect password status Failed!! Expected Value:: true || Actual Value:: false
+[2026-07-18 02:03:34] ERROR:  Incorrect password status Failed!! Expected Value:: true || Actual Value:: false
