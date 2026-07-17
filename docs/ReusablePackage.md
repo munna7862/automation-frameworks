@@ -47,11 +47,34 @@ We have successfully created a standalone, reusable npm package named `playwrigh
    npm install /path/to/playwright-utils/playwright-utils-1.0.0.tgz
    ```
 
-#### Option C: Install from Git (GitHub/GitLab)
-If you push the code to a Git repository, you can install it directly via:
+#### Option C: Install from Monorepo Git Subdirectory (No Publish Needed)
+If the package is stored in a monorepo on Git (such as `automation-frameworks`), you can install it directly from the subfolder using the `#path:` syntax:
 ```bash
-npm install git+https://github.com/username/playwright-utils.git
+npm install github:munna7862/automation-frameworks#path:playwright-utils
 ```
+> [!NOTE]
+> The package's `package.json` contains a `"prepare": "npm run build"` script, which ensures TypeScript compiles to `dist/` automatically upon git installation.
+
+#### Option D: Publish to Public NPM Registry
+If you want to publish the package to the registry so that anyone can install it anywhere:
+
+1. **Rename the package** in `playwright-utils/package.json` to a scoped name (to avoid naming collisions):
+   ```json
+   "name": "@munna7862/playwright-utils"
+   ```
+2. **Log in to your NPM account** via terminal:
+   ```bash
+   npm login
+   ```
+3. **Publish the package**:
+   ```bash
+   cd playwright-utils
+   npm publish --access public
+   ```
+   Once published, it can be installed anywhere via:
+   ```bash
+   npm install @munna7862/playwright-utils
+   ```
 
 ---
 
