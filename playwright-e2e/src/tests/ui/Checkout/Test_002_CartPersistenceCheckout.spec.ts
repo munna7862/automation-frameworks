@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import * as path from 'path';
-import { test } from '../../../core/base/base.test';
+import { test } from '../../../core/base/base.fixture';
 import { envConfig, getLoginCredentials } from '../../../config/env.config';
 import { CartPage } from '../../../pages/cart.page';
 import { CheckoutPage } from '../../../pages/checkout.page';

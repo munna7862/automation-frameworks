@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test } from '../../../core/base/base.test';
+import { test } from '../../../core/base/base.fixture';
 import { envConfig, getLoginCredentials } from '../../../config/env.config';
 import { CatalogPage } from '../../../pages/catalog.page';
 import { AuthUtility } from '../../../utils/auth.util';
