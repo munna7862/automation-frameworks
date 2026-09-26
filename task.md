@@ -38,7 +38,7 @@
 - [x] **US-AF-112.3** (`SDET Architect`): Verify single Google Chrome browser policy (`channel: 'chrome'` or `npx playwright install --with-deps chrome`) in all workflow definitions.
 - [x] **US-AF-112.4** (`DevOps Engineer`): Validate YAML syntax across all remaining `.github/workflows/*.{yml,yaml}` files.
 - [x] **US-AF-112.5** (`Scrum Master`): Verify 4-point DoD checklist, catalog parity, and sprint status updates.
-- [ ] **US-AF-112.6** (`DevOps Engineer`): Commit with conventional syntax, push branch, and open PR via `gh pr create`.
+- [x] **US-AF-112.6** (`DevOps Engineer`): Commit with conventional syntax, push branch, and open PR via `gh pr create` (PR #14 opened).
 
 ---
 
@@ -49,7 +49,7 @@
 | **Pre-Flight Architecture Gate** | SDET Architect | Verified test design, pipeline cleanliness, and single-browser Chrome policy. | `[APPROVED]` |
 | **Code Acceptance Review Gate** | SDET Architect | Verified 0 extensionless workflows, valid YAML schemas, and Render warm-up probes. | `[APPROVED]` |
 | **Scrum Master DoD Gate** | Scrum Master | Audited lint, typecheck, catalog parity, and documentation updates. | `[APPROVED]` |
-| **DevOps Release Gate** | DevOps Engineer | CI workflows verified, preparing conventional commit and PR delivery. | `[IN PROGRESS]` |
+| **DevOps Release Gate** | DevOps Engineer | CI workflows verified, PR #14 opened, monitoring CodeQL & checks. | `[APPROVED]` |
 | **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[PENDING]` |
 
 ---
@@ -64,7 +64,7 @@
 - [x] Dual-catalog parity confirmed (`docs/test_cases_catalog.md` vs `playwright-e2e/test_cases_catalog.md`).
 - [x] `npm run lint` and `npm run typecheck` pass with 0 errors.
 - [x] Sprint 1.1 status updated to `In Progress` / `Done` in planning documents.
-- [ ] Pull request opened with structured summary and verification evidence (`gh pr create`).
+- [x] Pull request opened with structured summary and verification evidence (`gh pr create` -> PR #14).
 
 ---
 
