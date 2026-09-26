@@ -12,6 +12,10 @@ on:
         required: false
         default: 'main'
 
+concurrency:
+  group: pages-deploy-allure
+  cancel-in-progress: false
+
 permissions:
   contents: write
   pages: write
@@ -27,7 +31,7 @@ jobs:
       ENV: INTEROP
       BASE_URL: https://buggy-books-fe.onrender.com/
       API_BASE_URL: https://buggy-books.onrender.com
-      HEADLESS: ${{ github.event.inputs.headless }}
+      HEADLESS: ${{ github.event.inputs.headless || 'true' }}
       BROWSER: chrome
       USER_NAME: ${{ secrets.E2E_USER_NAME }}
       PASSWORD: ${{ secrets.E2E_PASSWORD }}
@@ -35,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch }}
+          ref: ${{ github.event.inputs.branch || github.ref }}
 
       - uses: actions/setup-node@v4
         with:
@@ -47,11 +51,10 @@ jobs:
           npm ci
           npx playwright install --with-deps chrome
 
-      - name: Pre-Flight Warm-Up Staging Environment
+      - name: Render Staging Warm-Up Pre-Flight Probe
         run: |
-          echo "Pinging Render backend and frontend to wake from sleep..."
-          curl -s -o /dev/null -w "Backend wake ping status: %{http_code}\n" https://buggy-books.onrender.com/api/books || true
-          curl -s -o /dev/null -w "Frontend wake ping status: %{http_code}\n" https://buggy-books-fe.onrender.com/ || true
+          curl -s -o /dev/null https://buggy-books.onrender.com/api/books || true
+          curl -s -o /dev/null https://buggy-books-fe.onrender.com/ || true
           npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
           npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
 

@@ -74,7 +74,7 @@ The Master Plan establishes the foundational principles, target architecture, an
 
 | Sprint ID | Sprint Title | Phase | Est. SP | Lead Persona | Status |
 | :--- | :--- | :--- | :---: | :--- | :---: |
-| **SPRINT-1.1** | [Workflow Cleanup & Extensionless File Purge](Sprints/sprint_1_1_workflow_cleanup_and_extensionless_file_purge.md) | Phase 1 | 2 SP | DevOps Engineer | Ready |
+| **SPRINT-1.1** | [Workflow Cleanup & Extensionless File Purge](Sprints/sprint_1_1_workflow_cleanup_and_extensionless_file_purge.md) | Phase 1 | 2 SP | DevOps Engineer | Done |
 | **SPRINT-1.2** | [Standardized Env Templates & Visual Baseline Calibration](Sprints/sprint_1_2_standardized_env_templates_and_visual_baseline_calibration.md) | Phase 1 | 3 SP | Playwright QA Lead | Ready |
 | **SPRINT-1.3** | [Monorepo Workspaces & Utility Package Unification](Sprints/sprint_1_3_monorepo_workspaces_and_utility_unification.md) | Phase 1 | 5 SP | SDET Architect | Ready |
 | **SPRINT-2.1** | [Intentional Bugs & Chaos Testing Guide](Sprints/sprint_2_1_intentional_bugs_and_chaos_testing_guide.md) | Phase 2 | 3 SP | SDET Architect | Planned |
