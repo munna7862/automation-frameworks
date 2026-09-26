@@ -206,8 +206,8 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 ## 6. Pull Request & Git Hygiene
 
 1. **Pre-Commit Checks**:
-   - `npm run typecheck` inside `playwright-e2e/` (must exit 0).
-   - `npm run lint` inside `playwright-e2e/` (must exit 0).
+   - `npm run typecheck` across workspaces (must exit 0).
+   - `npm run lint` across workspaces (must exit 0).
    - Confirm `.auth/` directory is not staged (`.gitignore` must contain `.auth/`).
 2. **Commit Message Format**:
    - `feat(scope): concise description`
@@ -222,3 +222,68 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
    - Exact CLI commands executed.
    - Test results (e.g. "110 passed, 0 failed in 12s").
    ```
+
+---
+
+## 7. Multi-Framework Testing Standards (BuggyBooks Alignment)
+
+### A. Selenium WebDriver (`selenium-e2e/`)
+- **Browser Target**: Headless Google Chrome (`options.addArguments('--headless=new')`).
+- **Dynamic Waiting**: Rely on `driver.wait(until.elementLocated(locator))` and `until.elementIsEnabled()`. Never use `Thread.sleep` or static timeouts.
+- **Shadow DOM Traversal**: Pierce custom Web Components like `<order-summary-box>` using standard W3C `host.getShadowRoot()`.
+
+### B. WebdriverIO (`wdio-e2e/`)
+- **Capabilities**: Chrome headless (`goog:chromeOptions: { args: ['--headless', '--disable-gpu'] }`).
+- **Shadow DOM**: Use native WebdriverIO `$('order-summary-box').shadow$('.order-total')`.
+- **E2E Journeys**: Aligned with BuggyBooks user flows (auth, catalog search, cart mutations, checkout).
+
+### C. Appium Mobile Automation (`mobile-automation/`)
+- **Architecture**: Appium 2.x with `UiAutomator2` (Android) and `XCUITest` (iOS).
+- **Screen Objects**: All screens extend `BaseMobileScreen.ts` with touch gesture helpers (`swipeUp`, `scrollToText`).
+- **Chaos Resilience**: Automated specs for orientation shifts (`driver.setOrientation('LANDSCAPE')`), network latency, and app backgrounding.
+
+### D. k6 Fast-Feedback Performance (`k6-performance/`)
+- **Synergy with JMeter**: k6 handles developer-centric PR baseline drift gates (< 60s runtime), while Apache JMeter generates enterprise stress load and HTML reports.
+- **Regression Formula**:
+  $$\text{Drift \%} = \frac{\text{Current p95} - \text{Baseline p95}}{\text{Baseline p95}} \times 100$$
+  If drift exceeds **20%**, the test triggers an automated failure.
+
+---
+
+## 8. The 10 Strategic Monorepo Transformation Pillars
+
+| Pillar | Focus Area | Core Objective |
+| :--- | :--- | :--- |
+| **Pillar 1** | Multi-Framework Parity | Migrate Selenium and WDIO away from dummy sites to BuggyBooks. |
+| **Pillar 2** | Workspaces & Utilities | Unify `@automationframeworks/playwright-utils` under `packages/` via npm workspaces. |
+| **Pillar 3** | Mobile Automation | Import Appium 2.x suite from `buggy-books` with Screen Objects and chaos specs. |
+| **Pillar 4** | Chaos Testing Guide | Author `docs/intentional_bugs.md` detailing all 8 anti-patterns and safe reset recipes. |
+| **Pillar 5** | CI/CD Hygiene | Purge 4 dead extensionless workflow files and standardize on valid YAML syntax. |
+| **Pillar 6** | Environment Templates | Standardize `.env.example` templates in root and all sub-projects. |
+| **Pillar 7** | Chrome Visual Baseline | Calibrate golden snapshots for `Test_010_VisualRegressionChaos.spec.ts` under Chrome. |
+| **Pillar 8** | Dual Performance Engine | Integrate k6 baseline drift checking alongside Apache JMeter 5.6+ stress plans. |
+| **Pillar 9** | PR Quality Gate | Implement fast `.github/workflows/pr-gate.yml` (< 3 mins) on PRs to `main`. |
+| **Pillar 10** | Centralized Allure Portal | Host interactive executive reporting dashboard on GitHub Pages with subpaths per framework. |
+
+---
+
+## 9. Virtual Sprint Team Operating Model (6 Personas)
+
+The monorepo operates with 6 specialized virtual agent personas in `.agents/skills/`:
+1. [**`role-sdet-architect`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, review gates.
+2. [**`role-playwright-automation`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
+3. [**`role-selenium-specialist`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, Shadow DOM.
+4. [**`role-mobile-appium-specialist`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
+5. [**`role-performance-engineer`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-performance-engineer/SKILL.md): Dual-engine performance: Apache JMeter 5.6+ stress plans and k6 baseline drift gates.
+6. [**`role-devops-engineer`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.
+
+---
+
+## 10. Sprint Roadmap Navigation & Planning Structure
+
+The entire roadmap is organized under [`planning/`](file:///c:/Workspace/AutomationFrameworks/planning/):
+- **Master Plan**: [`planning/Master/master_plan.md`](file:///c:/Workspace/AutomationFrameworks/planning/Master/master_plan.md)
+- **5 Delivery Phases**: [`planning/Phases/`](file:///c:/Workspace/AutomationFrameworks/planning/Phases/)
+- **15 Granular Sprints**: [`planning/Sprints/`](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/)
+- **Executive Sitemap**: [`planning/README.md`](file:///c:/Workspace/AutomationFrameworks/planning/README.md)
+
