@@ -1,8 +1,11 @@
 # Sprint 3.1: BuggyBooks Selenium Page Objects & Auth/Catalog Smoke
 
+**Navigation**: [⬅️ Previous: Sprint 2.3](sprint_2_3_unified_pull_request_ci_quality_gate.md) | [🗺️ Planning Hub](../README.md) | **Sprint 3.1** | [➡️ Next: Sprint 3.2](sprint_3_2_buggybooks_wdio_page_objects_and_cart_checkout_flows.md)
+
 **Sprint Identifier**: `SPRINT-3.1-SELENIUM-BUGGYBOOKS-ALIGNMENT`  
-**Phase Mapping**: [Phase 3: WebdriverIO & Selenium Alignment to BuggyBooks](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md)  
+**Phase Mapping**: [Phase 3: WebdriverIO & Selenium Alignment to BuggyBooks](../Phases/phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md)  
 **Estimated Velocity**: 5 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Re-align the `selenium-e2e` framework from legacy mock sites to the BuggyBooks e-commerce platform, creating typed Page Objects (`LoginPage`, `CatalogPage`) and implementing deterministic smoke test specs running on Google Chrome.
 
 ---
@@ -81,3 +84,7 @@
 | `selenium-e2e/src/pages/LoginPage.ts` | Page Object | Typed BuggyBooks login page. |
 | `selenium-e2e/src/pages/CatalogPage.ts` | Page Object | Typed BuggyBooks catalog page. |
 | `selenium-e2e/src/tests/ui/` | Test Specs | BuggyBooks Selenium auth and catalog smoke specs. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 3.2: BuggyBooks WebdriverIO Page Objects & Cart/Checkout Flows](sprint_3_2_buggybooks_wdio_page_objects_and_cart_checkout_flows.md).

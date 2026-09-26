@@ -1,8 +1,11 @@
 # Sprint 1.3: Monorepo Workspaces & Utility Package Unification
 
+**Navigation**: [⬅️ Previous: Sprint 1.2](sprint_1_2_standardized_env_templates_and_visual_baseline_calibration.md) | [🗺️ Planning Hub](../README.md) | **Sprint 1.3** | [➡️ Next: Sprint 2.1](sprint_2_1_intentional_bugs_and_chaos_testing_guide.md)
+
 **Sprint Identifier**: `SPRINT-1.3-MONOREPO-WORKSPACES-AND-UTILITY-UNIFICATION`  
-**Phase Mapping**: [Phase 1: Monorepo Foundations, Pipeline Hygiene & Utility Unification](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)  
+**Phase Mapping**: [Phase 1: Monorepo Foundations, Pipeline Hygiene & Utility Unification](../Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)  
 **Estimated Velocity**: 5 Story Points  
+**Sprint Status**: Ready for Execution  
 **Sprint Goal**: Implement an `npm workspaces` root monorepo architecture, convert `playwright-utils/` into `@automationframeworks/playwright-utils` under `packages/`, link it to `playwright-e2e`, eliminate duplicated core utilities, and establish root orchestration scripts.
 
 ---
@@ -98,3 +101,7 @@
 | `packages/playwright-utils/` | Package | Standalone shared utilities library (`@automationframeworks/playwright-utils`). |
 | `playwright-e2e/package.json` | Config | Updated with internal workspace dependency. |
 | `playwright-e2e/src/` | Codebase | Refactored to import from `@automationframeworks/playwright-utils`. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 2.1: Intentional Bugs & Chaos Testing Guide](sprint_2_1_intentional_bugs_and_chaos_testing_guide.md).

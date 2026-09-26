@@ -1,7 +1,10 @@
 # Phase 3: WebdriverIO & Selenium Alignment to BuggyBooks
 
+**Navigation**: [🗺️ Planning Hub](../README.md) | [📖 Master Plan](../Master/master_plan.md) | [Phase 1](phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md) | [Phase 2](phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md) | **[Phase 3]** | [Phase 4](phase_4_mobile_automation_appium_and_webdriverio.md) | [Phase 5](phase_5_executive_observability_and_unified_allure_dashboard.md)
+
 **Phase Identifier**: `PHASE-3-SELENIUM-WDIO-ALIGNMENT`  
 **Phase Status**: Planned  
+**Total Phase Velocity**: **14 Story Points** (Sprint 3.1: 5 SP, Sprint 3.2: 5 SP, Sprint 3.3: 4 SP)  
 **Phase Leads**: SDET Architect & Selenium Specialist  
 **Primary Personas**: SDET Architect, Selenium Specialist, Playwright QA Lead, DevOps Engineer  
 
@@ -37,13 +40,13 @@ Currently, while `playwright-e2e` tests the BuggyBooks e-commerce platform (`htt
 
 ```mermaid
 graph LR
-    S31[Sprint 3.1: BuggyBooks Selenium Page Objects & Auth/Catalog Smoke] --> S32[Sprint 3.2: BuggyBooks WebdriverIO Page Objects & Cart/Checkout Flows]
-    S32 --> S33[Sprint 3.3: Cross-Framework Parity Assertions & Traceability Matrix Sync]
+    S31[Sprint 3.1: BuggyBooks Selenium Page Objects & Auth Smoke (5 SP)] --> S32[Sprint 3.2: BuggyBooks WDIO Page Objects & Cart/Checkout (5 SP)]
+    S32 --> S33[Sprint 3.3: Cross-Framework Parity & Catalog Sync (4 SP)]
 ```
 
 ### Sprint Breakdown
 
-1. **[Sprint 3.1: BuggyBooks Selenium Page Objects & Auth/Catalog Smoke](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_3_1_buggybooks_selenium_page_objects_and_auth_catalog_smoke.md)**
+1. **[Sprint 3.1: BuggyBooks Selenium Page Objects & Auth/Catalog Smoke](../Sprints/sprint_3_1_buggybooks_selenium_page_objects_and_auth_catalog_smoke.md)**
    - *Estimated Effort*: 5 Story Points
    - *Target Pillars*: Pillar 1 (Multi-Framework BuggyBooks Parity)
    - *Key Deliverables*:
@@ -55,7 +58,7 @@ graph LR
      - Deprecating legacy `github.page.ts` and external API mocks in `selenium-e2e`.
    - *Verification*: `npm test` inside `selenium-e2e` executes in headless Chrome against BuggyBooks staging with 100% green pass rate.
 
-2. **[Sprint 3.2: BuggyBooks WebdriverIO Page Objects & Cart/Checkout Flows](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_3_2_buggybooks_wdio_page_objects_and_cart_checkout_flows.md)**
+2. **[Sprint 3.2: BuggyBooks WebdriverIO Page Objects & Cart/Checkout Flows](../Sprints/sprint_3_2_buggybooks_wdio_page_objects_and_cart_checkout_flows.md)**
    - *Estimated Effort*: 5 Story Points
    - *Target Pillars*: Pillar 1 (Multi-Framework BuggyBooks Parity)
    - *Key Deliverables*:
@@ -68,7 +71,7 @@ graph LR
      - Purging legacy `automationexercise` specs.
    - *Verification*: `npm test` inside `wdio-e2e` executes cleanly on headless Chrome; order confirmation is validated.
 
-3. **[Sprint 3.3: Cross-Framework Parity Assertions & Traceability Matrix Sync](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_3_3_cross_framework_parity_assertions_and_traceability_matrix_sync.md)**
+3. **[Sprint 3.3: Cross-Framework Parity Assertions & Traceability Matrix Sync](../Sprints/sprint_3_3_cross_framework_parity_assertions_and_traceability_matrix_sync.md)**
    - *Estimated Effort*: 4 Story Points
    - *Target Pillars*: Pillar 1 (Multi-Framework BuggyBooks Parity) & Pillar 5 (Catalog Parity)
    - *Key Deliverables*:

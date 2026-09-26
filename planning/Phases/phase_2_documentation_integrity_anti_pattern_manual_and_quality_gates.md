@@ -1,7 +1,10 @@
 # Phase 2: Documentation Integrity, Anti-Pattern Manual & Quality Gates
 
+**Navigation**: [🗺️ Planning Hub](../README.md) | [📖 Master Plan](../Master/master_plan.md) | [Phase 1](phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md) | **[Phase 2]** | [Phase 3](phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md) | [Phase 4](phase_4_mobile_automation_appium_and_webdriverio.md) | [Phase 5](phase_5_executive_observability_and_unified_allure_dashboard.md)
+
 **Phase Identifier**: `PHASE-2-DOCS-CHAOS-AND-GATES`  
 **Phase Status**: Planned  
+**Total Phase Velocity**: **12 Story Points** (Sprint 2.1: 3 SP, Sprint 2.2: 5 SP, Sprint 2.3: 4 SP)  
 **Phase Leads**: SDET Architect & DevOps Engineer  
 **Primary Personas**: SDET Architect, Performance Engineer, DevOps Engineer, Playwright QA Lead  
 
@@ -38,13 +41,13 @@ Furthermore, while Apache JMeter provides enterprise-scale capacity and stress t
 
 ```mermaid
 graph LR
-    S21[Sprint 2.1: Intentional Bugs & Chaos Testing Guide] --> S22[Sprint 2.2: Dual-Engine Performance Strategy & k6 Migration]
-    S22 --> S23[Sprint 2.3: Unified Pull Request CI Quality Gate]
+    S21[Sprint 2.1: Intentional Bugs & Chaos Testing Guide (3 SP)] --> S22[Sprint 2.2: Dual-Engine Performance Strategy & k6 Migration (5 SP)]
+    S22 --> S23[Sprint 2.3: Unified Pull Request CI Quality Gate (4 SP)]
 ```
 
 ### Sprint Breakdown
 
-1. **[Sprint 2.1: Intentional Bugs & Chaos Testing Guide](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_2_1_intentional_bugs_and_chaos_testing_guide.md)**
+1. **[Sprint 2.1: Intentional Bugs & Chaos Testing Guide](../Sprints/sprint_2_1_intentional_bugs_and_chaos_testing_guide.md)**
    - *Estimated Effort*: 3 Story Points
    - *Target Pillars*: Pillar 4 (Intentional Bugs & Chaos Testing Guide)
    - *Key Deliverables*:
@@ -55,7 +58,7 @@ graph LR
      - Synchronization of references in `AGENTS.md` and `.agents/skills/chaos-and-bug-testing/`.
    - *Verification*: Full compliance with `doc-implementation-standards` skill; all documented endpoints validated against live staging.
 
-2. **[Sprint 2.2: Dual-Engine Performance Strategy & k6 Migration](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_2_2_dual_engine_performance_strategy_and_k6_migration.md)**
+2. **[Sprint 2.2: Dual-Engine Performance Strategy & k6 Migration](../Sprints/sprint_2_2_dual_engine_performance_strategy_and_k6_migration.md)**
    - *Estimated Effort*: 5 Story Points
    - *Target Pillars*: Pillar 8 (Dual-Engine Performance Strategy: JMeter + k6)
    - *Key Deliverables*:
@@ -69,7 +72,7 @@ graph LR
        - `TC-PERF-JM-001` through `TC-PERF-JM-004` (Apache JMeter).
    - *Verification*: `npm run perf:smoke` runs locally with k6; CI workflow runs green on GitHub Actions.
 
-3. **[Sprint 2.3: Unified Pull Request CI Quality Gate (`pr-gate.yml`)](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_2_3_unified_pull_request_ci_quality_gate.md)**
+3. **[Sprint 2.3: Unified Pull Request CI Quality Gate (`pr-gate.yml`)](../Sprints/sprint_2_3_unified_pull_request_ci_quality_gate.md)**
    - *Estimated Effort*: 4 Story Points
    - *Target Pillars*: Pillar 9 (Unified Pull Request Quality Gate)
    - *Key Deliverables*:

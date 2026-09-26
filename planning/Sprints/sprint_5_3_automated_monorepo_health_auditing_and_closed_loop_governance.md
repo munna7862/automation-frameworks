@@ -1,8 +1,11 @@
 # Sprint 5.3: Automated Monorepo Health Auditing & Closed-Loop Governance
 
+**Navigation**: [⬅️ Previous: Sprint 5.2](sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md) | [🗺️ Planning Hub](../README.md) | **Sprint 5.3 (Final Milestone)**
+
 **Sprint Identifier**: `SPRINT-5.3-HEALTH-AUDITING-AND-GOVERNANCE`  
-**Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
+**Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](../Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
 **Estimated Velocity**: 4 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Implement automated health auditing tools including a byte-for-byte dual-catalog parity verifier (`scripts/verify-catalog-sync.ts`) and a scheduled closed-loop quarantine audit pipeline (`quarantine-audit.yml`) to maintain monorepo hygiene over time.
 
 ---
@@ -75,3 +78,7 @@
 | `scripts/verify-catalog-sync.ts` | CLI Script | Automated byte-for-byte dual-catalog parity verifier. |
 | `.github/workflows/quarantine-audit.yml` | Workflow | Scheduled 10x repetition audit for quarantined tests. |
 | `package.json` | Config | Root script `npm run test:verify-catalog` configured. |
+
+---
+
+**Milestone Completion**: This concludes the 15-sprint engineering roadmap, achieving full multi-framework transformation across 63 Story Points. Return to [Planning & Sprint Sitemap](../README.md) or [Strategic Master Plan](../Master/master_plan.md).

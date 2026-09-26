@@ -58,6 +58,10 @@ To prevent report clobbering across frameworks, deployment jobs must use `peacei
 ```
 Always preserve the `history/` directory from previous deployments to maintain pass-rate trend charts.
 
+### D. Workflow File Sanitation & Concurrency Locks
+- **File Extensions**: Every workflow under `.github/workflows/` must end in `.yml` or `.yaml`. Dead or extensionless files trigger syntax parsing crashes.
+- **Pages Concurrency**: Always declare `concurrency: { group: 'github-pages', cancel-in-progress: false }` on documentation and report deployment workflows to prevent Git ref collisions during concurrent job completion.
+
 ---
 
 ## 3. Remote Pull Request Delivery (`gh pr create`)

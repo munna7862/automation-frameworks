@@ -6,12 +6,12 @@
 
 ## 🏛️ Strategic Engineering Planning & Delivery Roadmap
 
-The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven by a specialized 6-agent virtual persona team:
-- 📖 [**Master Plan (`planning/Master/master_plan.md`)**](file:///c:/Workspace/AutomationFrameworks/planning/Master/master_plan.md)
-- 🗺️ [**Planning & Sprint Sitemap (`planning/README.md`)**](file:///c:/Workspace/AutomationFrameworks/planning/README.md)
-- 📋 [**Test Cases Catalog (`docs/test_cases_catalog.md`)**](file:///c:/Workspace/AutomationFrameworks/docs/test_cases_catalog.md)
-- 🧠 [**Always-On Agent Memory (`AGENTS.md`)**](file:///c:/Workspace/AutomationFrameworks/AGENTS.md)
-- 🛠️ [**Repository Learnings Playbook (`.agents/skills/repo-learnings-and-patterns/SKILL.md`)**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/repo-learnings-and-patterns/SKILL.md)
+The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven by a specialized 7-agent virtual persona team:
+- 📖 [**Master Plan (`planning/Master/master_plan.md`)**](planning/Master/master_plan.md)
+- 🗺️ [**Planning & Sprint Sitemap (`planning/README.md`)**](planning/README.md)
+- 📋 [**Test Cases Catalog (`docs/test_cases_catalog.md`)**](docs/test_cases_catalog.md)
+- 🧠 [**Always-On Agent Memory (`AGENTS.md`)**](AGENTS.md)
+- 🛠️ [**Repository Learnings Playbook (`.agents/skills/repo-learnings-and-patterns/SKILL.md`)**](.agents/skills/repo-learnings-and-patterns/SKILL.md)
 
 ---
 

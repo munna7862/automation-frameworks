@@ -1,8 +1,11 @@
 # Sprint 2.2: Dual-Engine Performance Strategy & k6 Migration
 
+**Navigation**: [⬅️ Previous: Sprint 2.1](sprint_2_1_intentional_bugs_and_chaos_testing_guide.md) | [🗺️ Planning Hub](../README.md) | **Sprint 2.2** | [➡️ Next: Sprint 2.3](sprint_2_3_unified_pull_request_ci_quality_gate.md)
+
 **Sprint Identifier**: `SPRINT-2.2-DUAL-ENGINE-PERFORMANCE-AND-K6-MIGRATION`  
-**Phase Mapping**: [Phase 2: Documentation Integrity, Anti-Pattern Manual & Quality Gates](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)  
+**Phase Mapping**: [Phase 2: Documentation Integrity, Anti-Pattern Manual & Quality Gates](../Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)  
 **Estimated Velocity**: 5 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Establish a dual performance testing strategy by migrating the k6 benchmarking framework alongside existing Apache JMeter suites, calibrating golden regression baselines (`baseline-perf.json`), and adding automated drift comparison in CI.
 
 ---
@@ -79,3 +82,7 @@
 | `.github/workflows/k6-performance.yaml` | Workflow | CI performance pipeline with drift regression detection. |
 | `docs/test_cases_catalog.md` | Catalog | Master catalog updated with dual performance suites. |
 | `playwright-e2e/test_cases_catalog.md` | Catalog | Playwright duplicate catalog updated in exact lockstep. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 2.3: Unified Pull Request CI Quality Gate (`pr-gate.yml`)](sprint_2_3_unified_pull_request_ci_quality_gate.md).

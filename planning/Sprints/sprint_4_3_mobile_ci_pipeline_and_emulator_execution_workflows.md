@@ -1,8 +1,11 @@
 # Sprint 4.3: Mobile CI Pipeline & Emulator Execution Workflows
 
+**Navigation**: [⬅️ Previous: Sprint 4.2](sprint_4_2_appium_android_ios_smoke_and_chaos_e2e_verification.md) | [🗺️ Planning Hub](../README.md) | **Sprint 4.3** | [➡️ Next: Sprint 5.1](sprint_5_1_multi_framework_allure_result_aggregation_architecture.md)
+
 **Sprint Identifier**: `SPRINT-4.3-MOBILE-CI-AND-EMULATOR-PIPELINE`  
-**Phase Mapping**: [Phase 4: Mobile Automation (Appium + WebdriverIO)](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_4_mobile_automation_appium_and_webdriverio.md)  
+**Phase Mapping**: [Phase 4: Mobile Automation (Appium + WebdriverIO)](../Phases/phase_4_mobile_automation_appium_and_webdriverio.md)  
 **Estimated Velocity**: 5 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Implement an automated GitHub Actions mobile execution pipeline (`.github/workflows/mobile-ci.yml`) leveraging Android Emulator Runner, manage the Appium server lifecycle headlessly, and provide cross-platform local run scripts.
 
 ---
@@ -113,3 +116,7 @@
 | `.github/workflows/mobile-ci.yml` | Workflow | GitHub Actions Android emulator execution pipeline. |
 | `mobile-automation/scripts/` | Scripts | Local helper scripts for Windows and POSIX systems. |
 | `package.json` | Config | Root script for mobile smoke test dispatch. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 5.1: Multi-Framework Allure Result Aggregation Architecture](sprint_5_1_multi_framework_allure_result_aggregation_architecture.md).

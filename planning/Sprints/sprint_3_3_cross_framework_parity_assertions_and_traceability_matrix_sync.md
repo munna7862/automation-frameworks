@@ -1,8 +1,11 @@
 # Sprint 3.3: Cross-Framework Parity Assertions & Traceability Matrix Sync
 
+**Navigation**: [⬅️ Previous: Sprint 3.2](sprint_3_2_buggybooks_wdio_page_objects_and_cart_checkout_flows.md) | [🗺️ Planning Hub](../README.md) | **Sprint 3.3** | [➡️ Next: Sprint 4.1](sprint_4_1_mobile_automation_monorepo_import_and_scaffolding.md)
+
 **Sprint Identifier**: `SPRINT-3.3-CROSS-FRAMEWORK-PARITY-AND-CATALOG-SYNC`  
-**Phase Mapping**: [Phase 3: WebdriverIO & Selenium Alignment to BuggyBooks](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md)  
+**Phase Mapping**: [Phase 3: WebdriverIO & Selenium Alignment to BuggyBooks](../Phases/phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md)  
 **Estimated Velocity**: 4 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Establish comparative execution benchmarks across Playwright, Selenium, and WebdriverIO, update the dual Test Cases Catalog with standardized test IDs for all web frameworks, and integrate smoke commands into root monorepo scripts.
 
 ---
@@ -84,3 +87,7 @@
 | `playwright-e2e/test_cases_catalog.md` | Catalog | Duplicate catalog updated in exact lockstep. |
 | `docs/architecture/framework_comparison_benchmark.md` | Document | Comparative benchmark report across all 3 web frameworks. |
 | `package.json` | Config | Root scripts unified for multi-framework execution. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 4.1: Mobile Automation Monorepo Import & Scaffolding](sprint_4_1_mobile_automation_monorepo_import_and_scaffolding.md).

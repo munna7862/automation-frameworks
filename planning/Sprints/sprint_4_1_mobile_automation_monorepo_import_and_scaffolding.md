@@ -1,8 +1,11 @@
 # Sprint 4.1: Mobile Automation Monorepo Import & Scaffolding
 
+**Navigation**: [⬅️ Previous: Sprint 3.3](sprint_3_3_cross_framework_parity_assertions_and_traceability_matrix_sync.md) | [🗺️ Planning Hub](../README.md) | **Sprint 4.1** | [➡️ Next: Sprint 4.2](sprint_4_2_appium_android_ios_smoke_and_chaos_e2e_verification.md)
+
 **Sprint Identifier**: `SPRINT-4.1-MOBILE-IMPORT-AND-SCAFFOLDING`  
-**Phase Mapping**: [Phase 4: Mobile Automation (Appium + WebdriverIO)](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_4_mobile_automation_appium_and_webdriverio.md)  
+**Phase Mapping**: [Phase 4: Mobile Automation (Appium + WebdriverIO)](../Phases/phase_4_mobile_automation_appium_and_webdriverio.md)  
 **Estimated Velocity**: 4 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Import the Appium 2.x and WebdriverIO mobile automation framework from `buggy-books` into `AutomationFrameworks/mobile-automation`, register it in monorepo workspaces, configure device capabilities, and verify Screen Object compilation.
 
 ---
@@ -80,3 +83,7 @@
 | `mobile-automation/src/screens/` | Screen Objects | 6 BuggyBooks mobile screen objects. |
 | `mobile-automation/src/config/` | Config | Shared, Android, and iOS WebdriverIO configurations. |
 | `package.json` | Root Config | Updated workspaces array including `mobile-automation`. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 4.2: Appium Android/iOS Smoke & Chaos E2E Verification](sprint_4_2_appium_android_ios_smoke_and_chaos_e2e_verification.md).

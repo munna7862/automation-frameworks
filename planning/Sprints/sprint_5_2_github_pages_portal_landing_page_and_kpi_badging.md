@@ -1,8 +1,11 @@
 # Sprint 5.2: GitHub Pages Portal Landing Page & Executive KPI Badging
 
+**Navigation**: [⬅️ Previous: Sprint 5.1](sprint_5_1_multi_framework_allure_result_aggregation_architecture.md) | [🗺️ Planning Hub](../README.md) | **Sprint 5.2** | [➡️ Next: Sprint 5.3](sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md)
+
 **Sprint Identifier**: `SPRINT-5.2-GITHUB-PAGES-PORTAL-LANDING-PAGE`  
-**Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
+**Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](../Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
 **Estimated Velocity**: 5 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Create a state-of-the-art executive reporting portal (`index.html`) deployed to the root of GitHub Pages, featuring interactive framework cards, real-time KPI metrics, and direct links to sub-framework Allure and JMeter dashboards.
 
 ---
@@ -76,3 +79,7 @@
 | `docs/portal/index.html` | Web UI | Executive landing dashboard for GitHub Pages. |
 | `scripts/generate-portal-metadata.js` | Script | Metrics aggregator script extracting latest run data. |
 | `docs/portal/portal-data.json` | Data | Dynamic metrics feed consumed by portal dashboard. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 5.3: Automated Monorepo Health Auditing & Closed-Loop Governance](sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md).

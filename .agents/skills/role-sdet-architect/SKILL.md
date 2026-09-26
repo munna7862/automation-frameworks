@@ -68,3 +68,18 @@ During sprint planning and delivery:
 3. **Deterministic Execution Gate**: Require 100% green test passes without flaky sleeps (`waitForTimeout` is forbidden).
 4. **Documentation Audit**: Confirm `docs/intentional_bugs.md` and dual catalogs reflect all newly authored test suites.
 5. **PR Sign-Off**: Review PR Step Summary and Allure test reports before approving merges to `main`.
+
+---
+
+## 4. Planning Roadmap & Velocity Governance
+
+The SDET Architect governs the strategic execution roadmap in [`planning/README.md`](../../planning/README.md):
+- **15-Sprint Delivery Hierarchy**: Governs 5 core phases totaling **63 Story Points**:
+  - Phase 1: Foundations & Parity (10 SP)
+  - Phase 2: Workspaces & Multi-Framework (12 SP)
+  - Phase 3: Resilience, Chaos & Mobile (14 SP)
+  - Phase 4: CI/CD Quality Gates & Governance (14 SP)
+  - Phase 5: Enterprise Maturity & Telemetry (13 SP)
+- **Link Portability Rule**: Strictly enforce relative links (`../Phases/...`, `../Sprints/...`) across all planning artifacts. Reject any PR introducing absolute local file URIs.
+- **Sprint DoD Auditing**: Ensure each sprint spec contains clear persona assignments, user stories, acceptance criteria, and exact verification commands.
+

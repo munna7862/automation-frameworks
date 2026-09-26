@@ -18,5 +18,21 @@ logs/
 .env.*
 !.env.example
 
+# Reporting & Artifacts
+allure-results/
+allure-report/
+**/allure-results/
+**/allure-report/
+coverage/
+.nyc_output/
+
+# JMeter Outputs
+*.jtl
+jmeter/Results/
+jmeter/Reports/
+!jmeter/TestData/*.csv
+
 # OS
 .DS_Store
+Thumbs.db
+
