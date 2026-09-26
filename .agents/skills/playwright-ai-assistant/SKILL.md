@@ -7,72 +7,54 @@ description: >-
 # Playwright E2E AI Assistant Skill
 
 ## Overview
-This skill guides the agent to autonomously generate Page Objects, write E2E test specs, and self-heal locator failures in the Playwright test suite. It coordinates CLI snapshot utilities and failure-hook reports.
+This skill provides core capabilities for generating Page Objects, writing E2E test specs, and self-healing locator failures in the BuggyBooks Playwright test suite.
+
+> **Note on Conventions & Instructions:**
+> Shared repository conventions live in [.github/copilot-instructions.md](../../../.github/copilot-instructions.md).
+> Detailed domain rules auto-apply via path-scoped instruction files:
+> - Page Objects: [.github/instructions/playwright-pom.instructions.md](../../../.github/instructions/playwright-pom.instructions.md)
+> - UI Specs: [.github/instructions/playwright-specs.instructions.md](../../../.github/instructions/playwright-specs.instructions.md)
+> - API Specs: [.github/instructions/playwright-api.instructions.md](../../../.github/instructions/playwright-api.instructions.md)
+> - Advanced UI & Chaos: [.github/instructions/playwright-advanced-ui.instructions.md](../../../.github/instructions/playwright-advanced-ui.instructions.md)
+> - Test Data: [.github/instructions/testdata.instructions.md](../../../.github/instructions/testdata.instructions.md)
+> - Governance & DoD: [.github/instructions/workflow.instructions.md](../../../.github/instructions/workflow.instructions.md)
 
 ---
 
-## 1. Capabilities & Instructions
+## Capabilities
 
-### 1.1 Generating Page Object Models (POMs)
-When requested to create a Page Object for a page (e.g. catalog or login):
-1. **Launch & Capture Snapshot:** Execute the save-snapshot CLI script in the `playwright-e2e` directory:
-   - **For public pages:**
-     `npm run save-snapshot <url> <page-name>`
-   - **For pages requiring interactive actions (SSO, MFA, scroll to load):**
-     Run in headful mode using:
-     `npm run save-snapshot <url> <page-name> -- --interactive`
-     *(Wait for the user to confirm completion in the terminal).*
-2. **Read Cleaned HTML:** Load the captured HTML snapshot from `playwright-e2e/reports/snapshots/<page-name>.html` and the accessibility tree YAML from `playwright-e2e/reports/snapshots/<page-name>.yaml`.
-3. **Draft the POM Class:**
-   - Extend `BasePage` imported from `../core/base/base.page`.
-   - Declare locators as private getters returning `Locator` using `@playwright/test`.
-   - Implement public action methods using custom `BasePage` wrappers (`this.doClick`, `this.doEnterText`, `this.doGetText`, etc.) with meaningful descriptive logs.
-4. **Save Page Object:** Write the TypeScript file directly to `playwright-e2e/src/pages/<page-name>.page.ts`.
+### 1. Generating Page Object Models (POMs)
+1. Capture clean DOM/ARIA snapshots using `scripts/save-snapshot.ts`:
+   - Standard: `npm run save-snapshot -- <url> <page-name>`
+   - Interactive (SSO/MFA): `npm run save-snapshot -- <url> <page-name> --interactive`
+2. Read generated snapshots from `playwright-e2e/reports/snapshots/<page-name>.{html,yaml}`.
+3. Draft Page Object extending `BasePage` (`src/core/base/base.page.ts`). Place private getters at the top and action methods calling `BasePage` wrappers (`doClick`, `doEnterText`, `doGetText`, etc.) with descriptive log messages.
+4. Save file to `playwright-e2e/src/pages/<page-name>.page.ts`.
 
-### 1.2 Generating E2E Test Specs (UI & API)
-When requested to write E2E tests:
-1. **Analyze existing POMs (for UI):** Check page object classes in `playwright-e2e/src/pages/` to identify reusable methods. Specs must not contain inline selectors.
-2. **Draft the Spec:**
-   - Import `test` from `../../../core/base/base.test` (extended custom fixture) and `expect` from `@playwright/test`.
-   - Group test steps using `await test.step(...)`.
-   - **For API Tests:**
-     - Utilize Playwright's native `request` context.
-     - Enforce type safety for request payloads and parse JSON responses.
-     - Validate standard status code boundaries (e.g. `200 OK`, `201 Created`, `400 Bad Request`, `401 Unauthorized`).
-     - Isolate test data from test code using JSON files under `src/test-data/`.
-3. **Save Spec:** Write the file to `playwright-e2e/src/tests/ui/<FeatureName>/<TestName>.spec.ts` or `src/tests/api/<TestName>.spec.ts`.
+### 2. Generating E2E Test Specs (UI & API)
+1. Inspect existing page objects and fixtures in `src/pages/` and `src/core/base/base.fixture.ts`.
+2. UI specs import `test` from `../../../core/base/base.fixture`; API specs import native `test`/`expect` from `@playwright/test`.
+3. Wrap flows in `await test.step(...)`. Use `commonFunctions.compareTwoValues(...)` for soft assertions, concluding with a consolidated hard assertion.
+4. Mirror test data under `src/test-data/<ui|api>/<Area>/<SpecName>.json`.
+5. Save spec to `src/tests/ui/<Area>/<SpecName>.spec.ts` or `src/tests/api/<Area>/<SpecName>.spec.ts`.
 
-### 1.3 Self-Healing Broken Tests
-When a test fails or when requested to "heal a failure":
-1. **Load Failure Context:** Read the generated failure metadata from:
-   - `playwright-e2e/reports/snapshots/failure-context.json` (contains the failing locator and error traceback)
-   - `playwright-e2e/reports/snapshots/failure-dom.html` (contains the cleaned DOM at failure point)
-2. **Diagnose Selector Changes:**
-   - Compare the failing locator from `failure-context.json` against the elements inside `failure-dom.html`.
-   - Match the target selector to its updated element attributes.
-3. **Patch Code:** Automatically locate the corresponding Page Object (or test spec) file and update the broken selector.
-4. **Rerun & Verify:** Run the spec using Playwright to confirm the healed test passes:
-   `$env:HEADLESS="true"; npx playwright test <TestName>.spec.ts --config=src/config/playwright.config.ts`
+### 3. Self-Healing Broken Tests
+1. Read failure artifacts written by `failure-hook.ts`:
+   - `reports/snapshots/failure-context.json` (failing locator and traceback)
+   - `reports/snapshots/failure-dom.html` (cleaned DOM at failure point)
+   - `reports/snapshots/failure-aria.yaml` (accessibility tree at failure point)
+2. Compare failing selector against updated element attributes in `failure-dom.html` / `failure-aria.yaml`.
+3. Update the selector inside the corresponding Page Object private getter.
+4. Rerun targeted spec in headless mode to confirm the fix:
+   `npx cross-env HEADLESS=true npx playwright test <target-spec-path> --config=src/config/playwright.config.ts`
 
----
+### 4. Git & Pull Request Delivery (MANDATORY)
+1. Always create a dedicated branch from latest `main`: `git checkout main && git pull origin main && git checkout -b <type>/<name>`.
+2. Commit changes with conventional commits (`feat:`, `fix:`, `refactor:`) and push to remote (`git push -u origin <branch-name>`).
+3. Open a Pull Request using GitHub CLI:
+   `gh pr create --title "<type>(<scope>): <summary>" --body "<structured description>" --head <branch-name> --base main`
+4. PR body MUST include **📌 Summary of Changes** and **🧪 Verification** results.
+5. If follow-up changes or fixes are pushed, update the existing PR description using `gh pr edit <pr-number> --body-file <path>`.
+6. **Verify CI Checks Before Merge**: Monitor PR checks (`gh pr checks <pr-number> --watch`). If any CI workflow fails, diagnose via `gh run view --log-failed`, resolve on the branch, and push. Never merge until CI workflows are completely green.
 
-## 2. SDET Coding Standards
 
-### 2.1 Locator Selection Hierarchy
-When generating or updating selectors, always adhere to this prioritization:
-1. **Playwright Recommended Semantic Locators:**
-   * `this.page.getByRole(...)`
-   * `this.page.getByPlaceholder(...)`
-   * `this.page.getByLabel(...)`
-   * `this.page.getByTestId(...)`
-2. **Standard CSS/ID Selectors:** Fall back to unique element IDs (`#element-id`) or unique classes.
-3. **Relative XPaths (Fallback Only):** 
-   - Use relative XPaths (e.g. `//button[...]`) only when standard semantic or CSS locators fail to isolate the element.
-   - You **must** use relative XPaths when complex traversals are required using **XPath axes** (such as `following-sibling`, `preceding-sibling`, `ancestor`).
-   - **BANNED:** **Absolutely no absolute XPaths** (e.g. `/html/body/div[1]/div[2]...`).
-
-### 2.2 Formatting and Design Rules
-- **Encapsulation:** Never write raw selectors directly inside spec files. All selectors must be declared in POMs as private getters.
-- **Indentation:** Use exactly 2 spaces for indentation (no tabs).
-- **Single-Line Signatures:** Keep class methods and function parameter definitions on a single line.
-- **Custom wrappers:** Always call custom base wrappers (`this.doClick`, `this.doEnterText`, `this.doGetText`) rather than native locator operations.

@@ -1,6 +1,7 @@
 import { BasePage } from '../core/base/base.page';
 import { Locator } from '@playwright/test';
 import { CatalogPage } from './catalog.page';
+import { getLoginCredentials } from '../config/env.config';
 
 export class SignUpPage extends BasePage {
 
@@ -26,9 +27,38 @@ export class SignUpPage extends BasePage {
   private get btnSignIn(): Locator {
     return this.page.locator("//button[@name='btn_submit_login_rnd']");
   }
+  private get eleErrorBanner(): Locator {
+    return this.page.locator('.error-banner');
+  }
+  private get elePwdStrengthText(): Locator {
+    return this.page.locator('.pwd-text');
+  }
+  private get eleLoginTitle(): Locator {
+    return this.page.locator('.auth-title');
+  }
+  private get inputLoginUsername(): Locator {
+    return this.page.locator("input[name='txt_usr_77']");
+  }
+  private get inputLoginPassword(): Locator {
+    return this.page.locator("input[name='txt_pwd_99']");
+  }
+  private get firstAuthLabel(): Locator {
+    return this.page.locator(".auth-label").first();
+  }
 
   // Add methods to interact with the Sign Up page elements
+  public async getErrorBannerText(): Promise<string> {
+    await this.eleErrorBanner.waitFor({ state: 'visible', timeout: 5000 });
+    return (await this.doGetText(this.eleErrorBanner, "Getting error banner text")) || '';
+  }
+
+  public async getPwdStrengthText(): Promise<string> {
+    await this.elePwdStrengthText.waitFor({ state: 'visible', timeout: 5000 });
+    return (await this.doGetText(this.elePwdStrengthText, "Getting password strength text")) || '';
+  }
+
   public async clickSignUp() {
+    await this.ensureNavElementVisible(this.lblSignUpPage);
     await this.doClick(this.lblSignUpPage, "Clicking on Sign Up link");
   }
 
@@ -74,4 +104,40 @@ export class SignUpPage extends BasePage {
     return await catalogPage.verifyCheckoutPage();
   }
 
+  public async loginWithSeedCredentials(): Promise<boolean> {
+    const { userName, password } = getLoginCredentials();
+    return await this.login(userName, password);
+  }
+
+  public async loginWithInvalidCredentials(username: string, password: string) {
+    await this.enterUsername(username);
+    await this.enterPassword(password);
+    await this.clickSignIn();
+  }
+
+  public async isSignInPageLoaded(): Promise<boolean> {
+    return await this.doesElementExist(this.btnSignIn, "Checking if Sign In button is visible on Login page");
+  }
+
+  public async verifyLoginPageLoaded(): Promise<boolean> {
+    const isTitleVisible = await this.doesElementExist(this.eleLoginTitle, "Checking if Login page title is visible");
+    const isUsernameVisible = await this.doesElementExist(this.tfldUsername, "Checking if Username input field is visible on Login page");
+    const isPasswordVisible = await this.doesElementExist(this.tfldPassword, "Checking if Password input field is visible on Login page");
+    const isButtonVisible = await this.doesElementExist(this.btnSignIn, "Checking if Sign In button is visible on Login page");
+    return isTitleVisible && isUsernameVisible && isPasswordVisible && isButtonVisible;
+  }
+
+  public async getLoginUsernameId(): Promise<string | null> {
+    return await this.inputLoginUsername.getAttribute('id');
+  }
+
+  public async getLoginPasswordId(): Promise<string | null> {
+    return await this.inputLoginPassword.getAttribute('id');
+  }
+
+  public async getFirstAuthLabelFor(): Promise<string | null> {
+    return await this.firstAuthLabel.getAttribute('for');
+  }
+
 }
+

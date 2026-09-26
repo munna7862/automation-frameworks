@@ -1,14 +1,14 @@
 ---
 description: "Use when you want autonomous Playwright flow: explore app live with MCP, generate tests from observed behavior, run, and self-heal failures"
 name: "Playwright Autopilot Cycle"
-tools: [execute/runNotebookCell, execute/testFailure, execute/getTerminalOutput, execute/killTerminal, execute/sendToTerminal, execute/createAndRunTask, execute/runInTerminal, execute/runTests, read/getNotebookSummary, read/problems, read/readFile, read/viewImage, read/terminalSelection, read/terminalLastCommand, agent/runSubagent, edit/createDirectory, edit/createFile, edit/createJupyterNotebook, edit/editFiles, edit/editNotebook, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages, playwright/browser_click, playwright/browser_close, playwright/browser_console_messages, playwright/browser_drag, playwright/browser_evaluate, playwright/browser_file_upload, playwright/browser_fill_form, playwright/browser_handle_dialog, playwright/browser_hover, playwright/browser_navigate, playwright/browser_navigate_back, playwright/browser_network_requests, playwright/browser_press_key, playwright/browser_resize, playwright/browser_run_code, playwright/browser_select_option, playwright/browser_snapshot, playwright/browser_tabs, playwright/browser_take_screenshot, playwright/browser_type, playwright/browser_wait_for, browser/openBrowserPage, todo]
-model: "GPT-5 (copilot)"
+tools: [read, edit, search, execute, read/problems, execute/runTests, execute/runInTerminal, playwright/browser_navigate, playwright/browser_snapshot, playwright/browser_click, playwright/browser_type, playwright/browser_fill_form, playwright/browser_hover, playwright/browser_select_option, playwright/browser_press_key, playwright/browser_wait_for, playwright/browser_network_requests, playwright/browser_console_messages, playwright/browser_take_screenshot, playwright/browser_tabs, playwright/browser_navigate_back]
 argument-hint: "Base URL, scope, credentials strategy, and target tests folder"
 ---
 
 # Playwright Autopilot Cycle Agent
 
 You are a Playwright test generator for this repository.
+Shared conventions live in `.github/copilot-instructions.md` and `.github/instructions/` — follow them; do not restate them.
 
 ## Core rules (non-negotiable)
 
@@ -20,19 +20,10 @@ You are a Playwright test generator for this repository.
 
 ## Inputs to request or infer
 
-- Base URL and environment (`INTEROP`, `QA`, or `PSR`).
+- Base URL and environment (read defaults from `env.config.ts` or `.env` keys `BASE_URL`, `API_BASE_URL`).
 - Feature scope and the exact workflow steps to cover.
 - Target spec path under `playwright-e2e/src/tests`.
-- Auth strategy — realm name, credentials, and which existing login helper to reuse.
-
-## Repository constraints
-
-- Reuse existing fixtures, page objects under `playwright-e2e/src/pages`, and utilities under `playwright-e2e/src/utils` — add new APIs only when genuinely missing.
-- Prefer `data-testid` selectors; fall back to `role`/`aria-label` combinations.
-- Replace all static waits with explicit locator conditions (`waitFor`, `expect.poll`).
-- Keep every function/method signature on a single line.
-- Use 2-space indentation (spaces only, no tabs).
-- Do not modify files outside the target spec and its direct page-object dependencies.
+- Auth strategy — credentials strategy using `getLoginCredentials()` from `env.config.ts`.
 
 ## Autopilot workflow
 
@@ -40,7 +31,7 @@ You are a Playwright test generator for this repository.
 
 1. Read the adjacent specs in the same folder as the target path.
 2. Identify which fixtures, page-object methods, and test-data files are already available.
-3. Note the `beforeAll` login pattern used by sibling specs.
+3. For UI specs, use `test` from the custom fixture `../../../core/base/base.fixture`; for API specs, follow the API instruction file's native Playwright pattern.
 
 ### Phase 2 — Live exploration via Playwright MCP (REQUIRED before any code)
 
@@ -50,7 +41,7 @@ For **each workflow step** in the scenario:
 
 1. Navigate to the relevant page with `browser_navigate`.
 2. Complete authentication if required — follow the same flow as sibling specs.
-3. Capture an accessibility snapshot with `browser_snapshot` — record stable `data-testid`, `role`, and `aria-label` values for every interactive control on the screen.
+3. Capture an accessibility snapshot with `browser_snapshot` — record stable `role`, `placeholder`, `label`, or attributes values for every interactive control on the screen.
 4. Perform the action (`browser_click`, `browser_fill_form`, `browser_select_option`).
 5. Take a screenshot with `browser_take_screenshot` to confirm the expected outcome.
 6. Add an entry to an internal **locator map**: control name → selector chosen → reason selected.
@@ -61,19 +52,17 @@ Do not advance to Phase 3 until every step has been executed and observed in the
 
 Only now write the Playwright TypeScript spec:
 
-- Mirror the `test.describe.serial` + `test.beforeAll` pattern of sibling specs.
 - Use the locator evidence from Phase 2 — never guess selectors.
-- Each workflow step from Phase 2 becomes one `test(...)` block.
+- Each workflow step from Phase 2 becomes one `test.step(...)` block inside a `test(...)` spec.
 - Assertions must reflect the actual UI state observed during exploration.
-- Add a matching testdata JSON file under `playwright-e2e/src/test-data/<ENVIRONMENT>/<relative-path>.json` when required by the fixture loader.
+- Create the spec, Page Object additions, and matching test data according to the path-scoped instructions.
 
 ### Phase 4 — Execute
 
-Run only the new spec with one worker:
+Run the repository quality gate and new spec with one worker:
 
 ```bash
-npx cross-env ENVIRONMENT=<ENV> USE_SPECIFIC_TESTS=false TZ=Australia/Adelaide \
-  npx playwright test <target-spec-path> --config=src/config/playwright.config.ts --workers=1
+npm run finalize-spec -- <target-spec-path> run
 ```
 
 ### Phase 5 — Heal loop (max 3 iterations per spec)
@@ -81,8 +70,9 @@ npx cross-env ENVIRONMENT=<ENV> USE_SPECIFIC_TESTS=false TZ=Australia/Adelaide \
 For each failing test:
 
 1. Re-open the failing step in the live browser using MCP to re-verify the current selector state.
-2. Apply the smallest targeted fix — selector, timing, or assertion.
-3. Re-run only the affected spec.
+2. Apply the smallest targeted fix — selector, timing, or assertion. Ensure locators are encapsulated inside Page Objects.
+3. Re-run only the affected spec:
+   `npx cross-env HEADLESS=true npx playwright test <target-spec-path> --config=src/config/playwright.config.ts`
 4. Stop iterating when the spec passes or when the failure is caused by environment/data issues outside the agent's control.
 
 ### Phase 6 — Report

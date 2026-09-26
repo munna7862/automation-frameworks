@@ -3,7 +3,7 @@ import { expect, Locator } from '@playwright/test';
 
 export class CatalogPage extends BasePage {
 
-  // Define locators for the Sign Up page elements
+  // Locators
   private get btnLogout(): Locator {
     return this.page.locator("//button[text()='Logout']");
   }
@@ -28,53 +28,147 @@ export class CatalogPage extends BasePage {
     return this.page.getByRole('status');
   }
 
+  private get inputSearch(): Locator {
+    return this.page.locator('#book-search-input');
+  }
 
-  // Add methods to interact with the Sign Up page elements
+  private get btnSearch(): Locator {
+    return this.page.locator('#book-search-btn');
+  }
+
+  private get btnClearSearch(): Locator {
+    return this.page.locator('#book-search-clear-btn');
+  }
+
+  private get eleResultCount(): Locator {
+    return this.page.locator('.catalog-result-count');
+  }
+
+  private get eleEmptyCatalog(): Locator {
+    return this.page.locator('.catalog-empty');
+  }
+
+  private get firstBookTitle(): Locator {
+    return this.page.locator('.title-variant-2 a').first();
+  }
+
+  private getBookTitleLink(bookId: string | number): Locator {
+    return this.page.locator(`.info-cell-beta a[href="/books/${bookId}"]`);
+  }
+
+  private get eleGridWrapper(): Locator {
+    return this.page.locator('.layout-wrapper-xyz987');
+  }
+
+  private get eleBookCover(): Locator {
+    return this.page.locator('.catalog-book-cover');
+  }
+
+  private get eleInfoCell(): Locator {
+    return this.page.locator('.info-cell-beta');
+  }
+
+  private get elePriceTag(): Locator {
+    return this.page.locator('.price-tag-value');
+  }
+
+  private get formSearch(): Locator {
+    return this.page.locator('.catalog-search-form');
+  }
+
+  private get eleInfoCellH3(): Locator {
+    return this.page.locator('.info-cell-beta h3');
+  }
+
+  // Actions and Interaction Methods
   public async navigateToCatalog(baseUrl: string): Promise<void> {
     await this.logMessage('INFO', `Navigating to catalog page: ${baseUrl}`);
     await this.page.goto(baseUrl);
   }
 
   public async clickNavigateLink(sLink: string) {
-    await this.doClick(this.getNavigateLink(sLink), `Clicking on ${sLink} link`);
+    const linkLocator = this.getNavigateLink(sLink);
+    await this.ensureNavElementVisible(linkLocator);
+    await this.doClick(linkLocator, `Clicking on ${sLink} link`);
   }
 
   public async clickLogout() {
+    await this.ensureNavElementVisible(this.btnLogout);
     await this.doClick(this.btnLogout, "Clicking on Logout button");
   }
 
   public async verifyCheckoutPage() {
     await this.logMessage('INFO', "Verifying landing on Checkout Page");
-    let actualText = await this.doGetText(this.getNavigateLink("Checkout"), "Checking if Checkout label is visible");
+    const checkoutLink = this.getNavigateLink("Checkout");
+    await this.ensureNavElementVisible(checkoutLink);
+    const actualText = await this.doGetText(checkoutLink, "Checking if Checkout label is visible");
     await this.logMessage('INFO', "Landed on Checkout Page successfully and Text is: " + actualText);
     return actualText?.trim() === "Checkout" ? true : false;
   }
 
   public async isLoginVisible() {
-    await this.getNavigateLink("Login").waitFor({ state: 'visible', timeout: 5000 });
-    return await this.doesElementExist(this.getNavigateLink("Login"), "Checking if Login link is visible on Catalog page");
+    const loginLink = this.getNavigateLink("Login");
+    await this.ensureNavElementVisible(loginLink);
+    await loginLink.waitFor({ state: 'visible', timeout: 5000 });
+    return await this.doesElementExist(loginLink, "Checking if Login link is visible on Catalog page");
+  }
+
+  public async isLogoutVisible(): Promise<boolean> {
+    await this.ensureNavElementVisible(this.btnLogout);
+    await this.btnLogout.waitFor({ state: 'visible', timeout: 5000 });
+    return await this.doesElementExist(this.btnLogout, "Checking if Logout button is visible on Catalog page");
   }
 
   public async getBooksCount() {
-    await this.eleBooksCount.first().waitFor({ state: 'visible', timeout: 5000 });
-    let count = await this.eleBooksCount.count();
+    await this.eleBooksCount.first().waitFor({ state: 'visible', timeout: 60000 });
+    const count = await this.eleBooksCount.count();
     await this.logMessage('INFO', "Total Books displayed in Catalog page are: " + count);
     return count;
   }
 
+  public async getDisplayedBooksCount(): Promise<number> {
+    return await this.eleBooksCount.count();
+  }
+
   public async clickPaginationButton(btnNumber: number) {
-    await this.doClick(this.getpaginationButton(btnNumber), `Clicking on Pagination button number ${btnNumber}`);
-    for (let i = 0; i < 5; i++) { // Retry mechanism to handle potential timing issues
-      await this.page.waitForTimeout(2000); // Wait before retrying
-      let buttonClass = await this.doGetAttribute(this.getpaginationButton(btnNumber), "class", `Checking if Pagination button number ${btnNumber} is active after click`);
-      await this.logMessage('INFO', `Pagination button number ${btnNumber} class attribute after click: ${buttonClass}`);
-      if (buttonClass && buttonClass.includes("active")) {
-        break; // Exit loop if button is active
-      }
-      else {
-        await this.logMessage('WARN', `Pagination button number ${btnNumber} is not active yet. Retrying... (${i + 1}/5)`);
-      }
-    }
+    const responsePromise = this.page.waitForResponse(res => res.url().includes('/api/books') && res.status() === 200);
+    const btn = this.getpaginationButton(btnNumber);
+    await this.doClick(btn, `Clicking on Pagination button number ${btnNumber}`);
+    await responsePromise;
+    await expect(btn).toHaveClass(/active/, { timeout: 10000 }).catch(() => undefined);
+  }
+
+  public async searchBooks(term: string): Promise<void> {
+    const responsePromise = this.page.waitForResponse(res => res.url().includes('/api/books') && res.status() === 200);
+    await this.doEnterText(this.inputSearch, term, `Filling search input with: ${term}`);
+    await this.doClick(this.btnSearch, `Clicking Search button`);
+    await responsePromise;
+    await this.eleResultCount.or(this.eleEmptyCatalog).first().waitFor({ state: 'visible', timeout: 30000 });
+  }
+
+  public async clearSearch(): Promise<void> {
+    const responsePromise = this.page.waitForResponse(res => res.url().includes('/api/books') && res.status() === 200);
+    await this.doClick(this.btnClearSearch, `Clicking Clear search button`);
+    await responsePromise;
+    await this.btnClearSearch.waitFor({ state: 'hidden', timeout: 10000 });
+  }
+
+
+
+  public async getResultCountText(): Promise<string> {
+    return await this.doGetText(this.eleResultCount, `Getting catalog result count text`);
+  }
+
+  public async getEmptyStateText(): Promise<string> {
+    return await this.doGetText(this.eleEmptyCatalog, `Getting catalog empty state text`);
+  }
+
+  public async clickBookTitle(bookId: string | number): Promise<void> {
+    await this.doClick(this.getBookTitleLink(bookId), `Clicking on book title link for book ID: ${bookId}`);
+  }
+
+  public async getFirstBookTitle(): Promise<string> {
+    return await this.doGetText(this.firstBookTitle, `Getting first book title in catalog`);
   }
 
   public async clickAddToCartForBook(bookId: number): Promise<void> {
@@ -87,12 +181,105 @@ export class CatalogPage extends BasePage {
 
   public async waitForCartStatusMessage(expectedMessage: string): Promise<void> {
     await this.logMessage('INFO', `Waiting for cart status message: ${expectedMessage}`);
-    await expect(this.page.getByRole('status').filter({ hasText: expectedMessage })).toBeVisible({ timeout: 60000 });
+    await expect(this.page.getByRole('status').filter({ hasText: expectedMessage }).first()).toBeVisible({ timeout: 60000 });
     await this.logMessage('INFO', `Cart status message "${expectedMessage}" is visible`);
   }
 
   public async addBookToCart(bookId: number): Promise<void> {
+    const responsePromise = this.page.waitForResponse(res => res.url().includes('/api/cart') && res.status() === 200);
     await this.clickAddToCartForBook(bookId);
+    await responsePromise;
+    await this.waitForCartStatusMessage('added to cart');
+  }
+
+  public async getGridWrapperCount(): Promise<number> {
+    return await this.eleGridWrapper.count();
+  }
+
+  public async getBookCardCount(): Promise<number> {
+    return await this.eleBooksCount.count();
+  }
+
+  public async getBookCoverCount(): Promise<number> {
+    return await this.eleBookCover.count();
+  }
+
+  public async getInfoCellCount(): Promise<number> {
+    return await this.eleInfoCell.count();
+  }
+
+  public async getPriceTagCount(): Promise<number> {
+    return await this.elePriceTag.count();
+  }
+
+  public async getSearchInputCount(): Promise<number> {
+    return await this.inputSearch.count();
+  }
+
+  public async getSearchBtnCount(): Promise<number> {
+    return await this.btnSearch.count();
+  }
+
+  public async getSearchClearBtnCount(): Promise<number> {
+    return await this.btnClearSearch.count();
+  }
+
+  public async getGridComputedLayout(): Promise<{ display: string; columnCount: number }> {
+    return await this.eleGridWrapper.evaluate(el => {
+      const style = getComputedStyle(el);
+      const cols = style.gridTemplateColumns.trim().split(/\s+/).filter(s => s.length > 0);
+      return { display: style.display, columnCount: cols.length };
+    });
+  }
+
+  public async getFirstCoverTransform(): Promise<string> {
+    return await this.eleBookCover.first().evaluate(el => getComputedStyle(el).transform);
+  }
+
+  public async hoverFirstBookCard(): Promise<void> {
+    await this.mouseHover(this.eleBooksCount.first(), "Hovering over first book card");
+  }
+
+  public async waitForFirstCoverTransformTransition(): Promise<void> {
+    await this.page.waitForFunction(() => {
+      const el = document.querySelector('.catalog-book-cover');
+      return el ? getComputedStyle(el).transform !== 'none' : false;
+    }).catch(() => undefined);
+  }
+
+  public async waitForBookCardsVisible(): Promise<void> {
+    await this.eleBooksCount.first().waitFor({ state: 'visible', timeout: 30000 });
+  }
+
+  public async getFirstBookCardBorderColor(): Promise<string> {
+    return await this.eleBooksCount.first().evaluate(el => getComputedStyle(el).borderColor);
+  }
+
+  public async getFirstCoverFilter(): Promise<string> {
+    return await this.eleBookCover.first().evaluate(el => getComputedStyle(el).filter);
+  }
+
+  public async getSearchFormTransform(): Promise<string> {
+    return await this.formSearch.evaluate(el => getComputedStyle(el).transform);
+  }
+
+  public async getFirstPriceTagTransform(): Promise<string> {
+    return await this.elePriceTag.first().evaluate(el => getComputedStyle(el).transform);
+  }
+
+  public async getFirstBookCardH3Styles(): Promise<{ fontSize: string; lineHeight: string }> {
+    return await this.eleInfoCellH3.first().evaluate(el => {
+      const style = getComputedStyle(el);
+      return { fontSize: style.fontSize, lineHeight: style.lineHeight };
+    });
+  }
+
+  public async waitForVisualChaosActive(): Promise<void> {
+    await this.page.waitForSelector('body.visual-chaos-active', { timeout: 10000 });
+  }
+
+  public async waitForBookCardSelector(): Promise<void> {
+    await this.eleBooksCount.first().waitFor({ state: 'visible', timeout: 30000 });
   }
 
 }
