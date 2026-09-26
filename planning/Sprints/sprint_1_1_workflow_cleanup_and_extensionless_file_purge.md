@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-1.1-WORKFLOW-CLEANUP-AND-EXTENSIONLESS-PURGE`  
 **Phase Mapping**: [Phase 1: Monorepo Foundations, Pipeline Hygiene & Utility Unification](../Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)  
 **Estimated Velocity**: 2 Story Points  
-**Sprint Status**: Ready for Execution  
+**Sprint Status**: Done  
 **Sprint Goal**: Purge broken extensionless workflow files and obsolete legacy CRUD test pipelines from `.github/workflows/`, ensuring all remaining workflows have valid kebab-case YAML syntax and incorporate mandatory Render staging warm-up probes.
 
 ---
@@ -29,13 +29,13 @@
   *So that* the CI workflow tab is clean and free of parsing errors or rogue job definitions.
 - **Story Points**: 1 SP (Small)
 - **Technical Subtasks**:
-  - [ ] Identify and delete the 4 extensionless files from `.github/workflows/`:
+  - [x] Identify and delete the 4 extensionless files from `.github/workflows/`:
     - `.github/workflows/Playwright Automation CI (Sharded)`
     - `.github/workflows/Playwright Automation CI - Docker (Sharded Optimized)`
     - `.github/workflows/Playwright Automation CI - Docker (Sharded)`
     - `.github/workflows/Playwright Automation CI - Kubernetes (Sharded Optimized)`
-  - [ ] Delete legacy `.github/workflows/performance-crud.yaml` (superseded by `jmeter-performance.yaml`).
-  - [ ] Run git status to confirm all 5 dead files are staged for removal.
+  - [x] Delete legacy `.github/workflows/performance-crud.yaml` (superseded by `jmeter-performance.yaml`).
+  - [x] Run git status to confirm all 5 dead files are staged for removal.
 - **Acceptance Criteria**:
   - Zero extensionless files remain in `.github/workflows/`.
   - All remaining workflow files possess `.yml` or `.yaml` extensions.
@@ -47,8 +47,8 @@
   *So that* tests never fail due to Render free-tier cold-start latency (502/504 errors).
 - **Story Points**: 1 SP (Small)
 - **Technical Subtasks**:
-  - [ ] Inspect `.github/workflows/playwright-ci.yml`, `playwright-docker.yml`, and `jmeter-performance.yaml`.
-  - [ ] Verify each job targeting staging includes the standardized probe:
+  - [x] Inspect `.github/workflows/playwright-ci.yml`, `playwright-docker.yml`, and `jmeter-performance.yaml`.
+  - [x] Verify each job targeting staging includes the standardized probe:
     ```yaml
     - name: Render Staging Warm-Up Pre-Flight Probe
       run: |
@@ -57,7 +57,7 @@
         npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
         npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
     ```
-  - [ ] Verify single Google Chrome browser flags (`channel: 'chrome'`) in all workflow test commands.
+  - [x] Verify single Google Chrome browser flags (`channel: 'chrome'`) in all workflow test commands.
 - **Acceptance Criteria**:
   - Every workflow interacting with Render executes the warm-up probe before tests start.
   - Zero test runs suffer from initial Render cold-start timeouts.
@@ -66,10 +66,10 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] All 4 extensionless workflow files are removed.
-- [ ] `performance-crud.yaml` is deleted.
-- [ ] Remaining workflows (`playwright-ci.yml`, `playwright-docker.yml`, `jmeter-performance.yaml`) pass YAML syntax validation.
-- [ ] No workflow runs multiple browsers (Chrome only).
+- [x] All 4 extensionless workflow files are removed.
+- [x] `performance-crud.yaml` is deleted.
+- [x] Remaining workflows (`playwright-ci.yml`, `playwright-docker.yml`, `jmeter-performance.yaml`) pass YAML syntax validation.
+- [x] No workflow runs multiple browsers (Chrome only).
 
 ---
 

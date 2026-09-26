@@ -3,7 +3,7 @@
 **Navigation**: [🗺️ Planning Hub](../README.md) | [📖 Master Plan](../Master/master_plan.md) | **[Phase 1]** | [Phase 2](phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md) | [Phase 3](phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md) | [Phase 4](phase_4_mobile_automation_appium_and_webdriverio.md) | [Phase 5](phase_5_executive_observability_and_unified_allure_dashboard.md)
 
 **Phase Identifier**: `PHASE-1-FOUNDATIONS-AND-PIPELINES`  
-**Phase Status**: Planned  
+**Phase Status**: In Progress  
 **Total Phase Velocity**: **10 Story Points** (Sprint 1.1: 2 SP, Sprint 1.2: 3 SP, Sprint 1.3: 5 SP)  
 **Phase Leads**: SDET Architect & DevOps Engineer  
 **Primary Personas**: SDET Architect, Playwright QA Lead, DevOps Engineer  
@@ -84,7 +84,7 @@ graph LR
 
 ## 4. Definition of Done & Quality Acceptance Gates
 
-- [ ] All 4 extensionless files and legacy CRUD workflows are permanently purged from `.github/workflows/`.
+- [x] All 4 extensionless files and legacy CRUD workflows are permanently purged from `.github/workflows/`.
 - [ ] Root and sub-project `.env.example` templates are committed with clear documentation and safe default values.
 - [ ] Visual regression tests pass deterministically on Google Chrome without manual snapshot overrides.
 - [ ] Monorepo root `package.json` coordinates all frameworks via npm workspaces.
