@@ -6,6 +6,8 @@ npm-debug.log*
 playwright-report/
 reports/
 test-results/
+.auth/
+**/playwright-e2e/.auth/
 
 # Logs
 logs/

@@ -16,6 +16,14 @@ test.describe('Chaos and Testing Utilities API', () => {
     expect(resetRes.status()).toBe(200);
   });
 
+  test.afterEach(async ({ request }) => {
+    // Reset chaos configuration back to baseline 0
+    await request.post('/api/test/config', {
+      data: { checkoutFailureRate: 0, inventoryDelayMs: 0 }
+    });
+    await request.post('/api/test/reset');
+  });
+
   test('API_TEST_01: Global reset clears all non-default users and carts @smoke @regression', async ({ request }) => {
     const username = uniqueUsername();
     const password = 'Password123!';

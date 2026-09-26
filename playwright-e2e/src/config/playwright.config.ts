@@ -105,6 +105,9 @@ export default defineConfig({
     {
       name: 'setup',
       testMatch: /.*auth\.setup\.ts/,
+      use: {
+        channel: 'chrome',
+      },
     },
     {
       name: 'api',
@@ -120,68 +123,17 @@ export default defineConfig({
       },
     },
     {
-      name: 'chromium',
+      name: 'chrome',
       dependencies: ['setup'],
       testDir: path.resolve(__dirname, '../tests/ui'),
       testMatch: /.*\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
-        viewport: { width: 1280, height: 720 },
-        storageState: authFile,
-      },
-    },
-    {
-      name: 'Google Chrome',
-      dependencies: ['setup'],
-      testDir: path.resolve(__dirname, '../tests/ui'),
-      testMatch: /.*\.spec\.ts/,
-      use: {
         channel: 'chrome',
+        viewport: { width: 1280, height: 720 },
         launchOptions: {
           args: ['--disable-notifications', '--disable-infobars', '--disable-extensions', '--start-maximized'],
         },
-        storageState: authFile,
-      },
-    },
-    {
-      name: 'firefox',
-      dependencies: ['setup'],
-      testDir: path.resolve(__dirname, '../tests/ui'),
-      testMatch: /.*\.spec\.ts/,
-      use: {
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1280, height: 720 },
-        storageState: authFile,
-      },
-    },
-    {
-      name: 'webkit',
-      dependencies: ['setup'],
-      testDir: path.resolve(__dirname, '../tests/ui'),
-      testMatch: /.*\.spec\.ts/,
-      use: {
-        ...devices['Desktop Safari'],
-        viewport: { width: 1280, height: 720 },
-        storageState: authFile,
-      },
-    },
-    {
-      name: 'mobile-chrome',
-      dependencies: ['setup'],
-      testDir: path.resolve(__dirname, '../tests/ui'),
-      testMatch: /.*\.spec\.ts/,
-      use: {
-        ...devices['Pixel 5'],
-        storageState: authFile,
-      },
-    },
-    {
-      name: 'mobile-safari',
-      dependencies: ['setup'],
-      testDir: path.resolve(__dirname, '../tests/ui'),
-      testMatch: /.*\.spec\.ts/,
-      use: {
-        ...devices['iPhone 13'],
         storageState: authFile,
       },
     },
