@@ -1,0 +1,239 @@
+name: JMeter Performance CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_plan:
+        description: 'JMeter Test Plan to execute'
+        required: true
+        default: 'BuggyBooks_Catalog_Load'
+        type: choice
+        options:
+          - 'BuggyBooks_Catalog_Load'
+          - 'BuggyBooks_Auth_Stress'
+          - 'BuggyBooks_Ecommerce_Journey'
+          - 'BuggyBooks_Inventory_Stress'
+          - 'CRUDPerformanceTest'
+
+      thread_count:
+        description: 'Virtual Users (Threads)'
+        required: false
+        default: '5'
+        type: string
+
+      ramp_time:
+        description: 'Ramp-up period in seconds'
+        required: false
+        default: '5'
+        type: string
+
+      iterations:
+        description: 'Loop iterations per thread'
+        required: false
+        default: '5'
+        type: string
+
+      target_host:
+        description: 'Target API Host'
+        required: false
+        default: 'buggy-books.onrender.com'
+        type: string
+
+      target_protocol:
+        description: 'Target Protocol (https or http)'
+        required: false
+        default: 'https'
+        type: choice
+        options:
+          - 'https'
+          - 'http'
+
+      branch:
+        description: 'Branch to run workflow on'
+        required: false
+        default: 'main'
+        type: string
+
+env:
+  JMETER_VERSION: "5.6.3"
+  JMETER_TEST_DIR: "jmeter"
+  RESULTS_DIR: "jmeter/Results"
+  REPORTS_DIR: "jmeter/Reports"
+
+jobs:
+  run-performance-test:
+    name: Run JMeter Performance Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    outputs:
+      test_status: ${{ steps.parse-results.outputs.test_status }}
+      total_samples: ${{ steps.parse-results.outputs.total_samples }}
+      failed_samples: ${{ steps.parse-results.outputs.failed_samples }}
+      success_rate: ${{ steps.parse-results.outputs.success_rate }}
+      avg_response_time: ${{ steps.parse-results.outputs.avg_response_time }}
+      report_ready: ${{ steps.detect-report.outputs.report_ready }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || github.ref }}
+          fetch-depth: 1
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Apache JMeter ${{ env.JMETER_VERSION }}
+        shell: bash
+        run: |
+          set -euxo pipefail
+          JMETER_ARCHIVE="apache-jmeter-${JMETER_VERSION}.tgz"
+          curl -fsSL "https://archive.apache.org/dist/jmeter/binaries/${JMETER_ARCHIVE}" -o "${RUNNER_TEMP}/${JMETER_ARCHIVE}"
+          tar -xzf "${RUNNER_TEMP}/${JMETER_ARCHIVE}" -C "${RUNNER_TEMP}"
+          echo "${RUNNER_TEMP}/apache-jmeter-${JMETER_VERSION}/bin" >> "${GITHUB_PATH}"
+
+      - name: Pre-Flight Warm-Up Staging Environment
+        shell: bash
+        run: |
+          TARGET_HOST="${{ inputs.target_host || 'buggy-books.onrender.com' }}"
+          if [[ "${TARGET_HOST}" == *"onrender.com"* ]]; then
+            echo "Waking Render staging instance: ${TARGET_HOST}..."
+            curl -s -o /dev/null -w "Backend wake status: %{http_code}\n" "https://${TARGET_HOST}/api/books" || true
+            npx wait-on -t 90000 "https://${TARGET_HOST}/api/books" || true
+          fi
+
+      - name: Prepare result directories & select dataset
+        id: prep
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p "${RESULTS_DIR}" "${REPORTS_DIR}"
+          TEST_PLAN="${{ inputs.test_plan || 'BuggyBooks_Catalog_Load' }}"
+
+          if [[ "${TEST_PLAN}" == "BuggyBooks_Catalog_Load" ]]; then
+            CSV_PATH="${GITHUB_WORKSPACE}/jmeter/TestData/catalog_search.csv"
+          elif [[ "${TEST_PLAN}" == "BuggyBooks_Auth_Stress" || "${TEST_PLAN}" == "BuggyBooks_Ecommerce_Journey" ]]; then
+            CSV_PATH="${GITHUB_WORKSPACE}/jmeter/TestData/users.csv"
+          else
+            CSV_PATH="${GITHUB_WORKSPACE}/jmeter/TestData/UserId.csv"
+          fi
+
+          echo "csv_path=${CSV_PATH}" >> "${GITHUB_OUTPUT}"
+          echo "test_plan=${TEST_PLAN}" >> "${GITHUB_OUTPUT}"
+
+      - name: Execute JMeter Non-GUI Benchmark
+        id: run-test
+        shell: bash
+        run: |
+          set -euxo pipefail
+          TEST_PLAN="${{ steps.prep.outputs.test_plan }}"
+          CSV_PATH="${{ steps.prep.outputs.csv_path }}"
+          RESULTS_FILE="${GITHUB_WORKSPACE}/jmeter/Results/${TEST_PLAN}-results.jtl"
+          REPORT_DIR="${GITHUB_WORKSPACE}/jmeter/Reports/${TEST_PLAN}-report"
+          LOG_FILE="${GITHUB_WORKSPACE}/jmeter/Results/jmeter.log"
+
+          cd "${JMETER_TEST_DIR}"
+          jmeter -n \
+            -t "Tests/${TEST_PLAN}.jmx" \
+            -l "${RESULTS_FILE}" \
+            -j "${LOG_FILE}" \
+            -e -o "${REPORT_DIR}" \
+            -Jhost="${{ inputs.target_host || 'buggy-books.onrender.com' }}" \
+            -Jprotocol="${{ inputs.target_protocol || 'https' }}" \
+            -JbasePath="api" \
+            -JTHREAD_COUNT="${{ inputs.thread_count || '5' }}" \
+            -JRAMP_TIME="${{ inputs.ramp_time || '5' }}" \
+            -JITERATIONS="${{ inputs.iterations || '5' }}" \
+            -JCSV_FILE="${CSV_PATH}" \
+            -JRESULTS_FILE="${RESULTS_FILE}"
+
+      - name: Parse benchmark results
+        id: parse-results
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          TEST_PLAN="${{ steps.prep.outputs.test_plan }}"
+          RESULT_FILE="${GITHUB_WORKSPACE}/jmeter/Results/${TEST_PLAN}-results.jtl"
+
+          if [[ ! -f "${RESULT_FILE}" ]]; then
+            echo "test_status=ERROR" >> "${GITHUB_OUTPUT}"
+            echo "total_samples=0" >> "${GITHUB_OUTPUT}"
+            echo "failed_samples=0" >> "${GITHUB_OUTPUT}"
+            echo "success_rate=0.00" >> "${GITHUB_OUTPUT}"
+            echo "avg_response_time=0" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          TOTAL_SAMPLES=$(tail -n +2 "${RESULT_FILE}" | wc -l | tr -d ' ')
+          FAILED_SAMPLES=$(tail -n +2 "${RESULT_FILE}" | awk -F',' '$8=="false" {count++} END {print count+0}')
+
+          if [[ "${TOTAL_SAMPLES}" -eq 0 ]]; then
+            SUCCESS_RATE="0.00"
+            AVG_RESPONSE_TIME="0"
+          else
+            SUCCESS_RATE=$(awk -v total="${TOTAL_SAMPLES}" -v failed="${FAILED_SAMPLES}" 'BEGIN {printf "%.2f", ((total - failed) * 100) / total}')
+            AVG_RESPONSE_TIME=$(tail -n +2 "${RESULT_FILE}" | awk -F',' '{sum+=$2; count++} END {if (count > 0) printf "%.0f", sum / count; else print 0}')
+          fi
+
+          if [[ "${FAILED_SAMPLES}" -eq 0 && "${TOTAL_SAMPLES}" -gt 0 ]]; then
+            TEST_STATUS="PASSED"
+          else
+            TEST_STATUS="FAILED"
+          fi
+
+          echo "test_status=${TEST_STATUS}" >> "${GITHUB_OUTPUT}"
+          echo "total_samples=${TOTAL_SAMPLES}" >> "${GITHUB_OUTPUT}"
+          echo "failed_samples=${FAILED_SAMPLES}" >> "${GITHUB_OUTPUT}"
+          echo "success_rate=${SUCCESS_RATE}" >> "${GITHUB_OUTPUT}"
+          echo "avg_response_time=${AVG_RESPONSE_TIME}" >> "${GITHUB_OUTPUT}"
+
+      - name: Detect generated HTML dashboard report
+        id: detect-report
+        if: always()
+        shell: bash
+        run: |
+          TEST_PLAN="${{ steps.prep.outputs.test_plan }}"
+          REPORT_DIR="${GITHUB_WORKSPACE}/jmeter/Reports/${TEST_PLAN}-report"
+          if [[ -f "${REPORT_DIR}/index.html" ]]; then
+            echo "report_ready=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "report_ready=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Upload JMeter Dashboard & Results Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-${{ steps.prep.outputs.test_plan }}-report
+          path: |
+            ${{ env.RESULTS_DIR }}
+            ${{ env.REPORTS_DIR }}
+          retention-days: 14
+
+      - name: Generate Quality Gate Step Summary
+        if: always()
+        shell: bash
+        run: |
+          TEST_PLAN="${{ steps.prep.outputs.test_plan }}"
+          {
+            echo "## 🚀 JMeter Performance Benchmark Summary"
+            echo
+            echo "| Metric | Value |"
+            echo "| :--- | :--- |"
+            echo "| **Test Plan** | \`${TEST_PLAN}.jmx\` |"
+            echo "| **Target Host** | \`${{ inputs.target_host || 'buggy-books.onrender.com' }}\` |"
+            echo "| **Virtual Users (Threads)** | \`${{ inputs.thread_count || '5' }}\` |"
+            echo "| **Iterations** | \`${{ inputs.iterations || '5' }}\` |"
+            echo "| **Status** | **${{ steps.parse-results.outputs.test_status }}** |"
+            echo "| **Total Samples** | \`${{ steps.parse-results.outputs.total_samples }}\` |"
+            echo "| **Failed Samples** | \`${{ steps.parse-results.outputs.failed_samples }}\` |"
+            echo "| **Success Rate** | \`${{ steps.parse-results.outputs.success_rate }}%\` |"
+            echo "| **Avg Response Time** | \`${{ steps.parse-results.outputs.avg_response_time }} ms\` |"
+            echo "| **Report Artifact** | \`jmeter-${TEST_PLAN}-report\` |"
+          } >> "${GITHUB_STEP_SUMMARY}"

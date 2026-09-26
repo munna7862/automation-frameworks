@@ -106,20 +106,37 @@ More details: [wdio-e2e/README.md](./wdio-e2e/README.md)
 
 ## JMeter Performance Tests
 
-The JMeter project contains performance test plans, test data, and sample result output.
+The JMeter project contains performance test plans, parameterized CSV datasets, and automated reporting configurations for BuggyBooks API benchmarks and legacy CRUD tests.
 
 ```text
 jmeter/
-  Tests/CRUDPerformanceTest.jmx
-  TestData/UserId.csv
-  Results/output.jtl
+  Tests/
+    BuggyBooks_Catalog_Load.jmx
+    BuggyBooks_Auth_Stress.jmx
+    BuggyBooks_Ecommerce_Journey.jmx
+    BuggyBooks_Inventory_Stress.jmx
+    CRUDPerformanceTest.jmx
+  TestData/
+    catalog_search.csv
+    users.csv
+    UserId.csv
+  Results/
 ```
 
-Run from a machine with Apache JMeter installed:
+Run headlessly from a machine with Apache JMeter 5.6+ installed:
 
 ```bash
-jmeter -n -t jmeter/Tests/CRUDPerformanceTest.jmx -l jmeter/Results/output.jtl
+# BuggyBooks Catalog Load Test
+jmeter -n -t jmeter/Tests/BuggyBooks_Catalog_Load.jmx -l jmeter/Results/catalog_report.jtl -e -o jmeter/Results/html-dashboard
+
+# BuggyBooks Auth Stress Test
+jmeter -n -t jmeter/Tests/BuggyBooks_Auth_Stress.jmx -l jmeter/Results/auth_report.jtl
+
+# BuggyBooks Full E-Commerce Journey
+jmeter -n -t jmeter/Tests/BuggyBooks_Ecommerce_Journey.jmx -l jmeter/Results/journey_report.jtl
 ```
+
+More details: [jmeter/README.md](./jmeter/README.md)
 
 ## Common Prerequisites
 
@@ -167,7 +184,8 @@ Current workflow coverage includes:
 - Playwright CI execution
 - Playwright Docker execution
 - Sharded Playwright execution variants
-- JMeter CRUD performance workflow
+- BuggyBooks JMeter performance test workflows (`jmeter-performance.yaml`)
+- Legacy JMeter CRUD performance workflow (`jmeter.yml`)
 
 ## Engineering Principles
 
