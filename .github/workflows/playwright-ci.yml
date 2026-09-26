@@ -47,6 +47,14 @@ jobs:
           npm ci
           npx playwright install --with-deps chrome
 
+      - name: Pre-Flight Warm-Up Staging Environment
+        run: |
+          echo "Pinging Render backend and frontend to wake from sleep..."
+          curl -s -o /dev/null -w "Backend wake ping status: %{http_code}\n" https://buggy-books.onrender.com/api/books || true
+          curl -s -o /dev/null -w "Frontend wake ping status: %{http_code}\n" https://buggy-books-fe.onrender.com/ || true
+          npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
+          npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
+
       - name: Run tests
         working-directory: playwright-e2e
         env:

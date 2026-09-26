@@ -40,14 +40,10 @@ on:
       project:
         description: 'Playwright browser / device project for UI tests'
         required: false
-        default: 'chromium'
+        default: 'chrome'
         type: choice
         options:
-          - chromium
-          - firefox
-          - webkit
-          - mobile-chrome
-          - mobile-safari
+          - chrome
 
       retries:
         description: 'Test retry count override (0 for instant fail-fast, default uses config retries)'
@@ -332,7 +328,7 @@ jobs:
   # STAGE 2: UI Automation Execution
   # ============================================================================
   ui-tests:
-    name: UI Automation (${{ github.event.inputs.project || 'chromium' }})
+    name: UI Automation (${{ github.event.inputs.project || 'chrome' }})
     if: >-
       ${{
         !cancelled() &&
@@ -364,18 +360,11 @@ jobs:
         working-directory: playwright-e2e
         run: echo "version=$(node -e "console.log(require('@playwright/test/package.json').version)")" >> $GITHUB_OUTPUT
 
-      - name: Install Selected Playwright Browser Binaries & Dependencies
+      - name: Install Google Chrome & Dependencies
         working-directory: playwright-e2e
         run: |
-          SELECTED_PROJECT="${{ github.event.inputs.project || 'chromium' }}"
-          BROWSERS="chromium"
-          if [[ "$SELECTED_PROJECT" == "firefox" ]]; then
-            BROWSERS="firefox chromium"
-          elif [[ "$SELECTED_PROJECT" == "webkit" || "$SELECTED_PROJECT" == "mobile-safari" ]]; then
-            BROWSERS="webkit chromium"
-          fi
-          echo "Installing Playwright browsers: $BROWSERS for project: $SELECTED_PROJECT"
-          npx playwright install --with-deps $BROWSERS
+          echo "Installing Google Chrome browser binary and system dependencies"
+          npx playwright install --with-deps chrome
 
       - name: Pre-Flight Warm-Up Staging Environment
         run: |
@@ -405,7 +394,7 @@ jobs:
             TARGET_PATH="$INPUT_PATH"
           fi
 
-          PROJECT="${{ github.event.inputs.project || 'chromium' }}"
+          PROJECT="${{ github.event.inputs.project || 'chrome' }}"
           TAG="${{ github.event.inputs.tag }}"
           GREP_INPUT="${{ github.event.inputs.grep }}"
           EXCLUDE_TAG="${{ github.event.inputs.exclude_tag }}"
@@ -490,7 +479,7 @@ jobs:
       - name: Generate UI Quality Gate Step Summary
         if: always()
         working-directory: playwright-e2e
-        run: node scripts/generate-playwright-summary.js test-results/ui-results.json "UI Automation (${{ github.event.inputs.project || 'chromium' }})" "playwright-traces-ui"
+        run: node scripts/generate-playwright-summary.js test-results/ui-results.json "UI Automation (${{ github.event.inputs.project || 'chrome' }})" "playwright-traces-ui"
 
       - name: Upload Playwright Failure Traces & Screenshots
         if: failure()

@@ -73,7 +73,7 @@ jobs:
           MONOCART_REPORT_PATH: reports/monocart-shard-${{ matrix.shardIndex }}/index.html
         run: |
           echo "Executing native dynamic shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}"
-          npx playwright test --config=src/config/playwright.config.ts --project=chromium --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+          npx playwright test --config=src/config/playwright.config.ts --project=chrome --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
       - name: Generate Shard Quality Gate Step Summary
         if: always()
