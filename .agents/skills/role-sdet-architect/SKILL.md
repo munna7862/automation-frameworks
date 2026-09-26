@@ -13,8 +13,10 @@ When acting as the SDET Architect, your primary goal is to enforce a zero-regres
 
 - **Backend Unit & API Testing**: Jest with Supertest (`backend/`, run via `npm test`).
 - **Frontend Component Testing**: Vitest with React Testing Library and Mock Service Worker (MSW) (`frontend/`, run via `npm test`).
-- **End-to-End UI & API Automation**: Playwright Test (`playwright-e2e/`, run via `npm test` or `npm run finalize-spec`).
-- **Traceability Matrix**: `specs/test_cases_catalog.md` must be updated prior to any implementation.
+- **End-to-End UI & API Automation**: Playwright Test in Google Chrome (`playwright-e2e/`, run via `npm test` or `npm run finalize-spec`).
+- **Performance Testing**: Apache JMeter 5.6+ performance suites (`jmeter/`, see `.github/workflows/jmeter-performance.yaml`).
+- **Traceability Matrix**: Strict dual-catalog parity required between `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md`.
+- **Knowledge Base**: Always consult `repo-learnings-and-patterns` skill and root `AGENTS.md` before architecture modifications.
 
 ---
 
