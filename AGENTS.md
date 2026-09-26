@@ -100,6 +100,29 @@ The monorepo operates with 7 specialized virtual agent personas to drive executi
 - **Structure**: 5 Phases (Foundations 10 SP, Multi-Framework 12 SP, Resilience & Mobile 14 SP, Governance 14 SP, Enterprise Maturity 13 SP) decomposed into 15 granular Sprints.
 - **Execution Standards**: Every sprint has clear DoD (Definition of Done), persona assignments, verification scripts, and breadcrumb navigation.
 
+### 10. Sprint Execution Protocol, Persona Handover Sequence & `task.md`
+Whenever a sprint is kicked off (e.g. by the human user saying "Execute Sprint X.Y"):
+1. **Scrum Master Kick-off (`role-scrum-master`)**:
+   - Creates/switches to feature branch `feat/sprint-X.Y-...`.
+   - Initializes root `task.md` from `task.template.md` with user stories, task breakdowns, and persona assignments.
+   - Verifies **Definition of Ready (DoR)**: Staging probe (`wait-on`), test accounts, catalog mappings.
+2. **SDET Architect Strategy (`role-sdet-architect`)**:
+   - Designs POM interfaces, test scenario contracts, assertion thresholds (< 3000ms SLAs, drift $\le$ 20%).
+   - Updates **both catalogs** (`docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md`) in 100% lockstep parity.
+3. **Specialist Automation Implementation**:
+   - Playwright QA Lead / Selenium Specialist / Mobile Specialist / Performance Engineer implements Page Objects, test specs, and execution scripts.
+   - Enforces single-browser policy (Chrome only), zero blind timeouts, and teardown state reset (`POST /api/test/reset`).
+4. **SDET Architect Technical Review Gate**:
+   - Conducts Code Acceptance Review on authored test code, POM encapsulation, and assertion hygiene.
+   - Logs review comments in `task.md`; automation specialist addresses any feedback.
+5. **Scrum Master Definition of Done (DoD) Gate**:
+   - Audits 4-point DoD: (1) `lint`/`typecheck` exit 0, (2) 100% deterministic green passes, (3) dual-catalog zero diff, (4) docs updated.
+   - Signs off gate in `task.md` and hands over to DevOps.
+6. **DevOps Release Protocol (`role-devops-engineer`)**:
+   - Updates GitHub Actions workflows and Pages concurrency locks if required.
+   - Commits with conventional syntax, pushes branch, and opens PR via `gh pr create`.
+   - Watches CI checks (`gh pr checks --watch`); once all green, hands PR over to Human PO for final merge.
+
 ---
 
 ## 📖 Deep-Dive Reference

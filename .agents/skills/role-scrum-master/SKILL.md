@@ -26,16 +26,16 @@ The Scrum Master governs the sprint cadence, capacity, and velocity rollup acros
 
 ## 2. Core Agile Responsibilities & Ceremonies
 
-### A. Sprint Planning & Backlog Grooming
-- **Backlog Refinement**: Ensure every sprint specification in [`planning/Sprints/`](../../planning/Sprints/) contains:
-  - Clear user stories with priority (`P0` / `P1` / `P2`) and story point estimates.
-  - Granular acceptance criteria formatted with testable outcomes.
-  - Assigned virtual specialist personas (SDET Architect, Playwright QA, Selenium Specialist, Mobile Specialist, Performance Engineer, DevOps Lead).
-  - Explicit execution commands for verification.
-- **Definition of Ready (DoR)**: A sprint cannot be started until:
-  1. Dependencies on prior sprints are resolved.
-  2. Target application endpoints (e.g. BuggyBooks backend/frontend) and test credentials are verified.
-  3. Acceptance criteria and test plan mapping are unambiguous.
+### A. Sprint Planning, Kick-Off & `task.md` Initialization
+When the Human Tech Lead kicks off a sprint (e.g. "Execute Sprint X.Y"):
+1. **Initialize `task.md`**: Copy `task.template.md` from repository root to `task.md`.
+2. **Decompose User Stories**: Populate `task.md` with sprint goals, story points, user stories, checklist items, and persona assignments from [`planning/Sprints/sprint_X_Y_*.md`](../../planning/Sprints/).
+3. **Branch Creation**: Ensure the working branch is set to `feat/sprint-X.Y-<slug>`.
+4. **Audit Definition of Ready (DoR)**:
+   - Execute Render staging pre-flight warm-up probe (`wait-on` 90s on frontend and backend).
+   - Confirm test accounts and environment variables are configured.
+   - Verify prior sprint dependencies are resolved.
+5. **Trigger SDET Architect**: Formally hand off sprint backlog to `role-sdet-architect` to design test contracts and author dual-catalog entries.
 
 ### B. Daily Synchronization & Blocker Removal
 - **Impediment Identification**: Proactively identify and eliminate technical blockers across the monorepo:

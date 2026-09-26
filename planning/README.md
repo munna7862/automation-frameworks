@@ -129,3 +129,99 @@ Every sprint is executed through a specialized 7-agent persona team defined in `
 5. [**`role-mobile-appium-specialist`**](../.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
 6. [**`role-performance-engineer`**](../.agents/skills/role-performance-engineer/SKILL.md): Apache JMeter 5.6+ enterprise stress plans and k6 baseline drift gates.
 7. [**`role-devops-engineer`**](../.agents/skills/role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.
+
+---
+
+## 🔄 Sprint Execution Lifecycle & Persona Handover Flow
+
+Every sprint follows an automated 6-stage persona handover loop:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Human Tech Lead / PO
+    participant SM as Scrum Master (role-scrum-master)
+    participant SDET as SDET Architect (role-sdet-architect)
+    participant AUTO as Automation Specialist (Playwright / Selenium / Mobile / Perf)
+    participant DO as DevOps Engineer (role-devops-engineer)
+
+    User->>SM: 1. Kick off Sprint (e.g. "Execute Sprint X.Y")
+    rect rgb(240, 248, 255)
+    note over SM: Sprint Inception & Definition of Ready (DoR)
+    SM->>SM: Read sprint spec from planning/Sprints/sprint_X_Y_*.md
+    SM->>SM: Checkout branch `feat/sprint-X.Y-...` & initialize `task.md`
+    SM->>SM: Verify DoR: Staging warm-up probe, credentials, dependencies
+    end
+
+    SM->>SDET: 2. Hand over sprint backlog & scope
+    rect rgb(255, 250, 240)
+    note over SDET: Test Strategy & Dual-Catalog Lockstep
+    SDET->>SDET: Design multi-framework strategy & POM interfaces
+    SDET->>SDET: Update BOTH catalogs (docs/ & playwright-e2e/test_cases_catalog.md)
+    SDET->>SDET: Define assertion SLAs & chaos containment rules
+    end
+
+    SDET->>AUTO: 3. Hand over test scenarios & architectural contracts
+    rect rgb(240, 255, 240)
+    note over AUTO: Multi-Framework Implementation Loop
+    alt Playwright Sprint (Phase 1, 2)
+        AUTO->>AUTO: Playwright QA Lead: Chrome UI + API specs, POMs, self-healing
+    else Selenium / WDIO Sprint (Phase 3)
+        AUTO->>AUTO: Selenium/WDIO Specialist: WebDriver POMs, Shadow DOM piercing
+    else Mobile Appium Sprint (Phase 4)
+        AUTO->>AUTO: Mobile Specialist: Appium 2.x, Screen Objects, touch chaos
+    else Performance Sprint (Phase 2, 5)
+        AUTO->>AUTO: Performance Engineer: JMeter 5.6+ JMX, k6 drift regression gates
+    end
+    AUTO->>AUTO: Local execution & teardown reset (`POST /api/test/reset`)
+    end
+
+    AUTO->>SDET: 4. Submit test code for Technical Review
+    rect rgb(255, 240, 245)
+    note over SDET,AUTO: SDET Code Acceptance Review Gate
+    SDET->>SDET: Audit single-browser policy (Chrome only), no blind sleeps
+    SDET->>SDET: Audit locator robustness, typing, and chaos containment
+    alt Review Comments Raised
+        SDET->>AUTO: Log review comments in task.md -> AUTO fixes & re-runs
+    else Approved
+        SDET->>SM: Sign off technical gate in task.md
+    end
+    end
+
+    rect rgb(245, 245, 255)
+    note over SM: Scrum Master DoD Quality Audit
+    SM->>SM: Audit 4-Point DoD:
+    SM->>SM: 1. `npm run lint:all` & `npm run typecheck:all` exit 0
+    SM->>SM: 2. 100% green deterministic test passes (no flaky retries)
+    SM->>SM: 3. Dual-catalog zero diff (`git diff --exit-code`)
+    SM->>SM: 4. Intentional bugs manual & sprint docs updated
+    end
+
+    SM->>DO: 5. DoD fulfilled -> Authorize release & PR creation
+    rect rgb(240, 255, 255)
+    note over DO: DevOps Release Protocol
+    DO->>DO: Update GitHub Actions workflows & Pages concurrency locks
+    DO->>DO: Sync branch with main & verify .gitignore hygiene
+    DO->>DO: Push branch & open PR via `gh pr create` (structured body)
+    DO->>DO: Monitor CI checks (`gh pr checks --watch`)
+    end
+
+    DO->>User: 6. Hand over green PR with test metrics for Final Human Review
+    User->>User: Review PR diff, execution summary & merge to main
+```
+
+---
+
+## 📋 Centralized Active Sprint Tracking (`task.md`)
+
+When any sprint starts, the Scrum Master initializes [`task.md`](../task.md) at the repository root using [`task.template.md`](../task.template.md). This file serves as the live state machine tracking:
+1. **Active Sprint & Velocity**: Sprint ID, Phase, Story Points, Goal.
+2. **Persona Ownership**: Assigned specialist personas for that sprint.
+3. **Granular Checklist**: User stories broken down into sub-tasks with persona labels (`[SM]`, `[SDET]`, `[QA]`, `[DevOps]`).
+4. **Quality Gates & Review Sign-Off**:
+   - `Pre-Flight Architecture Gate` (SDET Architect)
+   - `Code Acceptance Review Gate` (SDET Architect)
+   - `DoD & Governance Gate` (Scrum Master)
+   - `CI/CD & Release Gate` (DevOps Engineer)
+5. **Execution Evidence**: Verification commands, test counts, pass rates.
+
