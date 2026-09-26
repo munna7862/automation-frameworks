@@ -1,0 +1,4 @@
+[2026-09-27 00:00:54] INFO: Verifying user registration status is 201
+[2026-09-27 00:00:56] INFO: Verifying user login status is 200
+[2026-09-27 00:00:56] INFO: Verifying add to cart status is 200
+[2026-09-27 00:00:57] INFO: Verifying process checkout status is 200
