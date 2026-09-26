@@ -1,0 +1,8 @@
+[2026-09-27 00:34:10] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w8-2-1790435050416-0ab95e19
+[2026-09-27 00:34:10] INFO: ✅ New context created with saved authentication state from: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/.auth/user.json
+[2026-09-27 00:34:11] INFO: Checking if Logout button is visible on Catalog page - Element is visible
+[2026-09-27 00:34:11] INFO: Verifying if user is logged in using saved session - Matched: [true]
+[2026-09-27 00:34:11] INFO: Clicking on Logout button
+[2026-09-27 00:34:12] INFO: Checking if Login link is visible on Catalog page - Element is visible
+[2026-09-27 00:34:12] INFO: Verifying if user logged out successfully - Matched: [true]
+[2026-09-27 00:34:12] INFO: Cleaned up ephemeral test session: pw-w8-2-1790435050416-0ab95e19
