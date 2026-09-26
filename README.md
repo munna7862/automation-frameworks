@@ -1,45 +1,45 @@
-# AutomationFrameworks
+# AutomationFrameworks — Enterprise Multi-Framework Test Automation Monorepo
 
-AutomationFrameworks is a multi-framework test automation monorepo containing UI, API, end-to-end, and performance testing assets. It is structured as a comparative and reusable SDET workspace where different automation stacks can validate similar engineering patterns: page objects, reusable utilities, environment configuration, reporting, logging, and CI execution.
+`AutomationFrameworks` is a state-of-the-art multi-framework test automation monorepo testing the **BuggyBooks** e-commerce platform ([Frontend](https://buggy-books-fe.onrender.com) | [Backend](https://buggy-books.onrender.com/api)). It serves as a premier comparative and reusable SDET workspace where diverse automation stacks validate the identical application across Web, Mobile, API, and Performance disciplines.
 
-## Repository Structure
+---
 
-```text
-AutomationFrameworks/
-  .github/
-    agents/
-    prompts/
-    workflows/
-  jmeter/
-    Results/
-    TestData/
-    Tests/
-  playwright-e2e/
-  selenium-e2e/
-  wdio-e2e/
-  .gitignore
-```
+## 🏛️ Strategic Engineering Planning & Delivery Roadmap
 
-## Frameworks
+The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven by a specialized 6-agent virtual persona team:
+- 📖 [**Master Plan (`planning/Master/master_plan.md`)**](file:///c:/Workspace/AutomationFrameworks/planning/Master/master_plan.md)
+- 🗺️ [**Planning & Sprint Sitemap (`planning/README.md`)**](file:///c:/Workspace/AutomationFrameworks/planning/README.md)
+- 📋 [**Test Cases Catalog (`docs/test_cases_catalog.md`)**](file:///c:/Workspace/AutomationFrameworks/docs/test_cases_catalog.md)
+- 🧠 [**Always-On Agent Memory (`AGENTS.md`)**](file:///c:/Workspace/AutomationFrameworks/AGENTS.md)
+- 🛠️ [**Repository Learnings Playbook (`.agents/skills/repo-learnings-and-patterns/SKILL.md`)**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/repo-learnings-and-patterns/SKILL.md)
 
-| Project | Purpose | Stack |
-| --- | --- | --- |
-| `playwright-e2e` | Primary UI, API, and E2E framework for BuggyBooks | Playwright, TypeScript, Axios, Allure |
-| `selenium-e2e` | Selenium-based UI and API automation framework | Selenium WebDriver, TypeScript, Mocha, Chai, Allure |
-| `wdio-e2e` | WebdriverIO-based UI and API automation framework | WebdriverIO, TypeScript, Mocha, Allure |
-| `jmeter` | Performance test assets | Apache JMeter |
-| `.github` | CI workflows, reusable prompts, and SDET automation agents | GitHub Actions, prompt assets |
+---
 
-## Quick Start
+## 🧭 Multi-Framework Architecture
 
-Clone the repository and install dependencies inside the framework you want to run.
+| Framework / Package | Technology Stack | Scope & Status |
+| :--- | :--- | :--- |
+| **`playwright-e2e`** | Playwright, TypeScript, Allure | **Primary Web & API**: Strictly Google Chrome (`channel: 'chrome'`) and headless API (~110 tests). |
+| **`packages/playwright-utils`**| `@automationframeworks/playwright-utils` | Shared BasePage, Winston loggers, and typed assertion helpers. |
+| **`selenium-e2e`** | Selenium WebDriver, TypeScript, Mocha, Chai | W3C compliant E2E web automation on Google Chrome with WebDriverWait & Shadow DOM piercing. |
+| **`wdio-e2e`** | WebdriverIO, TypeScript, Mocha, Allure | Modern WebdriverIO web automation targeting BuggyBooks with `shadow$` selectors. |
+| **`mobile-automation`** | Appium 2.x, WebdriverIO | Android (`UiAutomator2`) & iOS (`XCUITest`) Screen Objects & mobile chaos resilience. |
+| **`jmeter`** | Apache JMeter 5.6+ | Enterprise stress, high-concurrency load, and HTML reporting dashboards. |
+| **`k6-performance`** | k6 (JavaScript) | Fast PR baseline drift regression gates (`<= 20%` drift threshold). |
 
-```bash
-git clone <repository-url>
-cd AutomationFrameworks
-```
+---
 
-Each test framework is intentionally self-contained. Run `npm install` inside the selected project folder rather than at the monorepo root.
+## ⚡ Non-Negotiable Operational Baseline
+
+1. **Browser Execution Policy**: All web suites execute strictly on **Google Chrome** (`channel: 'chrome'` or Chrome headless). Multi-browser configs (`firefox`, `webkit`, `safari`) are forbidden.
+2. **Render Staging Pre-Flight Warm-Up**: Free-tier Render instances sleep when idle. Always wake instances before test runs:
+   ```bash
+   npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
+   npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
+   ```
+3. **Intentional Chaos Containment**: Any test toggling chaos knobs via `POST /api/test/config` must restore defaults via `POST /api/test/reset` in `afterEach`.
+4. **Dual-Catalog Parity**: Both `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` must remain 100% synchronized.
+
 
 ## Playwright E2E
 

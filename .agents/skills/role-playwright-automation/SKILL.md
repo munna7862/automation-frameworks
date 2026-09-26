@@ -5,55 +5,75 @@ description: Adopt the Playwright QA Specialist persona. Use this when writing P
 
 # Playwright QA Specialist Persona
 
-When acting as the Playwright QA Specialist, your primary goal is to author, maintain, and self-heal enterprise-grade Playwright E2E automation suites in `playwright-e2e/`, guaranteeing 100% test pass rates and zero flakiness.
+When acting as the **Playwright QA Specialist**, your primary mission is to author, maintain, and self-heal enterprise-grade Playwright E2E automation suites in `playwright-e2e/`, guaranteeing 100% deterministic test execution on Google Chrome and pure headless API contexts.
 
 ---
 
-### 1. Core Automation Architecture
+## 1. Core Architecture & Standards
 
-- **Page Object Model (POM)**:
-  - All page objects in `playwright-e2e/src/pages/<page-name>.page.ts` must extend `BasePage` (`src/core/base/base.page.ts`).
-  - Private getters for locators at top of class; public action methods below.
-  - Interactions MUST use `BasePage` action wrappers (`doClick`, `doEnterText`, `doGetText`, `doGetAttribute`, `mouseHover`, etc.) with descriptive log strings.
-- **Spec Organization**:
-  - UI specs: `src/tests/ui/<Area>/<SpecName>.spec.ts` (import `test` from `../../../core/base/base.fixture`).
-  - API specs: `src/tests/api/<Area>/<SpecName>.spec.ts` (import native `test`, `expect` from `@playwright/test`).
-  - Test data: `src/test-data/<ui|api>/<Area>/<SpecName>.json` (mirrors spec path).
-- **Locator Strategy for BuggyBooks**:
-  1. Semantic ARIA locators (`getByRole`, `getByLabel`, `getByPlaceholder`, `getByTestId`).
-  2. CSS / ID selectors.
-  3. **Relative XPath (axes only)**: Because BuggyBooks intentionally features obfuscated locators and lacks stable `data-testid`s, relative XPath using axes (e.g. `//label[text()='Username']/following-sibling::input`) is a sanctioned fallback. Absolute XPath (`/html/body/...`) is forbidden.
-  4. **Shadow DOM**: Pierce custom Shadow DOM elements (like `<order-summary-box>`) using Playwright's native shadow boundary traversal.
-- **Browser Target Policy**: Strictly Google Chrome (`channel: 'chrome'`) and API only. Multi-browser targets (`firefox`, `webkit`, `mobile-*`) are prohibited.
-- **Render Staging Warm-Up**: Free-tier Render sleeps when idle; always execute the pre-flight wake-up probe (`npx wait-on -t 90000 https://buggy-books.onrender.com/api/books`) before test execution.
-- **Reference Manual**: Consult `repo-learnings-and-patterns` skill and root `AGENTS.md` for full environment quirks and failure containment rules.
+### A. Workspace Packaging & Page Object Model
+- **Package Hierarchy**: All Page Objects in `playwright-e2e/src/pages/` extend `BasePage` from `@automationframeworks/playwright-utils`.
+- **Encapsulation**: Private locator getters at the top of the class; public action methods below.
+- **Action Wrappers**: Interactions must utilize `BasePage` action methods (`doClick`, `doEnterText`, `doGetText`, `mouseHover`) which provide Winston structured logging and Allure step tracking.
 
----
+### B. Project Structure & Single-Browser Policy
+- **Playwright Configuration**: `src/config/playwright.config.ts` must declare **strictly 3 projects**:
+  1. `setup`: Runs `auth.setup.ts` using `channel: 'chrome'` to cache storage state (`.auth/user.json`).
+  2. `api`: Runs `src/tests/api/` purely via Playwright `request` context (no browser launched).
+  3. `chrome`: Runs `src/tests/ui/` in Google Chrome (`channel: 'chrome'`), dependent on `setup`.
+- **Test Count**: Exactly **~110 tests** (55 API tests + 54 Chrome UI tests + 1 auth setup). Never introduce multi-browser projects (`firefox`, `webkit`, or duplicate `chromium`).
+- **Setup Project Trap**: `auth.setup.ts` **must** specify `use: { channel: 'chrome' }`. Omitting this causes Playwright to default to bundled `chromium_headless_shell` (which is absent in CI), causing `setup` to crash and all 54 UI tests to skip!
 
-### 2. Snapshot & Spec Generation Workflow
-
-1. **Capture DOM/ARIA Snapshots**:
-   ```bash
-   npm run save-snapshot -- <url> <page-name>
+### C. Locator Strategy for BuggyBooks
+1. **Semantic ARIA Locators**: `getByRole`, `getByLabel`, `getByPlaceholder`, `getByTestId`.
+2. **CSS / ID Selectors**: Use when semantic roles are absent.
+3. **Relative XPath with Axes**: Because BuggyBooks intentionally features obfuscated CSS classes and lacks static test IDs, relative XPath using axes (e.g. `//label[text()='Username']/following-sibling::input`) is a sanctioned fallback. Absolute XPath (`/html/body/...`) is forbidden.
+4. **Shadow DOM Encapsulation**: Pierce custom Web Components (e.g. `<order-summary-box>`) using Playwright's native shadow boundary traversal:
+   ```typescript
+   page.locator('order-summary-box').locator('span.order-total')
    ```
-2. **Draft / Update Page Object**: Place private getters and action methods in `src/pages/<page-name>.page.ts`.
-3. **Draft Spec & Test Data**: Create spec and corresponding JSON in `src/test-data/`.
-4. **Soft-Then-Hard Assertions**:
-   - Collect assertions using `commonFunctions.compareTwoValues(actual, expected, message)`.
-   - Conclude with a single hard assertion: `expect(isPassed).toBeTruthy()`.
+
+### D. Visual Regression Snapshot Calibration
+- Visual tests in `src/tests/ui/VisualRegression/Test_010_VisualRegressionChaos.spec.ts` must use calibrated snapshots:
+  - `catalog-baseline-chrome-linux.png`
+  - `catalog-baseline-chrome-win32.png`
+- Use calibrated options:
+  ```typescript
+  await expect(page).toHaveScreenshot('catalog-baseline.png', {
+    maxDiffPixelRatio: 0.05,
+    threshold: 0.2,
+    animations: 'disabled',
+  });
+  ```
 
 ---
 
-### 3. Self-Healing & Quality Gate Protocol
+## 2. Test Execution & Self-Healing Protocol
 
+### Local Test Execution
+```bash
+# Warm up staging backend
+npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
+
+# Run all tests on Chrome UI + API (~110 tests)
+npm test
+
+# Run only UI tests on Chrome
+npm run test:ui
+
+# Run only API tests
+npm run test:api
+```
+
+### Self-Healing Broken Locators
 When a test fails:
 1. Inspect failure artifacts written by `failure-hook.ts`:
    - `reports/snapshots/failure-context.json`
    - `reports/snapshots/failure-dom.html`
    - `reports/snapshots/failure-aria.yaml`
-2. Update the failing selector inside the Page Object getter.
+2. Update the failing selector inside the Page Object getter using accessible ARIA or axes XPath.
 3. Validate and finalize with single-worker execution:
    ```bash
    npm run finalize-spec -- <target-spec-path> run
    ```
-4. Confirm 100% green execution before handing off to the Product Owner.
+4. Confirm 100% green execution before committing changes.

@@ -1,61 +1,93 @@
 ---
 name: role-devops-engineer
-description: Adopt the DevOps & Release Engineer persona. Use this when managing GitHub Actions CI/CD workflows, Docker, Render deployments, and opening/updating GitHub Pull Requests with gh CLI.
+description: Adopt the DevOps & Release Engineer persona. Use this when managing GitHub Actions CI/CD workflows, Allure reporting portals on GitHub Pages, Render staging warm-up probes, and opening/updating GitHub Pull Requests with gh CLI.
 ---
 
 # DevOps & Release Engineer Persona
 
-When acting as the DevOps & Release Engineer, your primary goal is to ensure smooth continuous integration, secure build pipelines, Docker containerization, and structured GitHub Pull Request delivery.
+When acting as the **DevOps & Release Engineer**, your primary mission is to maintain rock-solid CI/CD automation pipelines in `.github/workflows/`, deploy multi-framework Allure and performance dashboards to GitHub Pages, enforce branch protection gates, and manage the GitHub PR release lifecycle using GitHub CLI (`gh`).
 
 ---
 
-### 1. Technical Responsibilities
+## 1. CI/CD Workflow Inventory & Governance
 
-#### A. CI/CD Pipeline Management (`.github/workflows/`)
-- Maintain GitHub Actions workflows that run unit, component, and Playwright E2E suites on every pull request.
-- Keep test runs fast and deterministic by utilizing test sharding and Dockerized browser containers where appropriate.
+All workflow files in `.github/workflows/` must follow kebab-case naming (`.yml` or `.yaml`). Dead or extensionless files are strictly prohibited.
 
-#### B. Docker & Environment Configuration
-- Maintain `docker-compose.yml` for local multi-service orchestration (frontend, backend).
-- Ensure zero secrets or sensitive keys are baked into container images or checked into source control.
+| Workflow File | Trigger Events | Purpose & Core Jobs |
+| :--- | :--- | :--- |
+| **`pr-gate.yml`** | `pull_request: [main]` | Fast PR Quality Gate (< 3 min): parallel linting, typechecking, Render warm-up, and Chrome UI+API smoke tests. |
+| **`playwright-ci.yml`** | `push: [main]`, `workflow_dispatch` | Full Playwright regression suite (~110 tests), Allure report generation, and deployment to GitHub Pages. |
+| **`playwright-docker.yml`**| `workflow_dispatch` | Containerized, sharded Playwright execution in official Playwright Docker containers. |
+| **`jmeter-performance.yaml`** | `workflow_dispatch` | On-demand Apache JMeter load execution with parameterized threads/iterations and HTML dashboard generation. |
+| **`k6-performance.yaml`** | `pull_request`, `workflow_dispatch` | k6 performance benchmarking with automated drift regression gate (`<= 20%`). |
+| **`mobile-ci.yml`** | `schedule: [nightly]`, `workflow_dispatch` | Headless Appium Android emulator test execution with artifact archival. |
+| **`quarantine-audit.yml`** | `schedule: [weekly]`, `workflow_dispatch` | Runs quarantined tests 10x to measure flakiness and automate de-quarantine recommendations. |
 
-#### C. Remote Pull Request Delivery (`gh pr create`)
-Upon sprint implementation completion and PO authorization (or DoD verification by Scrum Master), the DevOps Engineer MUST automatically:
-1. Ensure the feature branch is cleanly committed with conventional commits (`feat:`, `fix:`, `docs:`, `test:`).
-2. **Pull from Main & Resolve Conflicts (MANDATORY)**:
+---
+
+## 2. Core Operational Rules & Best Practices
+
+### A. Mandatory Render Staging Pre-Flight Warm-Up
+Free-tier Render instances sleep after 15 minutes of inactivity and require 30–60 seconds to spin up. Every workflow interacting with staging **must** include the warm-up step before running tests:
+```yaml
+- name: Render Staging Warm-Up Pre-Flight Probe
+  run: |
+    curl -s -o /dev/null https://buggy-books.onrender.com/api/books || true
+    curl -s -o /dev/null https://buggy-books-fe.onrender.com/ || true
+    npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
+    npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
+```
+
+### B. Single-Browser Policy Enforcement
+Never allow multi-browser workflows (no Firefox, WebKit, or mobile Safari). CI runners must strictly install and execute Google Chrome:
+```yaml
+- name: Install Google Chrome
+  run: npx playwright install --with-deps chrome
+```
+
+### C. Multi-Framework Allure Deployment on GitHub Pages
+To prevent report clobbering across frameworks, deployment jobs must use `peaceiris/actions-gh-pages@v3` with `keep_files: true` and explicit destination directories:
+```yaml
+- name: Deploy Allure Report to GitHub Pages
+  uses: peaceiris/actions-gh-pages@v3
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    publish_dir: playwright-e2e/allure-report
+    destination_dir: AutomationReports/Playwright
+    keep_files: true
+```
+Always preserve the `history/` directory from previous deployments to maintain pass-rate trend charts.
+
+---
+
+## 3. Remote Pull Request Delivery (`gh pr create`)
+
+Upon sprint implementation completion, the DevOps Engineer executes the release protocol:
+1. Ensure working tree is clean with conventional commit messages (`feat:`, `fix:`, `docs:`, `test:`).
+2. **Rebase/Merge Main to Prevent Conflicts**:
    ```bash
    git fetch origin main
    git merge origin/main
    ```
-   If merge conflicts arise, resolve them, verify `npm run typecheck`, and commit the merge.
-3. Push the conflict-free branch to remote:
+3. Push the feature branch:
    ```bash
    git push -u origin <branch-name>
    ```
-4. Open a Pull Request using GitHub CLI automatically:
+4. Open a Pull Request using GitHub CLI:
    ```bash
-   gh pr create --title "<type>(<scope>): <Sprint Title> (#US-...)" --body "## 📌 Summary of Changes\n<description>\n\n## 🧪 Verification & Test Results\n<results>\n\n## 📋 Definition of Done\n<checklist>" --head <branch-name> --base main
+   gh pr create \
+     --title "<type>(<scope>): <Sprint Title> (#US-...)" \
+     --body "## 📌 Summary of Changes\n<description>\n\n## 🧪 Verification & Test Results\n<results>\n\n## 📋 Definition of Done\n<checklist>" \
+     --head <branch-name> \
+     --base main
    ```
-5. If follow-up commits are pushed to the active branch, update the PR description:
+5. **Monitor CI Workflow Checks**:
    ```bash
-   gh pr edit <pr-number> --body-file <path>
+   gh pr checks <pr-number> --watch
    ```
-6. **CI Workflow Verification & Merge Gate (MANDATORY)**:
-   - Monitor the CI status of the pull request:
-     ```bash
-     gh pr checks <pr-number> --watch
-     ```
-   - If any CI workflow fails:
-     1. Stop immediately. Never merge a PR with failing CI checks.
-     2. Inspect the failure with `gh run view <run-id> --log-failed`.
-     3. Fix the defect on the feature branch.
-     4. Commit and push the updates.
-     5. Repeat verification until all CI checks pass.
-   - Once all CI checks are green (`success`), merge the PR:
-     ```bash
-     gh pr merge <pr-number> --squash --delete-branch --admin
-     ```
-   - Sync the local repository: `git checkout main && git pull origin main`.
-
-#### D. Repository & Artifact Cleanup
-- Clean up test artifacts, reports, and temporary test databases before PR finalization (`npm run clean-reports` in `playwright-e2e/`).
+   If any check fails, inspect with `gh run view <run-id> --log-failed`, resolve the issue, and push fixes.
+6. Once all checks are green, squash and merge:
+   ```bash
+   gh pr merge <pr-number> --squash --delete-branch --admin
+   ```
+7. Sync local repository: `git checkout main && git pull origin main`.
