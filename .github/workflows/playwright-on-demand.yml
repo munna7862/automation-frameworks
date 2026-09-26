@@ -1,0 +1,689 @@
+name: Playwright On-Demand Dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_scope:
+        description: 'Test Suite Scope (all, ui, api)'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - ui
+          - api
+
+      tag:
+        description: 'Tag filter to execute (e.g. @smoke, @regression, @chaos, @visual, or "all")'
+        required: false
+        default: 'all'
+        type: string
+
+      test_path:
+        description: 'Specific test file or folder (e.g. src/tests/ui/UserManagement/Test_001_RegisterUser.spec.ts). Blank for default.'
+        required: false
+        default: ''
+        type: string
+
+      grep:
+        description: 'Test title pattern or regex filter (e.g. "Register New User"). Blank for all.'
+        required: false
+        default: ''
+        type: string
+
+      exclude_tag:
+        description: 'Negative tag filter to exclude (e.g. @chaos or @visual). Blank for none.'
+        required: false
+        default: ''
+        type: string
+
+      project:
+        description: 'Playwright browser / device project for UI tests'
+        required: false
+        default: 'chromium'
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+          - mobile-chrome
+          - mobile-safari
+
+      retries:
+        description: 'Test retry count override (0 for instant fail-fast, default uses config retries)'
+        required: false
+        default: 'default'
+        type: choice
+        options:
+          - default
+          - '0'
+          - '1'
+          - '2'
+
+      repeat_each:
+        description: 'Repeat count for flakiness testing (e.g. 1, 3, 5)'
+        required: false
+        default: '1'
+        type: string
+
+      trace_mode:
+        description: 'Playwright trace recording mode'
+        required: false
+        default: 'retain-on-failure'
+        type: choice
+        options:
+          - retain-on-failure
+          - 'on'
+
+      fail_fast:
+        description: 'Stop test execution immediately upon first failure (-x)'
+        required: false
+        default: false
+        type: boolean
+
+      workers:
+        description: 'Worker concurrency count (e.g. 4 default, 1 for sequential debugging)'
+        required: false
+        default: '4'
+        type: string
+
+      target_env:
+        description: 'Target environment: INTEROP (Render staging)'
+        required: false
+        default: 'INTEROP'
+        type: choice
+        options:
+          - INTEROP
+
+      publish_report:
+        description: 'Deploy Allure & HTML report to GitHub Pages (set false for artifact-only)'
+        required: false
+        default: true
+        type: boolean
+
+      headless:
+        description: 'Run browser in headless mode (true or false)'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+      branch:
+        description: 'Git branch to checkout for this run (optional; defaults to current branch/ref)'
+        required: false
+        default: ''
+        type: string
+
+concurrency:
+  group: on-demand-${{ github.ref }}-${{ github.run_id }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  # ============================================================================
+  # STAGE 1: Dedicated API Test Execution
+  # ============================================================================
+  api-tests:
+    name: API Automation
+    if: >-
+      ${{
+        !cancelled() &&
+        (github.event.inputs.test_scope == 'all' || github.event.inputs.test_scope == 'api' || github.event.inputs.test_scope == '') &&
+        !(github.event.inputs.test_path != '' && (contains(github.event.inputs.test_path, 'tests/ui') || contains(github.event.inputs.test_path, 'src/tests/ui')))
+      }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: playwright-e2e/package-lock.json
+
+      - name: Install Playwright Dependencies
+        working-directory: playwright-e2e
+        run: npm ci
+
+      - name: Get Playwright version
+        id: playwright-version
+        working-directory: playwright-e2e
+        run: echo "version=$(node -e "console.log(require('@playwright/test/package.json').version)")" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright Browser Binaries
+        id: playwright-cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}-chromium
+
+      - name: Install Playwright Chromium & OS Dependencies (Cache Miss)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        working-directory: playwright-e2e
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS Dependencies Only (Cache Hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        working-directory: playwright-e2e
+        run: npx playwright install-deps chromium
+
+      - name: Pre-Flight Warm-Up Staging Environment
+        run: |
+          echo "Pinging Render backend and frontend to wake from sleep..."
+          curl -s -o /dev/null -w "Backend wake ping status: %{http_code}\n" https://buggy-books.onrender.com/api/books || true
+          curl -s -o /dev/null -w "Frontend wake ping status: %{http_code}\n" https://buggy-books-fe.onrender.com/ || true
+          npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
+          npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
+
+      - name: Run API Automation Tests
+        working-directory: playwright-e2e
+        env:
+          ENVIRONMENT: INTEROP
+          TZ: Australia/Adelaide
+          BASE_URL: https://buggy-books-fe.onrender.com
+          API_BASE_URL: https://buggy-books.onrender.com
+          HEADLESS: ${{ github.event.inputs.headless || 'true' }}
+          BROWSER: chrome
+          USER_NAME: ${{ secrets.E2E_USER_NAME || 'admin' }}
+          PASSWORD: ${{ secrets.E2E_PASSWORD || 'password123' }}
+          PLAYWRIGHT_JSON_OUTPUT_NAME: test-results/api-results.json
+          MONOCART_REPORT_PATH: reports/monocart-api/index.html
+        run: |
+          TARGET_PATH="src/tests/api"
+          INPUT_PATH="${{ github.event.inputs.test_path }}"
+          if [ -n "$INPUT_PATH" ]; then
+            TARGET_PATH="$INPUT_PATH"
+          fi
+
+          TAG="${{ github.event.inputs.tag }}"
+          GREP_INPUT="${{ github.event.inputs.grep }}"
+          EXCLUDE_TAG="${{ github.event.inputs.exclude_tag }}"
+          REPEAT_EACH="${{ github.event.inputs.repeat_each || '1' }}"
+          RETRIES="${{ github.event.inputs.retries || 'default' }}"
+          FAIL_FAST="${{ github.event.inputs.fail_fast }}"
+          TRACE_MODE="${{ github.event.inputs.trace_mode || 'retain-on-failure' }}"
+          WORKERS="${{ github.event.inputs.workers || '4' }}"
+
+          TAG_REGEX=""
+          if [ -n "$TAG" ] && [ "$TAG" != "all" ]; then
+            if [[ ! "$TAG" =~ ^@ ]]; then
+              TAG_REGEX="@${TAG}"
+            else
+              TAG_REGEX="${TAG}"
+            fi
+          fi
+
+          COMBINED_GREP=""
+          if [ -n "$TAG_REGEX" ] && [ -n "$GREP_INPUT" ]; then
+            COMBINED_GREP="(?=.*${TAG_REGEX})(?=.*${GREP_INPUT})"
+          elif [ -n "$TAG_REGEX" ]; then
+            COMBINED_GREP="${TAG_REGEX}"
+          elif [ -n "$GREP_INPUT" ]; then
+            COMBINED_GREP="${GREP_INPUT}"
+          fi
+
+          ARGS=("$TARGET_PATH" "--config=src/config/playwright.config.ts" "--project=api" "--workers=${WORKERS}" "--pass-with-no-tests")
+
+          if [ -n "$COMBINED_GREP" ]; then
+            ARGS+=("--grep" "$COMBINED_GREP")
+          fi
+
+          if [ -n "$EXCLUDE_TAG" ]; then
+            EXCLUDE_REGEX="$EXCLUDE_TAG"
+            if [[ ! "$EXCLUDE_REGEX" =~ ^@ ]]; then
+              EXCLUDE_REGEX="@${EXCLUDE_REGEX}"
+            fi
+            ARGS+=("--grep-invert" "$EXCLUDE_REGEX")
+          elif [[ "$TAG" =~ "quarantine" ]] || [[ "$GREP_INPUT" =~ "quarantine" ]]; then
+            ARGS+=("--grep-invert" "")
+          fi
+
+          if [ "$REPEAT_EACH" != "1" ] && [ -n "$REPEAT_EACH" ]; then
+            ARGS+=("--repeat-each" "$REPEAT_EACH")
+          fi
+
+          if [ "$RETRIES" != "default" ]; then
+            ARGS+=("--retries" "$RETRIES")
+          fi
+
+          if [ "$FAIL_FAST" == "true" ]; then
+            ARGS+=("-x")
+          fi
+
+          if [ "$TRACE_MODE" == "on" ]; then
+            ARGS+=("--trace" "on")
+          fi
+
+          echo "================================================================================"
+          echo "PLAYWRIGHT ON-DEMAND API RUN CONFIGURATION"
+          echo "================================================================================"
+          echo "Target Path:         $TARGET_PATH"
+          echo "Target Environment:  INTEROP"
+          echo "Base URL:            $BASE_URL"
+          echo "API Base URL:        $API_BASE_URL"
+          echo "Tag Filter:          ${TAG:-all} (${TAG_REGEX:-none})"
+          echo "Exclude Tag:         ${EXCLUDE_TAG:-none}"
+          echo "Title Grep:          ${GREP_INPUT:-none}"
+          echo "Combined Regex:      ${COMBINED_GREP:-none}"
+          echo "Repeat Count:        $REPEAT_EACH"
+          echo "Retries Policy:      $RETRIES"
+          echo "Fail Fast:           $FAIL_FAST"
+          echo "Trace Mode:          $TRACE_MODE"
+          echo "Workers:             $WORKERS"
+          echo "Headless:            ${{ github.event.inputs.headless || 'true' }}"
+          echo "================================================================================"
+          echo "Executing CLI: npx playwright test ${ARGS[@]}"
+          npx playwright test "${ARGS[@]}"
+
+      - name: Generate API Quality Gate Step Summary
+        if: always()
+        working-directory: playwright-e2e
+        run: node scripts/generate-playwright-summary.js test-results/api-results.json "API Automation" "playwright-traces-api"
+
+      - name: Upload Playwright Failure Traces & Screenshots
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: playwright-traces-api
+          path: |
+            playwright-e2e/test-results/
+            playwright-e2e/reports/test-artifacts/
+          retention-days: 7
+
+      - name: Upload Blob Report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: blob-report-api
+          path: playwright-e2e/blob-report
+          retention-days: 7
+
+      - name: Upload Monocart Report (API)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: monocart-report-api
+          path: playwright-e2e/reports/monocart-api
+          retention-days: 7
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: allure-results-api
+          path: |
+            playwright-e2e/reports/allure-results
+            playwright-e2e/allure-results
+          retention-days: 7
+
+  # ============================================================================
+  # STAGE 2: UI Automation Execution
+  # ============================================================================
+  ui-tests:
+    name: UI Automation (${{ github.event.inputs.project || 'chromium' }})
+    if: >-
+      ${{
+        !cancelled() &&
+        (github.event.inputs.test_scope == 'all' || github.event.inputs.test_scope == 'ui' || github.event.inputs.test_scope == '') &&
+        !(github.event.inputs.test_path != '' && (contains(github.event.inputs.test_path, 'tests/api') || contains(github.event.inputs.test_path, 'src/tests/api')))
+      }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: playwright-e2e/package-lock.json
+
+      - name: Install Playwright Dependencies
+        working-directory: playwright-e2e
+        run: npm ci
+
+      - name: Get Playwright version
+        id: playwright-version
+        working-directory: playwright-e2e
+        run: echo "version=$(node -e "console.log(require('@playwright/test/package.json').version)")" >> $GITHUB_OUTPUT
+
+      - name: Install Selected Playwright Browser Binaries & Dependencies
+        working-directory: playwright-e2e
+        run: |
+          SELECTED_PROJECT="${{ github.event.inputs.project || 'chromium' }}"
+          BROWSERS="chromium"
+          if [[ "$SELECTED_PROJECT" == "firefox" ]]; then
+            BROWSERS="firefox chromium"
+          elif [[ "$SELECTED_PROJECT" == "webkit" || "$SELECTED_PROJECT" == "mobile-safari" ]]; then
+            BROWSERS="webkit chromium"
+          fi
+          echo "Installing Playwright browsers: $BROWSERS for project: $SELECTED_PROJECT"
+          npx playwright install --with-deps $BROWSERS
+
+      - name: Pre-Flight Warm-Up Staging Environment
+        run: |
+          echo "Pinging Render backend and frontend to wake from sleep..."
+          curl -s -o /dev/null -w "Backend wake ping status: %{http_code}\n" https://buggy-books.onrender.com/api/books || true
+          curl -s -o /dev/null -w "Frontend wake ping status: %{http_code}\n" https://buggy-books-fe.onrender.com/ || true
+          npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
+          npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
+
+      - name: Run UI Automation Tests
+        working-directory: playwright-e2e
+        env:
+          ENVIRONMENT: INTEROP
+          TZ: Australia/Adelaide
+          BASE_URL: https://buggy-books-fe.onrender.com
+          API_BASE_URL: https://buggy-books.onrender.com
+          HEADLESS: ${{ github.event.inputs.headless || 'true' }}
+          BROWSER: chrome
+          USER_NAME: ${{ secrets.E2E_USER_NAME || 'admin' }}
+          PASSWORD: ${{ secrets.E2E_PASSWORD || 'password123' }}
+          PLAYWRIGHT_JSON_OUTPUT_NAME: test-results/ui-results.json
+          MONOCART_REPORT_PATH: reports/monocart-ui/index.html
+        run: |
+          TARGET_PATH="src/tests/ui"
+          INPUT_PATH="${{ github.event.inputs.test_path }}"
+          if [ -n "$INPUT_PATH" ]; then
+            TARGET_PATH="$INPUT_PATH"
+          fi
+
+          PROJECT="${{ github.event.inputs.project || 'chromium' }}"
+          TAG="${{ github.event.inputs.tag }}"
+          GREP_INPUT="${{ github.event.inputs.grep }}"
+          EXCLUDE_TAG="${{ github.event.inputs.exclude_tag }}"
+          REPEAT_EACH="${{ github.event.inputs.repeat_each || '1' }}"
+          RETRIES="${{ github.event.inputs.retries || 'default' }}"
+          FAIL_FAST="${{ github.event.inputs.fail_fast }}"
+          TRACE_MODE="${{ github.event.inputs.trace_mode || 'retain-on-failure' }}"
+          WORKERS="${{ github.event.inputs.workers || '4' }}"
+
+          TAG_REGEX=""
+          if [ -n "$TAG" ] && [ "$TAG" != "all" ]; then
+            if [[ ! "$TAG" =~ ^@ ]]; then
+              TAG_REGEX="@${TAG}"
+            else
+              TAG_REGEX="${TAG}"
+            fi
+          fi
+
+          COMBINED_GREP=""
+          if [ -n "$TAG_REGEX" ] && [ -n "$GREP_INPUT" ]; then
+            COMBINED_GREP="(?=.*${TAG_REGEX})(?=.*${GREP_INPUT})"
+          elif [ -n "$TAG_REGEX" ]; then
+            COMBINED_GREP="${TAG_REGEX}"
+          elif [ -n "$GREP_INPUT" ]; then
+            COMBINED_GREP="${GREP_INPUT}"
+          fi
+
+          ARGS=("$TARGET_PATH" "--config=src/config/playwright.config.ts" "--project=${PROJECT}" "--workers=${WORKERS}" "--pass-with-no-tests")
+
+          if [ -n "$COMBINED_GREP" ]; then
+            ARGS+=("--grep" "$COMBINED_GREP")
+          fi
+
+          if [ -n "$EXCLUDE_TAG" ]; then
+            EXCLUDE_REGEX="$EXCLUDE_TAG"
+            if [[ ! "$EXCLUDE_REGEX" =~ ^@ ]]; then
+              EXCLUDE_REGEX="@${EXCLUDE_REGEX}"
+            fi
+            ARGS+=("--grep-invert" "$EXCLUDE_REGEX")
+          elif [[ "$TAG" =~ "quarantine" ]] || [[ "$GREP_INPUT" =~ "quarantine" ]]; then
+            ARGS+=("--grep-invert" "")
+          fi
+
+          if [ "$REPEAT_EACH" != "1" ] && [ -n "$REPEAT_EACH" ]; then
+            ARGS+=("--repeat-each" "$REPEAT_EACH")
+          fi
+
+          if [ "$RETRIES" != "default" ]; then
+            ARGS+=("--retries" "$RETRIES")
+          fi
+
+          if [ "$FAIL_FAST" == "true" ]; then
+            ARGS+=("-x")
+          fi
+
+          if [ "$TRACE_MODE" == "on" ]; then
+            ARGS+=("--trace" "on")
+          fi
+
+          echo "================================================================================"
+          echo "PLAYWRIGHT ON-DEMAND UI RUN CONFIGURATION"
+          echo "================================================================================"
+          echo "Target Path:         $TARGET_PATH"
+          echo "Project / Browser:   $PROJECT"
+          echo "Target Environment:  INTEROP"
+          echo "Base URL:            $BASE_URL"
+          echo "API Base URL:        $API_BASE_URL"
+          echo "Tag Filter:          ${TAG:-all} (${TAG_REGEX:-none})"
+          echo "Exclude Tag:         ${EXCLUDE_TAG:-none}"
+          echo "Title Grep:          ${GREP_INPUT:-none}"
+          echo "Combined Regex:      ${COMBINED_GREP:-none}"
+          echo "Repeat Count:        $REPEAT_EACH"
+          echo "Retries Policy:      $RETRIES"
+          echo "Fail Fast:           $FAIL_FAST"
+          echo "Trace Mode:          $TRACE_MODE"
+          echo "Workers:             $WORKERS"
+          echo "Headless:            ${{ github.event.inputs.headless || 'true' }}"
+          echo "================================================================================"
+          echo "Executing CLI: npx playwright test ${ARGS[@]}"
+          npx playwright test "${ARGS[@]}"
+
+      - name: Generate UI Quality Gate Step Summary
+        if: always()
+        working-directory: playwright-e2e
+        run: node scripts/generate-playwright-summary.js test-results/ui-results.json "UI Automation (${{ github.event.inputs.project || 'chromium' }})" "playwright-traces-ui"
+
+      - name: Upload Playwright Failure Traces & Screenshots
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: playwright-traces-ui
+          path: |
+            playwright-e2e/test-results/
+            playwright-e2e/reports/test-artifacts/
+          retention-days: 7
+
+      - name: Upload Blob Report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: blob-report-ui
+          path: playwright-e2e/blob-report
+          retention-days: 7
+
+      - name: Upload Monocart Report (UI)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: monocart-report-ui
+          path: playwright-e2e/reports/monocart-ui
+          retention-days: 7
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: allure-results-ui
+          path: |
+            playwright-e2e/reports/allure-results
+            playwright-e2e/allure-results
+          retention-days: 7
+
+  # ============================================================================
+  # STAGE 3: Merge Blob Reports, Build Allure Dashboard & Deploy
+  # ============================================================================
+  deploy-report:
+    name: Consolidate Reports & Summary
+    concurrency:
+      group: pages-deploy-allure
+      cancel-in-progress: false
+    needs: [api-tests, ui-tests]
+    if: >-
+      ${{
+        always() && !cancelled() &&
+        (needs.api-tests.result == 'success' || needs.api-tests.result == 'failure' ||
+         needs.ui-tests.result == 'success' || needs.ui-tests.result == 'failure')
+      }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: playwright-e2e/package-lock.json
+
+      - name: Install Playwright Dependencies
+        working-directory: playwright-e2e
+        run: npm ci
+
+      - name: Download all Blob Reports
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        continue-on-error: true
+        with:
+          pattern: blob-report-*
+          path: playwright-e2e/all-blobs
+          merge-multiple: true
+
+      - name: Merge Playwright Blob Reports into HTML Report
+        working-directory: playwright-e2e
+        run: |
+          if [ -d "all-blobs" ] && [ "$(ls -A all-blobs 2>/dev/null)" ]; then
+            echo "Merging $(ls all-blobs | wc -l) blob report(s)..."
+            npx playwright merge-reports --reporter=html all-blobs
+          else
+            echo "No blob reports found to merge."
+            mkdir -p playwright-report
+            echo "<html><body><h1>Playwright On-Demand Execution Report</h1><p>No tests were executed matching the requested criteria.</p></body></html>" > playwright-report/index.html
+          fi
+
+      - name: Upload Consolidated HTML Report Artifact
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: playwright-html-report-on-demand
+          path: playwright-e2e/playwright-report
+          retention-days: 7
+
+      - name: Download all Monocart Reports
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        continue-on-error: true
+        with:
+          pattern: monocart-report-*
+          path: playwright-e2e/all-monocart
+          merge-multiple: false
+
+      - name: Merge Monocart Reports into HTML Report
+        working-directory: playwright-e2e
+        run: |
+          if [ -d "all-monocart" ] && [ "$(ls -A all-monocart 2>/dev/null)" ]; then
+            node scripts/merge-monocart.js all-monocart reports/monocart-report/index.html
+          else
+            echo "No monocart reports found to merge."
+          fi
+
+      - name: Upload Consolidated Monocart HTML Report Artifact
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: playwright-monocart-report-on-demand
+          path: playwright-e2e/reports/monocart-report
+          retention-days: 7
+
+      - name: Checkout gh-pages
+        if: github.event.inputs.publish_report == 'true' || github.event.inputs.publish_report == true
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Download All Allure Results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        continue-on-error: true
+        with:
+          pattern: allure-results-*
+          path: allure-results
+          merge-multiple: true
+
+      - name: Prepare Allure Results Directory
+        run: |
+          mkdir -p allure-results
+          find allure-results -mindepth 2 -type f -exec cp -t allure-results/ {} + 2>/dev/null || true
+          find allure-results -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} + 2>/dev/null || true
+          echo "Total Allure result files prepared: $(find allure-results -maxdepth 1 -type f | wc -l)"
+
+      - name: Generate Allure Report
+        if: github.event.inputs.publish_report == 'true' || github.event.inputs.publish_report == true
+        uses: simple-elf/allure-report-action@385367cde61ac68c2568a117f7579f7f148dc459 # v1.12
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 7
+          subfolder: AutomationReports/OnDemand
+
+      - name: Sync gh-pages history and prune old reports (keep max 7)
+        if: (github.event.inputs.publish_report == 'true' || github.event.inputs.publish_report == true) && always()
+        run: |
+          sudo chown -R $USER:$USER allure-history/ allure-results/ || true
+          mkdir -p allure-history
+          if [ -d "gh-pages" ]; then
+            rsync -av --exclude="AutomationReports/OnDemand" --exclude=".git" gh-pages/ allure-history/ || true
+            cp -n gh-pages/.nojekyll allure-history/ 2>/dev/null || true
+            cp -n gh-pages/.gitignore allure-history/ 2>/dev/null || true
+          fi
+          TARGET_DIR="allure-history/AutomationReports/OnDemand"
+          if [ -d "$TARGET_DIR" ]; then
+            RUNS=$(find "$TARGET_DIR" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | grep -E '^[0-9]+$' | sort -n -r)
+            COUNT=0
+            for RUN in $RUNS; do
+              COUNT=$((COUNT + 1))
+              if [ $COUNT -gt 7 ]; then
+                echo "Pruning old OnDemand report run: $RUN from $TARGET_DIR"
+                rm -rf "$TARGET_DIR/$RUN"
+              fi
+            done
+          fi
+          sudo chown -R $USER:$USER allure-history/ || true
+
+      - name: Deploy to GitHub Pages
+        if: github.event.inputs.publish_report == 'true' || github.event.inputs.publish_report == true
+        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3.9.3
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+          keep_files: false

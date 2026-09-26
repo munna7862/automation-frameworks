@@ -3,16 +3,26 @@ import { CommonFunctions } from "./common.util";
 
 export class ApiUtil {
   private objCommonFunctions: CommonFunctions;
+  private sessionId?: string;
 
-  constructor() {
+  constructor(sessionId?: string) {
     this.objCommonFunctions = new CommonFunctions();
+    this.sessionId = sessionId;
+  }
+
+  public setSessionId(sessionId?: string): void {
+    this.sessionId = sessionId;
+  }
+
+  public getSessionId(): string | undefined {
+    return this.sessionId;
   }
 
   /**
    * Enhanced method to make HTTP requests with better error handling and logging
    * Combines functionality from processAPIRequest with full method support
    */
-  public async makeRequest(options: {
+  public async makeRequest<T = any>(options: {
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
     url: string;
     data?: any;
@@ -20,7 +30,7 @@ export class ApiUtil {
     logMessage: string;
     responseType?: "data" | "status" | "headers" | "full";
     timeout?: number;
-  }): Promise<any> {
+  }): Promise<T> {
     const { method, url, data, headers = {}, logMessage, responseType = "data", timeout = 30000 } = options;
 
     try {
@@ -29,10 +39,17 @@ export class ApiUtil {
         await this.objCommonFunctions.logMessage("INFO", `📤 Request Payload: ${JSON.stringify(data, null, 2)}`);
       }
 
+      const sessionHeaders: Record<string, string> = this.sessionId ? { "x-test-session-id": this.sessionId } : {};
+
       const config: any = {
         method,
         url,
-        headers: { "Content-Type": "application/json", ...headers },
+        headers: { 
+          "Content-Type": "application/json", 
+          "x-bypass-rate-limit": "true",
+          ...sessionHeaders,
+          ...headers 
+        },
         timeout,
         ...(data && ["POST", "PUT", "PATCH"].includes(method) && { data }),
       };
@@ -45,7 +62,7 @@ export class ApiUtil {
       }
       await this.objCommonFunctions.logMessage("INFO", `📥 Response Payload: ${JSON.stringify(response.data, null, 2)}`);
 
-      return responseType === "full" ? response : response[responseType];
+      return (responseType === "full" ? response : response[responseType]) as T;
     } catch (error: any) {
       const errorDetails = error.response
         ? `Status: ${error.response.status} ${error.response.statusText} | Response: ${JSON.stringify(error.response.data, null, 2)}`
@@ -60,7 +77,7 @@ export class ApiUtil {
         data: error.response?.data ?? null,
         headers: error.response?.headers ?? {},
         message: error.message
-      };
+      } as unknown as T;
     }
   }
 
@@ -77,7 +94,7 @@ export class ApiUtil {
     };
 
     await this.objCommonFunctions.logMessage("INFO", `Fetching Bearer Token from ${url} with data: ${requestData.toString()}`);
-    const response = await this.makeRequest({
+    const response = await this.makeRequest<{ access_token: string }>({
       method: "POST",
       url,
       data: requestData,
