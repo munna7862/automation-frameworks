@@ -1,0 +1,16 @@
+[2026-09-27 00:45:45] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1790435745392-29c5e9c6
+[2026-09-27 00:45:46] INFO: Clicking on Sign Up link
+[2026-09-27 00:45:46] INFO: Entering full name: Full profile_user_K5soY
+[2026-09-27 00:45:47] INFO: Entering username: profile_user_K5soY
+[2026-09-27 00:45:47] INFO: Entering password: Password123!
+[2026-09-27 00:45:47] INFO: Entering confirming password: Password123!
+[2026-09-27 00:45:47] INFO: Clicking on Create Account button
+[2026-09-27 00:45:47] INFO: Verifying landing on Checkout Page
+[2026-09-27 00:45:48] INFO: Checking if Checkout label is visible
+[2026-09-27 00:45:49] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-09-27 00:45:49] INFO: Clicking on Profile navbar link
+[2026-09-27 00:45:50] INFO: Selecting file for avatar upload: /__w/automation-frameworks/automation-frameworks/playwright-e2e/src/test-data/ui/Profile/invalid_file.txt
+[2026-09-27 00:45:50] INFO: Clicking Upload Image button
+[2026-09-27 00:45:56] INFO: Getting upload error message text
+[2026-09-27 00:45:56] INFO: Verifying file extension filter 400 error message - Condition met (true)
+[2026-09-27 00:45:56] INFO: Cleaned up ephemeral test session: pw-w4-3-1790435745392-29c5e9c6

@@ -1,0 +1,36 @@
+[2026-09-27 00:46:47] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w5-0-1790435807899-087dd942
+[2026-09-27 00:46:48] INFO: Clicking on Sign Up link
+[2026-09-27 00:46:48] INFO: Entering full name: Full ws_user_ob5je
+[2026-09-27 00:46:48] INFO: Entering username: ws_user_ob5je
+[2026-09-27 00:46:48] INFO: Entering password: Password123!
+[2026-09-27 00:46:48] INFO: Entering confirming password: Password123!
+[2026-09-27 00:46:48] INFO: Clicking on Create Account button
+[2026-09-27 00:46:49] INFO: Verifying landing on Checkout Page
+[2026-09-27 00:46:49] INFO: Checking if Checkout label is visible
+[2026-09-27 00:46:50] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-09-27 00:46:50] INFO: Clicking on Add to Cart button for book id: 1
+[2026-09-27 00:46:50] INFO: Waiting for cart status message: added to cart
+[2026-09-27 00:46:52] INFO: Cart status message "added to cart" is visible
+[2026-09-27 00:46:52] INFO: Clicking on Cart link
+[2026-09-27 00:46:52] INFO: Clicking on Proceed to Checkout button
+[2026-09-27 00:46:53] INFO: Entering first name: Web
+[2026-09-27 00:46:53] INFO: Entering last name: SocketUser
+[2026-09-27 00:46:53] INFO: Entering shipping address: 123 Buggy Lane
+[2026-09-27 00:46:53] INFO: Entering city: Stack City
+[2026-09-27 00:46:53] INFO: Clicking on Next Step button
+[2026-09-27 00:46:53] INFO: Entering card number
+[2026-09-27 00:46:53] INFO: Entering card expiry: 12/30
+[2026-09-27 00:46:53] INFO: Entering card CVV: 123
+[2026-09-27 00:46:53] INFO: Checking if Next Step button is visible - Element is visible
+[2026-09-27 00:46:53] INFO: Clicking on Next Step button on Payment page
+[2026-09-27 00:46:53] INFO: Waiting for confirmation message containing: Thank you for your order
+
+[Failure Hook] Capturing state for failing test: "WS_EVENT_02: Hot-Toast Alert Trigger @regression"...
+[Failure Hook] Failure state successfully captured and written to:
+  DOM Snapshot:  file:////__w/automation-frameworks/automation-frameworks/playwright-e2e/reports/snapshots/failure-dom.html
+  ARIA Snapshot: file:////__w/automation-frameworks/automation-frameworks/playwright-e2e/reports/snapshots/failure-aria.yaml
+  Context JSON:  file:////__w/automation-frameworks/automation-frameworks/playwright-e2e/reports/snapshots/failure-context.json
+[Failure Hook] You can now ask Antigravity to heal this test using these failure reports.
+
+[2026-09-27 00:47:48] INFO: Cleaned up ephemeral test session: pw-w5-0-1790435807899-087dd942
+[2026-09-27 00:47:48] WARN: Payment attempt 1 did not complete successfully. Retrying payment.
