@@ -24,6 +24,9 @@ When acting as the Playwright QA Specialist, your primary goal is to author, mai
   2. CSS / ID selectors.
   3. **Relative XPath (axes only)**: Because BuggyBooks intentionally features obfuscated locators and lacks stable `data-testid`s, relative XPath using axes (e.g. `//label[text()='Username']/following-sibling::input`) is a sanctioned fallback. Absolute XPath (`/html/body/...`) is forbidden.
   4. **Shadow DOM**: Pierce custom Shadow DOM elements (like `<order-summary-box>`) using Playwright's native shadow boundary traversal.
+- **Browser Target Policy**: Strictly Google Chrome (`channel: 'chrome'`) and API only. Multi-browser targets (`firefox`, `webkit`, `mobile-*`) are prohibited.
+- **Render Staging Warm-Up**: Free-tier Render sleeps when idle; always execute the pre-flight wake-up probe (`npx wait-on -t 90000 https://buggy-books.onrender.com/api/books`) before test execution.
+- **Reference Manual**: Consult `repo-learnings-and-patterns` skill and root `AGENTS.md` for full environment quirks and failure containment rules.
 
 ---
 
