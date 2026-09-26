@@ -1,8 +1,11 @@
 # Sprint 4.2: Appium Android/iOS Smoke & Chaos E2E Verification
 
+**Navigation**: [⬅️ Previous: Sprint 4.1](sprint_4_1_mobile_automation_monorepo_import_and_scaffolding.md) | [🗺️ Planning Hub](../README.md) | **Sprint 4.2** | [➡️ Next: Sprint 4.3](sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md)
+
 **Sprint Identifier**: `SPRINT-4.2-APPIUM-SMOKE-AND-CHAOS-VERIFICATION`  
-**Phase Mapping**: [Phase 4: Mobile Automation (Appium + WebdriverIO)](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_4_mobile_automation_appium_and_webdriverio.md)  
+**Phase Mapping**: [Phase 4: Mobile Automation (Appium + WebdriverIO)](../Phases/phase_4_mobile_automation_appium_and_webdriverio.md)  
 **Estimated Velocity**: 5 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Port mobile test specifications to `mobile-automation/src/specs/`, validate authentication, catalog touch interactions, orientation toggling, and payment chaos handling, and synchronize the dual Test Cases Catalog with `TC-MOB-001` through `TC-MOB-006`.
 
 ---
@@ -78,3 +81,7 @@
 | `docs/test_cases_catalog.md` | Catalog | Master catalog updated with mobile suite. |
 | `playwright-e2e/test_cases_catalog.md` | Catalog | Duplicate catalog updated in exact lockstep. |
 | `.agents/skills/role-mobile-appium-specialist/` | Skill | Dedicated agent persona for Appium mobile automation. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 4.3: Mobile CI Pipeline & Emulator Execution Workflows](sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md).

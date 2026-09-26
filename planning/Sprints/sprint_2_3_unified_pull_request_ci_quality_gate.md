@@ -1,8 +1,11 @@
 # Sprint 2.3: Unified Pull Request CI Quality Gate (`pr-gate.yml`)
 
+**Navigation**: [⬅️ Previous: Sprint 2.2](sprint_2_2_dual_engine_performance_strategy_and_k6_migration.md) | [🗺️ Planning Hub](../README.md) | **Sprint 2.3** | [➡️ Next: Sprint 3.1](sprint_3_1_buggybooks_selenium_page_objects_and_auth_catalog_smoke.md)
+
 **Sprint Identifier**: `SPRINT-2.3-UNIFIED-PR-QUALITY-GATE`  
-**Phase Mapping**: [Phase 2: Documentation Integrity, Anti-Pattern Manual & Quality Gates](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)  
+**Phase Mapping**: [Phase 2: Documentation Integrity, Anti-Pattern Manual & Quality Gates](../Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)  
 **Estimated Velocity**: 4 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Implement an automated, fast-feedback Pull Request Quality Gate pipeline (`.github/workflows/pr-gate.yml`) that validates static quality, warms up staging, and executes smoke tests on Google Chrome in under 3 minutes, blocking regressions from merging into `main`.
 
 ---
@@ -114,3 +117,7 @@
 | :--- | :--- | :--- |
 | `.github/workflows/pr-gate.yml` | Workflow | High-speed PR verification gate. |
 | `package.json` | Config | Root `test:smoke:all` command aligned with PR gate. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 3.1: BuggyBooks Selenium Page Objects & Auth/Catalog Smoke](sprint_3_1_buggybooks_selenium_page_objects_and_auth_catalog_smoke.md).

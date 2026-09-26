@@ -1,7 +1,10 @@
 # Phase 1: Monorepo Foundations, Pipeline Hygiene & Utility Unification
 
+**Navigation**: [🗺️ Planning Hub](../README.md) | [📖 Master Plan](../Master/master_plan.md) | **[Phase 1]** | [Phase 2](phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md) | [Phase 3](phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md) | [Phase 4](phase_4_mobile_automation_appium_and_webdriverio.md) | [Phase 5](phase_5_executive_observability_and_unified_allure_dashboard.md)
+
 **Phase Identifier**: `PHASE-1-FOUNDATIONS-AND-PIPELINES`  
 **Phase Status**: Planned  
+**Total Phase Velocity**: **10 Story Points** (Sprint 1.1: 2 SP, Sprint 1.2: 3 SP, Sprint 1.3: 5 SP)  
 **Phase Leads**: SDET Architect & DevOps Engineer  
 **Primary Personas**: SDET Architect, Playwright QA Lead, DevOps Engineer  
 
@@ -37,13 +40,13 @@ During our initial repository audit and comparative assessment against `buggy-bo
 
 ```mermaid
 graph LR
-    S11[Sprint 1.1: Workflow Cleanup & Extensionless File Purge] --> S12[Sprint 1.2: Standardized Environment Templates & Visual Baseline Calibration]
-    S12 --> S13[Sprint 1.3: Monorepo Workspaces & Utility Package Unification]
+    S11[Sprint 1.1: Workflow Cleanup & Extensionless File Purge (2 SP)] --> S12[Sprint 1.2: Standardized Environment Templates & Visual Calibration (3 SP)]
+    S12 --> S13[Sprint 1.3: Monorepo Workspaces & Utility Unification (5 SP)]
 ```
 
 ### Sprint Breakdown
 
-1. **[Sprint 1.1: Workflow Cleanup & Extensionless File Purge](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_1_1_workflow_cleanup_and_extensionless_file_purge.md)**
+1. **[Sprint 1.1: Workflow Cleanup & Extensionless File Purge](../Sprints/sprint_1_1_workflow_cleanup_and_extensionless_file_purge.md)**
    - *Estimated Effort*: 2 Story Points
    - *Target Pillars*: Pillar 5 (CI/CD Workflow Modernization)
    - *Key Deliverables*:
@@ -56,7 +59,7 @@ graph LR
      - Validation that all remaining workflows have valid YAML syntax and include mandatory Render pre-flight warm-up probes.
    - *Verification*: GitHub Actions workflow linter passes with zero errors; no dead files detected.
 
-2. **[Sprint 1.2: Standardized Environment Templates & Visual Baseline Calibration](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_1_2_standardized_env_templates_and_visual_baseline_calibration.md)**
+2. **[Sprint 1.2: Standardized Environment Templates & Visual Baseline Calibration](../Sprints/sprint_1_2_standardized_env_templates_and_visual_baseline_calibration.md)**
    - *Estimated Effort*: 3 Story Points
    - *Target Pillars*: Pillar 6 (Environment Templates) & Pillar 7 (Visual Snapshot Calibration)
    - *Key Deliverables*:
@@ -66,7 +69,7 @@ graph LR
      - Execution of visual regression tests locally to ensure zero pixel-diff discrepancies.
    - *Verification*: `npm run test:ui -- Test_010_VisualRegressionChaos.spec.ts` passes 100% green without snapshot mismatch errors.
 
-3. **[Sprint 1.3: Monorepo Workspaces & Utility Package Unification](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_1_3_monorepo_workspaces_and_utility_unification.md)**
+3. **[Sprint 1.3: Monorepo Workspaces & Utility Package Unification](../Sprints/sprint_1_3_monorepo_workspaces_and_utility_unification.md)**
    - *Estimated Effort*: 5 Story Points
    - *Target Pillars*: Pillar 2 (Monorepo Workspaces & `playwright-utils` Package Unification)
    - *Key Deliverables*:

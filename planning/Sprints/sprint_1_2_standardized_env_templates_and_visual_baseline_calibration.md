@@ -1,8 +1,11 @@
 # Sprint 1.2: Standardized Environment Templates & Visual Baseline Calibration
 
+**Navigation**: [⬅️ Previous: Sprint 1.1](sprint_1_1_workflow_cleanup_and_extensionless_file_purge.md) | [🗺️ Planning Hub](../README.md) | **Sprint 1.2** | [➡️ Next: Sprint 1.3](sprint_1_3_monorepo_workspaces_and_utility_unification.md)
+
 **Sprint Identifier**: `SPRINT-1.2-ENV-TEMPLATES-AND-VISUAL-CALIBRATION`  
-**Phase Mapping**: [Phase 1: Monorepo Foundations, Pipeline Hygiene & Utility Unification](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)  
+**Phase Mapping**: [Phase 1: Monorepo Foundations, Pipeline Hygiene & Utility Unification](../Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)  
 **Estimated Velocity**: 3 Story Points  
+**Sprint Status**: Ready for Execution  
 **Sprint Goal**: Create documented, secure `.env.example` templates for all monorepo test frameworks, and calibrate golden visual regression baselines for `Test_010_VisualRegressionChaos.spec.ts` strictly under Google Chrome (`channel: 'chrome'`).
 
 ---
@@ -95,3 +98,7 @@
 | `selenium-e2e/.env.example` | Config | Selenium project environment variable template. |
 | `wdio-e2e/.env.example` | Config | WebdriverIO project environment variable template. |
 | `Test_010_VisualRegressionChaos.spec.ts` | Test Spec | Calibrated Chrome visual regression test. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 1.3: Monorepo Workspaces & Utility Package Unification](sprint_1_3_monorepo_workspaces_and_utility_unification.md).

@@ -1,7 +1,10 @@
 # Phase 5: Executive Observability & Unified Allure Dashboard
 
+**Navigation**: [🗺️ Planning Hub](../README.md) | [📖 Master Plan](../Master/master_plan.md) | [Phase 1](phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md) | [Phase 2](phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md) | [Phase 3](phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md) | [Phase 4](phase_4_mobile_automation_appium_and_webdriverio.md) | **[Phase 5]**
+
 **Phase Identifier**: `PHASE-5-EXECUTIVE-OBSERVABILITY`  
 **Phase Status**: Planned  
+**Total Phase Velocity**: **13 Story Points** (Sprint 5.1: 4 SP, Sprint 5.2: 5 SP, Sprint 5.3: 4 SP)  
 **Phase Leads**: SDET Architect & DevOps Engineer  
 **Primary Personas**: SDET Architect, DevOps Engineer, Playwright QA Lead, Performance Engineer  
 
@@ -45,13 +48,13 @@ Presently:
 
 ```mermaid
 graph LR
-    S51[Sprint 5.1: Multi-Framework Allure Result Aggregation Architecture] --> S52[Sprint 5.2: GitHub Pages Portal Landing Page & Executive KPI Badging]
-    S52 --> S53[Sprint 5.3: Automated Monorepo Health Auditing & Closed-Loop Governance]
+    S51[Sprint 5.1: Multi-Framework Allure Aggregation (4 SP)] --> S52[Sprint 5.2: GitHub Pages Portal & Badging (5 SP)]
+    S52 --> S53[Sprint 5.3: Automated Health & Governance (4 SP)]
 ```
 
 ### Sprint Breakdown
 
-1. **[Sprint 5.1: Multi-Framework Allure Result Aggregation Architecture](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_5_1_multi_framework_allure_result_aggregation_architecture.md)**
+1. **[Sprint 5.1: Multi-Framework Allure Result Aggregation Architecture](../Sprints/sprint_5_1_multi_framework_allure_result_aggregation_architecture.md)**
    - *Estimated Effort*: 4 Story Points
    - *Target Pillars*: Pillar 10 (Centralized Multi-Framework Allure Reporting)
    - *Key Deliverables*:
@@ -64,7 +67,7 @@ graph LR
      - Preserving historical trend files (`history/` folder injection) across multi-run deployments.
    - *Verification*: CI runs deploy Allure reports into dedicated paths on `gh-pages` without clobbering existing directories.
 
-2. **[Sprint 5.2: GitHub Pages Portal Landing Page & Executive KPI Badging](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md)**
+2. **[Sprint 5.2: GitHub Pages Portal Landing Page & Executive KPI Badging](../Sprints/sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md)**
    - *Estimated Effort*: 5 Story Points
    - *Target Pillars*: Pillar 10 (Centralized Multi-Framework Allure Reporting)
    - *Key Deliverables*:
@@ -77,7 +80,7 @@ graph LR
      - Publishing pipeline deployed on every CI completion.
    - *Verification*: GitHub Pages root URL loads dashboard cleanly; all framework cards link directly to functioning reports.
 
-3. **[Sprint 5.3: Automated Monorepo Health Auditing & Closed-Loop Governance](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md)**
+3. **[Sprint 5.3: Automated Monorepo Health Auditing & Closed-Loop Governance](../Sprints/sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md)**
    - *Estimated Effort*: 4 Story Points
    - *Target Pillars*: Pillar 5 (CI Modernization) & Pillar 10 (Governance)
    - *Key Deliverables*:

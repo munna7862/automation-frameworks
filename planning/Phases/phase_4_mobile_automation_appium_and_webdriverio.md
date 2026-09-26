@@ -1,7 +1,10 @@
 # Phase 4: Mobile Automation (Appium + WebdriverIO)
 
+**Navigation**: [🗺️ Planning Hub](../README.md) | [📖 Master Plan](../Master/master_plan.md) | [Phase 1](phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md) | [Phase 2](phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md) | [Phase 3](phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md) | **[Phase 4]** | [Phase 5](phase_5_executive_observability_and_unified_allure_dashboard.md)
+
 **Phase Identifier**: `PHASE-4-MOBILE-APPIUM-AUTOMATION`  
 **Phase Status**: Planned  
+**Total Phase Velocity**: **14 Story Points** (Sprint 4.1: 4 SP, Sprint 4.2: 5 SP, Sprint 4.3: 5 SP)  
 **Phase Leads**: SDET Architect & Mobile QA Specialist  
 **Primary Personas**: SDET Architect, Mobile QA Specialist, DevOps Engineer  
 
@@ -42,13 +45,13 @@ In `buggy-books`, a high-caliber mobile automation framework was engineered usin
 
 ```mermaid
 graph LR
-    S41[Sprint 4.1: Mobile Automation Monorepo Import & Scaffolding] --> S42[Sprint 4.2: Appium Android/iOS Smoke & Chaos E2E Verification]
-    S42 --> S43[Sprint 4.3: Mobile CI Pipeline & Emulator Execution Workflows]
+    S41[Sprint 4.1: Mobile Import & Scaffolding (4 SP)] --> S42[Sprint 4.2: Appium Smoke & Chaos Verification (5 SP)]
+    S42 --> S43[Sprint 4.3: Mobile CI Pipeline & Emulators (5 SP)]
 ```
 
 ### Sprint Breakdown
 
-1. **[Sprint 4.1: Mobile Automation Monorepo Import & Scaffolding](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_4_1_mobile_automation_monorepo_import_and_scaffolding.md)**
+1. **[Sprint 4.1: Mobile Automation Monorepo Import & Scaffolding](../Sprints/sprint_4_1_mobile_automation_monorepo_import_and_scaffolding.md)**
    - *Estimated Effort*: 4 Story Points
    - *Target Pillars*: Pillar 3 (Mobile Test Automation Suite)
    - *Key Deliverables*:
@@ -62,7 +65,7 @@ graph LR
      - Authoring `mobile-automation/.env.example` with documented device caps (`APPIUM_HOST`, `APPIUM_PORT`, `ANDROID_DEVICE_NAME`, `IOS_DEVICE_NAME`).
    - *Verification*: `npm install` at root links `mobile-automation` cleanly; `npm run typecheck --workspace=mobile-automation` passes with 0 errors.
 
-2. **[Sprint 4.2: Appium Android/iOS Smoke & Chaos E2E Verification](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_4_2_appium_android_ios_smoke_and_chaos_e2e_verification.md)**
+2. **[Sprint 4.2: Appium Android/iOS Smoke & Chaos E2E Verification](../Sprints/sprint_4_2_appium_android_ios_smoke_and_chaos_e2e_verification.md)**
    - *Estimated Effort*: 5 Story Points
    - *Target Pillars*: Pillar 3 (Mobile Test Automation Suite) & Pillar 5 (Catalog Parity)
    - *Key Deliverables*:
@@ -75,7 +78,7 @@ graph LR
      - Updating `AGENTS.md` and `.agents/skills/role-mobile-appium-specialist` with mobile testing rules and recipes.
    - *Verification*: Appium specs compile with full TypeScript typing; dual catalog validation confirms 100% parity.
 
-3. **[Sprint 4.3: Mobile CI Pipeline & Emulator Execution Workflows](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md)**
+3. **[Sprint 4.3: Mobile CI Pipeline & Emulator Execution Workflows](../Sprints/sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md)**
    - *Estimated Effort*: 5 Story Points
    - *Target Pillars*: Pillar 3 (Mobile Test Automation Suite) & Pillar 5 (CI/CD Modernization)
    - *Key Deliverables*:

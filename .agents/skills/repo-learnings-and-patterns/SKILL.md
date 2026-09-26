@@ -187,8 +187,8 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 
 ### A. The Dual-Catalog Parity Rule
 - Every test added, updated, or retired must be updated in **two files** in exact parity:
-  1. [`docs/test_cases_catalog.md`](file:///c:/Workspace/AutomationFrameworks/docs/test_cases_catalog.md)
-  2. [`playwright-e2e/test_cases_catalog.md`](file:///c:/Workspace/AutomationFrameworks/playwright-e2e/test_cases_catalog.md)
+  1. [`docs/test_cases_catalog.md`](../../docs/test_cases_catalog.md)
+  2. [`playwright-e2e/test_cases_catalog.md`](../../playwright-e2e/test_cases_catalog.md)
 - Verify zero diff between the two files using:
   ```bash
   git diff docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md
@@ -270,20 +270,95 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 ## 9. Virtual Sprint Team Operating Model (6 Personas)
 
 The monorepo operates with 6 specialized virtual agent personas in `.agents/skills/`:
-1. [**`role-sdet-architect`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, review gates.
-2. [**`role-playwright-automation`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
-3. [**`role-selenium-specialist`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, Shadow DOM.
-4. [**`role-mobile-appium-specialist`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
-5. [**`role-performance-engineer`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-performance-engineer/SKILL.md): Dual-engine performance: Apache JMeter 5.6+ stress plans and k6 baseline drift gates.
-6. [**`role-devops-engineer`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.
+1. [**`role-sdet-architect`**](../role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, review gates.
+2. [**`role-playwright-automation`**](../role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
+3. [**`role-selenium-specialist`**](../role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, Shadow DOM.
+4. [**`role-mobile-appium-specialist`**](../role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
+5. [**`role-performance-engineer`**](../role-performance-engineer/SKILL.md): Dual-engine performance: Apache JMeter 5.6+ stress plans and k6 baseline drift gates.
+6. [**`role-devops-engineer`**](../role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.
 
 ---
 
 ## 10. Sprint Roadmap Navigation & Planning Structure
 
-The entire roadmap is organized under [`planning/`](file:///c:/Workspace/AutomationFrameworks/planning/):
-- **Master Plan**: [`planning/Master/master_plan.md`](file:///c:/Workspace/AutomationFrameworks/planning/Master/master_plan.md)
-- **5 Delivery Phases**: [`planning/Phases/`](file:///c:/Workspace/AutomationFrameworks/planning/Phases/)
-- **15 Granular Sprints**: [`planning/Sprints/`](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/)
-- **Executive Sitemap**: [`planning/README.md`](file:///c:/Workspace/AutomationFrameworks/planning/README.md)
+The entire roadmap is organized under [`planning/`](../../planning/):
+- **Master Plan**: [`planning/Master/master_plan.md`](../../planning/Master/master_plan.md)
+- **5 Delivery Phases**: [`planning/Phases/`](../../planning/Phases/)
+- **15 Granular Sprints**: [`planning/Sprints/`](../../planning/Sprints/)
+- **Executive Sitemap**: [`planning/README.md`](../../planning/README.md)
+
+---
+
+## 11. GitHub Actions Workflow Sanitation & Extensionless File Trap
+
+- **The Pitfall**: In monorepo CI setups, extensionless or misnamed workflow files (such as `.github/workflows/jmeter` or `.github/workflows/playwright` without `.yml`/`.yaml`) cause silent workflow execution skips or syntax validation errors.
+- **Rule**: Every workflow file under `.github/workflows/` must have a valid `.yml` or `.yaml` extension, adhere to standard GitHub Actions schema, and specify a descriptive `name:`.
+- **Pre-Push Validation**: Validate workflow syntax locally with `actionlint` or YAML linters before pushing.
+
+---
+
+## 12. Multi-Framework GitHub Pages Namespacing & Concurrency Management
+
+- **Namespaced Publishing**: When multiple automated frameworks publish HTML reports (Playwright Allure, Selenium Allure, WDIO Allure, JMeter HTML dashboards), each stack must publish to an isolated destination directory:
+  - Playwright: `destination_dir: AutomationReports/Playwright`
+  - JMeter: `destination_dir: AutomationReports/JMeter`
+- **Prevent Report Clobbering**:
+  - Use `peaceiris/actions-gh-pages@v3` with `keep_files: true` so consecutive deployments do not erase other frameworks' reports.
+  - Preserve `history/` directories across builds to maintain trendline graphs in Allure.
+- **Concurrency Locks**:
+  - Always configure `concurrency: { group: 'github-pages', cancel-in-progress: false }` to queue deployment steps sequentially and prevent Git ref push collisions on `gh-pages`.
+
+---
+
+## 13. Markdown Link Portability Across Environments (GitHub vs. IDE)
+
+- **The Problem**: Using absolute Windows file paths (e.g. `file:///c:/Workspace/AutomationFrameworks/...`) in markdown files breaks across environments:
+  - In GitHub web views, clicking gives browser security errors (`Not allowed to load local resource`).
+  - In Linux CI runners or other developer workstations, the path does not exist.
+- **Strict Rule**:
+  - **Always use relative paths** (`../Phases/...`, `../../docs/...`, `../role-sdet-architect/SKILL.md`).
+  - Ensure links work equivalently inside IDE previews and on GitHub.com repository browsers.
+
+---
+
+## 14. Fast-Feedback PR Quality Gate vs. Full Regression Gate
+
+- **PR Gate (< 3 minutes)**:
+  - Target: Pull requests to `main`.
+  - Scope: Parallel `typecheck`, `lint`, Render staging warm-up probe, and high-priority `@smoke` UI + API tests.
+  - Purpose: Immediate developer feedback; blocks merges on broken contracts or styling regressions without incurring heavy execution overhead.
+- **Post-Merge & Scheduled Regression**:
+  - Target: Push to `main`, nightly schedules, or manual `workflow_dispatch`.
+  - Scope: Full ~110 Playwright tests, multi-framework E2E runs, Apache JMeter load tests, and Allure report publishing.
+
+---
+
+## 15. Appium 2.x Mobile Automation Ecosystem & Driver Decoupling
+
+- **Driver Decoupling**: Appium 2.x does not bundle drivers. CI environments and developer workstations must install drivers explicitly:
+  ```bash
+  appium driver install uiautomator2
+  appium driver install xcuitest
+  ```
+- **Screen Object Pattern**:
+  - Inherit all screen objects from a unified `BaseMobileScreen.ts`.
+  - Never hardcode absolute pixel coordinates for touch interactions; use dynamic percentage-based calculations (`swipeUp(0.8, 0.2)`).
+- **Mobile Chaos Resilience**:
+  - Author automated tests verifying screen orientation flips (`driver.setOrientation('LANDSCAPE')`), simulated network drops, and app backgrounding/resuming.
+
+---
+
+## 16. Automated Closed-Loop Governance & Parity Auditing
+
+- **Automated Dual-Catalog Parity Validator**:
+  - Maintain a zero-tolerance validator in CI:
+    ```bash
+    git diff --exit-code docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md
+    ```
+  - If a PR modifies one catalog without updating the other, CI fails immediately.
+- **Quarantine Lifecycle Governance**:
+  - Flaky tests must be tagged with `@quarantine` and tracked in the catalogs.
+  - A scheduled workflow (`quarantine-audit.yml`) executes quarantined tests 10x in a matrix loop.
+  - When a test achieves a 100% pass rate across 3 consecutive audit runs, an automated PR or notification proposes graduation back into the main regression suite.
+
 

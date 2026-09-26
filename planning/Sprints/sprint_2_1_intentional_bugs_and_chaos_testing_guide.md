@@ -1,8 +1,11 @@
 # Sprint 2.1: Intentional Bugs & Chaos Testing Guide
 
+**Navigation**: [⬅️ Previous: Sprint 1.3](sprint_1_3_monorepo_workspaces_and_utility_unification.md) | [🗺️ Planning Hub](../README.md) | **Sprint 2.1** | [➡️ Next: Sprint 2.2](sprint_2_2_dual_engine_performance_strategy_and_k6_migration.md)
+
 **Sprint Identifier**: `SPRINT-2.1-INTENTIONAL-BUGS-AND-CHAOS-GUIDE`  
-**Phase Mapping**: [Phase 2: Documentation Integrity, Anti-Pattern Manual & Quality Gates](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)  
+**Phase Mapping**: [Phase 2: Documentation Integrity, Anti-Pattern Manual & Quality Gates](../Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)  
 **Estimated Velocity**: 3 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Author `docs/intentional_bugs.md` in strict compliance with the `doc-implementation-standards` skill, detailing all BuggyBooks intentional failure modes, chaos configuration endpoints, and robust automated testing remediation recipes.
 
 ---
@@ -82,3 +85,7 @@
 | `docs/intentional_bugs.md` | Documentation | Authoritative BuggyBooks chaos and anti-pattern testing guide. |
 | `AGENTS.md` | Memory | Updated with links to intentional bugs manual and strict teardown policies. |
 | `.agents/skills/chaos-and-bug-testing/` | Skill | Aligned with new documentation. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 2.2: Dual-Engine Performance Strategy & k6 Migration](sprint_2_2_dual_engine_performance_strategy_and_k6_migration.md).

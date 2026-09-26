@@ -42,7 +42,7 @@ planning/
 
 ## 🏛️ Strategic Master Plan Overview
 
-👉 [**`planning/Master/master_plan.md`**](file:///c:/Workspace/AutomationFrameworks/planning/Master/master_plan.md)
+👉 [**`planning/Master/master_plan.md`**](Master/master_plan.md)
 
 The Master Plan establishes the foundational principles, target architecture, and 10 transformation pillars:
 1. **Pillar 1**: Multi-Framework BuggyBooks Parity (Selenium + WebdriverIO).
@@ -60,13 +60,36 @@ The Master Plan establishes the foundational principles, target architecture, an
 
 ## 📅 The 5 Delivery Phases & 15 Sprints
 
-| Phase & Specification | Theme & Scope | Associated Sprints |
-| :--- | :--- | :--- |
-| **[Phase 1](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)** | **Foundations, Pipeline Hygiene & Utility Unification** | • [Sprint 1.1: Workflow Cleanup & Extensionless Purge](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_1_1_workflow_cleanup_and_extensionless_file_purge.md)<br>• [Sprint 1.2: Env Templates & Visual Calibration](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_1_2_standardized_env_templates_and_visual_baseline_calibration.md)<br>• [Sprint 1.3: Monorepo Workspaces & Package Unification](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_1_3_monorepo_workspaces_and_utility_unification.md) |
-| **[Phase 2](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)** | **Documentation Integrity, Chaos Manual & Quality Gates** | • [Sprint 2.1: Intentional Bugs & Chaos Guide](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_2_1_intentional_bugs_and_chaos_testing_guide.md)<br>• [Sprint 2.2: Dual-Engine Performance & k6 Migration](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_2_2_dual_engine_performance_strategy_and_k6_migration.md)<br>• [Sprint 2.3: Unified PR CI Quality Gate (pr-gate.yml)](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_2_3_unified_pull_request_ci_quality_gate.md) |
-| **[Phase 3](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md)** | **WebdriverIO & Selenium Alignment to BuggyBooks** | • [Sprint 3.1: Selenium Page Objects & Auth/Catalog Smoke](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_3_1_buggybooks_selenium_page_objects_and_auth_catalog_smoke.md)<br>• [Sprint 3.2: WDIO Page Objects & Cart/Checkout Flows](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_3_2_buggybooks_wdio_page_objects_and_cart_checkout_flows.md)<br>• [Sprint 3.3: Cross-Framework Parity & Catalog Sync](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_3_3_cross_framework_parity_assertions_and_traceability_matrix_sync.md) |
-| **[Phase 4](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_4_mobile_automation_appium_and_webdriverio.md)** | **Mobile Automation (Appium 2.x + WebdriverIO)** | • [Sprint 4.1: Mobile Automation Monorepo Import](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_4_1_mobile_automation_monorepo_import_and_scaffolding.md)<br>• [Sprint 4.2: Appium Android/iOS Smoke & Chaos E2E](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_4_2_appium_android_ios_smoke_and_chaos_e2e_verification.md)<br>• [Sprint 4.3: Mobile CI Pipeline & Emulator Workflows](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md) |
-| **[Phase 5](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)** | **Executive Observability & Unified Allure Dashboard** | • [Sprint 5.1: Multi-Framework Allure Aggregation](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_5_1_multi_framework_allure_result_aggregation_architecture.md)<br>• [Sprint 5.2: GitHub Pages Portal Landing Page](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md)<br>• [Sprint 5.3: Automated Health & Governance](file:///c:/Workspace/AutomationFrameworks/planning/Sprints/sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md) |
+| Phase & Specification | Theme & Scope | Estimated Velocity | Associated Sprints |
+| :--- | :--- | :--- | :--- |
+| **[Phase 1](Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)** | **Foundations, Pipeline Hygiene & Utility Unification** | **10 SP** | • [Sprint 1.1: Workflow Cleanup & Extensionless Purge](Sprints/sprint_1_1_workflow_cleanup_and_extensionless_file_purge.md) (2 SP)<br>• [Sprint 1.2: Env Templates & Visual Calibration](Sprints/sprint_1_2_standardized_env_templates_and_visual_baseline_calibration.md) (3 SP)<br>• [Sprint 1.3: Monorepo Workspaces & Package Unification](Sprints/sprint_1_3_monorepo_workspaces_and_utility_unification.md) (5 SP) |
+| **[Phase 2](Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)** | **Documentation Integrity, Chaos Manual & Quality Gates** | **12 SP** | • [Sprint 2.1: Intentional Bugs & Chaos Guide](Sprints/sprint_2_1_intentional_bugs_and_chaos_testing_guide.md) (3 SP)<br>• [Sprint 2.2: Dual-Engine Performance & k6 Migration](Sprints/sprint_2_2_dual_engine_performance_strategy_and_k6_migration.md) (5 SP)<br>• [Sprint 2.3: Unified PR CI Quality Gate (pr-gate.yml)](Sprints/sprint_2_3_unified_pull_request_ci_quality_gate.md) (4 SP) |
+| **[Phase 3](Phases/phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md)** | **WebdriverIO & Selenium Alignment to BuggyBooks** | **14 SP** | • [Sprint 3.1: Selenium Page Objects & Auth/Catalog Smoke](Sprints/sprint_3_1_buggybooks_selenium_page_objects_and_auth_catalog_smoke.md) (5 SP)<br>• [Sprint 3.2: WDIO Page Objects & Cart/Checkout Flows](Sprints/sprint_3_2_buggybooks_wdio_page_objects_and_cart_checkout_flows.md) (5 SP)<br>• [Sprint 3.3: Cross-Framework Parity & Catalog Sync](Sprints/sprint_3_3_cross_framework_parity_assertions_and_traceability_matrix_sync.md) (4 SP) |
+| **[Phase 4](Phases/phase_4_mobile_automation_appium_and_webdriverio.md)** | **Mobile Automation (Appium 2.x + WebdriverIO)** | **14 SP** | • [Sprint 4.1: Mobile Automation Monorepo Import](Sprints/sprint_4_1_mobile_automation_monorepo_import_and_scaffolding.md) (4 SP)<br>• [Sprint 4.2: Appium Android/iOS Smoke & Chaos E2E](Sprints/sprint_4_2_appium_android_ios_smoke_and_chaos_e2e_verification.md) (5 SP)<br>• [Sprint 4.3: Mobile CI Pipeline & Emulator Workflows](Sprints/sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md) (5 SP) |
+| **[Phase 5](Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)** | **Executive Observability & Unified Allure Dashboard** | **13 SP** | • [Sprint 5.1: Multi-Framework Allure Aggregation](Sprints/sprint_5_1_multi_framework_allure_result_aggregation_architecture.md) (4 SP)<br>• [Sprint 5.2: GitHub Pages Portal Landing Page](Sprints/sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md) (5 SP)<br>• [Sprint 5.3: Automated Health & Governance](Sprints/sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md) (4 SP) |
+
+---
+
+## 📊 Sprint Execution Matrix & Velocity Rollup (63 Story Points Total)
+
+| Sprint ID | Sprint Title | Phase | Est. SP | Lead Persona | Status |
+| :--- | :--- | :--- | :---: | :--- | :---: |
+| **SPRINT-1.1** | [Workflow Cleanup & Extensionless File Purge](Sprints/sprint_1_1_workflow_cleanup_and_extensionless_file_purge.md) | Phase 1 | 2 SP | DevOps Engineer | Ready |
+| **SPRINT-1.2** | [Standardized Env Templates & Visual Baseline Calibration](Sprints/sprint_1_2_standardized_env_templates_and_visual_baseline_calibration.md) | Phase 1 | 3 SP | Playwright QA Lead | Ready |
+| **SPRINT-1.3** | [Monorepo Workspaces & Utility Package Unification](Sprints/sprint_1_3_monorepo_workspaces_and_utility_unification.md) | Phase 1 | 5 SP | SDET Architect | Ready |
+| **SPRINT-2.1** | [Intentional Bugs & Chaos Testing Guide](Sprints/sprint_2_1_intentional_bugs_and_chaos_testing_guide.md) | Phase 2 | 3 SP | SDET Architect | Planned |
+| **SPRINT-2.2** | [Dual-Engine Performance Strategy & k6 Migration](Sprints/sprint_2_2_dual_engine_performance_strategy_and_k6_migration.md) | Phase 2 | 5 SP | Performance Engineer | Planned |
+| **SPRINT-2.3** | [Unified Pull Request CI Quality Gate (`pr-gate.yml`)](Sprints/sprint_2_3_unified_pull_request_ci_quality_gate.md) | Phase 2 | 4 SP | DevOps Engineer | Planned |
+| **SPRINT-3.1** | [BuggyBooks Selenium Page Objects & Auth/Catalog Smoke](Sprints/sprint_3_1_buggybooks_selenium_page_objects_and_auth_catalog_smoke.md) | Phase 3 | 5 SP | Selenium Specialist | Planned |
+| **SPRINT-3.2** | [BuggyBooks WDIO Page Objects & Cart/Checkout Flows](Sprints/sprint_3_2_buggybooks_wdio_page_objects_and_cart_checkout_flows.md) | Phase 3 | 5 SP | Selenium / WDIO QA | Planned |
+| **SPRINT-3.3** | [Cross-Framework Parity Assertions & Catalog Sync](Sprints/sprint_3_3_cross_framework_parity_assertions_and_traceability_matrix_sync.md) | Phase 3 | 4 SP | SDET Architect | Planned |
+| **SPRINT-4.1** | [Mobile Automation Monorepo Import & Scaffolding](Sprints/sprint_4_1_mobile_automation_monorepo_import_and_scaffolding.md) | Phase 4 | 4 SP | Mobile QA Specialist | Planned |
+| **SPRINT-4.2** | [Appium Android/iOS Smoke & Chaos E2E Verification](Sprints/sprint_4_2_appium_android_ios_smoke_and_chaos_e2e_verification.md) | Phase 4 | 5 SP | Mobile QA Specialist | Planned |
+| **SPRINT-4.3** | [Mobile CI Pipeline & Emulator Execution Workflows](Sprints/sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md) | Phase 4 | 5 SP | DevOps Engineer | Planned |
+| **SPRINT-5.1** | [Multi-Framework Allure Aggregation Architecture](Sprints/sprint_5_1_multi_framework_allure_result_aggregation_architecture.md) | Phase 5 | 4 SP | DevOps Engineer | Planned |
+| **SPRINT-5.2** | [GitHub Pages Portal Landing Page & Executive KPI Badging](Sprints/sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md) | Phase 5 | 5 SP | SDET Architect | Planned |
+| **SPRINT-5.3** | [Automated Monorepo Health Auditing & Closed-Loop Governance](Sprints/sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md) | Phase 5 | 4 SP | SDET Architect | Planned |
+| **TOTAL** | **15 Sprints across 5 Phases** | **All** | **63 SP** | **Virtual Sprint Team** | **Active Roadmap** |
 
 ---
 
@@ -94,9 +117,9 @@ Every sprint is executed through a specialized 6-agent persona team defined in `
                                └─────────────────────┘
 ```
 
-1. [**`role-sdet-architect`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, Quality Gates.
-2. [**`role-playwright-automation`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
-3. [**`role-selenium-specialist`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, Shadow DOM.
-4. [**`role-mobile-appium-specialist`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
-5. [**`role-performance-engineer`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-performance-engineer/SKILL.md): Apache JMeter 5.6+ enterprise stress plans and k6 baseline drift gates.
-6. [**`role-devops-engineer`**](file:///c:/Workspace/AutomationFrameworks/.agents/skills/role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.
+1. [**`role-sdet-architect`**](../.agents/skills/role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, Quality Gates.
+2. [**`role-playwright-automation`**](../.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
+3. [**`role-selenium-specialist`**](../.agents/skills/role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, Shadow DOM.
+4. [**`role-mobile-appium-specialist`**](../.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
+5. [**`role-performance-engineer`**](../.agents/skills/role-performance-engineer/SKILL.md): Apache JMeter 5.6+ enterprise stress plans and k6 baseline drift gates.
+6. [**`role-devops-engineer`**](../.agents/skills/role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.

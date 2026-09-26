@@ -83,16 +83,26 @@ This document serves as the **always-on memory and operational baseline** for al
 
 ### 7. Virtual Sprint Team & Agent Personas
 The monorepo operates with 6 specialized virtual agent personas to drive execution sprint-by-sprint:
-1. [**`role-sdet-architect`**](file:///.agents/skills/role-sdet-architect/SKILL.md): Overall test strategy, dual-catalog sync, monorepo workspaces, sprint reviews, and Quality Gates.
-2. [**`role-playwright-automation`**](file:///.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression, and `@automationframeworks/playwright-utils`.
-3. [**`role-selenium-specialist`**](file:///.agents/skills/role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, and Shadow DOM piercing.
-4. [**`role-mobile-appium-specialist`**](file:///.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Android/iOS Screen Objects, touch gestures, and mobile chaos testing.
-5. [**`role-performance-engineer`**](file:///.agents/skills/role-performance-engineer/SKILL.md): Dual-engine performance: Apache JMeter 5.6+ stress plans and k6 baseline regression drift gates.
-6. [**`role-devops-engineer`**](file:///.agents/skills/role-devops-engineer/SKILL.md): GitHub Actions CI/CD workflows, PR Quality Gate (`pr-gate.yml`), Render warm-up probes, Allure GitHub Pages deployment, and GitHub CLI PR release lifecycle.
+1. [**`role-sdet-architect`**](.agents/skills/role-sdet-architect/SKILL.md): Overall test strategy, dual-catalog sync, monorepo workspaces, sprint reviews, and Quality Gates.
+2. [**`role-playwright-automation`**](.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression, and `@automationframeworks/playwright-utils`.
+3. [**`role-selenium-specialist`**](.agents/skills/role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, and Shadow DOM piercing.
+4. [**`role-mobile-appium-specialist`**](.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Android/iOS Screen Objects, touch gestures, and mobile chaos testing.
+5. [**`role-performance-engineer`**](.agents/skills/role-performance-engineer/SKILL.md): Dual-engine performance: Apache JMeter 5.6+ stress plans and k6 baseline regression drift gates.
+6. [**`role-devops-engineer`**](.agents/skills/role-devops-engineer/SKILL.md): GitHub Actions CI/CD workflows, PR Quality Gate (`pr-gate.yml`), Render warm-up probes, Allure GitHub Pages deployment, and GitHub CLI PR release lifecycle.
+
+### 8. Cross-Platform Markdown Link Portability
+- **Rule**: **Never commit absolute Windows file paths** (e.g. `file:///c:/Workspace/...`) in any documentation, plans, or skill files.
+- **Enforcement**: All internal links between planning docs, READMEs, skills, and catalogs must use standard relative markdown links (`../Phases/...`, `docs/...`). This ensures cross-platform rendering across GitHub web viewers, Linux CI runners, and teammate IDEs.
+
+### 9. 5-Phase, 15-Sprint Delivery Architecture (63 Story Points)
+- **Roadmap Location**: [`planning/README.md`](planning/README.md) and [`planning/Master/master_plan.md`](planning/Master/master_plan.md).
+- **Structure**: 5 Phases (Foundations 10 SP, Multi-Framework 12 SP, Resilience & Mobile 14 SP, Governance 14 SP, Enterprise Maturity 13 SP) decomposed into 15 granular Sprints.
+- **Execution Standards**: Every sprint has clear DoD (Definition of Done), persona assignments, verification scripts, and breadcrumb navigation.
 
 ---
 
 ## 📖 Deep-Dive Reference
 For detailed recipes, code examples, troubleshooting steps, and architectural walkthroughs, consult the dedicated agent skill:
-👉 [**`.agents/skills/repo-learnings-and-patterns/SKILL.md`**](file:///.agents/skills/repo-learnings-and-patterns/SKILL.md)
+👉 [**`.agents/skills/repo-learnings-and-patterns/SKILL.md`**](.agents/skills/repo-learnings-and-patterns/SKILL.md)
+
 

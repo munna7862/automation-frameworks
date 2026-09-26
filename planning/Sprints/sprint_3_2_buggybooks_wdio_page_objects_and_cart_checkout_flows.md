@@ -1,8 +1,11 @@
 # Sprint 3.2: BuggyBooks WebdriverIO Page Objects & Cart/Checkout Flows
 
+**Navigation**: [⬅️ Previous: Sprint 3.1](sprint_3_1_buggybooks_selenium_page_objects_and_auth_catalog_smoke.md) | [🗺️ Planning Hub](../README.md) | **Sprint 3.2** | [➡️ Next: Sprint 3.3](sprint_3_3_cross_framework_parity_assertions_and_traceability_matrix_sync.md)
+
 **Sprint Identifier**: `SPRINT-3.2-WDIO-BUGGYBOOKS-ALIGNMENT`  
-**Phase Mapping**: [Phase 3: WebdriverIO & Selenium Alignment to BuggyBooks](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md)  
+**Phase Mapping**: [Phase 3: WebdriverIO & Selenium Alignment to BuggyBooks](../Phases/phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md)  
 **Estimated Velocity**: 5 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Re-align `wdio-e2e` to BuggyBooks, author Page Objects for Cart and Checkout, implement native Shadow DOM piercing for the `<order-summary-box>` Web Component, and validate full customer purchasing workflows.
 
 ---
@@ -78,3 +81,7 @@
 | `wdio-e2e/src/pages/CartPage.ts` | Page Object | Typed WebdriverIO cart page. |
 | `wdio-e2e/src/pages/CheckoutPage.ts` | Page Object | Typed BuggyBooks checkout page with Shadow DOM. |
 | `wdio-e2e/src/tests/ui/` | Test Specs | BuggyBooks WebdriverIO purchasing workflow specs. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 3.3: Cross-Framework Parity Assertions & Traceability Matrix Sync](sprint_3_3_cross_framework_parity_assertions_and_traceability_matrix_sync.md).

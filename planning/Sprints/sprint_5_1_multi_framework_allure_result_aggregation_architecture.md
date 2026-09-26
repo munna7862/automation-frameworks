@@ -1,8 +1,11 @@
 # Sprint 5.1: Multi-Framework Allure Result Aggregation Architecture
 
+**Navigation**: [⬅️ Previous: Sprint 4.3](sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md) | [🗺️ Planning Hub](../README.md) | **Sprint 5.1** | [➡️ Next: Sprint 5.2](sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md)
+
 **Sprint Identifier**: `SPRINT-5.1-ALLURE-AGGREGATION-ARCHITECTURE`  
-**Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
+**Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](../Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
 **Estimated Velocity**: 4 Story Points  
+**Sprint Status**: Planned  
 **Sprint Goal**: Establish a standardized Allure results generation and namespaced publishing architecture across Playwright, JMeter, Selenium, WebdriverIO, and Mobile, preserving historical trend data on the `gh-pages` branch.
 
 ---
@@ -77,3 +80,7 @@
 | `.github/workflows/` | Workflows | Updated deployment jobs with namespaced GitHub Pages targets. |
 | `allure-results/` | Output Dirs | Standardized output across all framework directories. |
 | `docs/architecture/reporting_architecture.md` | Architecture | Comprehensive Allure and GitHub Pages deployment guide. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 5.2: GitHub Pages Portal Landing Page & Executive KPI Badging](sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md).

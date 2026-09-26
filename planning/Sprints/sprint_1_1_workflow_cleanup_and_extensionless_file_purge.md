@@ -1,8 +1,11 @@
 # Sprint 1.1: Workflow Cleanup & Extensionless File Purge
 
+**Navigation**: [🗺️ Planning Hub](../README.md) | [📖 Master Plan](../Master/master_plan.md) | **Sprint 1.1** | [➡️ Next: Sprint 1.2](sprint_1_2_standardized_env_templates_and_visual_baseline_calibration.md)
+
 **Sprint Identifier**: `SPRINT-1.1-WORKFLOW-CLEANUP-AND-EXTENSIONLESS-PURGE`  
-**Phase Mapping**: [Phase 1: Monorepo Foundations, Pipeline Hygiene & Utility Unification](file:///c:/Workspace/AutomationFrameworks/planning/Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)  
+**Phase Mapping**: [Phase 1: Monorepo Foundations, Pipeline Hygiene & Utility Unification](../Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)  
 **Estimated Velocity**: 2 Story Points  
+**Sprint Status**: Ready for Execution  
 **Sprint Goal**: Purge broken extensionless workflow files and obsolete legacy CRUD test pipelines from `.github/workflows/`, ensuring all remaining workflows have valid kebab-case YAML syntax and incorporate mandatory Render staging warm-up probes.
 
 ---
@@ -77,3 +80,7 @@
 | `.github/workflows/` | Directory | Clean directory containing only valid `.yml` files. |
 | `.github/workflows/playwright-ci.yml` | Workflow | Updated with warm-up probe and strict Chrome channel. |
 | `.github/workflows/jmeter-performance.yaml` | Workflow | Retained as the sole Apache JMeter performance pipeline. |
+
+---
+
+**Next Steps**: Proceed to [Sprint 1.2: Standardized Environment Templates & Visual Baseline Calibration](sprint_1_2_standardized_env_templates_and_visual_baseline_calibration.md).

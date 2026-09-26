@@ -287,12 +287,12 @@ To execute sprint-by-sprint with zero token waste and complete domain autonomy, 
 
 | Sprint Team Role | Agent Persona | Dedicated Skill File | Primary Responsibilities |
 | :--- | :--- | :--- | :--- |
-| **SDET Architect** | Lead Architect & Governance | `role-sdet-architect` | Test strategy, dual-catalog sync, monorepo workspaces, review gates. |
-| **Playwright QA Lead** | Playwright Specialist | `role-playwright-automation` | Chrome UI + API specs, POM maintenance, self-healing, visual regression. |
-| **Selenium Specialist** | Selenium Automation Engineer | `role-selenium-specialist` | Selenium WebDriver POMs, TypeScript typings, driver factory, BuggyBooks sync. |
-| **Mobile QA Specialist** | Appium / Mobile Engineer | `role-mobile-appium-specialist` | Appium 2.x, WDIO mobile configs, Screen Objects, mobile chaos testing. |
-| **Performance Engineer** | Load & Stress Specialist | `role-performance-engineer` | Apache JMeter JMX test plans, k6 scenarios, baseline regression gates, SLAs. |
-| **DevOps / Release Lead** | CI/CD Platform Engineer | `role-devops-engineer` | GitHub Actions, Render warm-up probes, Allure Pages deployment, PR gates. |
+| **SDET Architect** | Lead Architect & Governance | [**`role-sdet-architect`**](../../.agents/skills/role-sdet-architect/SKILL.md) | Test strategy, dual-catalog sync, monorepo workspaces, review gates. |
+| **Playwright QA Lead** | Playwright Specialist | [**`role-playwright-automation`**](../../.agents/skills/role-playwright-automation/SKILL.md) | Chrome UI + API specs, POM maintenance, self-healing, visual regression. |
+| **Selenium Specialist** | Selenium Automation Engineer | [**`role-selenium-specialist`**](../../.agents/skills/role-selenium-specialist/SKILL.md) | Selenium WebDriver POMs, TypeScript typings, driver factory, BuggyBooks sync. |
+| **Mobile QA Specialist** | Appium / Mobile Engineer | [**`role-mobile-appium-specialist`**](../../.agents/skills/role-mobile-appium-specialist/SKILL.md) | Appium 2.x, WDIO mobile configs, Screen Objects, mobile chaos testing. |
+| **Performance Engineer** | Load & Stress Specialist | [**`role-performance-engineer`**](../../.agents/skills/role-performance-engineer/SKILL.md) | Apache JMeter JMX test plans, k6 scenarios, baseline regression gates, SLAs. |
+| **DevOps / Release Lead** | CI/CD Platform Engineer | [**`role-devops-engineer`**](../../.agents/skills/role-devops-engineer/SKILL.md) | GitHub Actions, Render warm-up probes, Allure Pages deployment, PR gates. |
 
 ---
 
