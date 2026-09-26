@@ -95,12 +95,17 @@ The Master Plan establishes the foundational principles, target architecture, an
 
 ## 👥 Virtual Sprint Team Matrix
 
-Every sprint is executed through a specialized 6-agent persona team defined in `.agents/skills/`:
+Every sprint is executed through a specialized 7-agent persona team defined in `.agents/skills/`:
 
 ```
                ┌────────────────────────────────────────────────────────┐
-               │              Virtual Sprint Team (6 Roles)             │
+               │              Virtual Sprint Team (7 Roles)             │
                └──────────────────────────┬─────────────────────────────┘
+                                          │
+                               ┌──────────▼──────────┐
+                               │    Scrum Master     │
+                               │ (Agile / Velocity)  │
+                               └──────────┬──────────┘
                                           │
        ┌──────────────────┬───────────────┼───────────────┬──────────────────┐
        ▼                  ▼               ▼               ▼                  ▼
@@ -117,9 +122,10 @@ Every sprint is executed through a specialized 6-agent persona team defined in `
                                └─────────────────────┘
 ```
 
-1. [**`role-sdet-architect`**](../.agents/skills/role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, Quality Gates.
-2. [**`role-playwright-automation`**](../.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
-3. [**`role-selenium-specialist`**](../.agents/skills/role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, Shadow DOM.
-4. [**`role-mobile-appium-specialist`**](../.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
-5. [**`role-performance-engineer`**](../.agents/skills/role-performance-engineer/SKILL.md): Apache JMeter 5.6+ enterprise stress plans and k6 baseline drift gates.
-6. [**`role-devops-engineer`**](../.agents/skills/role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.
+1. [**`role-scrum-master`**](../.agents/skills/role-scrum-master/SKILL.md): Sprint ceremony facilitation, 63 SP velocity tracking, DoR/DoD enforcement, blocker removal.
+2. [**`role-sdet-architect`**](../.agents/skills/role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, Quality Gates.
+3. [**`role-playwright-automation`**](../.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
+4. [**`role-selenium-specialist`**](../.agents/skills/role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, Shadow DOM.
+5. [**`role-mobile-appium-specialist`**](../.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
+6. [**`role-performance-engineer`**](../.agents/skills/role-performance-engineer/SKILL.md): Apache JMeter 5.6+ enterprise stress plans and k6 baseline drift gates.
+7. [**`role-devops-engineer`**](../.agents/skills/role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.

@@ -287,6 +287,7 @@ To execute sprint-by-sprint with zero token waste and complete domain autonomy, 
 
 | Sprint Team Role | Agent Persona | Dedicated Skill File | Primary Responsibilities |
 | :--- | :--- | :--- | :--- |
+| **Scrum Master** | Agile Delivery Lead | [**`role-scrum-master`**](../../.agents/skills/role-scrum-master/SKILL.md) | Sprint ceremonies, 63 SP velocity tracking, DoR/DoD enforcement, blocker removal. |
 | **SDET Architect** | Lead Architect & Governance | [**`role-sdet-architect`**](../../.agents/skills/role-sdet-architect/SKILL.md) | Test strategy, dual-catalog sync, monorepo workspaces, review gates. |
 | **Playwright QA Lead** | Playwright Specialist | [**`role-playwright-automation`**](../../.agents/skills/role-playwright-automation/SKILL.md) | Chrome UI + API specs, POM maintenance, self-healing, visual regression. |
 | **Selenium Specialist** | Selenium Automation Engineer | [**`role-selenium-specialist`**](../../.agents/skills/role-selenium-specialist/SKILL.md) | Selenium WebDriver POMs, TypeScript typings, driver factory, BuggyBooks sync. |

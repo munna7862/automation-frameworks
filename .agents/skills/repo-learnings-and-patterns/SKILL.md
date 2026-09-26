@@ -267,15 +267,16 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 
 ---
 
-## 9. Virtual Sprint Team Operating Model (6 Personas)
+## 9. Virtual Sprint Team Operating Model (7 Personas)
 
-The monorepo operates with 6 specialized virtual agent personas in `.agents/skills/`:
-1. [**`role-sdet-architect`**](../role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, review gates.
-2. [**`role-playwright-automation`**](../role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
-3. [**`role-selenium-specialist`**](../role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, Shadow DOM.
-4. [**`role-mobile-appium-specialist`**](../role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
-5. [**`role-performance-engineer`**](../role-performance-engineer/SKILL.md): Dual-engine performance: Apache JMeter 5.6+ stress plans and k6 baseline drift gates.
-6. [**`role-devops-engineer`**](../role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.
+The monorepo operates with 7 specialized virtual agent personas in `.agents/skills/`:
+1. [**`role-scrum-master`**](../role-scrum-master/SKILL.md): Sprint ceremony facilitation, 63 SP velocity tracking, DoR/DoD enforcement, blocker removal.
+2. [**`role-sdet-architect`**](../role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, review gates.
+3. [**`role-playwright-automation`**](../role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
+4. [**`role-selenium-specialist`**](../role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, Shadow DOM.
+5. [**`role-mobile-appium-specialist`**](../role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
+6. [**`role-performance-engineer`**](../role-performance-engineer/SKILL.md): Dual-engine performance: Apache JMeter 5.6+ stress plans and k6 baseline drift gates.
+7. [**`role-devops-engineer`**](../role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.
 
 ---
 

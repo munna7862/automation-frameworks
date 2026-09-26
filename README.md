@@ -6,7 +6,7 @@
 
 ## 🏛️ Strategic Engineering Planning & Delivery Roadmap
 
-The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven by a specialized 6-agent virtual persona team:
+The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven by a specialized 7-agent virtual persona team:
 - 📖 [**Master Plan (`planning/Master/master_plan.md`)**](planning/Master/master_plan.md)
 - 🗺️ [**Planning & Sprint Sitemap (`planning/README.md`)**](planning/README.md)
 - 📋 [**Test Cases Catalog (`docs/test_cases_catalog.md`)**](docs/test_cases_catalog.md)

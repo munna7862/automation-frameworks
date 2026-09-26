@@ -82,13 +82,14 @@ This document serves as the **always-on memory and operational baseline** for al
   - `## 🧪 Verification` (with actual command output and test counts)
 
 ### 7. Virtual Sprint Team & Agent Personas
-The monorepo operates with 6 specialized virtual agent personas to drive execution sprint-by-sprint:
-1. [**`role-sdet-architect`**](.agents/skills/role-sdet-architect/SKILL.md): Overall test strategy, dual-catalog sync, monorepo workspaces, sprint reviews, and Quality Gates.
-2. [**`role-playwright-automation`**](.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression, and `@automationframeworks/playwright-utils`.
-3. [**`role-selenium-specialist`**](.agents/skills/role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, and Shadow DOM piercing.
-4. [**`role-mobile-appium-specialist`**](.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Android/iOS Screen Objects, touch gestures, and mobile chaos testing.
-5. [**`role-performance-engineer`**](.agents/skills/role-performance-engineer/SKILL.md): Dual-engine performance: Apache JMeter 5.6+ stress plans and k6 baseline regression drift gates.
-6. [**`role-devops-engineer`**](.agents/skills/role-devops-engineer/SKILL.md): GitHub Actions CI/CD workflows, PR Quality Gate (`pr-gate.yml`), Render warm-up probes, Allure GitHub Pages deployment, and GitHub CLI PR release lifecycle.
+The monorepo operates with 7 specialized virtual agent personas to drive execution sprint-by-sprint:
+1. [**`role-scrum-master`**](.agents/skills/role-scrum-master/SKILL.md): Sprint ceremony facilitation, velocity accounting (63 SP), DoR/DoD enforcement, blocker removal, and retrospective insights.
+2. [**`role-sdet-architect`**](.agents/skills/role-sdet-architect/SKILL.md): Overall test strategy, dual-catalog sync, monorepo workspaces, sprint reviews, and Quality Gates.
+3. [**`role-playwright-automation`**](.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression, and `@automationframeworks/playwright-utils`.
+4. [**`role-selenium-specialist`**](.agents/skills/role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, and Shadow DOM piercing.
+5. [**`role-mobile-appium-specialist`**](.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Android/iOS Screen Objects, touch gestures, and mobile chaos testing.
+6. [**`role-performance-engineer`**](.agents/skills/role-performance-engineer/SKILL.md): Dual-engine performance: Apache JMeter 5.6+ stress plans and k6 baseline regression drift gates.
+7. [**`role-devops-engineer`**](.agents/skills/role-devops-engineer/SKILL.md): GitHub Actions CI/CD workflows, PR Quality Gate (`pr-gate.yml`), Render warm-up probes, Allure GitHub Pages deployment, and GitHub CLI PR release lifecycle.
 
 ### 8. Cross-Platform Markdown Link Portability
 - **Rule**: **Never commit absolute Windows file paths** (e.g. `file:///c:/Workspace/...`) in any documentation, plans, or skill files.
