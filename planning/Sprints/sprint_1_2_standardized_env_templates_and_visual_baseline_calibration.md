@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-1.2-ENV-TEMPLATES-AND-VISUAL-CALIBRATION`  
 **Phase Mapping**: [Phase 1: Monorepo Foundations, Pipeline Hygiene & Utility Unification](../Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)  
 **Estimated Velocity**: 3 Story Points  
-**Sprint Status**: Ready for Execution  
+**Sprint Status**: Done  
 **Sprint Goal**: Create documented, secure `.env.example` templates for all monorepo test frameworks, and calibrate golden visual regression baselines for `Test_010_VisualRegressionChaos.spec.ts` strictly under Google Chrome (`channel: 'chrome'`).
 
 ---
@@ -29,7 +29,7 @@
   *So that* all required keys, URLs, credentials, and timeouts are clear without guessing or committing real secrets.
 - **Story Points**: 1.5 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Create root `.env.example`:
+  - [x] Create root `.env.example`:
     ```dotenv
     # BuggyBooks Staging URLs
     BASE_URL=https://buggy-books-fe.onrender.com
@@ -44,9 +44,9 @@
     TEST_USER=testuser@example.com
     TEST_PASSWORD=Password123!
     ```
-  - [ ] Create `playwright-e2e/.env.example` with Playwright-specific variables (`CHANNEL=chrome`, `WORKERS=2`, `RETRIES=1`, `CI=false`).
-  - [ ] Create `selenium-e2e/.env.example` and `wdio-e2e/.env.example`.
-  - [ ] Verify `.gitignore` strictly ignores `.env` files while allowing `.env.example`.
+  - [x] Create `playwright-e2e/.env.example` with Playwright-specific variables (`CHANNEL=chrome`, `WORKERS=2`, `RETRIES=1`, `CI=false`).
+  - [x] Create `selenium-e2e/.env.example` and `wdio-e2e/.env.example`.
+  - [x] Verify `.gitignore` strictly ignores `.env` files while allowing `.env.example`.
 - **Acceptance Criteria**:
   - Every project directory has a documented `.env.example`.
   - No secret credentials or sensitive tokens are committed to source control.
@@ -58,11 +58,11 @@
   *So that* visual regression tests validate UI layout stability without generating false-positive pixel diffs in CI.
 - **Story Points**: 1.5 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Inspect `playwright-e2e/src/tests/ui/VisualRegression/Test_010_VisualRegressionChaos.spec.ts`.
-  - [ ] Calibrate snapshot expectations in `Test_010_VisualRegressionChaos.spec.ts-snapshots/`:
+  - [x] Inspect `playwright-e2e/src/tests/ui/VisualRegression/Test_010_VisualRegressionChaos.spec.ts`.
+  - [x] Calibrate snapshot expectations in `Test_010_VisualRegressionChaos.spec.ts-snapshots/`:
     - `catalog-baseline-chrome-linux.png`
     - `catalog-baseline-chrome-win32.png`
-  - [ ] Configure Playwright visual comparison options:
+  - [x] Configure Playwright visual comparison options:
     ```typescript
     await expect(page).toHaveScreenshot('catalog-baseline.png', {
       maxDiffPixelRatio: 0.05,
@@ -70,7 +70,7 @@
       animations: 'disabled',
     });
     ```
-  - [ ] Execute visual regression test locally on Chrome:
+  - [x] Execute visual regression test locally on Chrome:
     ```bash
     npx playwright test src/tests/ui/VisualRegression/Test_010_VisualRegressionChaos.spec.ts --project=chrome
     ```
@@ -82,10 +82,10 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] `.env.example` files created in root, `playwright-e2e/`, `selenium-e2e/`, and `wdio-e2e/`.
-- [ ] Visual regression test passes locally and in CI on project `chrome`.
-- [ ] No multiple browser snapshots (no Firefox or WebKit) exist in snapshot directories.
-- [ ] `.gitignore` prevents `.env` or temporary screenshot diffs from being committed.
+- [x] `.env.example` files created in root, `playwright-e2e/`, `selenium-e2e/`, and `wdio-e2e/`.
+- [x] Visual regression test passes locally and in CI on project `chrome`.
+- [x] No multiple browser snapshots (no Firefox or WebKit) exist in snapshot directories.
+- [x] `.gitignore` prevents `.env` or temporary screenshot diffs from being committed.
 
 ---
 

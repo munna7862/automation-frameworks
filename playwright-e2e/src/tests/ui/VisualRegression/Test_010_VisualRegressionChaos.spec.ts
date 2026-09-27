@@ -41,10 +41,15 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     await test.step('Navigate to catalog page', async () => {
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardSelector();
+      await page.waitForLoadState('networkidle');
     });
 
     await test.step('Assert screenshot matches baseline', async () => {
-      await expect(page).toHaveScreenshot('catalog-baseline.png', { maxDiffPixelRatio: 0.05 });
+      await expect(page).toHaveScreenshot('catalog-baseline.png', {
+        maxDiffPixelRatio: 0.05,
+        threshold: 0.2,
+        animations: 'disabled',
+      });
     });
   });
 
@@ -206,7 +211,12 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     await test.step('Navigate to catalog and assert screenshot matches baseline', async () => {
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardSelector();
-      await expect(page).toHaveScreenshot('catalog-baseline.png', { maxDiffPixelRatio: 0.05 });
+      await page.waitForLoadState('networkidle');
+      await expect(page).toHaveScreenshot('catalog-baseline.png', {
+        maxDiffPixelRatio: 0.05,
+        threshold: 0.2,
+        animations: 'disabled',
+      });
     });
   });
 

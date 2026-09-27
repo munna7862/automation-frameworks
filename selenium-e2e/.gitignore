@@ -1,5 +1,5 @@
-
 # jmeter
 allure-results
 .env*
+!.env.example
 *log
