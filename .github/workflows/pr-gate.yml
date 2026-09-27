@@ -85,6 +85,12 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"checkoutFailureRate": 0, "inventoryDelayMs": 0, "visualChaos": false}' || true
           curl -s -X POST https://buggy-books.onrender.com/api/test/reset || true
+          curl -s -X POST https://buggy-books.onrender.com/api/test/books/1/stock \
+            -H "Content-Type: application/json" \
+            -d '{"stock": 100}' || true
+          curl -s -X POST https://buggy-books.onrender.com/api/test/books/2/stock \
+            -H "Content-Type: application/json" \
+            -d '{"stock": 100}' || true
 
       - name: Install Google Chrome
         run: npx playwright install --with-deps chrome
@@ -100,6 +106,12 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"checkoutFailureRate": 0, "inventoryDelayMs": 0, "visualChaos": false}' || true
           curl -s -X POST https://buggy-books.onrender.com/api/test/reset || true
+          curl -s -X POST https://buggy-books.onrender.com/api/test/books/1/stock \
+            -H "Content-Type: application/json" \
+            -d '{"stock": 100}' || true
+          curl -s -X POST https://buggy-books.onrender.com/api/test/books/2/stock \
+            -H "Content-Type: application/json" \
+            -d '{"stock": 100}' || true
 
       - name: Upload Test Artifacts
         if: always()

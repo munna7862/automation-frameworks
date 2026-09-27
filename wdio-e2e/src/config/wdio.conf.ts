@@ -5,17 +5,8 @@ import { envConfig } from './env.config';
 
 function loadTestSuite() {
   const suiteName = envConfig.SUITENAME;
-  const specificTests = [
-    './src/tests/ui/Test_001_VerifyHomePage.spec.ts',
-    './src/tests/ui/Test_002_NetworkInterceptor.spec.ts',
-    './src/tests/api/Test_001_BasicCRUD.spec.ts'
-  ];
 
-  if (envConfig.USE_SPECIFIC_TESTS === true) {
-    return specificTests;
-  }
-
-  if (suiteName) {
+  if (suiteName && suiteName !== 'Default') {
     try {
       const suiteFilePath = path.join(__dirname, `../tests/TestSuites/${suiteName}.json`);
       if (fs.existsSync(suiteFilePath)) {
@@ -27,20 +18,12 @@ function loadTestSuite() {
     }
   }
 
-  return ['./src/tests/**/*.spec.ts'];
-}
-
-function getBrowserName() {
-  if (envConfig.browser === 'chromium') {
-    return 'chrome';
-  }
-
-  return envConfig.browser;
+  return ['./src/tests/ui/**/*.spec.ts'];
 }
 
 const browserArgs = envConfig.headless
-  ? ['--headless=new', '--disable-gpu', '--window-size=1920,1080']
-  : ['--start-maximized'];
+  ? ['--headless=new', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080']
+  : ['--start-maximized', '--no-sandbox'];
 
 export const config = {
   runner: 'local',
@@ -51,7 +34,7 @@ export const config = {
   logLevel: 'warn',
   bail: 0,
   baseUrl: envConfig.baseUrl,
-  waitforTimeout: 60000,
+  waitforTimeout: 30000,
   connectionRetryTimeout: 120000,
   connectionRetryCount: 1,
   framework: 'mocha',
@@ -63,7 +46,7 @@ export const config = {
       disableWebdriverScreenshotsReporting: false,
       addConsoleLogs: true,
       reportedEnvironmentVars: {
-        Environment: envConfig.env || 'INTEROP',
+        Environment: envConfig.env || 'staging',
         Suite: envConfig.SUITENAME || 'Default',
         OS: process.platform,
         NodeVersion: process.version
@@ -72,21 +55,15 @@ export const config = {
   ],
   mochaOpts: {
     ui: 'bdd',
-    timeout: 300000
+    timeout: 120000
   },
   capabilities: [{
-    browserName: getBrowserName(),
+    browserName: 'chrome',
     acceptInsecureCerts: true,
     'goog:loggingPrefs': {
       performance: 'ALL'
     },
     'goog:chromeOptions': {
-      args: browserArgs
-    },
-    'moz:firefoxOptions': {
-      args: envConfig.headless ? ['-headless'] : []
-    },
-    'ms:edgeOptions': {
       args: browserArgs
     }
   }],

@@ -2,11 +2,31 @@ import type { ChainablePromiseElement } from 'webdriverio';
 import { CommonFunctions } from '@utils/common.util';
 
 export class BasePage extends CommonFunctions {
-  private static readonly DEFAULT_TIMEOUT = 60000;
+  protected static readonly DEFAULT_TIMEOUT = 30000;
+
+  public async getShadowElement(hostSelector: string, innerSelector: string) {
+    const host = await $(hostSelector);
+    return host.shadow$(innerSelector);
+  }
+
+  public async ensureNavElementVisible(): Promise<void> {
+    try {
+      const toggle = $('#mobile-menu-toggle');
+      if (await toggle.isDisplayed().catch(() => false)) {
+        const isExpanded = (await toggle.getAttribute('aria-expanded')) === 'true';
+        if (!isExpanded) {
+          await toggle.click();
+        }
+      }
+    } catch {
+      // Non-blocking fallback for desktop viewports
+    }
+  }
 
   public async doClick(locator: ChainablePromiseElement, sLogMessage: string): Promise<void> {
     await this.logMessage('INFO', sLogMessage);
     await locator.waitForDisplayed({ timeout: BasePage.DEFAULT_TIMEOUT });
+    await locator.waitForClickable({ timeout: BasePage.DEFAULT_TIMEOUT });
     await locator.click();
   }
 
@@ -52,8 +72,24 @@ export class BasePage extends CommonFunctions {
   }
 
   public async doesElementExist(locator: ChainablePromiseElement, sLogMessage: string): Promise<boolean> {
-    const isVisible = await locator.isDisplayed();
-    await this.logMessage('INFO', `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`);
-    return isVisible;
+    try {
+      const isVisible = await locator.isDisplayed();
+      await this.logMessage('INFO', `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`);
+      return isVisible;
+    } catch {
+      return false;
+    }
+  }
+
+  public async waitForVisible(locator: ChainablePromiseElement, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<void> {
+    await locator.waitForDisplayed({ timeout: timeoutMs });
+  }
+
+  public async waitForClickable(locator: ChainablePromiseElement, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<void> {
+    await locator.waitForClickable({ timeout: timeoutMs });
+  }
+
+  public async waitForHidden(locator: ChainablePromiseElement, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<void> {
+    await locator.waitForDisplayed({ timeout: timeoutMs, reverse: true });
   }
 }
