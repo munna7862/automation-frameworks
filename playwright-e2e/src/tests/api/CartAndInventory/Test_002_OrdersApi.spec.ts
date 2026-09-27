@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import * as path from 'path';
 import { randomBytes } from 'crypto';
 import { envConfig } from '../../../config/env.config';
-import { CommonFunctions } from '../../../utils/common.util';
+import { CommonFunctions } from '@automationframeworks/playwright-utils';
 
 const commonUtil = new CommonFunctions();
 

@@ -403,4 +403,21 @@ The entire roadmap is organized under [`planning/`](../../planning/):
     });
     ```
 
+---
+
+## 19. npm Workspaces, Internal Package Linking & PeerDependency Version Alignment
+
+- **Workspace Architecture**:
+  - Root `package.json` coordinates all frameworks via `workspaces: ["packages/*", "playwright-e2e", "selenium-e2e", "wdio-e2e"]`.
+  - Shared utilities reside in `packages/playwright-utils/` under the package name `@automationframeworks/playwright-utils`.
+  - Consuming packages link via npm workspace protocol: `"@automationframeworks/playwright-utils": "*"` in `dependencies`.
+  - Root orchestration scripts provide unified operations: `npm run lint:all`, `npm run typecheck:all`, `npm run test:smoke:all`, and `npm run clean`.
+- **PeerDependency Hoisting & Version Skew Pitfall**:
+  - If an internal workspace package declares a loose peerDependency range (e.g. `@playwright/test: ">=1.50.0"` or `"^1.58.0"`), npm attempts to resolve the latest semver match from the registry into the package's local `node_modules/`.
+  - In TypeScript, differing versions of `playwright-core` (e.g. 1.58.0 vs 1.61.1) produce subtly different `Locator` and `Page` interface shapes (new methods like `ariaSnapshot`, `drop`, `normalize`), triggering TS2345 type mismatch errors upon passing page or locator instances to base wrappers.
+  - **The Rule**: Always align and pin `@playwright/test` across workspace `peerDependencies` and consuming applications to the exact same version (`1.58.0`), allowing npm to deduplicate packages into a single hoisted root tree.
+- **Base Utility Consolidation**:
+  - Redundant copies of `base.page.ts`, `logger.ts`, and `common.util.ts` in `playwright-e2e/src/core/base/` must be permanently eliminated.
+  - All Page Objects (`src/pages/*.ts`) and specs import `BasePage`, `CommonFunctions`, and `logger` directly from `@automationframeworks/playwright-utils`.
+
 

@@ -46,10 +46,14 @@ jobs:
           node-version: 24
       
       - name: Install dependencies
-        working-directory: playwright-e2e
         run: |
           npm ci
           npx playwright install --with-deps chrome
+
+      - name: Run Monorepo Static Analysis
+        run: |
+          npm run lint:all
+          npm run typecheck:all
 
       - name: Render Staging Warm-Up Pre-Flight Probe
         run: |
@@ -59,14 +63,13 @@ jobs:
           npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
 
       - name: Run tests
-        working-directory: playwright-e2e
         env:
           ENVIRONMENT: INTEROP
           TZ: Australia/Adelaide
           USER_NAME: ${{ secrets.E2E_USER_NAME }}
           PASSWORD: ${{ secrets.E2E_PASSWORD }}
         run: |
-          npm run test
+          npm run test --workspace=playwright-e2e
         continue-on-error: true
 
       # Explicitly upload the allure-results folder

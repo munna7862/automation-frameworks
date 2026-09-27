@@ -1,5 +1,5 @@
 {
-  "name": "playwright-utils",
+  "name": "@automationframeworks/playwright-utils",
   "version": "1.0.0",
   "description": "Base classes and utilities for Playwright automation frameworks",
   "main": "dist/index.js",
@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "prepare": "npm run build",
     "prepublishOnly": "npm run build"
   },
@@ -19,12 +20,10 @@
     "winston": "^3.19.0"
   },
   "peerDependencies": {
-    "@playwright/test": "^1.58.0",
+    "@playwright/test": "1.58.0",
     "allure-js-commons": "^3.4.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.0",
-    "allure-js-commons": "^3.4.1",
     "@types/node": "^25.0.10",
     "typescript": "^5.9.3"
   }

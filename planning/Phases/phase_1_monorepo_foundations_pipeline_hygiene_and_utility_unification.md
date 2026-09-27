@@ -87,10 +87,10 @@ graph LR
 - [x] All 4 extensionless files and legacy CRUD workflows are permanently purged from `.github/workflows/`.
 - [x] Root and sub-project `.env.example` templates are committed with clear documentation and safe default values.
 - [x] Visual regression tests pass deterministically on Google Chrome without manual snapshot overrides.
-- [ ] Monorepo root `package.json` coordinates all frameworks via npm workspaces.
-- [ ] Code duplication between `playwright-utils` and `playwright-e2e` is eliminated; shared utilities reside strictly in `packages/playwright-utils/`.
-- [ ] `npm run lint:all` and `npm run typecheck:all` exit with code `0`.
-- [ ] Playwright test suite maintains exact ~110 test count (55 API + 54 Chrome UI + 1 auth setup).
+- [x] Monorepo root `package.json` coordinates all frameworks via npm workspaces.
+- [x] Code duplication between `playwright-utils` and `playwright-e2e` is eliminated; shared utilities reside strictly in `packages/playwright-utils/`.
+- [x] `npm run lint:all` and `npm run typecheck:all` exit with code `0`.
+- [x] Playwright test suite maintains exact ~110 test count (55 API + 54 Chrome UI + 1 auth setup).
 
 ---
 

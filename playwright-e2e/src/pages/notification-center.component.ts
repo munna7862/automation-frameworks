@@ -1,4 +1,4 @@
-import { BasePage } from '../core/base/base.page';
+import { BasePage } from '@automationframeworks/playwright-utils';
 import { Locator } from '@playwright/test';
 
 export class NotificationCenterComponent extends BasePage {

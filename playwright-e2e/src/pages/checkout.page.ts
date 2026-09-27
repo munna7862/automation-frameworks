@@ -1,4 +1,4 @@
-import { BasePage } from '../core/base/base.page';
+import { BasePage } from '@automationframeworks/playwright-utils';
 import { expect, Locator, Page } from '@playwright/test';
 
 export class CheckoutPage extends BasePage {

@@ -1,6 +1,6 @@
 import { test, expect, type APIRequestContext } from '@playwright/test';
 import { envConfig } from '../../../config/env.config';
-import { CommonFunctions } from '../../../utils/common.util';
+import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import testData from '../../../test-data/api/UserManagement/Test_001_RegisterAndLoginUser.json';
 import { randomBytes } from 'crypto';
 

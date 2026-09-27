@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import type { Book, PaginatedBooks } from '@buggybooks/types';
-import { CommonFunctions } from '../../../utils/common.util';
+import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import testData from '../../../test-data/api/BookCatalog/Test_001_BooksApi.json';
 
 const commonUtil = new CommonFunctions();

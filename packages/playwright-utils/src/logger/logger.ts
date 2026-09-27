@@ -3,9 +3,13 @@ import path from 'path';
 import fs from 'fs';
 
 const logDir = path.resolve(process.cwd(), 'logs');
-fs.mkdirSync(logDir, { recursive: true });
+try {
+  fs.mkdirSync(logDir, { recursive: true });
+} catch {
+  // Directory already exists or non-fatal
+}
 
-const createLogger = (filename: string, level: string = 'info') => {
+export const createLogger = (filename: string, level: string = 'info') => {
   return winston.createLogger({
     level,
     format: winston.format.combine(

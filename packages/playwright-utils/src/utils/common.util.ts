@@ -1,6 +1,6 @@
-import { logger, errorLogger } from '../core/logger/logger';
+import { logger, errorLogger } from '../logger/logger';
 import { expect, Locator } from '@playwright/test';
-import * as allure from "allure-js-commons";
+import * as allure from 'allure-js-commons';
 import { randomInt } from 'crypto';
 
 export class CommonFunctions {
@@ -130,6 +130,7 @@ export class CommonFunctions {
     } else {
       await this.logMessage('FAIL', ` ${sLogMessage} Failed!! Expected Value:: ${sExpectedValue} || Actual Value:: ${sActualValue}`);
     }
+    expect.soft(sActualValue, sLogMessage).toBe(sExpectedValue);
     return bValidation;
   }
 

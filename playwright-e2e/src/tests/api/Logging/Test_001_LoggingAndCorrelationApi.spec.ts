@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { CommonFunctions } from '../../../utils/common.util';
+import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import TestData from '../../../test-data/api/Logging/Test_001_LoggingAndCorrelationApi.json';
 import { randomBytes } from 'crypto';
 

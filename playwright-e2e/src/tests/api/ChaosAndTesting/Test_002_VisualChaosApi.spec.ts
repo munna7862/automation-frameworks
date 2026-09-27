@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { CommonFunctions } from '../../../utils/common.util';
+import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import TestData from '../../../test-data/api/ChaosAndTesting/Test_002_VisualChaosApi.json';
 
 const commonUtil = new CommonFunctions();

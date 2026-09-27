@@ -2,8 +2,9 @@ import { Page, Locator } from '@playwright/test';
 import { CommonFunctions } from '../../utils/common.util';
 export declare class BasePage extends CommonFunctions {
     protected page: Page;
-    private static readonly DEFAULT_TIMEOUT;
+    static get DEFAULT_TIMEOUT(): number;
     constructor(page: Page);
+    ensureNavElementVisible(targetLocator?: Locator): Promise<void>;
     doClick(locator: Locator, sLogMessage: string): Promise<void>;
     doEnterText(locator: Locator, sValue: string, sLogMessage: string): Promise<void>;
     doGetText(locator: Locator, sLogMessage: string): Promise<string>;

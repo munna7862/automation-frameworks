@@ -1,4 +1,4 @@
-import { logger } from '../logger/logger';
+import { logger, CommonFunctions } from '@automationframeworks/playwright-utils';
 import { SignUpPage } from '../../pages/signup-login.page';
 import { CatalogPage } from '../../pages/catalog.page';
 import { BookDetailPage } from '../../pages/book-detail.page';
@@ -7,7 +7,6 @@ import { CheckoutPage } from '../../pages/checkout.page';
 import { ProfilePage } from '../../pages/profile.page';
 import { ChaosDashboardPage } from '../../pages/chaos-dashboard.page';
 import { NotificationCenterComponent } from '../../pages/notification-center.component';
-import { CommonFunctions } from '../../utils/common.util';
 import defaultApiUtil, { ApiUtil } from '../../utils/api.util';
 import { envConfig } from '../../config/env.config';
 import { NetworkInterceptor } from '../network/network.interceptor';
