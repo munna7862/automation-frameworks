@@ -43,7 +43,7 @@ export class CheckoutPage extends BasePage {
   }
 
   private get finalSubmitButton(): Locator {
-    return this.page.getByRole('button', { name: /Complete Payment/i }).or(this.page.locator('button[name="btn_submit_rnd"], button.primary-x2'));
+    return this.page.getByRole('button', { name: 'Complete Payment' });
   }
 
   private get orderConfirmationMessage(): Locator {
@@ -179,17 +179,7 @@ export class CheckoutPage extends BasePage {
     if (await this.doesElementExist(this.nextStepButton, 'Checking if Next Step button is visible')) {
       await this.doClick(this.nextStepButton, 'Clicking on Next Step button on Payment page');
     } else {
-      await this.page.evaluate(() => {
-        try {
-          document.querySelectorAll('div[role="status"], .react-hot-toast, [class*="toast"]').forEach(el => el.remove());
-        } catch {
-          // ignore DOM detachment
-        }
-      });
-      const submitBtn = this.finalSubmitButton.first();
-      await submitBtn.scrollIntoViewIfNeeded().catch(() => undefined);
-      await submitBtn.click({ force: true, timeout: 10000 });
-      await this.logMessage('INFO', 'Clicked on Complete Payment button on Confirm page');
+      await this.doClick(this.finalSubmitButton, 'Clicking on Complete Payment button on Confirm page');
     }
   }
 

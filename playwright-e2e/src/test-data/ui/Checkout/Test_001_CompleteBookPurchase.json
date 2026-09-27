@@ -1,6 +1,6 @@
 {
   "book": {
-    "id": 2
+    "id": 1
   },
   "payment": {
     "firstName": "john",
@@ -9,9 +9,9 @@
   },
   "expected": {
     "addToCartMessage": "Added to cart!",
-    "bookPrice": "$15.50",
-    "cartTotal": "Total: $15.50",
-    "checkoutTotal": "$15.50",
+    "bookPrice": "$10.99",
+    "cartTotal": "Total: $10.99",
+    "checkoutTotal": "$10.99",
     "paymentSuccessMessage": "Payment Successful! Thank you for your order."
   }
 }

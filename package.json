@@ -12,7 +12,7 @@
   "scripts": {
     "lint:all": "npm run lint --workspaces --if-present",
     "typecheck:all": "npm run typecheck --workspaces --if-present",
-    "test:smoke:all": "npm run test:all:smoke",
+    "test:smoke:all": "npm run test:smoke --workspace=playwright-e2e",
     "test:playwright:smoke": "npm run test:smoke --workspace=playwright-e2e",
     "test:selenium:smoke": "npm run test:smoke --workspace=selenium-e2e",
     "test:wdio:smoke": "npm run test:smoke --workspace=wdio-e2e",
