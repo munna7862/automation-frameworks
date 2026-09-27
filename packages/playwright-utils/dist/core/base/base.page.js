@@ -63,9 +63,15 @@ class BasePage extends common_util_1.CommonFunctions {
         await fieldLocator.pressSequentially(value, { timeout: BasePage.DEFAULT_TIMEOUT });
     }
     async doesElementExist(locator, sLogMessage) {
-        const isVisible = await locator.isVisible();
-        await this.logMessage('INFO', `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`);
-        return isVisible;
+        try {
+            const isVisible = await locator.isVisible();
+            await this.logMessage('INFO', `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`);
+            return isVisible;
+        }
+        catch {
+            await this.logMessage('INFO', `${sLogMessage} - Element is not visible`);
+            return false;
+        }
     }
 }
 exports.BasePage = BasePage;
