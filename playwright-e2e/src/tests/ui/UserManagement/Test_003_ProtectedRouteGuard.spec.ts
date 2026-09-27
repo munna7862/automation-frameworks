@@ -40,6 +40,7 @@ test.describe('Protected Route Access Guard', () => {
           }, route.path);
         }
 
+        await page.waitForURL((url) => url.pathname.includes(route.expectedRedirect) || url.href.includes(route.expectedRedirect), { timeout: 10000 }).catch(() => undefined);
         const isLoginPageLoaded = await signUpPage.verifyLoginPageLoaded();
         const currentUrl = page.url();
         const isUrlCorrect = currentUrl.includes(route.expectedRedirect);
