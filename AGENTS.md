@@ -41,15 +41,16 @@ This document serves as the **always-on memory and operational baseline** for al
   *Skipping this will cause initial test requests to time out and produce false-positive flakiness.*
 
 ### 3. Intentional Chaos Containment & State Reset
+- **Authoritative Manual**: Comprehensive specifications for all 8 intentional anti-patterns, failure signatures, and Playwright/Selenium/WDIO remediation recipes are documented in [**`docs/intentional_bugs.md`**](docs/intentional_bugs.md).
 - **Chaos Endpoints**:
-  - Toggle Chaos: `POST /api/test/config` (e.g. `checkoutFailureRate`, `inventoryDelayMs`)
+  - Toggle Chaos: `POST /api/test/config` (e.g. `checkoutFailureRate`, `inventoryDelayMs`, `visualChaos`, `rateLimitMaxRequests`)
   - Reset Application State: `POST /api/test/reset`
 - **Critical Gotcha**: Chaos settings mutate the **shared staging server** globally.
 - **Strict Rule**: Any test altering chaos parameters (e.g. `Test_001_ChaosAndTestingApi.spec.ts`) **must** reset parameters in `test.afterEach`:
   ```ts
   test.afterEach(async ({ request }) => {
     await request.post('/api/test/config', {
-      data: { checkoutFailureRate: 0, inventoryDelayMs: 0 }
+      data: { checkoutFailureRate: 0, inventoryDelayMs: 0, visualChaos: false }
     });
     await request.post('/api/test/reset');
   });

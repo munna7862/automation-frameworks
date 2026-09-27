@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-2.1-INTENTIONAL-BUGS-AND-CHAOS-GUIDE`  
 **Phase Mapping**: [Phase 2: Documentation Integrity, Anti-Pattern Manual & Quality Gates](../Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)  
 **Estimated Velocity**: 3 Story Points  
-**Sprint Status**: Planned  
+**Sprint Status**: Done  
 **Sprint Goal**: Author `docs/intentional_bugs.md` in strict compliance with the `doc-implementation-standards` skill, detailing all BuggyBooks intentional failure modes, chaos configuration endpoints, and robust automated testing remediation recipes.
 
 ---
@@ -29,7 +29,7 @@
   *So that* I can implement resilient locators, auto-waiting, and error recovery without suffering from false-positive test failures.
 - **Story Points**: 2 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Port and customize `docs/intentional_bugs.md` based on `buggy-books`:
+  - [x] Port and customize `docs/intentional_bugs.md` based on `buggy-books`:
     - **Backend Anti-Patterns**:
       1. Intermittent Checkout Failure (`POST /api/test/config` $\rightarrow$ `checkoutFailureRate`).
       2. Delayed Inventory Report (`inventoryDelayMs: 3000`).
@@ -40,8 +40,8 @@
       6. Obfuscated Locators & Missing `data-testid` attributes.
       7. Shadow DOM Encapsulation (`<order-summary-box>`).
       8. Visual Layout Chaos (`visualChaos: true`).
-  - [ ] Provide explicit, runnable remediation code snippets for Playwright, Selenium, and WebdriverIO.
-  - [ ] Document strict state restoration commands (`POST /api/test/reset`).
+  - [x] Provide explicit, runnable remediation code snippets for Playwright, Selenium, and WebdriverIO.
+  - [x] Document strict state restoration commands (`POST /api/test/reset`).
 - **Acceptance Criteria**:
   - `docs/intentional_bugs.md` is authored and committed.
   - All 8 anti-patterns have clear descriptions, failure signatures, and remediation code blocks.
@@ -53,12 +53,12 @@
   *So that* chaos parameters modified during testing never contaminate subsequent test suites on the shared staging server.
 - **Story Points**: 1 SP (Small)
 - **Technical Subtasks**:
-  - [ ] Cross-reference `docs/intentional_bugs.md` in `AGENTS.md` and `.agents/skills/chaos-and-bug-testing/SKILL.md`.
-  - [ ] Add explicit warnings and code patterns for `test.afterEach` state resets:
+  - [x] Cross-reference `docs/intentional_bugs.md` in `AGENTS.md` and `.agents/skills/chaos-and-bug-testing/SKILL.md`.
+  - [x] Add explicit warnings and code patterns for `test.afterEach` state resets:
     ```typescript
     test.afterEach(async ({ request }) => {
       await request.post('/api/test/config', {
-        data: { checkoutFailureRate: 0, inventoryDelayMs: 0 }
+        data: { checkoutFailureRate: 0, inventoryDelayMs: 0, visualChaos: false }
       });
       await request.post('/api/test/reset');
     });
@@ -71,10 +71,10 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] `docs/intentional_bugs.md` created with 100% compliance with `doc-implementation-standards`.
-- [ ] Code examples provided for Playwright, Selenium, and WebdriverIO.
-- [ ] Safe reset endpoint (`POST /api/test/reset`) explicitly documented.
-- [ ] `AGENTS.md` updated with cross-references.
+- [x] `docs/intentional_bugs.md` created with 100% compliance with `doc-implementation-standards`.
+- [x] Code examples provided for Playwright, Selenium, and WebdriverIO.
+- [x] Safe reset endpoint (`POST /api/test/reset`) explicitly documented.
+- [x] `AGENTS.md` updated with cross-references.
 
 ---
 

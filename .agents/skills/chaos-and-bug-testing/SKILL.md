@@ -8,6 +8,7 @@ description: Guidelines and procedures for interacting with BuggyBooks chaos end
 This skill outlines how to interact with BuggyBooks' intentional chaos features and anti-patterns during test development and QA validation against the remote staging environment:
 - **Frontend Staging**: `https://buggy-books-fe.onrender.com`
 - **Backend Staging**: `https://buggy-books.onrender.com/api`
+- **Authoritative Manual**: Detailed failure signatures and code recipes across Playwright, Selenium, and WebdriverIO are in [`docs/intentional_bugs.md`](../../../docs/intentional_bugs.md).
 
 ---
 
@@ -58,10 +59,16 @@ x-test-session-id: test-session-${timestamp}
 
 ## 3. Intentional Anti-Patterns & Remediation Strategies
 
+Consult [`docs/intentional_bugs.md`](../../../docs/intentional_bugs.md) for complete, runnable code recipes in Playwright, Selenium, and WebdriverIO:
+
 | Anti-Pattern | Description | Cross-Framework Remediation Strategy |
 | :--- | :--- | :--- |
 | **Flaky Checkout** | `POST /api/checkout/process` intermittently returns `500 Internal Server Error` (~15% of the time). | Implement exponential backoff retry in API/UI flow; never remove the assertion. |
-| **Dynamic UI Delays** | "Add to Cart" and checkout buttons simulate latency (500–3500ms). | Use native auto-waiting: Playwright `expect(locator).toHaveText()`, Selenium `until.elementIsEnabled()`, WDIO `waitForDisplayed()`. Forbid static sleeps (`waitForTimeout`). |
+| **Delayed Inventory Report** | `GET /api/inventory/report` artificially delayed by `inventoryDelayMs` (0-10000ms). | Calibrate per-request timeout thresholds (`timeout: 15000`) and SLA assertions. |
+| **Express Rate Limiting** | Exceeding `rateLimitMaxRequests` yields `429 Too Many Requests`. | Restrict parallel CI workers (`workers: 2`), respect `Retry-After` header, apply jitter. |
+| **Session Cart State Leak** | Shared carts between parallel workers cause race conditions. | Sandbox with `x-test-session-id: <uuid>` request header across API/UI sessions. |
+| **Dynamic UI Delays** | "Add to Cart" and checkout buttons simulate latency (500–3500ms). | Use native auto-waiting: Playwright `expect(locator).toBeEnabled()`, Selenium `until.elementIsEnabled()`, WDIO `waitForClickable()`. Forbid static sleeps (`waitForTimeout`). |
 | **Obfuscated Locators** | Missing static IDs and `data-testid` attributes. | Use semantic ARIA queries (`getByRole`, `getByLabel`) or sanctioned **relative XPath with axes** (`//label[text()='Username']/following-sibling::input`). Absolute XPath is forbidden. |
-| **Shadow DOM Encapsulation** | `<order-summary-box>` encapsulates price inside `#shadow-root`. | Playwright: native boundary piercing (`locator('order-summary-box').locator('.price')`).<br>Selenium: `getShadowRoot()` W3C API.<br>WebdriverIO: `$('order-summary-box').shadow$('.price')`. |
+| **Shadow DOM Encapsulation** | `<order-summary-box>` encapsulates price inside `#shadow-root`. | Playwright: native boundary piercing (`locator('order-summary-box .price')`).<br>Selenium: `getShadowRoot()` W3C API.<br>WebdriverIO: `$('order-summary-box').shadow$('.price')`. |
 | **Visual Layout Chaos** | Shifting elements, mutated padding, and distorted banners when `visualChaos: true`. | Calibrate visual regression tests with `maxDiffPixelRatio: 0.05` and threshold filters. |
+
