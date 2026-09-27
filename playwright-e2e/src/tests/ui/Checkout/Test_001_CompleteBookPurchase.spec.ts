@@ -29,6 +29,7 @@ const TestData = require(testDataPath) as CompleteBookPurchaseTestData;
 test.describe('Complete Book Purchase', () => {
 
   test('Testcase 1: Complete book purchase successfully @smoke @regression', async ({ catalogPage, commonFunctions, page }) => {
+    test.setTimeout(60000);
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
 

@@ -199,7 +199,7 @@ export class CheckoutPage extends BasePage {
 
   private async waitForConfirmationMessage(expectedMessage: string): Promise<void> {
     await this.logMessage('INFO', `Waiting for confirmation message containing: ${expectedMessage}`);
-    await expect(this.orderConfirmationMessage).toBeVisible({ timeout: 60000 });
+    await expect(this.orderConfirmationMessage).toBeVisible({ timeout: 15000 });
     const cardText = (await this.orderConfirmationMessage.textContent() || '').replace(/\s+/g, ' ');
     expect(cardText).toContain('Payment Successful');
     expect(cardText).toContain('Thank you for your order');
@@ -228,7 +228,7 @@ export class CheckoutPage extends BasePage {
 
   public async waitForOrderConfirmationMessage(expectedMessage: string): Promise<void> {
     await this.logMessage('INFO', `Waiting for order confirmation message: ${expectedMessage}`);
-    await expect(this.orderConfirmationMessage).toBeVisible({ timeout: 60000 });
+    await expect(this.orderConfirmationMessage).toBeVisible({ timeout: 15000 });
     const cardText = (await this.orderConfirmationMessage.textContent() || '').replace(/\s+/g, ' ');
     expect(cardText).toContain('Payment Successful');
     expect(cardText).toContain('Thank you for your order');
