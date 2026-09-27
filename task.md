@@ -1,12 +1,12 @@
 # Task Backlog: AutomationFrameworks Sprint Execution
 
-## Current Focus: Sprint 1.3 — Monorepo Workspaces & Utility Package Unification
+## Current Focus: Sprint 2.1 — Intentional Bugs & Chaos Testing Guide
 
-**Sprint Identifier**: `SPRINT-1.3-MONOREPO-WORKSPACES-AND-UTILITY-UNIFICATION`  
-**Phase**: Phase 1 (Monorepo Foundations, Pipeline Hygiene & Utility Unification)  
-**Story Points**: 5 SP  
-**Branch**: `feat/sprint-1.3-monorepo-workspaces-and-utility-unification`  
-**Goal**: Implement an `npm workspaces` root monorepo architecture, convert `playwright-utils/` into `@automationframeworks/playwright-utils` under `packages/`, link it to `playwright-e2e`, eliminate duplicated core utilities, and establish root orchestration scripts.
+**Sprint Identifier**: `SPRINT-2.1-INTENTIONAL-BUGS-AND-CHAOS-GUIDE`  
+**Phase**: Phase 2 (Documentation Integrity, Anti-Pattern Manual & Quality Gates)  
+**Story Points**: 3 SP  
+**Branch**: `feat/sprint-2.1-intentional-bugs-and-chaos-guide`  
+**Goal**: Author `docs/intentional_bugs.md` in strict compliance with the `doc-implementation-standards` skill, detailing all BuggyBooks intentional failure modes, chaos configuration endpoints, and robust automated testing remediation recipes across Playwright, Selenium, and WebdriverIO.
 
 ---
 
@@ -14,31 +14,28 @@
 
 | Persona | Role Assignment | Responsibilities for this Sprint | Status |
 | :--- | :--- | :--- | :--- |
-| **Scrum Master** | `role-scrum-master` | Sprint planning, `task.md` tracking, DoR verification, and DoD audit. | `ACTIVE` |
-| **SDET Architect** | `role-sdet-architect` | Architecting npm workspaces schema, package boundary rules, and authoring root orchestration commands. | `ACTIVE` |
-| **Playwright QA Lead** | `role-playwright-automation` | Refactoring `playwright-e2e` imports to consume `@automationframeworks/playwright-utils` and verifying zero regressions. | `ACTIVE` |
-| **DevOps Engineer** | `role-devops-engineer` | Validating root workspace commands (`npm run lint:all`, `npm run typecheck:all`) and CI compatibility. | `ACTIVE` |
+| **Scrum Master** | `role-scrum-master` | Sprint planning, `task.md` tracking, DoR verification, and DoD audit. | `COMPLETED` |
+| **SDET Architect** | `role-sdet-architect` | Authoring `docs/intentional_bugs.md`, cross-framework remediation recipes, and code review gate. | `COMPLETED` |
+| **Playwright QA Lead** | `role-playwright-automation` | Validating Playwright remediation patterns and live staging API responses. | `COMPLETED` |
+| **DevOps Engineer** | `role-devops-engineer` | Ensuring chaos state reset protocols in CI and managing PR release lifecycle. | `COMPLETED` |
 | **Product Owner** | Human Tech Lead (`User`) | Backlog prioritization, sprint kickoff, and final PR review & merge. | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
-### US-AF-131: Root Monorepo Package & Workspace Setup (2 SP)
-- [x] **US-AF-131.1** (`SDET Architect`): Create root `package.json` declaring workspaces (`packages/*`, `playwright-e2e`, `selenium-e2e`, `wdio-e2e`) and scripts (`lint:all`, `typecheck:all`, `test:smoke:all`, `clean`).
-- [x] **US-AF-131.2** (`SDET Architect`): Relocate `playwright-utils/` into `packages/playwright-utils/`.
-- [x] **US-AF-131.3** (`SDET Architect`): Configure `packages/playwright-utils/package.json` name as `@automationframeworks/playwright-utils` and set up exports / build scripts.
-- [x] **US-AF-131.4** (`SDET Architect`): Verify root `npm install` creates workspace links cleanly without registry errors.
+### US-AF-211: Comprehensive Intentional Bugs Manual Authoring (2 SP)
+- [x] **US-AF-211.1** (`SDET Architect`): Author `docs/intentional_bugs.md` documenting 4 Backend Anti-Patterns (Intermittent Checkout Failure, Delayed Inventory Report, Express Rate Limiting, Session Sandboxing).
+- [x] **US-AF-211.2** (`SDET Architect`): Document 4 UI Anti-Patterns in `docs/intentional_bugs.md` (Dynamic Actionability Delay, Obfuscated Locators, Shadow DOM Encapsulation, Visual Layout Chaos).
+- [x] **US-AF-211.3** (`SDET Architect` / `Playwright QA Lead`): Provide complete, runnable remediation code recipes for Playwright, Selenium, and WebdriverIO for each pattern.
+- [x] **US-AF-211.4** (`SDET Architect`): Document safe teardown state restoration commands (`POST /api/test/reset` and payload cleanup).
 
-### US-AF-132: Elimination of Duplicated Base Utilities (3 SP)
-- [x] **US-AF-132.1** (`SDET Architect`): Link `@automationframeworks/playwright-utils: "*"` in `playwright-e2e/package.json`.
-- [x] **US-AF-132.2** (`Playwright QA Lead`): Audit and harmonize base utility implementations (`base.page.ts`, `logger.ts`, `common.util.ts`) in `packages/playwright-utils/src/` to support all `playwright-e2e` features (including failure capture / screenshot methods if needed).
-- [x] **US-AF-132.3** (`Playwright QA Lead`): Refactor imports across `playwright-e2e` Page Objects, fixtures, and helpers to consume `@automationframeworks/playwright-utils`.
-- [x] **US-AF-132.4** (`Playwright QA Lead`): Remove duplicated files from `playwright-e2e/src/core/base/` (`base.page.ts`, `common.util.ts`, `logger.ts`).
-- [x] **US-AF-132.5** (`Playwright QA Lead`): Execute Playwright API & UI suites on Google Chrome, confirming 100% green pass and zero import errors.
-- [x] **US-AF-132.6** (`SDET Architect`): Conduct Code Acceptance Review and verify dual catalogs parity.
-- [x] **US-AF-132.7** (`Scrum Master`): Audit 4-point DoD checklist and sign off sprint gates.
-- [x] **US-AF-132.8** (`DevOps Engineer`): Validate workspace scripts in CI, commit changes, push branch, and open PR via `gh pr create`.
+### US-AF-212: Teardown Reset Hygiene & Agent Memory Synchronization (1 SP)
+- [x] **US-AF-212.1** (`SDET Architect`): Cross-reference `docs/intentional_bugs.md` and strengthen teardown reset hygiene rules in `AGENTS.md`.
+- [x] **US-AF-212.2** (`SDET Architect`): Update `.agents/skills/chaos-and-bug-testing/SKILL.md` to reference `docs/intentional_bugs.md` and synchronize anti-pattern remediation.
+- [x] **US-AF-212.3** (`Scrum Master`): Update sprint statuses across `planning/README.md`, `planning/Phases/phase_2_*.md`, and `planning/Sprints/sprint_2_1_*.md`.
+- [x] **US-AF-212.4** (`Scrum Master` / `DevOps Engineer`): Run full DoD audit (static analysis, dual-catalog parity, lint/typecheck).
+- [x] **US-AF-212.5** (`DevOps Engineer`): Stage, commit with conventional message, and push branch to remote repository.
 
 ---
 
@@ -46,25 +43,24 @@
 
 | Gate / Reviewer | Target Role | Review Feedback & Comments | Gate Status |
 | :--- | :--- | :--- | :---: |
-| **Pre-Flight Architecture Gate** | SDET Architect | Verified npm workspace declaration (`packages/*`, `playwright-e2e`, `selenium-e2e`, `wdio-e2e`), package relocation to `packages/playwright-utils/`, and unified peerDependency versions. | `[APPROVED]` |
-| **Code Acceptance Review Gate** | SDET Architect | Verified complete elimination of redundant base utilities in `playwright-e2e/src/core/base/`, zero raw Playwright action calls across all 8 Page Objects, and 100% clean imports from `@automationframeworks/playwright-utils`. | `[APPROVED]` |
-| **Scrum Master DoD Gate** | Scrum Master | Audited `lint:all` and `typecheck:all` exiting with 0, 100% smoke test pass rate across Google Chrome UI + API, and zero catalog diff. | `[APPROVED]` |
-| **DevOps Release Gate** | DevOps Engineer | Validated root workspace commands (`npm run lint:all`, `npm run typecheck:all`), updated `.github/workflows/playwright-ci.yml`, and prepared PR. | `[APPROVED]` |
-| **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[PENDING]` |
+| **Pre-Flight Architecture Gate** | SDET Architect | Staging warm-up passed, branch checked out, dual-catalog parity verified at baseline. | `[APPROVED]` |
+| **Code Acceptance Review Gate** | SDET Architect | Verified comprehensive coverage of all 8 anti-patterns (4 Backend + 4 UI), runnable code recipes for Playwright/Selenium/WDIO, mandatory reset hooks, and zero absolute Windows paths. | `[APPROVED]` |
+| **Scrum Master DoD Gate** | Scrum Master | Audited static typechecks across workspaces (exit 0), dual-catalog parity (zero diff), and documentation integrity. | `[APPROVED]` |
+| **DevOps Release Gate** | DevOps Engineer | Validated Git working tree, conventional commit formatting, and clean branch state. | `[APPROVED]` |
+| **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[READY_FOR_MERGE]` |
 
 ---
 
 ## 4. Definition of Done (DoD) Checklist
 
-- [x] Root `package.json` with npm workspaces configured and operational (`npm run lint:all`, `npm run typecheck:all`).
-- [x] `packages/playwright-utils` successfully builds and exports shared utilities as `@automationframeworks/playwright-utils`.
-- [x] `playwright-e2e` consumes `@automationframeworks/playwright-utils` cleanly with zero broken imports.
-- [x] Redundant duplicate `base.page.ts`, `common.util.ts`, and `logger.ts` in `playwright-e2e/src/core/base/` eliminated.
-- [x] Exactly 110 Playwright tests remain active (55 API + 54 Chrome UI + 1 auth setup).
-- [x] `npm run lint:all` and `npm run typecheck:all` exit 0 across all workspaces.
-- [x] Dual-catalog parity confirmed: `git diff --no-index docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md` exits 0.
-- [x] Sprint documentation updated in `planning/Sprints/sprint_1_3_monorepo_workspaces_and_utility_unification.md`, `planning/README.md`, and `planning/Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md`.
-- [ ] Pull request opened with structured summary and verification evidence (`gh pr create`).
+- [x] `docs/intentional_bugs.md` authored with 100% compliance with `doc-implementation-standards` skill.
+- [x] All 8 anti-patterns (4 Backend + 4 UI) comprehensively detailed with failure signatures, HTTP/DOM specifications, and remediation recipes.
+- [x] Cross-framework remediation snippets provided for Playwright, Selenium, and WebdriverIO.
+- [x] State restoration commands (`POST /api/test/reset`) strictly enforced and documented.
+- [x] `AGENTS.md` and `.agents/skills/chaos-and-bug-testing/SKILL.md` synchronized with relative links.
+- [x] Dual-catalog parity confirmed: `git diff --exit-code docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md` exits 0.
+- [x] Static typecheck passes cleanly across workspaces: `npm run typecheck --prefix playwright-e2e`, `npm run typecheck --prefix packages/playwright-utils`.
+- [x] Zero absolute Windows paths (`file:///c:/...`) introduced in any markdown or configuration files.
 
 ---
 
@@ -72,13 +68,15 @@
 
 ```bash
 # Command 1: Dual-catalog parity check
-git diff --no-index docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md
+git diff --exit-code docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md
+# Status: 0 diff, exit code 0
 
-# Command 2: Monorepo static analysis
-npm run typecheck:all
-npm run lint:all
+# Command 2: Static analysis
+npm run typecheck --prefix playwright-e2e
+npm run typecheck --prefix packages/playwright-utils
+# Status: Both workspaces pass with 0 errors
 
-# Command 3: Full Playwright execution
-npm run test:api --workspace=playwright-e2e
-npm run test:smoke:all
+# Command 3: Git status & branch check
+git status
+# Status: On branch feat/sprint-2.1-intentional-bugs-and-chaos-guide
 ```

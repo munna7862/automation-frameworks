@@ -47,8 +47,8 @@ graph LR
 
 ### Sprint Breakdown
 
-1. **[Sprint 2.1: Intentional Bugs & Chaos Testing Guide](../Sprints/sprint_2_1_intentional_bugs_and_chaos_testing_guide.md)**
-   - *Estimated Effort*: 3 Story Points
+1. **[Sprint 2.1: Intentional Bugs & Chaos Testing Guide](../Sprints/sprint_2_1_intentional_bugs_and_chaos_testing_guide.md)** — **[COMPLETED]**
+   - *Estimated Effort*: 3 Story Points (Completed)
    - *Target Pillars*: Pillar 4 (Intentional Bugs & Chaos Testing Guide)
    - *Key Deliverables*:
      - Authoring `docs/intentional_bugs.md` documenting:
