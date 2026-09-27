@@ -43,7 +43,7 @@ export class CheckoutPage extends BasePage {
   }
 
   private get finalSubmitButton(): Locator {
-    return this.page.locator('button.primary-x2, button[name="btn_submit_rnd"]');
+    return this.page.getByRole('button', { name: /Complete Payment/i }).or(this.page.locator('button[name="btn_submit_rnd"], button.primary-x2'));
   }
 
   private get orderConfirmationMessage(): Locator {
@@ -186,8 +186,9 @@ export class CheckoutPage extends BasePage {
           // ignore DOM detachment
         }
       });
-      await this.finalSubmitButton.scrollIntoViewIfNeeded().catch(() => undefined);
-      await this.finalSubmitButton.click({ force: true, timeout: 10000 });
+      const submitBtn = this.finalSubmitButton.first();
+      await submitBtn.scrollIntoViewIfNeeded().catch(() => undefined);
+      await submitBtn.click({ force: true, timeout: 10000 });
       await this.logMessage('INFO', 'Clicked on Complete Payment button on Confirm page');
     }
   }

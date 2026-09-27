@@ -18,7 +18,7 @@ export default defineConfig({
   fullyParallel: true,
   timeout: 30 * 1000,
   retries: 1,
-  workers: process.env.CI ? 4 : undefined,
+  workers: process.env.CI ? 2 : undefined,
   grepInvert: process.env.RUN_QUARANTINE ? undefined : /@quarantine/,
   expect: {
     timeout: 10 * 1000,
@@ -124,7 +124,7 @@ export default defineConfig({
     },
     {
       name: 'chrome',
-      dependencies: ['setup'],
+      dependencies: ['setup', 'api'],
       testDir: path.resolve(__dirname, '../tests/ui'),
       testMatch: /.*\.spec\.ts/,
       use: {
