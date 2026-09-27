@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-2.2-DUAL-ENGINE-PERFORMANCE-AND-K6-MIGRATION`  
 **Phase Mapping**: [Phase 2: Documentation Integrity, Anti-Pattern Manual & Quality Gates](../Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)  
 **Estimated Velocity**: 5 Story Points  
-**Sprint Status**: Planned  
+**Sprint Status**: Completed  
 **Sprint Goal**: Establish a dual performance testing strategy by migrating the k6 benchmarking framework alongside existing Apache JMeter suites, calibrating golden regression baselines (`baseline-perf.json`), and adding automated drift comparison in CI.
 
 ---
@@ -29,12 +29,12 @@
   *So that* developers can run local benchmarks and CI can detect latency regressions on PRs in under 60 seconds.
 - **Story Points**: 2.5 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Port `buggy-books/performance/` into `AutomationFrameworks/k6-performance/`:
+  - [x] Port `buggy-books/performance/` into `AutomationFrameworks/k6-performance/`:
     - `config/options.js`: Staged virtual user topologies (smoke, average, stress, spike, soak).
     - `scenarios/`: Catalog browsing, search query load, cart operations, order checkout stress.
     - `scripts/report-perf-summary.js`: Markdown and JSON summary generator.
     - `baseline-perf.json`: Committed golden response time baselines (p95 thresholds).
-  - [ ] Add k6 scripts to monorepo root:
+  - [x] Add k6 scripts to monorepo root:
     ```bash
     npm run perf:smoke --workspace=k6-performance
     npm run perf:drift-check --workspace=k6-performance
@@ -50,15 +50,15 @@
   *So that* performance coverage is fully tracked and transparent.
 - **Story Points**: 2.5 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Add entries to both catalog files:
+  - [x] Add entries to both catalog files:
     - `TC-PERF-001`: Catalog Browsing k6 Smoke (< 500ms p95).
     - `TC-PERF-002`: Search Endpoint k6 Average Load (< 800ms p95).
     - `TC-PERF-003`: Cart Addition k6 Stress (< 1200ms p95).
     - `TC-PERF-004`: Checkout Chaos k6 Resilience (< 2000ms p95).
     - `TC-PERF-005`: Memory & Latency Drift Gate (< 20% degradation).
     - `TC-PERF-JM-001` through `TC-PERF-JM-004`: Apache JMeter suites.
-  - [ ] Verify both catalog files match in 100% lockstep.
-  - [ ] Create `.github/workflows/k6-performance.yaml` with automated PR drift reporting.
+  - [x] Verify both catalog files match in 100% lockstep.
+  - [x] Create `.github/workflows/k6-performance.yaml` with automated PR drift reporting.
 - **Acceptance Criteria**:
   - Both catalog files have identical performance tables.
   - `.github/workflows/k6-performance.yaml` executes successfully.
@@ -67,10 +67,10 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] `k6-performance/` fully functional with `baseline-perf.json`.
-- [ ] `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` are 100% identical.
-- [ ] `.github/workflows/k6-performance.yaml` committed with warm-up probe and Step Summary output.
-- [ ] Apache JMeter suites in `jmeter/` remain pristine and functional.
+- [x] `k6-performance/` fully functional with `baseline-perf.json`.
+- [x] `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` are 100% identical.
+- [x] `.github/workflows/k6-performance.yaml` committed with warm-up probe and Step Summary output.
+- [x] Apache JMeter suites in `jmeter/` remain pristine and functional.
 
 ---
 

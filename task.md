@@ -1,12 +1,12 @@
 # Task Backlog: AutomationFrameworks Sprint Execution
 
-## Current Focus: Sprint 2.1 — Intentional Bugs & Chaos Testing Guide
+## Current Focus: Sprint 2.2 — Dual-Engine Performance Strategy & k6 Migration
 
-**Sprint Identifier**: `SPRINT-2.1-INTENTIONAL-BUGS-AND-CHAOS-GUIDE`  
+**Sprint Identifier**: `SPRINT-2.2-DUAL-ENGINE-PERFORMANCE-AND-K6-MIGRATION`  
 **Phase**: Phase 2 (Documentation Integrity, Anti-Pattern Manual & Quality Gates)  
-**Story Points**: 3 SP  
-**Branch**: `feat/sprint-2.1-intentional-bugs-and-chaos-guide`  
-**Goal**: Author `docs/intentional_bugs.md` in strict compliance with the `doc-implementation-standards` skill, detailing all BuggyBooks intentional failure modes, chaos configuration endpoints, and robust automated testing remediation recipes across Playwright, Selenium, and WebdriverIO.
+**Story Points**: 5 SP  
+**Branch**: `feat/sprint-2.2-dual-engine-performance-and-k6-migration`  
+**Goal**: Establish a dual performance testing strategy by migrating the k6 benchmarking framework alongside existing Apache JMeter suites, calibrating golden regression baselines (`baseline-perf.json`), implementing automated drift comparison, and achieving 100% dual-catalog parity.
 
 ---
 
@@ -14,28 +14,31 @@
 
 | Persona | Role Assignment | Responsibilities for this Sprint | Status |
 | :--- | :--- | :--- | :--- |
-| **Scrum Master** | `role-scrum-master` | Sprint planning, `task.md` tracking, DoR verification, and DoD audit. | `COMPLETED` |
-| **SDET Architect** | `role-sdet-architect` | Authoring `docs/intentional_bugs.md`, cross-framework remediation recipes, and code review gate. | `COMPLETED` |
-| **Playwright QA Lead** | `role-playwright-automation` | Validating Playwright remediation patterns and live staging API responses. | `COMPLETED` |
-| **DevOps Engineer** | `role-devops-engineer` | Ensuring chaos state reset protocols in CI and managing PR release lifecycle. | `COMPLETED` |
+| **Scrum Master** | `role-scrum-master` | Sprint kick-off, `task.md` tracking, DoR verification, and DoD audit. | `COMPLETED` |
+| **SDET Architect** | `role-sdet-architect` | Test scenario contracts, dual-catalog sync (`TC-PERF-001`..`005`, `TC-PERF-JM-001`..`004`), code acceptance review. | `COMPLETED` |
+| **Performance Engineer** | `role-performance-engineer` | Porting k6 framework into `k6-performance/`, `config/options.js`, scenarios, `report-perf-summary.js`, `baseline-perf.json`. | `COMPLETED` |
+| **DevOps Engineer** | `role-devops-engineer` | Authoring `.github/workflows/k6-performance.yaml`, Render pre-flight probe, PR release lifecycle. | `ACTIVE` |
 | **Product Owner** | Human Tech Lead (`User`) | Backlog prioritization, sprint kickoff, and final PR review & merge. | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
-### US-AF-211: Comprehensive Intentional Bugs Manual Authoring (2 SP)
-- [x] **US-AF-211.1** (`SDET Architect`): Author `docs/intentional_bugs.md` documenting 4 Backend Anti-Patterns (Intermittent Checkout Failure, Delayed Inventory Report, Express Rate Limiting, Session Sandboxing).
-- [x] **US-AF-211.2** (`SDET Architect`): Document 4 UI Anti-Patterns in `docs/intentional_bugs.md` (Dynamic Actionability Delay, Obfuscated Locators, Shadow DOM Encapsulation, Visual Layout Chaos).
-- [x] **US-AF-211.3** (`SDET Architect` / `Playwright QA Lead`): Provide complete, runnable remediation code recipes for Playwright, Selenium, and WebdriverIO for each pattern.
-- [x] **US-AF-211.4** (`SDET Architect`): Document safe teardown state restoration commands (`POST /api/test/reset` and payload cleanup).
+### US-AF-221: k6 Performance Framework Migration & Scaffolding (2.5 SP)
+- [x] **US-AF-221.1** (`Performance Engineer`): Port k6 framework into `k6-performance/` including `run-k6.js`, `package.json`, and utilities (`html-reporter.js`, `history-tracker.js`, `summary-handler.js`).
+- [x] **US-AF-221.2** (`Performance Engineer`): Implement modular `config/options.js` with staged virtual user topologies (smoke, average, stress, spike, soak).
+- [x] **US-AF-221.3** (`Performance Engineer`): Port and implement test scenarios in `k6-performance/scenarios/` (Catalog browsing, search query load, cart operations, order checkout stress, auth, inventory).
+- [x] **US-AF-221.4** (`Performance Engineer`): Implement `scripts/report-perf-summary.js` and calibrate golden baseline `baseline-perf.json` with drift comparison logic (`<= 20%`).
+- [x] **US-AF-221.5** (`Performance Engineer`): Add `k6-performance` workspace to monorepo root `package.json` with `perf:smoke` and `perf:drift-check` runner scripts.
+- [x] **US-AF-221.6** (`Performance Engineer`): Validate local execution via `k6 run` and drift gate assertions.
 
-### US-AF-212: Teardown Reset Hygiene & Agent Memory Synchronization (1 SP)
-- [x] **US-AF-212.1** (`SDET Architect`): Cross-reference `docs/intentional_bugs.md` and strengthen teardown reset hygiene rules in `AGENTS.md`.
-- [x] **US-AF-212.2** (`SDET Architect`): Update `.agents/skills/chaos-and-bug-testing/SKILL.md` to reference `docs/intentional_bugs.md` and synchronize anti-pattern remediation.
-- [x] **US-AF-212.3** (`Scrum Master`): Update sprint statuses across `planning/README.md`, `planning/Phases/phase_2_*.md`, and `planning/Sprints/sprint_2_1_*.md`.
-- [x] **US-AF-212.4** (`Scrum Master` / `DevOps Engineer`): Run full DoD audit (static analysis, dual-catalog parity, lint/typecheck).
-- [x] **US-AF-212.5** (`DevOps Engineer`): Stage, commit with conventional message, and push branch to remote repository.
+### US-AF-222: Dual-Catalog Parity for Performance Suites & CI Pipeline (2.5 SP)
+- [x] **US-AF-222.1** (`SDET Architect`): Add performance test entries (`TC-PERF-001` through `TC-PERF-005` and `TC-PERF-JM-001` through `TC-PERF-JM-004`) to `docs/test_cases_catalog.md`.
+- [x] **US-AF-222.2** (`SDET Architect`): Synchronize `playwright-e2e/test_cases_catalog.md` in 100% character-for-character lockstep parity.
+- [x] **US-AF-222.3** (`DevOps Engineer`): Author `.github/workflows/k6-performance.yaml` with Render warm-up pre-flight probe, smoke execution, drift check, and GitHub Step Summary generation.
+- [x] **US-AF-222.4** (`SDET Architect`): Conduct Code Acceptance Review on authored scenarios, baseline configs, and workflow syntax.
+- [x] **US-AF-222.5** (`Scrum Master`): Perform 4-point DoD verification audit (static analysis, catalog zero diff, clean passes).
+- [ ] **US-AF-222.6** (`DevOps Engineer`): Git commit with conventional syntax, push branch, open PR via `gh pr create`, and monitor CI checks.
 
 ---
 
@@ -43,24 +46,24 @@
 
 | Gate / Reviewer | Target Role | Review Feedback & Comments | Gate Status |
 | :--- | :--- | :--- | :---: |
-| **Pre-Flight Architecture Gate** | SDET Architect | Staging warm-up passed, branch checked out, dual-catalog parity verified at baseline. | `[APPROVED]` |
-| **Code Acceptance Review Gate** | SDET Architect | Verified comprehensive coverage of all 8 anti-patterns (4 Backend + 4 UI), runnable code recipes for Playwright/Selenium/WDIO, mandatory reset hooks, and zero absolute Windows paths. | `[APPROVED]` |
-| **Scrum Master DoD Gate** | Scrum Master | Audited static typechecks across workspaces (exit 0), dual-catalog parity (zero diff), and documentation integrity. | `[APPROVED]` |
-| **DevOps Release Gate** | DevOps Engineer | Validated Git working tree, conventional commit formatting, and clean branch state. | `[APPROVED]` |
-| **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[READY_FOR_MERGE]` |
+| **Pre-Flight Architecture Gate** | SDET Architect | Staging warm-up passed, branch checked out, dual-catalog baseline parity confirmed (diff: 0). | `[APPROVED]` |
+| **Code Acceptance Review Gate** | SDET Architect | Verified k6 modular topology in `config/options.js`, calibrated golden baselines in `baseline-perf.json`, verified <= 20% drift enforcement, tested simulated regression trigger (+25% alert), and confirmed teardown state reset hooks. | `[APPROVED]` |
+| **Scrum Master DoD Gate** | Scrum Master | Audited static typechecks (`npm run typecheck:all`), linting (`npm run lint:all`), unit tests (5/5 pass), dual-catalog diff (0 diff), and root script execution (`npm run perf:smoke` & `npm run perf:drift-check`). | `[APPROVED]` |
+| **DevOps Release Gate** | DevOps Engineer | Validate CI workflow syntax, Step Summary formatting, and PR submission. | `[IN_PROGRESS]` |
+| **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[PENDING]` |
 
 ---
 
 ## 4. Definition of Done (DoD) Checklist
 
-- [x] `docs/intentional_bugs.md` authored with 100% compliance with `doc-implementation-standards` skill.
-- [x] All 8 anti-patterns (4 Backend + 4 UI) comprehensively detailed with failure signatures, HTTP/DOM specifications, and remediation recipes.
-- [x] Cross-framework remediation snippets provided for Playwright, Selenium, and WebdriverIO.
-- [x] State restoration commands (`POST /api/test/reset`) strictly enforced and documented.
-- [x] `AGENTS.md` and `.agents/skills/chaos-and-bug-testing/SKILL.md` synchronized with relative links.
-- [x] Dual-catalog parity confirmed: `git diff --exit-code docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md` exits 0.
-- [x] Static typecheck passes cleanly across workspaces: `npm run typecheck --prefix playwright-e2e`, `npm run typecheck --prefix packages/playwright-utils`.
-- [x] Zero absolute Windows paths (`file:///c:/...`) introduced in any markdown or configuration files.
+- [x] `k6-performance/` fully functional with `baseline-perf.json`, `config/options.js`, scenarios, and runner scripts.
+- [x] Golden baseline comparison asserts `((current - baseline) / baseline) * 100 <= 20%`.
+- [x] `npm run perf:smoke` and `npm run perf:drift-check` executable from root via workspaces.
+- [x] `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` are 100% identical.
+- [x] `.github/workflows/k6-performance.yaml` committed with Render warm-up probe and Step Summary output.
+- [x] Apache JMeter suites in `jmeter/` remain pristine and functional.
+- [x] Static quality checks (`npm run lint:all`, `npm run typecheck:all`) exit 0 with zero errors.
+- [ ] Pull request opened with structured summary and verification evidence (`gh pr create`).
 
 ---
 
@@ -68,15 +71,19 @@
 
 ```bash
 # Command 1: Dual-catalog parity check
-git diff --exit-code docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md
-# Status: 0 diff, exit code 0
+git diff --no-index docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md
+# Result: 0 diff, exit code 0
 
-# Command 2: Static analysis
-npm run typecheck --prefix playwright-e2e
-npm run typecheck --prefix packages/playwright-utils
-# Status: Both workspaces pass with 0 errors
+# Command 2: k6 Smoke execution
+npm run perf:smoke
+# Result: 57 requests executed across 5 VUs, 0% errors, exit code 0
 
-# Command 3: Git status & branch check
-git status
-# Status: On branch feat/sprint-2.1-intentional-bugs-and-chaos-guide
+# Command 3: k6 Drift check execution
+npm run perf:drift-check
+# Result: All metrics within golden baseline SLA, exit code 0
+
+# Command 4: Monorepo typecheck & lint
+npm run typecheck:all
+npm run lint:all
+# Result: All workspaces pass with exit code 0
 ```

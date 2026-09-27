@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-09-27T04:51:42.488Z",
+  "history": [
+    {
+      "timestamp": "2026-09-27T04:41:40.014Z",
+      "commit_sha": "1a47f7d",
+      "workflow_run_id": "local",
+      "test_type": "smoke",
+      "rps": 2.05,
+      "p95_latency": 490.34,
+      "error_rate": 0
+    },
+    {
+      "timestamp": "2026-09-27T04:42:22.673Z",
+      "commit_sha": "1a47f7d",
+      "workflow_run_id": "local",
+      "test_type": "smoke",
+      "rps": 3.26,
+      "p95_latency": 799.64,
+      "error_rate": 0
+    },
+    {
+      "timestamp": "2026-09-27T04:42:52.898Z",
+      "commit_sha": "1a47f7d",
+      "workflow_run_id": "local",
+      "test_type": "smoke",
+      "rps": 3.26,
+      "p95_latency": 799.64,
+      "error_rate": 0
+    },
+    {
+      "timestamp": "2026-09-27T04:43:14.183Z",
+      "commit_sha": "1a47f7d",
+      "workflow_run_id": "local",
+      "test_type": "smoke",
+      "rps": 4.39,
+      "p95_latency": 400.27,
+      "error_rate": 0
+    },
+    {
+      "timestamp": "2026-09-27T04:43:22.187Z",
+      "commit_sha": "1a47f7d",
+      "workflow_run_id": "local",
+      "test_type": "smoke",
+      "rps": 4.39,
+      "p95_latency": 400.27,
+      "error_rate": 0
+    },
+    {
+      "timestamp": "2026-09-27T04:44:44.543Z",
+      "commit_sha": "1a47f7d",
+      "workflow_run_id": "local",
+      "test_type": "smoke",
+      "rps": 9.06,
+      "p95_latency": 718.08,
+      "error_rate": 0
+    },
+    {
+      "timestamp": "2026-09-27T04:51:42.421Z",
+      "commit_sha": "1a47f7d",
+      "workflow_run_id": "local",
+      "test_type": "smoke",
+      "rps": 8.88,
+      "p95_latency": 540.44,
+      "error_rate": 0
+    }
+  ]
+}
