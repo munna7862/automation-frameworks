@@ -33,6 +33,16 @@ jmeter/Results/
 jmeter/Reports/
 !jmeter/TestData/*.csv
 
+# k6 Performance Outputs & Binaries
+k6-performance/bin/
+**/bin/k6*
+*.zip
+*.tar.gz
+perf-summary*.json
+**/perf-summary*.json
+k6-performance/report*.html
+k6-performance/k6-summary*.md
+
 # OS
 .DS_Store
 Thumbs.db

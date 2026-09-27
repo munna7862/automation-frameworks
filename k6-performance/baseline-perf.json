@@ -1,0 +1,43 @@
+{
+  "description": "BuggyBooks API Performance Golden Baseline (Main Reference)",
+  "version": "1.0.0",
+  "generated_at": "2026-09-27T00:00:00Z",
+  "environment": "Production/Staging",
+  "metrics": {
+    "http_req_duration": {
+      "avg": 415.00,
+      "med": 350.00,
+      "p(90)": 785.00,
+      "p(95)": 800.00,
+      "p(99)": 880.00,
+      "max": 950.00
+    },
+    "catalog_duration": {
+      "avg": 410.00,
+      "med": 340.00,
+      "p(90)": 780.00,
+      "p(95)": 805.00,
+      "p(99)": 880.00
+    },
+    "search_duration": {
+      "avg": 380.00,
+      "med": 330.00,
+      "p(90)": 670.00,
+      "p(95)": 690.00,
+      "p(99)": 850.00
+    },
+    "detail_duration": {
+      "avg": 390.00,
+      "med": 340.00,
+      "p(90)": 680.00,
+      "p(95)": 700.00,
+      "p(99)": 860.00
+    },
+    "http_req_failed": {
+      "rate": 0.00
+    },
+    "http_reqs": {
+      "rate": 10.0
+    }
+  }
+}

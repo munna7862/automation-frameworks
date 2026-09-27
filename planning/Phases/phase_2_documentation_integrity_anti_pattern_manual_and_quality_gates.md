@@ -58,8 +58,8 @@ graph LR
      - Synchronization of references in `AGENTS.md` and `.agents/skills/chaos-and-bug-testing/`.
    - *Verification*: Full compliance with `doc-implementation-standards` skill; all documented endpoints validated against live staging.
 
-2. **[Sprint 2.2: Dual-Engine Performance Strategy & k6 Migration](../Sprints/sprint_2_2_dual_engine_performance_strategy_and_k6_migration.md)**
-   - *Estimated Effort*: 5 Story Points
+2. **[Sprint 2.2: Dual-Engine Performance Strategy & k6 Migration](../Sprints/sprint_2_2_dual_engine_performance_strategy_and_k6_migration.md)** — **[COMPLETED]**
+   - *Estimated Effort*: 5 Story Points (Completed)
    - *Target Pillars*: Pillar 8 (Dual-Engine Performance Strategy: JMeter + k6)
    - *Key Deliverables*:
      - Porting k6 performance framework from `buggy-books/performance/` into `AutomationFrameworks/k6-performance/`:

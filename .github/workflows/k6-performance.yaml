@@ -1,0 +1,115 @@
+name: k6 Performance Benchmarking CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'k6-performance/**'
+      - '.github/workflows/k6-performance.yaml'
+      - 'package.json'
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: 'k6 Scenario to execute'
+        required: true
+        default: 'smoke-load.js'
+        type: choice
+        options:
+          - 'smoke-load.js'
+          - 'catalog-load.js'
+          - 'ecommerce-journey.js'
+          - 'checkout-stress.js'
+          - 'inventory-stress.js'
+          - 'auth-stress.js'
+      vus:
+        description: 'Virtual Users (VUs)'
+        required: false
+        default: '5'
+        type: string
+      duration:
+        description: 'Test duration (e.g. 10s, 30s)'
+        required: false
+        default: '10s'
+        type: string
+      target_host:
+        description: 'Target API Host URL'
+        required: false
+        default: 'https://buggy-books.onrender.com'
+        type: string
+
+jobs:
+  k6-benchmark-and-drift-gate:
+    name: k6 Performance & Drift Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+
+    env:
+      BASE_URL: ${{ inputs.target_host || 'https://buggy-books.onrender.com' }}
+      VUS: ${{ inputs.vus || '5' }}
+      DURATION: ${{ inputs.duration || '10s' }}
+      CI: 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Install dependencies
+        run: |
+          npm ci || npm install
+
+      - name: Render Staging Warm-Up Pre-Flight Probe
+        shell: bash
+        run: |
+          echo "Waking Render staging instance: ${{ env.BASE_URL }}..."
+          curl -s -o /dev/null -w "Backend wake probe: %{http_code}\n" "${{ env.BASE_URL }}/api/books" || true
+          npx wait-on -t 90000 "${{ env.BASE_URL }}/api/books" || true
+
+      - name: Execute k6 Performance Benchmark
+        id: run-k6
+        shell: bash
+        run: |
+          SCENARIO="${{ inputs.scenario || 'smoke-load.js' }}"
+          echo "Executing k6 scenario: ${SCENARIO} with ${VUS} VUs for ${DURATION}..."
+          npm run perf:smoke --workspace=k6-performance
+
+      - name: Run Relative Baseline Drift Regression Gate
+        id: drift-gate
+        shell: bash
+        run: |
+          echo "Evaluating response time drift against golden baseline..."
+          npm run perf:drift-check --workspace=k6-performance
+
+      - name: Teardown Staging State Reset
+        if: always()
+        shell: bash
+        run: |
+          echo "Restoring staging application state..."
+          curl -s -X POST "${{ env.BASE_URL }}/api/test/config" \
+            -H "Content-Type: application/json" \
+            -d '{"checkoutFailureRate": 0, "inventoryDelayMs": 0, "visualChaos": false}' || true
+          curl -s -X POST "${{ env.BASE_URL }}/api/test/reset" || true
+
+      - name: Upload Performance Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-performance-reports
+          path: |
+            k6-performance/report.html
+            k6-performance/perf-summary*.json
+            k6-performance/k6-summary.md
+          retention-days: 14
