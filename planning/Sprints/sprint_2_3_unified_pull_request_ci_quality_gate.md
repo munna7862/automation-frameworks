@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-2.3-UNIFIED-PR-QUALITY-GATE`  
 **Phase Mapping**: [Phase 2: Documentation Integrity, Anti-Pattern Manual & Quality Gates](../Phases/phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md)  
 **Estimated Velocity**: 4 Story Points  
-**Sprint Status**: Planned  
+**Sprint Status**: Completed  
 **Sprint Goal**: Implement an automated, fast-feedback Pull Request Quality Gate pipeline (`.github/workflows/pr-gate.yml`) that validates static quality, warms up staging, and executes smoke tests on Google Chrome in under 3 minutes, blocking regressions from merging into `main`.
 
 ---
@@ -29,7 +29,7 @@
   *So that* broken code, type errors, or failing smoke tests are caught immediately before merging.
 - **Story Points**: 2.5 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Create `.github/workflows/pr-gate.yml`:
+  - [x] Create `.github/workflows/pr-gate.yml`:
     ```yaml
     name: PR Quality Gate
     on:
@@ -48,7 +48,7 @@
           - uses: actions/checkout@v4
           - uses: actions/setup-node@v4
             with:
-              node-version: 20
+              node-version: 22
               cache: 'npm'
           - run: npm ci
           - run: npm run lint:all
@@ -62,7 +62,7 @@
           - uses: actions/checkout@v4
           - uses: actions/setup-node@v4
             with:
-              node-version: 20
+              node-version: 22
               cache: 'npm'
           - run: npm ci
           - name: Staging Pre-Flight Probe
@@ -85,7 +85,7 @@
   *So that* I can diagnose failures immediately without digging through raw console logs.
 - **Story Points**: 1.5 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Add GitHub Step Summary generation step in `pr-gate.yml`:
+  - [x] Add GitHub Step Summary generation step in `pr-gate.yml`:
     ```yaml
     - name: Generate PR Quality Gate Summary
       if: always()
@@ -95,7 +95,7 @@
         echo "- **Target Environment**: BuggyBooks Staging" >> $GITHUB_STEP_SUMMARY
         echo "- **Browser**: Google Chrome (Channel: chrome)" >> $GITHUB_STEP_SUMMARY
     ```
-  - [ ] Verify execution time remains $< 180$ seconds.
+  - [x] Verify execution time remains $< 180$ seconds.
 - **Acceptance Criteria**:
   - Step Summary renders cleanly on GitHub Actions summary page.
   - Total workflow execution duration is under 3 minutes.
@@ -104,10 +104,10 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] `.github/workflows/pr-gate.yml` committed and active on `pull_request: [main]`.
-- [ ] Strict single-browser rule adhered to (`channel: 'chrome'`).
-- [ ] Mandatory Render warm-up probe included.
-- [ ] Concurrency controls cancel outdated in-progress runs on the same branch.
+- [x] `.github/workflows/pr-gate.yml` committed and active on `pull_request: [main]`.
+- [x] Strict single-browser rule adhered to (`channel: 'chrome'`).
+- [x] Mandatory Render warm-up probe included.
+- [x] Concurrency controls cancel outdated in-progress runs on the same branch.
 
 ---
 
