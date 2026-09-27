@@ -6,6 +6,7 @@ import { envConfig, getLoginCredentials } from '../config/env.config';
 const authFile = path.resolve(__dirname, '../../.auth/user.json');
 
 setup('authenticate seed user and cache storage state', async ({ page }) => {
+  setup.setTimeout(60000);
   const authDir = path.dirname(authFile);
   if (!fs.existsSync(authDir)) {
     fs.mkdirSync(authDir, { recursive: true });

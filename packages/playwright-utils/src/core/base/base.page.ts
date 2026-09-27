@@ -69,8 +69,13 @@ export class BasePage extends CommonFunctions {
   }
 
   public async doesElementExist(locator: Locator, sLogMessage: string): Promise<boolean> {
-    const isVisible = await locator.isVisible();
-    await this.logMessage('INFO', `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`);
-    return isVisible;
+    try {
+      const isVisible = await locator.isVisible();
+      await this.logMessage('INFO', `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`);
+      return isVisible;
+    } catch {
+      await this.logMessage('INFO', `${sLogMessage} - Element is not visible`);
+      return false;
+    }
   }
 }

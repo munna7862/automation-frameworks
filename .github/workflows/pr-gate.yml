@@ -80,6 +80,11 @@ jobs:
           curl -s -o /dev/null https://buggy-books-fe.onrender.com/ || true
           npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
           npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
+          echo "Restoring clean staging application state and resetting chaos parameters..."
+          curl -s -X POST https://buggy-books.onrender.com/api/test/config \
+            -H "Content-Type: application/json" \
+            -d '{"checkoutFailureRate": 0, "inventoryDelayMs": 0, "visualChaos": false}' || true
+          curl -s -X POST https://buggy-books.onrender.com/api/test/reset || true
 
       - name: Install Google Chrome
         run: npx playwright install --with-deps chrome

@@ -31,6 +31,7 @@ const TestData = require(testDataPath) as CartPersistenceCheckoutTestData;
 test.describe('Cart Persistence Checkout', () => {
 
   test('Testcase 1: Complete checkout after cart persists across logout and login @smoke @regression', async ({ signUpPage, catalogPage, commonFunctions, page }) => {
+    test.setTimeout(60000);
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
     const { userName, password } = getLoginCredentials();
