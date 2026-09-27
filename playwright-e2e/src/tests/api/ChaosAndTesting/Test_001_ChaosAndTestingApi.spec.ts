@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { CommonFunctions } from '../../../utils/common.util';
+import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import { randomBytes } from 'crypto';
 
 const commonUtil = new CommonFunctions();

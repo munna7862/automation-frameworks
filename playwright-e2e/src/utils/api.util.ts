@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CommonFunctions } from "./common.util";
+import { CommonFunctions } from '@automationframeworks/playwright-utils';
 
 export class ApiUtil {
   private objCommonFunctions: CommonFunctions;

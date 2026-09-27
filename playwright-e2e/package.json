@@ -1,5 +1,5 @@
 {
-  "name": "automationframeworks",
+  "name": "playwright-e2e",
   "version": "1.0.0",
   "description": "Playwright E2E Automation Framework for BuggyBooks",
   "main": "index.js",
@@ -19,6 +19,7 @@
     "generate-allure": "allure generate --clean reports/allure-results -o reports/allure-report",
     "open-allure": "allure open reports/allure-report",
     "report": "npm run generate-allure && npm run open-allure",
+    "clean": "npm run clean-reports",
     "clean-reports": "rimraf reports logs playwright-report test-results",
     "save-snapshot": "ts-node scripts/save-snapshot.ts",
     "finalize-spec": "ts-node scripts/finalize-spec.ts",
@@ -46,6 +47,7 @@
     "typescript-eslint": "^8.70.0"
   },
   "dependencies": {
+    "@automationframeworks/playwright-utils": "*",
     "axios": "^1.13.3",
     "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",

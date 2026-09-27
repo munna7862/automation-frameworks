@@ -3,12 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.errorLogger = exports.logger = void 0;
+exports.errorLogger = exports.logger = exports.createLogger = void 0;
 const winston_1 = __importDefault(require("winston"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const logDir = path_1.default.resolve(process.cwd(), 'logs');
-fs_1.default.mkdirSync(logDir, { recursive: true });
+try {
+    fs_1.default.mkdirSync(logDir, { recursive: true });
+}
+catch {
+    // Directory already exists or non-fatal
+}
 const createLogger = (filename, level = 'info') => {
     return winston_1.default.createLogger({
         level,
@@ -19,5 +24,6 @@ const createLogger = (filename, level = 'info') => {
         ]
     });
 };
-exports.logger = createLogger('framework.log');
-exports.errorLogger = createLogger('errors.log', 'error');
+exports.createLogger = createLogger;
+exports.logger = (0, exports.createLogger)('framework.log');
+exports.errorLogger = (0, exports.createLogger)('errors.log', 'error');

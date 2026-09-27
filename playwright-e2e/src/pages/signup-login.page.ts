@@ -1,4 +1,4 @@
-import { BasePage } from '../core/base/base.page';
+import { BasePage } from '@automationframeworks/playwright-utils';
 import { Locator } from '@playwright/test';
 import { CatalogPage } from './catalog.page';
 import { getLoginCredentials } from '../config/env.config';

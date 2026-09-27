@@ -1,9 +1,10 @@
 import { Page, Locator } from '@playwright/test';
 import { CommonFunctions } from '../../utils/common.util';
-import { envConfig } from '../../config/env.config';
 
 export class BasePage extends CommonFunctions {
-  private static readonly DEFAULT_TIMEOUT = envConfig.timeout;
+  public static get DEFAULT_TIMEOUT(): number {
+    return parseInt(process.env.ELEMENT_TIMEOUT || process.env.TIMEOUT || '15000', 10);
+  }
 
   constructor(protected page: Page) {
     super();

@@ -1,7 +1,7 @@
 import { BrowserContext, Browser, Page } from '@playwright/test';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { logger } from '../core/logger/logger';
+import { logger } from '@automationframeworks/playwright-utils';
 
 export class AuthUtility {
   private static readonly AUTH_STATE_DIR = path.resolve(__dirname, '../../.auth');

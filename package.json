@@ -1,0 +1,20 @@
+{
+  "name": "automation-frameworks-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "playwright-e2e",
+    "selenium-e2e",
+    "wdio-e2e"
+  ],
+  "scripts": {
+    "lint:all": "npm run lint --workspaces --if-present",
+    "typecheck:all": "npm run typecheck --workspaces --if-present",
+    "test:smoke:all": "npm run test:smoke --workspace=playwright-e2e",
+    "clean": "npm run clean --workspaces --if-present"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-1.3-MONOREPO-WORKSPACES-AND-UTILITY-UNIFICATION`  
 **Phase Mapping**: [Phase 1: Monorepo Foundations, Pipeline Hygiene & Utility Unification](../Phases/phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md)  
 **Estimated Velocity**: 5 Story Points  
-**Sprint Status**: Ready for Execution  
+**Sprint Status**: Completed  
 **Sprint Goal**: Implement an `npm workspaces` root monorepo architecture, convert `playwright-utils/` into `@automationframeworks/playwright-utils` under `packages/`, link it to `playwright-e2e`, eliminate duplicated core utilities, and establish root orchestration scripts.
 
 ---
@@ -29,7 +29,7 @@
   *So that* a single `npm install` bootstraps dependencies across all frameworks with unified linting and typechecking scripts.
 - **Story Points**: 2 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Create root `package.json` declaring workspaces:
+  - [x] Create root `package.json` declaring workspaces:
     ```json
     {
       "name": "automation-frameworks-monorepo",
@@ -52,8 +52,8 @@
       }
     }
     ```
-  - [ ] Move `playwright-utils/` into `packages/playwright-utils/`.
-  - [ ] Update `packages/playwright-utils/package.json` to name: `@automationframeworks/playwright-utils`.
+  - [x] Move `playwright-utils/` into `packages/playwright-utils/`.
+  - [x] Update `packages/playwright-utils/package.json` to name: `@automationframeworks/playwright-utils`.
 - **Acceptance Criteria**:
   - `npm install` at root links internal packages without npm registry errors.
   - `npm run typecheck:all` runs TypeScript verification across all workspaces.
@@ -65,14 +65,14 @@
   *So that* bug fixes in base utilities automatically benefit all consuming test specs without code divergence.
 - **Story Points**: 3 SP (Medium-Large)
 - **Technical Subtasks**:
-  - [ ] Add `"@automationframeworks/playwright-utils": "*"` to `playwright-e2e/package.json` dependencies.
-  - [ ] Audit duplicated files between `packages/playwright-utils/src/` and `playwright-e2e/src/core/base/`:
+  - [x] Add `"@automationframeworks/playwright-utils": "*"` to `playwright-e2e/package.json` dependencies.
+  - [x] Audit duplicated files between `packages/playwright-utils/src/` and `playwright-e2e/src/core/base/`:
     - `base.page.ts`
     - `logger.ts`
     - `common.util.ts`
-  - [ ] Refactor imports across `playwright-e2e` Page Objects to import from `@automationframeworks/playwright-utils`.
-  - [ ] Remove redundant duplicate files from `playwright-e2e/src/core/base/`.
-  - [ ] Run full Playwright test suite to verify 100% functionality:
+  - [x] Refactor imports across `playwright-e2e` Page Objects to import from `@automationframeworks/playwright-utils`.
+  - [x] Remove redundant duplicate files from `playwright-e2e/src/core/base/`.
+  - [x] Run full Playwright test suite to verify 100% functionality:
     ```bash
     npm run test:api --workspace=playwright-e2e
     npm run test:ui --workspace=playwright-e2e
@@ -85,11 +85,11 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] Root `package.json` with npm workspaces configured and operational.
-- [ ] `packages/playwright-utils` successfully builds and exports shared utilities.
-- [ ] `playwright-e2e` consumes `@automationframeworks/playwright-utils` cleanly.
-- [ ] `npm run lint:all` and `npm run typecheck:all` exit 0.
-- [ ] Exactly 110 Playwright tests remain active (55 API + 54 Chrome UI + 1 auth setup).
+- [x] Root `package.json` with npm workspaces configured and operational.
+- [x] `packages/playwright-utils` successfully builds and exports shared utilities.
+- [x] `playwright-e2e` consumes `@automationframeworks/playwright-utils` cleanly.
+- [x] `npm run lint:all` and `npm run typecheck:all` exit 0.
+- [x] Exactly 110 Playwright tests remain active (55 API + 54 Chrome UI + 1 auth setup).
 
 ---
 

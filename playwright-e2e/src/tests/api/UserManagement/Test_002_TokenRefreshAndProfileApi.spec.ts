@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { envConfig } from '../../../config/env.config';
-import { CommonFunctions } from '../../../utils/common.util';
+import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import TestData from '../../../test-data/api/UserManagement/Test_002_TokenRefreshAndProfileApi.json';
 import { randomBytes } from 'crypto';
 
