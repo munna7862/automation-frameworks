@@ -362,4 +362,45 @@ The entire roadmap is organized under [`planning/`](../../planning/):
   - A scheduled workflow (`quarantine-audit.yml`) executes quarantined tests 10x in a matrix loop.
   - When a test achieves a 100% pass rate across 3 consecutive audit runs, an automated PR or notification proposes graduation back into the main regression suite.
 
+---
+
+## 17. Monorepo `.gitignore` Negation Precedence in Subdirectories
+
+- **The Pitfall**: In Git, wildcard ignore rules like `.env.*` match files in any subfolder (e.g. `selenium-e2e/.env.example`). However, a negation exception written without a glob prefix (like `!.env.example`) only un-ignores the file at the root repository level!
+- **Consequence**: Subproject template files like `selenium-e2e/.env.example` or `playwright-e2e/.env.example` remain silently ignored and blocked by Git.
+- **The Rule**: Always pair root negations with recursive glob negation patterns in the root `.gitignore`:
+  ```gitignore
+  # Ignore real env files in all directories
+  .env
+  .env.*
+  
+  # Allow example templates at root and across all subpackages
+  !.env.example
+  !**/.env.example
+  ```
+- **Validation**: Always verify with `git check-ignore <filepath>` to guarantee real secrets are ignored while `.env.example` files are tracked.
+
+---
+
+## 18. Playwright Visual Regression Snapshot Resolution & Dynamic Element Settling
+
+- **Snapshot File Resolution**:
+  - Playwright's `expect(page).toHaveScreenshot('catalog-baseline.png')` resolves file paths using `{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}-{platform}.png`.
+  - When the project name is set to `chrome` (`name: 'chrome'`), Playwright strictly expects `catalog-baseline-chrome-win32.png` on Windows and `catalog-baseline-chrome-linux.png` on Linux CI.
+  - Legacy filenames like `catalog-baseline-Google-Chrome-*.png` or `catalog-baseline-chromium-*.png` cause snapshot mismatch errors and must be cleaned up to adhere to the single-browser Chrome policy.
+- **Asynchronous Asset Settling vs. DOM Visibility**:
+  - Waiting only for element presence (`waitForBookCardSelector()`) is insufficient for visual assertions because images (book covers) and live WebSockets (`#ws-status-dot`) load asynchronously.
+  - An unscheduled snapshot captures blank image placeholders and a red disconnected WebSocket dot, triggering an 8% pixel mismatch against settled baselines.
+  - **Golden Stabilization Pattern**:
+    ```typescript
+    await page.goto(envConfig.baseUrl);
+    await catalogPage.waitForBookCardSelector();
+    await page.waitForLoadState('networkidle');
+    await expect(page).toHaveScreenshot('catalog-baseline.png', {
+      maxDiffPixelRatio: 0.05,
+      threshold: 0.2,
+      animations: 'disabled',
+    });
+    ```
+
 
