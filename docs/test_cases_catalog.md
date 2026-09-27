@@ -558,3 +558,21 @@ These test suites provide a dual-engine performance verification architecture: l
 | **TC-PERF-JM-002** | BuggyBooks Auth Stress Test | Apache JMeter 5.6+ test plan stressing authentication services: user registration with `${__UUID}`, credential login (`POST /api/auth/login`), JSON token extraction (`$.token`), and authorized session verification (`GET /api/auth/me`). Assert SLA < 2000ms. | High | Apache JMeter (`jmeter/`) | `@perf` `@jmeter` `@auth` | **Yes**<br>- Plan: `jmeter/Tests/BuggyBooks_Auth_Stress.jmx`<br>- Data: `jmeter/TestData/users.csv`<br>- Assertion: `Response Time < 2000ms, $.token valid` |
 | **TC-PERF-JM-003** | BuggyBooks Ecommerce Journey | Apache JMeter 5.6+ end-to-end customer journey test plan: Login -> Browse Catalog -> View Book Detail -> Add to Cart -> View Cart -> Place Order. Assert state continuity across steps and SLA < 3000ms. | Critical | Apache JMeter (`jmeter/`) | `@perf` `@jmeter` `@e2e` | **Yes**<br>- Plan: `jmeter/Tests/BuggyBooks_Ecommerce_Journey.jmx`<br>- Data: `jmeter/TestData/users.csv`<br>- Assertion: `Response Time < 3000ms, Order HTTP 200/201` |
 | **TC-PERF-JM-004** | BuggyBooks Inventory Contention Stress | Apache JMeter 5.6+ high-contention stress test targeting delayed inventory calculations (`GET /api/inventory/report`). Assert system stability and response time SLA < 5000ms under concurrent thread load. | Medium | Apache JMeter (`jmeter/`) | `@perf` `@jmeter` `@inventory` | **Yes**<br>- Plan: `jmeter/Tests/BuggyBooks_Inventory_Stress.jmx`<br>- Data: `jmeter/TestData/UserId.csv`<br>- Assertion: `Response Time < 5000ms, HTTP 200` |
+
+---
+
+## 24. Selenium E2E Web Automation (BuggyBooks Platform Alignment)
+
+*Sprint Source: [Sprint 3.1: BuggyBooks Selenium Page Objects & Auth/Catalog Smoke](../planning/Sprints/sprint_3_1_buggybooks_selenium_page_objects_and_auth_catalog_smoke.md)*
+
+These test suites provide W3C-standard Selenium WebDriver TypeScript E2E automation for the BuggyBooks application running on Google Chrome headless, verifying authentication journeys and catalog discovery workflows.
+
+### **Suite: Selenium Authentication & Session Governance**
+| ID | Title | Description | Priority | Target Coverage | Tags | Covered |
+|:---|:---|:---|:---|:---|:---|:---|
+| **TC-SEL-001** | BuggyBooks Selenium User Authentication & Session Validation | Validate user login with valid credentials (`admin`/`password123`), error handling on invalid credentials ("Unauthorized: Invalid credentials"), and logout session clearing using Selenium WebDriver on Google Chrome headless. | Smoke | Selenium WebDriver (`selenium-e2e`) | `@smoke` `@auth` `@selenium` | **Yes**<br>- Spec: `selenium-e2e/src/tests/ui/Test_001_Selenium_Auth.spec.ts`<br>- Page Objects: `selenium-e2e/src/pages/LoginPage.ts`, `selenium-e2e/src/pages/CatalogPage.ts`<br>- Runner: `npm test --prefix selenium-e2e` |
+
+### **Suite: Selenium Catalog Discovery & Search**
+| ID | Title | Description | Priority | Target Coverage | Tags | Covered |
+|:---|:---|:---|:---|:---|:---|:---|
+| **TC-SEL-002** | BuggyBooks Selenium Catalog Browsing & Search Smoke | Verify initial catalog load of book cards, keyword search filtering (`GET /api/books`), and clearing search input using Selenium WebDriver on Google Chrome headless. | Smoke | Selenium WebDriver (`selenium-e2e`) | `@smoke` `@catalog` `@selenium` | **Yes**<br>- Spec: `selenium-e2e/src/tests/ui/Test_002_Selenium_Catalog.spec.ts`<br>- Page Objects: `selenium-e2e/src/pages/CatalogPage.ts`<br>- Runner: `npm test --prefix selenium-e2e` |

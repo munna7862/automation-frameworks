@@ -59,8 +59,10 @@ export class BaseTest {
     }
 
     if (this.intercepting) {
-      this.intercepting = false;
-      const outputPath = `./allure-results/network-log-${Date.now()}.json`;
+      const resultsDir = './allure-results';
+      const { mkdir } = await import('fs/promises');
+      await mkdir(resultsDir, { recursive: true });
+      const outputPath = `${resultsDir}/network-log-${Date.now()}.json`;
       const networkLog = JSON.stringify(this.networkEntries, null, 2);
 
       await writeFile(outputPath, networkLog, 'utf-8');
