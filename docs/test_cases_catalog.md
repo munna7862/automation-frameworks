@@ -576,3 +576,22 @@ These test suites provide W3C-standard Selenium WebDriver TypeScript E2E automat
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **TC-SEL-002** | BuggyBooks Selenium Catalog Browsing & Search Smoke | Verify initial catalog load of book cards, keyword search filtering (`GET /api/books`), and clearing search input using Selenium WebDriver on Google Chrome headless. | Smoke | Selenium WebDriver (`selenium-e2e`) | `@smoke` `@catalog` `@selenium` | **Yes**<br>- Spec: `selenium-e2e/src/tests/ui/Test_002_Selenium_Catalog.spec.ts`<br>- Page Objects: `selenium-e2e/src/pages/CatalogPage.ts`<br>- Runner: `npm test --prefix selenium-e2e` |
+
+---
+
+## 25. WebdriverIO E2E Web Automation (BuggyBooks Platform Alignment)
+
+*Sprint Source: [Sprint 3.2: BuggyBooks WebdriverIO Page Objects & Cart/Checkout Flows](../planning/Sprints/sprint_3_2_buggybooks_wdio_page_objects_and_cart_checkout_flows.md)*
+
+These test suites provide modern WebdriverIO TypeScript E2E automation for the BuggyBooks application running on Google Chrome headless, verifying authentication journeys, catalog discovery, cart persistence, and purchasing workflows featuring native Shadow DOM piercing.
+
+### **Suite: WebdriverIO Authentication & Catalog Discovery**
+| ID | Title | Description | Priority | Target Coverage | Tags | Covered |
+|:---|:---|:---|:---|:---|:---|:---|
+| **TC-WDIO-001** | BuggyBooks WDIO User Authentication & Catalog Discovery Smoke | Validate user login with valid credentials (`admin`/`password123`), catalog card rendering, keyword search filtering (`GET /api/books`), and logout session clearing using WebdriverIO on Google Chrome headless. | Smoke | WebdriverIO (`wdio-e2e`) | `@smoke` `@auth` `@catalog` `@wdio` | **Yes**<br>- Spec: `wdio-e2e/src/tests/ui/Test_001_WDIO_AuthAndCatalog.spec.ts`<br>- Page Objects: `wdio-e2e/src/pages/LoginPage.ts`, `wdio-e2e/src/pages/CatalogPage.ts`<br>- Runner: `npm test --prefix wdio-e2e` |
+
+### **Suite: WebdriverIO Cart & Checkout Purchasing Workflow**
+| ID | Title | Description | Priority | Target Coverage | Tags | Covered |
+|:---|:---|:---|:---|:---|:---|:---|
+| **TC-WDIO-002** | BuggyBooks WDIO End-to-End Cart & Checkout Purchasing Flow with Shadow DOM Piercing | Execute full customer purchasing journey: add book to cart, verify cart badge and item persistence, navigate through multi-step checkout wizard (shipping & payment), pierce Shadow DOM on `<order-summary-box>` Web Component using native `shadow$` locator to verify order total, submit payment, and assert order confirmation on Google Chrome headless. | Smoke | WebdriverIO (`wdio-e2e`) | `@smoke` `@cart` `@checkout` `@shadow-dom` `@wdio` | **Yes**<br>- Spec: `wdio-e2e/src/tests/ui/Test_002_WDIO_CartAndCheckout.spec.ts`<br>- Page Objects: `wdio-e2e/src/pages/CartPage.ts`, `wdio-e2e/src/pages/CheckoutPage.ts`<br>- Runner: `npm test --prefix wdio-e2e` |
+

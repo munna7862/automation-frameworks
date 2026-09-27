@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-3.2-WDIO-BUGGYBOOKS-ALIGNMENT`  
 **Phase Mapping**: [Phase 3: WebdriverIO & Selenium Alignment to BuggyBooks](../Phases/phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md)  
 **Estimated Velocity**: 5 Story Points  
-**Sprint Status**: Planned  
+**Sprint Status**: Completed  
 **Sprint Goal**: Re-align `wdio-e2e` to BuggyBooks, author Page Objects for Cart and Checkout, implement native Shadow DOM piercing for the `<order-summary-box>` Web Component, and validate full customer purchasing workflows.
 
 ---
@@ -29,10 +29,10 @@
   *So that* tests can interact with encapsulated Web Components like `<order-summary-box>` seamlessly.
 - **Story Points**: 2 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Update `wdio-e2e/src/config/wdio.conf.ts`:
+  - [x] Update `wdio-e2e/src/config/wdio.conf.ts`:
     - Base URL: `https://buggy-books-fe.onrender.com`
     - Browser: `chrome` with headless arguments.
-  - [ ] Implement Shadow DOM traversal helper in `base.page.ts`:
+  - [x] Implement Shadow DOM traversal helper in `base.page.ts`:
     ```typescript
     public async getShadowElement(hostSelector: string, innerSelector: string) {
       const host = await $(hostSelector);
@@ -50,14 +50,14 @@
   *So that* an entire customer purchase journey (Add to Cart $\rightarrow$ View Cart $\rightarrow$ Enter Shipping $\rightarrow$ Complete Order) can be verified.
 - **Story Points**: 3 SP (Medium-Large)
 - **Technical Subtasks**:
-  - [ ] Author `wdio-e2e/src/pages/CartPage.ts`:
+  - [x] Author `wdio-e2e/src/pages/CartPage.ts`:
     - Locators: item rows, quantity input, remove item button, checkout button.
     - Actions: `getCartItemCount()`, `updateQuantity(id, qty)`, `proceedToCheckout()`.
-  - [ ] Author `wdio-e2e/src/pages/CheckoutPage.ts`:
+  - [x] Author `wdio-e2e/src/pages/CheckoutPage.ts`:
     - Locators: shipping address inputs, payment method, order summary shadow box, place order button.
     - Actions: `fillShippingDetails(...)`, `getOrderSummaryTotal()`, `placeOrder()`.
-  - [ ] Author `wdio-e2e/src/tests/ui/Test_002_WDIO_CartAndCheckout.spec.ts` (`TC-WDIO-002`).
-  - [ ] Remove legacy `automationexercise` specs.
+  - [x] Author `wdio-e2e/src/tests/ui/Test_002_WDIO_CartAndCheckout.spec.ts` (`TC-WDIO-002`).
+  - [x] Remove legacy `automationexercise` specs.
 - **Acceptance Criteria**:
   - Complete purchase flow executes cleanly.
   - Order confirmation screen and order ID are asserted.
@@ -66,10 +66,10 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] `wdio-e2e` operates entirely against BuggyBooks staging.
-- [ ] `<order-summary-box>` Web Component is inspected and asserted using native `shadow$` locator.
-- [ ] End-to-end cart and checkout tests pass cleanly on Google Chrome.
-- [ ] TypeScript compilation exits 0 with zero errors.
+- [x] `wdio-e2e` operates entirely against BuggyBooks staging.
+- [x] `<order-summary-box>` Web Component is inspected and asserted using native `shadow$` locator.
+- [x] End-to-end cart and checkout tests pass cleanly on Google Chrome.
+- [x] TypeScript compilation exits 0 with zero errors.
 
 ---
 
