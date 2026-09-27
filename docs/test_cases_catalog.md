@@ -567,15 +567,13 @@ These test suites provide a dual-engine performance verification architecture: l
 
 These test suites provide W3C-standard Selenium WebDriver TypeScript E2E automation for the BuggyBooks application running on Google Chrome headless, verifying authentication journeys and catalog discovery workflows.
 
-### **Suite: Selenium Authentication & Session Governance**
+### **Suite: Selenium Web Automation**
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
-| **TC-SEL-001** | BuggyBooks Selenium User Authentication & Session Validation | Validate user login with valid credentials (`admin`/`password123`), error handling on invalid credentials ("Unauthorized: Invalid credentials"), and logout session clearing using Selenium WebDriver on Google Chrome headless. | Smoke | Selenium WebDriver (`selenium-e2e`) | `@smoke` `@auth` `@selenium` | **Yes**<br>- Spec: `selenium-e2e/src/tests/ui/Test_001_Selenium_Auth.spec.ts`<br>- Page Objects: `selenium-e2e/src/pages/LoginPage.ts`, `selenium-e2e/src/pages/CatalogPage.ts`<br>- Runner: `npm test --prefix selenium-e2e` |
-
-### **Suite: Selenium Catalog Discovery & Search**
-| ID | Title | Description | Priority | Target Coverage | Tags | Covered |
-|:---|:---|:---|:---|:---|:---|:---|
-| **TC-SEL-002** | BuggyBooks Selenium Catalog Browsing & Search Smoke | Verify initial catalog load of book cards, keyword search filtering (`GET /api/books`), and clearing search input using Selenium WebDriver on Google Chrome headless. | Smoke | Selenium WebDriver (`selenium-e2e`) | `@smoke` `@catalog` `@selenium` | **Yes**<br>- Spec: `selenium-e2e/src/tests/ui/Test_002_Selenium_Catalog.spec.ts`<br>- Page Objects: `selenium-e2e/src/pages/CatalogPage.ts`<br>- Runner: `npm test --prefix selenium-e2e` |
+| **TC-SEL-001** | User Authentication Flow | Validate user login with valid credentials (`admin`/`password123`), error handling on invalid credentials ("Unauthorized: Invalid credentials"), and logout session clearing using Selenium WebDriver on Google Chrome headless. | Smoke | Selenium WebDriver (`selenium-e2e`) | `@smoke` `@auth` `@selenium` | **Yes**<br>- Spec: `selenium-e2e/src/tests/ui/Test_001_Selenium_Auth.spec.ts`<br>- Page Objects: `selenium-e2e/src/pages/LoginPage.ts`, `selenium-e2e/src/pages/CatalogPage.ts`<br>- Runner: `npm run test:selenium:smoke` |
+| **TC-SEL-002** | Catalog Search and Filtering | Verify initial catalog load of book cards, keyword search filtering (`GET /api/books`), and clearing search input using Selenium WebDriver on Google Chrome headless. | Smoke | Selenium WebDriver (`selenium-e2e`) | `@smoke` `@catalog` `@selenium` | **Yes**<br>- Spec: `selenium-e2e/src/tests/ui/Test_002_Selenium_Catalog.spec.ts`<br>- Page Objects: `selenium-e2e/src/pages/CatalogPage.ts`<br>- Runner: `npm run test:selenium:smoke` |
+| **TC-SEL-003** | Cart State Management | Verify adding items to cart, cart badge counter incrementation, item quantity adjustments, and cart item deletion in Selenium WebDriver. | High | Selenium WebDriver (`selenium-e2e`) | `@cart` `@selenium` | **Planned**<br>- Future roadmap parity expansion |
+| **TC-SEL-004** | Complete Order Checkout | Verify multi-step checkout form input (shipping, payment), W3C shadow root retrieval on `<order-summary-box>`, and successful order confirmation placement. | Critical | Selenium WebDriver (`selenium-e2e`) | `@checkout` `@shadow-dom` `@selenium` | **Planned**<br>- Future roadmap parity expansion |
 
 ---
 
@@ -585,13 +583,13 @@ These test suites provide W3C-standard Selenium WebDriver TypeScript E2E automat
 
 These test suites provide modern WebdriverIO TypeScript E2E automation for the BuggyBooks application running on Google Chrome headless, verifying authentication journeys, catalog discovery, cart persistence, and purchasing workflows featuring native Shadow DOM piercing.
 
-### **Suite: WebdriverIO Authentication & Catalog Discovery**
+### **Suite: WebdriverIO Web Automation**
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
-| **TC-WDIO-001** | BuggyBooks WDIO User Authentication & Catalog Discovery Smoke | Validate user login with valid credentials (`admin`/`password123`), catalog card rendering, keyword search filtering (`GET /api/books`), and logout session clearing using WebdriverIO on Google Chrome headless. | Smoke | WebdriverIO (`wdio-e2e`) | `@smoke` `@auth` `@catalog` `@wdio` | **Yes**<br>- Spec: `wdio-e2e/src/tests/ui/Test_001_WDIO_AuthAndCatalog.spec.ts`<br>- Page Objects: `wdio-e2e/src/pages/LoginPage.ts`, `wdio-e2e/src/pages/CatalogPage.ts`<br>- Runner: `npm test --prefix wdio-e2e` |
+| **TC-WDIO-001** | User Authentication Flow | Validate user login with valid credentials (`admin`/`password123`), authentication failure alert on invalid credentials, and session cookie/token invalidation upon logout using WebdriverIO on Google Chrome headless. | Smoke | WebdriverIO (`wdio-e2e`) | `@smoke` `@auth` `@wdio` | **Yes**<br>- Spec: `wdio-e2e/src/tests/ui/Test_001_WDIO_AuthAndCatalog.spec.ts`<br>- Page Objects: `wdio-e2e/src/pages/LoginPage.ts`<br>- Runner: `npm run test:wdio:smoke` |
+| **TC-WDIO-002** | Catalog Search & Book Inspection | Verify catalog book grid rendering, search query filtering against live backend, and clearing search input using WebdriverIO on Google Chrome headless. | Smoke | WebdriverIO (`wdio-e2e`) | `@smoke` `@catalog` `@wdio` | **Yes**<br>- Spec: `wdio-e2e/src/tests/ui/Test_001_WDIO_AuthAndCatalog.spec.ts`<br>- Page Objects: `wdio-e2e/src/pages/CatalogPage.ts`<br>- Runner: `npm run test:wdio:smoke` |
+| **TC-WDIO-003** | Cart Modification & Persistence | Verify adding book to cart, navigating to cart drawer/view, validating item count and total formatted text, and advancing to checkout wizard. | High | WebdriverIO (`wdio-e2e`) | `@smoke` `@cart` `@wdio` | **Yes**<br>- Spec: `wdio-e2e/src/tests/ui/Test_002_WDIO_CartAndCheckout.spec.ts`<br>- Page Objects: `wdio-e2e/src/pages/CartPage.ts`<br>- Runner: `npm run test:wdio:smoke` |
+| **TC-WDIO-004** | Complete Order Checkout Flow | Navigate multi-step checkout wizard (shipping address, credit card payment details), submit final order, and assert order confirmation view. | Critical | WebdriverIO (`wdio-e2e`) | `@smoke` `@checkout` `@wdio` | **Yes**<br>- Spec: `wdio-e2e/src/tests/ui/Test_002_WDIO_CartAndCheckout.spec.ts`<br>- Page Objects: `wdio-e2e/src/pages/CheckoutPage.ts`<br>- Runner: `npm run test:wdio:smoke` |
+| **TC-WDIO-005** | Shadow DOM Piercing (`<order-summary-box>`) | Pierce autonomous native `<order-summary-box>` Web Component using WebdriverIO native `shadow$` locator syntax and assert order summary total visibility and value. | High | WebdriverIO (`wdio-e2e`) | `@smoke` `@shadow-dom` `@wdio` | **Yes**<br>- Spec: `wdio-e2e/src/tests/ui/Test_002_WDIO_CartAndCheckout.spec.ts`<br>- Page Objects: `wdio-e2e/src/pages/CheckoutPage.ts`<br>- Runner: `npm run test:wdio:smoke` |
 
-### **Suite: WebdriverIO Cart & Checkout Purchasing Workflow**
-| ID | Title | Description | Priority | Target Coverage | Tags | Covered |
-|:---|:---|:---|:---|:---|:---|:---|
-| **TC-WDIO-002** | BuggyBooks WDIO End-to-End Cart & Checkout Purchasing Flow with Shadow DOM Piercing | Execute full customer purchasing journey: add book to cart, verify cart badge and item persistence, navigate through multi-step checkout wizard (shipping & payment), pierce Shadow DOM on `<order-summary-box>` Web Component using native `shadow$` locator to verify order total, submit payment, and assert order confirmation on Google Chrome headless. | Smoke | WebdriverIO (`wdio-e2e`) | `@smoke` `@cart` `@checkout` `@shadow-dom` `@wdio` | **Yes**<br>- Spec: `wdio-e2e/src/tests/ui/Test_002_WDIO_CartAndCheckout.spec.ts`<br>- Page Objects: `wdio-e2e/src/pages/CartPage.ts`, `wdio-e2e/src/pages/CheckoutPage.ts`<br>- Runner: `npm test --prefix wdio-e2e` |
 

@@ -6,6 +6,7 @@
   "scripts": {
     "test:interop": "cross-env ENVIRONMENT=INTEROP TZ=Australia/Adelaide wdio run src/config/wdio.conf.ts",
     "test": "wdio run src/config/wdio.conf.ts",
+    "test:smoke": "wdio run src/config/wdio.conf.ts --mochaOpts.grep @smoke",
     "typecheck": "tsc --noEmit",
     "generate-allure": "allure generate --clean reports/allure-results -o reports/allure-report",
     "open-allure": "allure open reports/allure-report",

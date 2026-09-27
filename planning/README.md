@@ -82,7 +82,7 @@ The Master Plan establishes the foundational principles, target architecture, an
 | **SPRINT-2.3** | [Unified Pull Request CI Quality Gate (`pr-gate.yml`)](Sprints/sprint_2_3_unified_pull_request_ci_quality_gate.md) | Phase 2 | 4 SP | DevOps Engineer | Done |
 | **SPRINT-3.1** | [BuggyBooks Selenium Page Objects & Auth/Catalog Smoke](Sprints/sprint_3_1_buggybooks_selenium_page_objects_and_auth_catalog_smoke.md) | Phase 3 | 5 SP | Selenium Specialist | Done |
 | **SPRINT-3.2** | [BuggyBooks WDIO Page Objects & Cart/Checkout Flows](Sprints/sprint_3_2_buggybooks_wdio_page_objects_and_cart_checkout_flows.md) | Phase 3 | 5 SP | Selenium / WDIO QA | Done |
-| **SPRINT-3.3** | [Cross-Framework Parity Assertions & Catalog Sync](Sprints/sprint_3_3_cross_framework_parity_assertions_and_traceability_matrix_sync.md) | Phase 3 | 4 SP | SDET Architect | Planned |
+| **SPRINT-3.3** | [Cross-Framework Parity Assertions & Catalog Sync](Sprints/sprint_3_3_cross_framework_parity_assertions_and_traceability_matrix_sync.md) | Phase 3 | 4 SP | SDET Architect | Done |
 | **SPRINT-4.1** | [Mobile Automation Monorepo Import & Scaffolding](Sprints/sprint_4_1_mobile_automation_monorepo_import_and_scaffolding.md) | Phase 4 | 4 SP | Mobile QA Specialist | Planned |
 | **SPRINT-4.2** | [Appium Android/iOS Smoke & Chaos E2E Verification](Sprints/sprint_4_2_appium_android_ios_smoke_and_chaos_e2e_verification.md) | Phase 4 | 5 SP | Mobile QA Specialist | Planned |
 | **SPRINT-4.3** | [Mobile CI Pipeline & Emulator Execution Workflows](Sprints/sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md) | Phase 4 | 5 SP | DevOps Engineer | Planned |

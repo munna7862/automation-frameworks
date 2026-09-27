@@ -3,7 +3,7 @@ import { LoginPage } from '@pages/LoginPage';
 import { CatalogPage } from '@pages/CatalogPage';
 import { getLoginCredentials } from '@config/env.config';
 
-describe('BuggyBooks WDIO Auth & Catalog — TC-WDIO-001 @smoke @auth @catalog @wdio', function () {
+describe('BuggyBooks WDIO Auth & Catalog — TC-WDIO-001 & TC-WDIO-002 @smoke @auth @catalog @wdio', function () {
   this.timeout(60000);
   let loginPage: LoginPage;
   let catalogPage: CatalogPage;
@@ -56,7 +56,7 @@ describe('BuggyBooks WDIO Auth & Catalog — TC-WDIO-001 @smoke @auth @catalog @
     expect(errorText).toContain('Invalid credentials');
   });
 
-  it('TC-WDIO-001.3: Catalog Search Filtering and Reset', async () => {
+  it('TC-WDIO-002: Catalog Search Filtering and Reset', async () => {
     await catalogPage.navigateToCatalog();
     const initialCount = await catalogPage.getBooksCount();
     expect(initialCount).toBeGreaterThan(0);
