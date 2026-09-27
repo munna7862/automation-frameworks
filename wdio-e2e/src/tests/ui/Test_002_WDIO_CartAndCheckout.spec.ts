@@ -5,7 +5,7 @@ import { CartPage } from '@pages/CartPage';
 import { CheckoutPage } from '@pages/CheckoutPage';
 import { getLoginCredentials } from '@config/env.config';
 
-describe('BuggyBooks WDIO Cart & Checkout — TC-WDIO-002 @smoke @cart @checkout @shadow-dom @wdio', function () {
+describe('BuggyBooks WDIO Cart & Checkout — TC-WDIO-003, TC-WDIO-004, TC-WDIO-005 @smoke @cart @checkout @shadow-dom @wdio', function () {
   this.timeout(90000);
   let loginPage: LoginPage;
   let catalogPage: CatalogPage;
@@ -35,7 +35,7 @@ describe('BuggyBooks WDIO Cart & Checkout — TC-WDIO-002 @smoke @cart @checkout
     await browser.deleteCookies();
   });
 
-  it('TC-WDIO-002.1: Add Book to Cart, Review Cart, and Navigate Multi-Step Checkout', async () => {
+  it('TC-WDIO-003: Add Book to Cart, Review Cart, and Navigate Multi-Step Checkout', async () => {
     // 1. Authenticate
     await loginPage.navigateToLoginPage();
     const { userName, password } = getLoginCredentials();
@@ -69,7 +69,7 @@ describe('BuggyBooks WDIO Cart & Checkout — TC-WDIO-002 @smoke @cart @checkout
     expect(isPaymentFieldVisible).toBe(true);
   });
 
-  it('TC-WDIO-002.2: Shadow DOM Piercing on <order-summary-box> and Complete Purchasing Journey', async () => {
+  it('TC-WDIO-004 & TC-WDIO-005: Shadow DOM Piercing on <order-summary-box> and Complete Purchasing Journey', async () => {
     // 1. Authenticate
     await loginPage.navigateToLoginPage();
     const { userName, password } = getLoginCredentials();

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env ENVIRONMENT=INTEROP TZ=Australia/Adelaide mocha",
+    "test:smoke": "cross-env ENVIRONMENT=INTEROP TZ=Australia/Adelaide mocha --grep @smoke",
     "typecheck": "tsc --noEmit",
     "generate-allure": "allure generate --clean allure-results -o allure-report",
     "open-allure": "allure open allure-report",
