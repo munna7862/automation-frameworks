@@ -1,0 +1,11 @@
+.........Console Logs.........
+
+[32m[2026-10-02 14:18:51] INFO: Navigating to login page: https://buggy-books-fe.onrender.com/login[39m
+[32m[2026-10-02 14:18:51] INFO: Checking if user is logged in - Element is not visible[39m
+[32m[2026-10-02 14:18:51] INFO: Clicking Login link in navbar[39m
+[32m[2026-10-02 14:18:52] INFO: Cleared input value[39m
+[32m[2026-10-02 14:18:52] INFO: Set input value to admin[39m
+[32m[2026-10-02 14:18:52] INFO: Cleared input value[39m
+[32m[2026-10-02 14:18:52] INFO: Set input value to password123[39m
+[32m[2026-10-02 14:18:52] INFO: Clicking Sign In button[39m
+[32m[2026-10-02 14:18:53] INFO: Clicking Logout button[39m

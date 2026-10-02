@@ -1,0 +1,34 @@
+.........Console Logs.........
+
+[32m[2026-10-02 14:18:59] INFO: Navigating to login page: https://buggy-books-fe.onrender.com/login[39m
+[32m[2026-10-02 14:18:59] INFO: Checking if user is logged in - Element is not visible[39m
+[32m[2026-10-02 14:18:59] INFO: Clicking Login link in navbar[39m
+[32m[2026-10-02 14:18:59] INFO: Cleared input value[39m
+[32m[2026-10-02 14:18:59] INFO: Set input value to admin[39m
+[32m[2026-10-02 14:18:59] INFO: Cleared input value[39m
+[32m[2026-10-02 14:19:00] INFO: Set input value to password123[39m
+[32m[2026-10-02 14:19:00] INFO: Clicking Sign In button[39m
+[32m[2026-10-02 14:19:00] INFO: Navigating to catalog: https://buggy-books-fe.onrender.com[39m
+[32m[2026-10-02 14:19:00] INFO: Clicking Add to Cart button for book ID: 2[39m
+[32m[2026-10-02 14:19:03] INFO: Clicking Cart navigation link[39m
+[32m[2026-10-02 14:19:03] INFO: Clicking Proceed to Checkout button[39m
+[32m[2026-10-02 14:19:03] INFO: Entering shipping details for Jane Doe[39m
+[32m[2026-10-02 14:19:04] INFO: Cleared input value[39m
+[32m[2026-10-02 14:19:04] INFO: Set input value to Jane[39m
+[32m[2026-10-02 14:19:04] INFO: Cleared input value[39m
+[32m[2026-10-02 14:19:04] INFO: Set input value to Doe[39m
+[32m[2026-10-02 14:19:04] INFO: Cleared input value[39m
+[32m[2026-10-02 14:19:04] INFO: Set input value to 123 Buggy Lane[39m
+[32m[2026-10-02 14:19:04] INFO: Cleared input value[39m
+[32m[2026-10-02 14:19:04] INFO: Set input value to Stack City[39m
+[32m[2026-10-02 14:19:04] INFO: Clicking Next Step button in checkout wizard[39m
+[32m[2026-10-02 14:19:04] INFO: Entering payment details[39m
+[32m[2026-10-02 14:19:04] INFO: Cleared input value[39m
+[32m[2026-10-02 14:19:04] INFO: Set input value to 4532015112830366[39m
+[32m[2026-10-02 14:19:04] INFO: Cleared input value[39m
+[32m[2026-10-02 14:19:04] INFO: Set input value to 12/30[39m
+[32m[2026-10-02 14:19:04] INFO: Cleared input value[39m
+[32m[2026-10-02 14:19:05] INFO: Set input value to 123[39m
+[32m[2026-10-02 14:19:05] INFO: Piercing Shadow DOM to extract total from <order-summary-box>[39m
+[32m[2026-10-02 14:19:05] INFO: Extracted Shadow DOM summary total: Secure Order Summary[39m
+[32mTotal to pay: $31.00[39m
