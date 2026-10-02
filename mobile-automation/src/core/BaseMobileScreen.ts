@@ -267,4 +267,13 @@ export abstract class BaseMobileScreen {
   async getOrientation(): Promise<string> {
     return driver.getOrientation();
   }
+
+  /**
+   * Background the application for a specified number of seconds and resume.
+   */
+  async background(seconds = 5): Promise<void> {
+    await this.step(`Background application for ${seconds} seconds`, async () => {
+      await driver.background(seconds);
+    });
+  }
 }

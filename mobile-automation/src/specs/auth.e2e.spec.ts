@@ -23,6 +23,15 @@ describe('Mobile Authentication Flow (MOB_E2E_01)', () => {
     expect(isCatalogLoaded).toBe(true);
   });
 
+  it('should maintain user session and catalog view across app backgrounding (TC-MOB-006)', async () => {
+    // Background the app for 3 seconds to verify session persistence across lifecycle events
+    await catalogScreen.background(3);
+
+    // Verify catalog is still loaded and user session is retained upon app resume
+    const isCatalogLoaded = await catalogScreen.isLoaded();
+    expect(isCatalogLoaded).toBe(true);
+  });
+
   it('should allow user to navigate to profile and log out', async () => {
     // Navigate to profile and trigger logout
     await navigationTab.logout();

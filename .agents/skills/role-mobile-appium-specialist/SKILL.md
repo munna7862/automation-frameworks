@@ -75,21 +75,43 @@ Automate mobile-specific edge cases:
    Verify cart items and form inputs remain intact across orientation shifts:
    ```typescript
    await driver.setOrientation('LANDSCAPE');
-   await expect(cartScreen.itemCount).toHaveText('2');
+   const orientation = await checkoutScreen.getOrientation();
+   expect(orientation.toUpperCase()).toBe('LANDSCAPE');
    await driver.setOrientation('PORTRAIT');
    ```
-2. **App Backgrounding & Resume**:
+2. **App Backgrounding & Resume (`auth.e2e.spec.ts`)**:
    Verify user session persists after app is backgrounded:
    ```typescript
-   await driver.background(5); // background for 5 seconds
-   await expect(catalogScreen.header).toBeDisplayed();
+   await catalogScreen.background(5); // background for 5 seconds
+   expect(await catalogScreen.isLoaded()).toBe(true);
    ```
 3. **Payment Network Drop Chaos (`checkout_chaos.e2e.spec.ts`)**:
-   Assert error toast appears and retry button succeeds.
+   Assert error toast/banner appears and retry button succeeds without rebuilding the cart.
+4. **Teardown State Reset (Core Rule 3)**:
+   Any chaos-mutating tests must restore baseline state in `after()` hook:
+   ```typescript
+   after(async () => {
+     await navigationTab.openChaos();
+     await chaosScreen.resetChaosDefaults();
+   });
+   ```
 
 ---
 
-## 3. Local Execution & CI Commands
+## 3. Test Cases Catalog Alignment (`TC-MOB-001` .. `TC-MOB-006`)
+
+| ID | Title | Spec File | Key Assertions / Verifications |
+| :--- | :--- | :--- | :--- |
+| **`TC-MOB-001`** | Mobile User Authentication | `auth.e2e.spec.ts` | Invalid credentials toast, valid login with obfuscated locators, session logout. |
+| **`TC-MOB-002`** | Mobile Catalog Gestures | `catalog.e2e.spec.ts` | W3C `swipeUp`, book card tap, bottom-sheet modal interaction and closure. |
+| **`TC-MOB-003`** | Payment Gateway Chaos | `checkout_chaos.e2e.spec.ts` | Form fill with keyboard occlusion dismissal, 500 error banner retry loop. |
+| **`TC-MOB-004`** | Orientation Toggle | `orientation_chaos.e2e.spec.ts` | Portrait -> Landscape layout shift, form integrity, orientation restoration. |
+| **`TC-MOB-005`** | Cart Mutation & Offline Sync | `catalog.e2e.spec.ts` | Cart mutation, simulated offline mode toggle, floating offline banner check. |
+| **`TC-MOB-006`** | Backgrounding Lifecycle | `auth.e2e.spec.ts` | App backgrounding (3-5s), session persistence, and UI integrity upon resume. |
+
+---
+
+## 4. Local Execution & CI Commands
 
 ### Local Android Emulator Execution
 ```bash
@@ -98,8 +120,20 @@ appium --port 4723 --use-drivers uiautomator2
 
 # In another terminal: execute Android smoke specs
 npm run test:android --workspace=mobile-automation
+# Or execute smoke runner
+npm run test:mobile:smoke
+```
+
+### Local iOS Simulator Execution
+```bash
+# Start Appium server
+appium --port 4723 --use-drivers xcuitest
+
+# In another terminal: execute iOS specs
+npm run test:ios --workspace=mobile-automation
 ```
 
 ### CI Pipeline (`.github/workflows/mobile-ci.yml`)
 - Executes headlessly using `reactivecircus/android-emulator-runner@v2` with `api-level: 31`, `arch: x86_64`, and snapshot caching.
 - Employs Render pre-flight warm-up probe before launching Appium.
+

@@ -2,9 +2,10 @@ import { loginScreen } from '../screens/LoginScreen.js';
 import { catalogScreen } from '../screens/CatalogScreen.js';
 import { cartScreen } from '../screens/CartScreen.js';
 import { checkoutScreen } from '../screens/CheckoutScreen.js';
+import { chaosScreen } from '../screens/ChaosScreen.js';
 import { navigationTab } from '../screens/NavigationTab.js';
 
-describe('Checkout Occlusion & Stochastic Gateway Retry Loop (MOB_E2E_03 & MOB_E2E_04)', () => {
+describe('Checkout Occlusion & Stochastic Gateway Retry Loop (TC-MOB-003, MOB_E2E_03 & MOB_E2E_04)', () => {
   before(async () => {
     // Ensure logged in
     if (await loginScreen.isLoaded()) {
@@ -17,6 +18,21 @@ describe('Checkout Occlusion & Stochastic Gateway Retry Loop (MOB_E2E_03 & MOB_E
       await navigationTab.openCatalog();
       await catalogScreen.quickAddToCart('book-1');
       await navigationTab.openCart();
+    }
+  });
+
+  after(async () => {
+    // Teardown: restore chaos configuration and reset application state (Core Rule 3)
+    try {
+      await navigationTab.openChaos();
+      await chaosScreen.resetChaosDefaults();
+    } catch {
+      // Fallback: ensure backend state is reset via test reset endpoint
+      try {
+        await fetch('https://buggy-books.onrender.com/api/test/reset', { method: 'POST' });
+      } catch {
+        // Ignore fallback failure if network offline
+      }
     }
   });
 
@@ -34,7 +50,7 @@ describe('Checkout Occlusion & Stochastic Gateway Retry Loop (MOB_E2E_03 & MOB_E
     });
   });
 
-  it('should place order and resolve stochastic 500 retry loop (MOB-B4)', async () => {
+  it('should place order and resolve stochastic 500 retry loop (TC-MOB-003, MOB-B4)', async () => {
     const isConfirmed = await checkoutScreen.submitOrderWithRetryLoop(3);
     expect(isConfirmed).toBe(true);
   });

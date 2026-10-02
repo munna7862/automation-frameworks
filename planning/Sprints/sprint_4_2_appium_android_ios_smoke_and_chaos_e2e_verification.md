@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-4.2-APPIUM-SMOKE-AND-CHAOS-VERIFICATION`  
 **Phase Mapping**: [Phase 4: Mobile Automation (Appium + WebdriverIO)](../Phases/phase_4_mobile_automation_appium_and_webdriverio.md)  
 **Estimated Velocity**: 5 Story Points  
-**Sprint Status**: Planned  
+**Sprint Status**: Done  
 **Sprint Goal**: Port mobile test specifications to `mobile-automation/src/specs/`, validate authentication, catalog touch interactions, orientation toggling, and payment chaos handling, and synchronize the dual Test Cases Catalog with `TC-MOB-001` through `TC-MOB-006`.
 
 ---
@@ -29,13 +29,13 @@
   *So that* the mobile application's UX and fault tolerance are thoroughly automated.
 - **Story Points**: 3 SP (Medium-Large)
 - **Technical Subtasks**:
-  - [ ] Port specs from `buggy-books/mobile-automation/src/specs/`:
-    - `auth.e2e.spec.ts` (`TC-MOB-001`): Valid/invalid login, session persistence across backgrounding.
-    - `catalog.e2e.spec.ts` (`TC-MOB-002`): Touch scroll, book selection, bottom-sheet modal interaction.
-    - `checkout_chaos.e2e.spec.ts` (`TC-MOB-003`): Payment gateway chaos handling and retry button validation.
-    - `orientation_chaos.e2e.spec.ts` (`TC-MOB-004`): Portrait to Landscape rotation state preservation.
-  - [ ] Implement mobile gesture assertions using WebdriverIO mobile commands (`driver.action('pointer')`, `driver.setOrientation()`).
-  - [ ] Verify test specs execute in headless mode using simulated Appium mocks or connected emulators.
+  - [x] Port specs from `buggy-books/mobile-automation/src/specs/`:
+    - `auth.e2e.spec.ts` (`TC-MOB-001` & `TC-MOB-006`): Valid/invalid login, session persistence across backgrounding.
+    - `catalog.e2e.spec.ts` (`TC-MOB-002` & `TC-MOB-005`): Touch scroll, book selection, bottom-sheet modal interaction, cart mutation, and offline sync.
+    - `checkout_chaos.e2e.spec.ts` (`TC-MOB-003`): Payment gateway chaos handling, keyboard occlusion dismissal, and retry button validation with teardown state reset.
+    - `orientation_chaos.e2e.spec.ts` (`TC-MOB-004`): Portrait to Landscape rotation state preservation and restoration.
+  - [x] Implement mobile gesture assertions using WebdriverIO mobile commands (`driver.action('pointer')`, `driver.setOrientation()`, `driver.background()`).
+  - [x] Verify test specs execute in headless mode using simulated Appium mocks or connected emulators.
 - **Acceptance Criteria**:
   - All 4 mobile specs compile cleanly with zero TypeScript errors.
   - Orientation toggle and chaos retry logic pass verification.
@@ -47,14 +47,14 @@
   *So that* team members and AI assistants have full visibility and automated guidance for mobile testing.
 - **Story Points**: 2 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Update `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` with:
+  - [x] Update `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` with:
     - `TC-MOB-001`: Mobile User Authentication & Session Persistence
     - `TC-MOB-002`: Mobile Catalog Gestures & Bottom-Sheet Modal
     - `TC-MOB-003`: Mobile Payment Gateway Chaos & Toast Verification
     - `TC-MOB-004`: Mobile Orientation Toggle & State Preservation
     - `TC-MOB-005`: Mobile Cart Mutation & Offline Sync
     - `TC-MOB-006`: Mobile Backgrounding & App Resume Lifecycle
-  - [ ] Create `.agents/skills/role-mobile-appium-specialist/SKILL.md` detailing:
+  - [x] Create and enrich `.agents/skills/role-mobile-appium-specialist/SKILL.md` detailing:
     - Appium 2.x server launch commands.
     - Android/iOS emulator configuration and capability options.
     - Screen Object design guidelines and mobile gesture recipes.
@@ -66,10 +66,11 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] All 4 mobile specs ported and compile with zero errors.
-- [ ] Both catalog files updated with `TC-MOB-001..006`.
-- [ ] `.agents/skills/role-mobile-appium-specialist/SKILL.md` authored.
-- [ ] Gesture helpers in `BaseMobileScreen.ts` verified.
+- [x] All 4 mobile specs ported and compile with zero errors.
+- [x] Both catalog files updated with `TC-MOB-001..006`.
+- [x] `.agents/skills/role-mobile-appium-specialist/SKILL.md` authored.
+- [x] Gesture helpers in `BaseMobileScreen.ts` verified.
+
 
 ---
 

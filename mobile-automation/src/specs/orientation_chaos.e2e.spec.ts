@@ -4,7 +4,7 @@ import { cartScreen } from '../screens/CartScreen.js';
 import { checkoutScreen } from '../screens/CheckoutScreen.js';
 import { navigationTab } from '../screens/NavigationTab.js';
 
-describe('Orientation Layout Shift Chaos (MOB_E2E_06)', () => {
+describe('Orientation Layout Shift Chaos (TC-MOB-004, MOB_E2E_06 & MOB-B6)', () => {
   before(async () => {
     // Ensure logged in
     if (await loginScreen.isLoaded()) {
