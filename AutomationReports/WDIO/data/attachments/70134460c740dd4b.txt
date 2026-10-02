@@ -1,0 +1,12 @@
+.........Console Logs.........
+
+[32m[2026-10-02 15:52:32] INFO: Navigating to catalog: https://buggy-books-fe.onrender.com[39m
+[32m[2026-10-02 15:52:32] INFO: Total books displayed: 8[39m
+[32m[2026-10-02 15:52:32] INFO: Searching catalog for: "Mockingbird"[39m
+[32m[2026-10-02 15:52:32] INFO: Cleared input value[39m
+[32m[2026-10-02 15:52:32] INFO: Set input value to Mockingbird[39m
+[32m[2026-10-02 15:52:32] INFO: Clicking Search button[39m
+[32m[2026-10-02 15:52:32] INFO: Books count reached expected: 1[39m
+[32m[2026-10-02 15:52:32] INFO: Getting first book title[39m
+[32m[2026-10-02 15:52:33] INFO: Clicking Clear Search button[39m
+[32m[2026-10-02 15:52:33] INFO: Books count reached expected: 8[39m
