@@ -54,6 +54,15 @@ on:
         default: 'main'
         type: string
 
+concurrency:
+  group: pages-deploy-allure
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 env:
   JMETER_VERSION: "5.6.3"
   JMETER_TEST_DIR: "jmeter"
@@ -65,8 +74,6 @@ jobs:
     name: Run JMeter Performance Test
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    permissions:
-      contents: read
     outputs:
       test_status: ${{ steps.parse-results.outputs.test_status }}
       total_samples: ${{ steps.parse-results.outputs.total_samples }}
@@ -216,11 +223,23 @@ jobs:
             ${{ env.REPORTS_DIR }}
           retention-days: 14
 
+      - name: Deploy JMeter Report to GitHub Pages
+        if: always() && steps.detect-report.outputs.report_ready == 'true'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: jmeter/Reports/${{ steps.prep.outputs.test_plan }}-report
+          destination_dir: AutomationReports/JMeter
+          keep_files: true
+
       - name: Generate Quality Gate Step Summary
         if: always()
         shell: bash
         run: |
           TEST_PLAN="${{ steps.prep.outputs.test_plan }}"
+          REPO_NAME="${{ github.event.repository.name }}"
+          OWNER="${{ github.repository_owner }}"
           {
             echo "## 🚀 JMeter Performance Benchmark Summary"
             echo
@@ -236,4 +255,5 @@ jobs:
             echo "| **Success Rate** | \`${{ steps.parse-results.outputs.success_rate }}%\` |"
             echo "| **Avg Response Time** | \`${{ steps.parse-results.outputs.avg_response_time }} ms\` |"
             echo "| **Report Artifact** | \`jmeter-${TEST_PLAN}-report\` |"
+            echo "| **Live Dashboard** | [View JMeter Report](https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/JMeter/) |"
           } >> "${GITHUB_STEP_SUMMARY}"

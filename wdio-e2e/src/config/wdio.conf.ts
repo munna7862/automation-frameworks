@@ -41,18 +41,43 @@ export const config = {
   reporters: [
     'spec',
     ['allure', {
-      outputDir: path.resolve(__dirname, '../..', 'reports', 'allure-results'),
+      outputDir: path.resolve(__dirname, '../..', 'allure-results'),
       disableWebdriverStepsReporting: true,
       disableWebdriverScreenshotsReporting: false,
       addConsoleLogs: true,
       reportedEnvironmentVars: {
-        Environment: envConfig.env || 'staging',
+        Framework: 'WebdriverIO (TypeScript + Mocha)',
+        Environment: envConfig.env || 'STAGING',
         Suite: envConfig.SUITENAME || 'Default',
-        OS: process.platform,
+        Browser: 'Google Chrome (DevTools/WebDriver)',
+        BaseURL: envConfig.baseUrl,
+        OS: `${process.platform} (${process.arch})`,
         NodeVersion: process.version
       }
     }]
   ],
+  onPrepare: function () {
+    try {
+      const resultsDir = path.resolve(__dirname, '../..', 'allure-results');
+      if (!fs.existsSync(resultsDir)) {
+        fs.mkdirSync(resultsDir, { recursive: true });
+      }
+      const envPropsPath = path.join(resultsDir, 'environment.properties');
+      const props = [
+        `Framework=WebdriverIO (TypeScript + Mocha)`,
+        `Framework.Version=^9.0.0`,
+        `Test.Environment=${envConfig.env || 'STAGING'}`,
+        `Base.URL=${envConfig.baseUrl}`,
+        `Browser.Target=Google Chrome (DevTools/WebDriver)`,
+        `Operating.System=${process.platform} (${process.arch})`,
+        `Node.Version=${process.version}`,
+        `Timestamp=${new Date().toISOString()}`
+      ].join('\n') + '\n';
+      fs.writeFileSync(envPropsPath, props, 'utf-8');
+    } catch {
+      // Non-blocking
+    }
+  },
   mochaOpts: {
     ui: 'bdd',
     timeout: 120000

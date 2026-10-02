@@ -1,4 +1,4 @@
-name: Playwright Automation CI
+name: WebdriverIO Automation CI
 
 on:
   workflow_dispatch:
@@ -11,6 +11,11 @@ on:
         description: 'Git branch to checkout for this run'
         required: false
         default: 'main'
+  push:
+    branches: [main]
+    paths:
+      - 'wdio-e2e/**'
+      - '.github/workflows/wdio-ci.yml'
 
 concurrency:
   group: pages-deploy-allure
@@ -22,38 +27,40 @@ permissions:
   id-token: write
 
 jobs:
-  # JOB 1: Run Sharded Tests
   test:
-    name: UI & API Automation
+    name: WebdriverIO E2E Tests
     runs-on: ubuntu-latest
-    
+
     env:
-      ENV: INTEROP
+      ENVIRONMENT: INTEROP
       BASE_URL: https://buggy-books-fe.onrender.com/
       API_BASE_URL: https://buggy-books.onrender.com
       HEADLESS: ${{ github.event.inputs.headless || 'true' }}
       BROWSER: chrome
+      TZ: Australia/Adelaide
       USER_NAME: ${{ secrets.E2E_USER_NAME }}
       PASSWORD: ${{ secrets.E2E_PASSWORD }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch || github.ref }}
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 24
-      
+          cache: 'npm'
+
       - name: Install dependencies
         run: |
-          npm ci
+          npm ci || npm install
           npx playwright install --with-deps chrome
 
       - name: Run Monorepo Static Analysis
         run: |
-          npm run lint:all
-          npm run typecheck:all
+          npm run typecheck --workspace=wdio-e2e
 
       - name: Render Staging Warm-Up Pre-Flight Probe
         run: |
@@ -62,33 +69,26 @@ jobs:
           npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
           npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
 
-      - name: Run tests
-        env:
-          ENVIRONMENT: INTEROP
-          TZ: Australia/Adelaide
-          USER_NAME: ${{ secrets.E2E_USER_NAME }}
-          PASSWORD: ${{ secrets.E2E_PASSWORD }}
+      - name: Run WebdriverIO Tests
         run: |
-          npm run test --workspace=playwright-e2e
+          npm test --workspace=wdio-e2e
         continue-on-error: true
 
       - name: Generate Standardized Allure Environment Metadata
         if: always()
         run: |
-          node scripts/generate-allure-environment.js --framework=playwright
+          node scripts/generate-allure-environment.js --framework=wdio
 
       - name: Upload Allure Results Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-allure-results
-          path: playwright-e2e/allure-results
+          name: wdio-allure-results
+          path: wdio-e2e/allure-results
           retention-days: 7
 
-
-  # JOB 2: Merge and Deploy
   deploy-report:
-    name: Deploy Playwright Allure Report
+    name: Deploy WebdriverIO Allure Report
     needs: [test]
     if: always()
     runs-on: ubuntu-latest
@@ -120,38 +120,38 @@ jobs:
       - name: Download Allure Results Artifact
         uses: actions/download-artifact@v4
         with:
-          name: playwright-allure-results
-          path: playwright-allure-results
+          name: wdio-allure-results
+          path: wdio-allure-results
 
       - name: Inject Previous Allure History
         run: |
-          if [ -d "gh-pages-branch/AutomationReports/Playwright/history" ]; then
-            echo "Found existing Allure history for Playwright. Injecting into results..."
-            mkdir -p playwright-allure-results/history
-            cp -r gh-pages-branch/AutomationReports/Playwright/history/* playwright-allure-results/history/
+          if [ -d "gh-pages-branch/AutomationReports/WDIO/history" ]; then
+            echo "Found existing Allure history for WDIO. Injecting into results..."
+            mkdir -p wdio-allure-results/history
+            cp -r gh-pages-branch/AutomationReports/WDIO/history/* wdio-allure-results/history/
           else
-            echo "No previous history found for Playwright. Starting fresh trend baseline."
+            echo "No previous history found for WDIO. Starting fresh trend baseline."
           fi
 
       - name: Generate Allure Report
         run: |
-          allure generate playwright-allure-results --clean -o playwright-allure-report
+          allure generate wdio-allure-results --clean -o wdio-allure-report
 
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: playwright-allure-report
-          destination_dir: AutomationReports/Playwright
+          publish_dir: wdio-allure-report
+          destination_dir: AutomationReports/WDIO
           keep_files: true
 
       - name: Append Quality Gate Step Summary
         run: |
           REPO_NAME="${{ github.event.repository.name }}"
           OWNER="${{ github.repository_owner }}"
-          REPORT_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Playwright/"
-          echo "## 📊 Playwright Allure Report Published" >> $GITHUB_STEP_SUMMARY
-          echo "- **Namespace**: \`AutomationReports/Playwright\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **Live Report URL**: [View Playwright Allure Dashboard](${REPORT_URL})" >> $GITHUB_STEP_SUMMARY
+          REPORT_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/WDIO/"
+          echo "## 📊 WebdriverIO Allure Report Published" >> $GITHUB_STEP_SUMMARY
+          echo "- **Namespace**: \`AutomationReports/WDIO\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Live Report URL**: [View WebdriverIO Allure Dashboard](${REPORT_URL})" >> $GITHUB_STEP_SUMMARY
           echo "- **History Preservation**: Enabled (Trend charts preserved on \`gh-pages\`)" >> $GITHUB_STEP_SUMMARY

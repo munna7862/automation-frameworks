@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-5.1-ALLURE-AGGREGATION-ARCHITECTURE`  
 **Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](../Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
 **Estimated Velocity**: 4 Story Points  
-**Sprint Status**: Planned  
+**Sprint Status**: In Progress  
 **Sprint Goal**: Establish a standardized Allure results generation and namespaced publishing architecture across Playwright, JMeter, Selenium, WebdriverIO, and Mobile, preserving historical trend data on the `gh-pages` branch.
 
 ---
@@ -29,12 +29,12 @@
   *So that* test execution steps, attachments, and failure stack traces are captured uniformly.
 - **Story Points**: 2 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Verify Allure reporters in:
+  - [x] Verify Allure reporters in:
     - `playwright-e2e`: `allure-playwright` generating to `playwright-e2e/allure-results/`.
     - `selenium-e2e`: Mocha Allure reporter generating to `selenium-e2e/allure-results/`.
     - `wdio-e2e`: `@wdio/allure-reporter` generating to `wdio-e2e/allure-results/`.
     - `mobile-automation`: WebdriverIO Allure reporter generating to `mobile-automation/allure-results/`.
-  - [ ] Standardize environment metadata generation (`environment.properties`) capturing framework version, OS, browser channel (`chrome`), and staging URL.
+  - [x] Standardize environment metadata generation (`environment.properties`) capturing framework version, OS, browser channel (`chrome`), and staging URL.
 - **Acceptance Criteria**:
   - Running any framework generates standardized JSON/XML results in its local `allure-results/` folder.
   - Environment details display cleanly in Allure metadata tab.
@@ -46,7 +46,7 @@
   *So that* all frameworks maintain live reports under one single domain.
 - **Story Points**: 2 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Standardize deployment directory hierarchy on `gh-pages`:
+  - [x] Standardize deployment directory hierarchy on `gh-pages`:
     ```text
     AutomationReports/
     ├── Playwright/
@@ -56,8 +56,8 @@
     ├── Mobile/
     └── k6/
     ```
-  - [ ] Configure `peaceiris/actions-gh-pages@v3` with `keep_files: true` and `destination_dir: AutomationReports/<framework>`.
-  - [ ] Implement history preservation by pulling previous `history/` directories from `gh-pages` before report generation.
+  - [x] Configure `peaceiris/actions-gh-pages@v3` with `keep_files: true` and `destination_dir: AutomationReports/<framework>`.
+  - [x] Implement history preservation by pulling previous `history/` directories from `gh-pages` before report generation.
 - **Acceptance Criteria**:
   - Deploying a Playwright report does not overwrite existing JMeter or Selenium reports.
   - Allure trend charts correctly show historical pass-rate trends across builds.
@@ -66,10 +66,10 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] All 4 web and mobile frameworks produce valid Allure result outputs.
-- [ ] `gh-pages` branch architecture cleanly partitions reports by framework.
-- [ ] History retention logic verified; trend charts display consecutive run data.
-- [ ] CI deployment uses `keep_files: true` to prevent data loss.
+- [x] All 4 web and mobile frameworks produce valid Allure result outputs.
+- [x] `gh-pages` branch architecture cleanly partitions reports by framework.
+- [x] History retention logic verified; trend charts display consecutive run data.
+- [x] CI deployment uses `keep_files: true` to prevent data loss.
 
 ---
 

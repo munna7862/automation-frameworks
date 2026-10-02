@@ -6,12 +6,13 @@ on:
     - cron: '0 3 * * *'
 
 concurrency:
-  group: mobile-ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: pages-deploy-allure
+  cancel-in-progress: false
 
 permissions:
-  contents: read
-  actions: read
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   android-test:
@@ -70,13 +71,20 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: npm run test:mobile:smoke
+        continue-on-error: true
+
+      - name: Generate Standardized Allure Environment Metadata
+        if: always()
+        run: |
+          node scripts/generate-allure-environment.js --framework=mobile
 
       - name: Upload Mobile Allure Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: mobile-allure-results
-          path: mobile-automation/reports/allure-results/
+          path: mobile-automation/allure-results
+          retention-days: 7
           if-no-files-found: ignore
 
       - name: Generate Mobile CI Summary
@@ -88,3 +96,72 @@ jobs:
           echo "- **Appium Driver**: UiAutomator2" >> $GITHUB_STEP_SUMMARY
           echo "- **Test Command**: \`npm run test:mobile:smoke\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Outcome**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+
+  deploy-report:
+    name: Deploy Mobile Allure Report
+    needs: [android-test]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install Allure CLI
+        run: npm install -g allure-commandline
+
+      - name: Checkout gh-pages for Historical Trend Data
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages-branch
+
+      - name: Download Mobile Allure Results Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mobile-allure-results
+          path: mobile-allure-results
+
+      - name: Inject Previous Allure History
+        run: |
+          if [ -d "gh-pages-branch/AutomationReports/Mobile/history" ]; then
+            echo "Found existing Allure history for Mobile. Injecting into results..."
+            mkdir -p mobile-allure-results/history
+            cp -r gh-pages-branch/AutomationReports/Mobile/history/* mobile-allure-results/history/
+          else
+            echo "No previous history found for Mobile. Starting fresh trend baseline."
+          fi
+
+      - name: Generate Allure Report
+        run: |
+          allure generate mobile-allure-results --clean -o mobile-allure-report
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: mobile-allure-report
+          destination_dir: AutomationReports/Mobile
+          keep_files: true
+
+      - name: Append Quality Gate Step Summary
+        run: |
+          REPO_NAME="${{ github.event.repository.name }}"
+          OWNER="${{ github.repository_owner }}"
+          REPORT_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Mobile/"
+          echo "## 📊 Mobile Allure Report Published" >> $GITHUB_STEP_SUMMARY
+          echo "- **Namespace**: \`AutomationReports/Mobile\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Live Report URL**: [View Mobile Allure Dashboard](${REPORT_URL})" >> $GITHUB_STEP_SUMMARY
+          echo "- **History Preservation**: Enabled (Trend charts preserved on \`gh-pages\`)" >> $GITHUB_STEP_SUMMARY

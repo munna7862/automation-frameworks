@@ -1,5 +1,6 @@
 import type { Options } from '@wdio/types';
 import path from 'path';
+import fs from 'fs';
 import { Logger } from '../utils/Logger.js';
 
 export const sharedConfig: Options.Testrunner = {
@@ -31,13 +32,36 @@ export const sharedConfig: Options.Testrunner = {
     [
       'allure',
       {
-        outputDir: 'reports/allure-results',
+        outputDir: 'allure-results',
         disableWebdriverStepsReporting: false,
         disableWebdriverScreenshotsReporting: false,
         useCucumberStepReporter: false,
       },
     ],
   ],
+  onPrepare: function () {
+    try {
+      const resultsDir = path.resolve(process.cwd(), 'allure-results');
+      if (!fs.existsSync(resultsDir)) {
+        fs.mkdirSync(resultsDir, { recursive: true });
+      }
+      const envPropsPath = path.join(resultsDir, 'environment.properties');
+      const props = [
+        `Framework=Appium 2.x + WebdriverIO Mobile`,
+        `Framework.Version=^2.16.1`,
+        `Test.Environment=STAGING`,
+        `Base.URL=https://buggy-books-fe.onrender.com/`,
+        `API.Base.URL=https://buggy-books.onrender.com`,
+        `Browser.Target=UiAutomator2 (Android Emulator - Pixel 6)`,
+        `Operating.System=${process.platform} (${process.arch})`,
+        `Node.Version=${process.version}`,
+        `Timestamp=${new Date().toISOString()}`
+      ].join('\n') + '\n';
+      fs.writeFileSync(envPropsPath, props, 'utf-8');
+    } catch {
+      // Non-blocking
+    }
+  },
   mochaOpts: {
     ui: 'bdd',
     timeout: 90000,

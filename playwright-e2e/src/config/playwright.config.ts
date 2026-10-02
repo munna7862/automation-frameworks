@@ -41,13 +41,16 @@ export default defineConfig({
         : path.resolve(__dirname, '../../test-results/results.json')
     }],
     ['allure-playwright', {
-      resultsDir: path.resolve(__dirname, '../../reports/allure-results'),
+      resultsDir: path.resolve(__dirname, '../../allure-results'),
       suiteTitle: 'Automation Test Suite',
       detail: false,
       environmentInfo: {
-        Environment: envConfig.env || 'INTEROP',
+        Framework: 'Playwright',
+        Environment: envConfig.env || 'STAGING',
         Suite: envConfig.SUITENAME || 'Default',
-        OS: process.platform,
+        Browser: 'Google Chrome (channel: chrome)',
+        BaseURL: envConfig.baseUrl,
+        OS: `${process.platform} (${process.arch})`,
         NodeVersion: process.version
       }
     }],

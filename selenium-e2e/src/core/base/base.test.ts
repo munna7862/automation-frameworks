@@ -3,6 +3,8 @@ import { DriverFactory } from '../driver.factory';
 import { envConfig } from '@config/env.config';
 import { logger } from '../logger/logger';
 import { writeFile } from 'fs/promises';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Context } from 'mocha';
 
 interface SetupOptions {
@@ -51,6 +53,29 @@ export class BaseTest {
 
     await this.driver.get(envConfig.baseUrl);
     logger.info('Test setup completed');
+
+    try {
+      const resultsDir = path.resolve(process.cwd(), 'allure-results');
+      if (!fs.existsSync(resultsDir)) {
+        fs.mkdirSync(resultsDir, { recursive: true });
+      }
+      const envPropsPath = path.join(resultsDir, 'environment.properties');
+      if (!fs.existsSync(envPropsPath)) {
+        const props = [
+          `Framework=Selenium WebDriver (TypeScript + Mocha)`,
+          `Framework.Version=^4.43.0`,
+          `Test.Environment=${envConfig.env || 'STAGING'}`,
+          `Base.URL=${envConfig.baseUrl}`,
+          `Browser.Target=Google Chrome (ChromeDriver)`,
+          `Operating.System=${process.platform} (${process.arch})`,
+          `Node.Version=${process.version}`,
+          `Timestamp=${new Date().toISOString()}`
+        ].join('\n') + '\n';
+        fs.writeFileSync(envPropsPath, props, 'utf-8');
+      }
+    } catch {
+      // Non-blocking environment properties generation
+    }
   }
 
   async teardown(testContext?: Context) {
