@@ -64,7 +64,7 @@
 - [x] `npm run lint:all` and `npm run typecheck:all` exit 0 across all workspaces.
 - [x] Planning documentation and roadmap marked complete for Sprint 5.3 and Phase 5.
 - [x] Pull request opened with structured summary and verification evidence (`gh pr create` -> PR #28).
-- [ ] All CI workflow checks green, approved, and ready for PO merge.
+- [x] All CI workflow checks green, approved, and ready for PO merge.
 
 ---
 
