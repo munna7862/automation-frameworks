@@ -1,0 +1,6 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","2938","TC-SEL-001.1: Successful Login and Logout with Valid Credentials","BuggyBooks Selenium Auth — TC-SEL-001 @smoke @auth @selenium","2026-10-02","passed","2026-10-02","","","",""
+"","1106","TC-SEL-002.1: Verify Initial Catalog Load and Book Cards Display","BuggyBooks Selenium Catalog — TC-SEL-002 @smoke @catalog @selenium","2026-10-02","passed","2026-10-02","","","",""
+"","1875","TC-SEL-001.2: Login Validation Error with Invalid Password","BuggyBooks Selenium Auth — TC-SEL-001 @smoke @auth @selenium","2026-10-02","passed","2026-10-02","","","",""
+"","1287","TC-SEL-002.3: Verify Empty Catalog State on Non-Existent Search","BuggyBooks Selenium Catalog — TC-SEL-002 @smoke @catalog @selenium","2026-10-02","passed","2026-10-02","","","",""
+"","1711","TC-SEL-002.2: Verify Keyword Search Filtering and Clear Search","BuggyBooks Selenium Catalog — TC-SEL-002 @smoke @catalog @selenium","2026-10-02","passed","2026-10-02","","","",""
