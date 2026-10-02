@@ -146,12 +146,26 @@ jobs:
           destination_dir: AutomationReports/WDIO
           keep_files: true
 
+      - name: Generate Portal Metadata
+        run: |
+          node scripts/generate-portal-metadata.js --gh-pages-dir=gh-pages-branch --output=docs/portal/portal-data.json
+
+      - name: Deploy Executive Portal to GitHub Pages Root
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: docs/portal
+          keep_files: true
+
       - name: Append Quality Gate Step Summary
         run: |
           REPO_NAME="${{ github.event.repository.name }}"
           OWNER="${{ github.repository_owner }}"
           REPORT_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/WDIO/"
-          echo "## 📊 WebdriverIO Allure Report Published" >> $GITHUB_STEP_SUMMARY
+          PORTAL_URL="https://${OWNER}.github.io/${REPO_NAME}/"
+          echo "## 📊 WebdriverIO Allure Report & Executive Portal Published" >> $GITHUB_STEP_SUMMARY
+          echo "- **Executive Portal**: [BuggyBooks Quality Portal](${PORTAL_URL})" >> $GITHUB_STEP_SUMMARY
+          echo "- **WebdriverIO Dashboard**: [View WebdriverIO Allure Dashboard](${REPORT_URL})" >> $GITHUB_STEP_SUMMARY
           echo "- **Namespace**: \`AutomationReports/WDIO\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **Live Report URL**: [View WebdriverIO Allure Dashboard](${REPORT_URL})" >> $GITHUB_STEP_SUMMARY
           echo "- **History Preservation**: Enabled (Trend charts preserved on \`gh-pages\`)" >> $GITHUB_STEP_SUMMARY

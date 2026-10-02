@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-5.2-GITHUB-PAGES-PORTAL-LANDING-PAGE`  
 **Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](../Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
 **Estimated Velocity**: 5 Story Points  
-**Sprint Status**: Planned  
+**Sprint Status**: Completed  
 **Sprint Goal**: Create a state-of-the-art executive reporting portal (`index.html`) deployed to the root of GitHub Pages, featuring interactive framework cards, real-time KPI metrics, and direct links to sub-framework Allure and JMeter dashboards.
 
 ---
@@ -29,7 +29,7 @@
   *So that* I can evaluate overall quality health at a glance without navigating multiple disconnected URLs.
 - **Story Points**: 3 SP (Medium-Large)
 - **Technical Subtasks**:
-  - [ ] Author `docs/portal/index.html`:
+  - [x] Author `docs/portal/index.html`:
     - Modern dark-themed CSS styling with responsive grid layout.
     - Executive KPI Cards: Total Test Count (~130+), Multi-Framework Coverage (6 Suites), Target Environment (BuggyBooks Staging).
     - Framework Tiles:
@@ -51,12 +51,12 @@
   *So that* the portal UI dynamically updates with actual test execution metrics on every build.
 - **Story Points**: 2 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Author `scripts/generate-portal-metadata.js`:
+  - [x] Author `scripts/generate-portal-metadata.js`:
     - Reads `widgets/summary.json` from each framework's generated report.
     - Extracts `passed`, `failed`, `skipped`, `total`, and `duration`.
     - Generates `docs/portal/portal-data.json`.
-  - [ ] Add client-side JavaScript in `index.html` to fetch `portal-data.json` and dynamically hydrate badges and counters.
-  - [ ] Add GitHub Actions step deploying `docs/portal/` to root of `gh-pages`.
+  - [x] Add client-side JavaScript in `index.html` to fetch `portal-data.json` and dynamically hydrate badges and counters.
+  - [x] Add GitHub Actions step deploying `docs/portal/` to root of `gh-pages`.
 - **Acceptance Criteria**:
   - Running script generates valid JSON data.
   - Portal displays dynamic, accurate numbers from latest test executions.
@@ -65,10 +65,10 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] `docs/portal/index.html` authored and verified locally.
-- [ ] `scripts/generate-portal-metadata.js` accurately parses Allure summary outputs.
-- [ ] Root GitHub Pages URL renders executive portal cleanly.
-- [ ] All framework deep-links navigate to functioning sub-reports.
+- [x] `docs/portal/index.html` authored and verified locally.
+- [x] `scripts/generate-portal-metadata.js` accurately parses Allure summary outputs.
+- [x] Root GitHub Pages URL renders executive portal cleanly.
+- [x] All framework deep-links navigate to functioning sub-reports.
 
 ---
 
