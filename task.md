@@ -49,11 +49,12 @@
 ## 3. Sprint Review Comments & Refinement Loop
 
 | Gate / Reviewer | Target Role | Review Feedback & Comments | Gate Status |
-| :--- | :--- | :--- | :---: |
+| :--- | :--- | :--- | :--- |
 | **Pre-Flight Architecture Gate** | SDET Architect | Staging pre-flight probe completed (200 OK); dual-catalog parity confirmed; DoR satisfied. | `[PASSED]` |
 | **Code Acceptance Review Gate** | SDET Architect | Dark glassmorphism UI verified; all 6 framework cards link with portable relative paths; dynamic hydration and graceful offline fallbacks verified; automated aggregator parses Allure summaries accurately. | `[PASSED]` |
 | **Scrum Master DoD Gate** | Scrum Master | `typecheck:all` exit 0, `lint:all` exit 0, `test:portal` passed across desktop and mobile, zero dual-catalog diff, roadmap synchronized. | `[PASSED]` |
-| **DevOps Release Gate** | DevOps Engineer | PR #27 opened; all GitHub Actions CI checks (`pr-gate.yml`, `k6-performance.yaml`, CodeQL) green. | `[PASSED]` |
+| **Security Review Gate** | SDET Architect | CodeQL CWE-22 alert on `scripts/test-portal.js` resolved via strict route whitelist; CodeQL check passed exit 0. | `[PASSED]` |
+| **DevOps Release Gate** | DevOps Engineer | PR #27 opened; resolved multi-worker session isolation in `playwright-e2e/src/core/base/api.fixture.ts` eliminating staging reset race condition; all CI checks (`Smoke Tests`, `pr-gate.yml`, `k6-performance.yaml`, `CodeQL`) 100% green. | `[PASSED]` |
 | **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[READY FOR MERGE]` |
 
 ---
