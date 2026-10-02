@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-4.1-MOBILE-IMPORT-AND-SCAFFOLDING`  
 **Phase Mapping**: [Phase 4: Mobile Automation (Appium + WebdriverIO)](../Phases/phase_4_mobile_automation_appium_and_webdriverio.md)  
 **Estimated Velocity**: 4 Story Points  
-**Sprint Status**: In Progress  
+**Sprint Status**: Done  
 **Sprint Goal**: Import the Appium 2.x and WebdriverIO mobile automation framework from `buggy-books` into `AutomationFrameworks/mobile-automation`, register it in monorepo workspaces, configure device capabilities, and verify Screen Object compilation.
 
 ---
