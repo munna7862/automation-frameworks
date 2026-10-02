@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-5.3-HEALTH-AUDITING-AND-GOVERNANCE`  
 **Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](../Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
 **Estimated Velocity**: 4 Story Points  
-**Sprint Status**: Planned  
+**Sprint Status**: Completed  
 **Sprint Goal**: Implement automated health auditing tools including a byte-for-byte dual-catalog parity verifier (`scripts/verify-catalog-sync.ts`) and a scheduled closed-loop quarantine audit pipeline (`quarantine-audit.yml`) to maintain monorepo hygiene over time.
 
 ---
@@ -29,15 +29,15 @@
   *So that* documentation drift between the central catalog and the Playwright duplicate is mechanically prevented in CI.
 - **Story Points**: 2 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Author `scripts/verify-catalog-sync.ts`:
+  - [x] Author `scripts/verify-catalog-sync.ts`:
     - Reads both `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md`.
     - Normalizes line endings (`\r\n` $\rightarrow$ `\n`).
     - Compares content; if differences exist, prints a readable diff and exits with code `1`.
-  - [ ] Add npm script to root `package.json`:
+  - [x] Add npm script to root `package.json`:
     ```json
     "test:verify-catalog": "tsx scripts/verify-catalog-sync.ts"
     ```
-  - [ ] Add `test:verify-catalog` check to `.github/workflows/pr-gate.yml`.
+  - [x] Add `test:verify-catalog` check to `.github/workflows/pr-gate.yml`.
 - **Acceptance Criteria**:
   - Script passes when files match; fails with informative diff if any line differs.
   - PR gate blocks merges that fail catalog synchronization.
@@ -49,7 +49,7 @@
   *So that* flaky tests that have stabilized can be identified and safely reintroduced into the main regression suite.
 - **Story Points**: 2 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Author `.github/workflows/quarantine-audit.yml`:
+  - [x] Author `.github/workflows/quarantine-audit.yml`:
     - Scheduled weekly (`cron: '0 2 * * 1'`) and dispatchable manually.
     - Runs pre-flight staging warm-up probe.
     - Filters specs tagged with `@quarantine` or `test.fixme`.
@@ -64,10 +64,10 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] `scripts/verify-catalog-sync.ts` authored, tested, and passing.
-- [ ] Catalog verification integrated into `.github/workflows/pr-gate.yml`.
-- [ ] `.github/workflows/quarantine-audit.yml` active and syntax-validated.
-- [ ] Documentation updated with quarantine lifecycle guidelines.
+- [x] `scripts/verify-catalog-sync.ts` authored, tested, and passing.
+- [x] Catalog verification integrated into `.github/workflows/pr-gate.yml`.
+- [x] `.github/workflows/quarantine-audit.yml` active and syntax-validated.
+- [x] Documentation updated with quarantine lifecycle guidelines (`docs/quarantine_lifecycle_guide.md`).
 
 ---
 
@@ -77,6 +77,7 @@
 | :--- | :--- | :--- |
 | `scripts/verify-catalog-sync.ts` | CLI Script | Automated byte-for-byte dual-catalog parity verifier. |
 | `.github/workflows/quarantine-audit.yml` | Workflow | Scheduled 10x repetition audit for quarantined tests. |
+| `docs/quarantine_lifecycle_guide.md` | Guide | Formal quarantine governance, SLAs, and de-quarantine protocol. |
 | `package.json` | Config | Root script `npm run test:verify-catalog` configured. |
 
 ---

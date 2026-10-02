@@ -11,14 +11,14 @@ name: Quarantine Stability Audit
 
 on:
   schedule:
-    # Run every Monday at 03:00 UTC
-    - cron: '0 3 * * 1'
+    # Run every Monday at 02:00 UTC
+    - cron: '0 2 * * 1'
   workflow_dispatch:
     inputs:
       repeat_each:
         description: 'Repetition count per quarantined test'
         required: false
-        default: '5'
+        default: '10'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -29,7 +29,7 @@ permissions:
 
 jobs:
   quarantine-audit:
-    name: Quarantined Test Stability Audit (5x Repetition)
+    name: Quarantined Test Stability Audit (10x Repetition)
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -42,7 +42,7 @@ jobs:
       BASE_URL: https://buggy-books-fe.onrender.com/
       API_BASE_URL: https://buggy-books.onrender.com
       HEADLESS: 'true'
-      REPEAT_EACH: ${{ github.event.inputs.repeat_each || '5' }}
+      REPEAT_EACH: ${{ github.event.inputs.repeat_each || '10' }}
 
     steps:
       - name: Checkout repository

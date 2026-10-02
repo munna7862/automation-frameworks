@@ -3,24 +3,28 @@
 /**
  * BuggyBooks Closed-Loop Quarantine Stability Audit Runner
  *
- * Runs all tests tagged with @quarantine 5 times (--repeat-each=5) using Playwright.
+ * Runs all tests tagged with @quarantine 10 times (--repeat-each=10) using Playwright.
  * Calculates the Quarantine Stability Index (% pass rate across repetitions).
  * Generates an actionable recommendation: if a test achieves a 100% pass rate across
- * all 5 repetitions, it is recommended for de-quarantine back into mainline regression.
+ * all repetitions (e.g. 10/10), it is recommended for de-quarantine back into mainline regression.
  */
 
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const REPEAT_COUNT = parseInt(process.env.REPEAT_EACH || '5', 10);
+const REPEAT_COUNT = parseInt(process.env.REPEAT_EACH || '10', 10);
 
 function runPlaywrightQuarantine() {
   const playwrightDir = path.resolve(__dirname, '..');
   const tempReportFile = path.join(playwrightDir, 'quarantine-results.json');
+  const legacyConfigReport = path.join(playwrightDir, 'src', 'config', 'quarantine-results.json');
 
   if (fs.existsSync(tempReportFile)) {
     try { fs.unlinkSync(tempReportFile); } catch (e) {}
+  }
+  if (fs.existsSync(legacyConfigReport)) {
+    try { fs.unlinkSync(legacyConfigReport); } catch (e) {}
   }
 
   const cmd = `npx playwright test --config=src/config/playwright.config.ts --grep "@quarantine" --grep-invert "" --repeat-each=${REPEAT_COUNT} --pass-with-no-tests --reporter=json`;
@@ -35,7 +39,7 @@ function runPlaywrightQuarantine() {
       env: {
         ...process.env,
         RUN_QUARANTINE: 'true',
-        PLAYWRIGHT_JSON_OUTPUT_NAME: 'quarantine-results.json',
+        PLAYWRIGHT_JSON_OUTPUT_NAME: tempReportFile,
       },
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe'],
