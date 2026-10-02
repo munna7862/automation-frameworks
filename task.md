@@ -38,7 +38,7 @@
 - [x] **US-AF-422.1** (`SDET Architect`): Synchronize `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` in 100% lockstep parity with Section 26 (`TC-MOB-001` through `TC-MOB-006`).
 - [x] **US-AF-422.2** (`Mobile QA Specialist`): Audit and enrich `.agents/skills/role-mobile-appium-specialist/SKILL.md` with Appium 2.x server launch, Android/iOS configs, Screen Object recipes, and gesture primitives.
 - [x] **US-AF-422.3** (`Scrum Master`): Verify 4-point DoD checklist (`typecheck`, `lint`, dual-catalog zero-diff, docs).
-- [ ] **US-AF-422.4** (`DevOps Engineer`): Commit changes, push branch, open PR via `gh pr create`, and monitor CI checks.
+- [x] **US-AF-422.4** (`DevOps Engineer`): Commit changes, push branch, open PR via `gh pr create` ([PR #24](https://github.com/munna7862/automation-frameworks/pull/24)), and monitor CI checks.
 
 ---
 
@@ -49,8 +49,8 @@
 | **Pre-Flight Architecture Gate** | SDET Architect | Staging probe clean (HTTP 200 on books API & frontend); test contracts defined; zero conflict with existing web frameworks. | `[PASSED]` |
 | **Code Acceptance Review Gate** | SDET Architect | All 4 mobile specs updated with TC-MOB-001..006 coverage; BaseMobileScreen contains W3C gesture actions and background lifecycle; teardown state reset configured in checkout chaos spec; 0 type errors. | `[PASSED]` |
 | **Scrum Master DoD Gate** | Scrum Master | All workspaces pass lint and typecheck with 0 errors; zero diff between dual catalogs; smoke tests validated; documentation updated. | `[PASSED]` |
-| **DevOps Release Gate** | DevOps Engineer | Validate CI workflows, PR creation, and green CI status. | `[IN PROGRESS]` |
-| **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[PENDING]` |
+| **DevOps Release Gate** | DevOps Engineer | PR #24 opened and GitHub Actions CI Quality Gate checks running. | `[IN PROGRESS]` |
+| **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[READY FOR PO REVIEW & MERGE]` |
 
 ---
 
