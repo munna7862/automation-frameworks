@@ -26,6 +26,14 @@ export class CatalogScreen extends BaseMobileScreen {
     return `card_book_${bookId}`;
   }
 
+  private get bookDetailModal() {
+    return 'modal_book_detail';
+  }
+
+  private get bookDetailCloseButton() {
+    return 'btn_close_detail';
+  }
+
   async isLoaded(): Promise<boolean> {
     return this.isDisplayed(this.searchInput);
   }
@@ -57,6 +65,18 @@ export class CatalogScreen extends BaseMobileScreen {
   async openBookDetail(bookId: string): Promise<void> {
     await this.step(`Open book detail for "${bookId}"`, async () => {
       await this.clickElement(this.getBookCard(bookId));
+    });
+  }
+
+  async isDetailModalDisplayed(): Promise<boolean> {
+    return this.isDisplayed(this.bookDetailModal);
+  }
+
+  async closeDetailModal(): Promise<void> {
+    await this.step('Close book detail modal / bottom sheet', async () => {
+      if (await this.isDisplayed(this.bookDetailCloseButton)) {
+        await this.clickElement(this.bookDetailCloseButton);
+      }
     });
   }
 
