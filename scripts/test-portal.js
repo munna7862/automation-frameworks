@@ -3,25 +3,52 @@ const fs = require('fs');
 const path = require('path');
 const { chromium } = require('@playwright/test');
 
+const portalDir = path.resolve(__dirname, '..', 'docs', 'portal');
+
+const MIME_TYPES = {
+  '.html': 'text/html; charset=utf-8',
+  '.json': 'application/json; charset=utf-8'
+};
+
 const server = http.createServer((req, res) => {
-  let reqPath = req.url.split('?')[0];
-  if (reqPath === '/favicon.ico') {
+  const parsedUrl = new URL(req.url, 'http://127.0.0.1');
+  const pathname = parsedUrl.pathname;
+
+  if (pathname === '/favicon.ico') {
     res.writeHead(204);
     res.end();
     return;
   }
-  if (reqPath === '/') reqPath = '/index.html';
-  const filePath = path.join(__dirname, '..', 'docs', 'portal', reqPath);
-  if (fs.existsSync(filePath)) {
-    const ext = path.extname(filePath);
-    const contentType = ext === '.html' ? 'text/html' : (ext === '.json' ? 'application/json' : 'text/plain');
-    res.writeHead(200, { 'Content-Type': contentType });
-    res.end(fs.readFileSync(filePath));
-  } else {
-    res.writeHead(404);
-    res.end('Not found');
+
+  // Strict static whitelist to eliminate any path traversal / uncontrolled path expression
+  let targetFile = null;
+  if (pathname === '/' || pathname === '/index.html') {
+    targetFile = 'index.html';
+  } else if (pathname === '/portal-data.json') {
+    targetFile = 'portal-data.json';
   }
+
+  if (!targetFile) {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not Found');
+    return;
+  }
+
+  const safeFilePath = path.join(portalDir, targetFile);
+  const ext = path.extname(safeFilePath);
+  const contentType = MIME_TYPES[ext] || 'text/plain';
+
+  fs.readFile(safeFilePath, (err, content) => {
+    if (err) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.end('Not Found');
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': contentType });
+    res.end(content);
+  });
 });
+
 
 server.listen(8099, async () => {
   try {
