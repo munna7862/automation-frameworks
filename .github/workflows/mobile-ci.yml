@@ -1,0 +1,90 @@
+name: Mobile Appium Automation CI
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
+
+concurrency:
+  group: mobile-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  android-test:
+    name: Android Appium E2E Specs
+    runs-on: macos-13
+    timeout-minutes: 30
+
+    env:
+      CI: 'true'
+      BASE_URL: https://buggy-books-fe.onrender.com/
+      API_BASE_URL: https://buggy-books.onrender.com
+      ANDROID_DEVICE_NAME: 'pixel_6'
+      ANDROID_PLATFORM_VERSION: '12.0'
+      USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Install Appium & UiAutomator2 Driver
+        run: |
+          npm install -g appium
+          appium driver install uiautomator2
+
+      - name: Render Staging Warm-Up Pre-Flight Probe
+        run: |
+          echo "Probing BuggyBooks staging endpoints for cold-start wake-up..."
+          curl -s -o /dev/null https://buggy-books.onrender.com/api/books || true
+          curl -s -o /dev/null https://buggy-books-fe.onrender.com/ || true
+          npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
+          npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
+
+      - name: Run Android Emulator Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: npm run test:mobile:smoke
+
+      - name: Upload Mobile Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-allure-results
+          path: mobile-automation/reports/allure-results/
+          if-no-files-found: ignore
+
+      - name: Generate Mobile CI Summary
+        if: always()
+        run: |
+          echo "### 📱 Mobile Appium CI Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Runner**: macos-13 (Hardware Accelerated)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target Device**: Pixel 6 (API Level 31, x86_64)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Appium Driver**: UiAutomator2" >> $GITHUB_STEP_SUMMARY
+          echo "- **Test Command**: \`npm run test:mobile:smoke\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Outcome**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY

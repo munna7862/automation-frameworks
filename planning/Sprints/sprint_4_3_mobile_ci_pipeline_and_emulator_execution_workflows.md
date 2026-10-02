@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-4.3-MOBILE-CI-AND-EMULATOR-PIPELINE`  
 **Phase Mapping**: [Phase 4: Mobile Automation (Appium + WebdriverIO)](../Phases/phase_4_mobile_automation_appium_and_webdriverio.md)  
 **Estimated Velocity**: 5 Story Points  
-**Sprint Status**: Planned  
+**Sprint Status**: Complete  
 **Sprint Goal**: Implement an automated GitHub Actions mobile execution pipeline (`.github/workflows/mobile-ci.yml`) leveraging Android Emulator Runner, manage the Appium server lifecycle headlessly, and provide cross-platform local run scripts.
 
 ---
@@ -29,7 +29,7 @@
   *So that* mobile regressions are caught on scheduled nightlies or manual workflow dispatches.
 - **Story Points**: 3 SP (Medium-Large)
 - **Technical Subtasks**:
-  - [ ] Author `.github/workflows/mobile-ci.yml`:
+  - [x] Author `.github/workflows/mobile-ci.yml`:
     ```yaml
     name: Mobile Appium Automation CI
     on:
@@ -76,7 +76,7 @@
               name: mobile-allure-results
               path: mobile-automation/allure-results/
     ```
-  - [ ] Validate workflow schema using actionlint.
+  - [x] Validate workflow schema using actionlint / YAML parser.
 - **Acceptance Criteria**:
   - Workflow passes syntax validation.
   - Caches system images and handles Appium server startup.
@@ -88,11 +88,11 @@
   *So that* I can run mobile tests locally without memorizing complex CLI flags.
 - **Story Points**: 2 SP (Medium)
 - **Technical Subtasks**:
-  - [ ] Author `mobile-automation/scripts/run-android-local.ps1` for Windows.
-  - [ ] Author `mobile-automation/scripts/run-android-local.sh` for Linux/macOS.
-  - [ ] Add root command `npm run test:mobile:smoke` to root `package.json`:
+  - [x] Author `mobile-automation/scripts/run-android-local.ps1` for Windows.
+  - [x] Author `mobile-automation/scripts/run-android-local.sh` for Linux/macOS.
+  - [x] Add root command `npm run test:mobile:smoke` to root `package.json`:
     ```json
-    "test:mobile:smoke": "npm run test:android --workspace=mobile-automation -- --spec=src/specs/auth.e2e.spec.ts"
+    "test:mobile:smoke": "npm run test:smoke --workspace=mobile-automation"
     ```
 - **Acceptance Criteria**:
   - Local scripts verify ADB connection before launching WDIO runner.
@@ -102,10 +102,10 @@
 
 ## 3. Definition of Done & Quality Gates
 
-- [ ] `.github/workflows/mobile-ci.yml` authored and syntax-validated.
-- [ ] Render staging warm-up probe included before emulator test execution.
-- [ ] Local run scripts authored for both Windows and Linux/macOS.
-- [ ] Root `npm run test:mobile:smoke` configured.
+- [x] `.github/workflows/mobile-ci.yml` authored and syntax-validated.
+- [x] Render staging warm-up probe included before emulator test execution.
+- [x] Local run scripts authored for both Windows and Linux/macOS.
+- [x] Root `npm run test:mobile:smoke` configured.
 
 ---
 
