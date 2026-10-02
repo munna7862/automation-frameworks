@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-5.1-ALLURE-AGGREGATION-ARCHITECTURE`  
 **Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](../Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
 **Estimated Velocity**: 4 Story Points  
-**Sprint Status**: In Progress  
+**Sprint Status**: Done  
 **Sprint Goal**: Establish a standardized Allure results generation and namespaced publishing architecture across Playwright, JMeter, Selenium, WebdriverIO, and Mobile, preserving historical trend data on the `gh-pages` branch.
 
 ---
