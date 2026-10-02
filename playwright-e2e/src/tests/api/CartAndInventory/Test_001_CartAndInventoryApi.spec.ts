@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../../core/base/api.fixture';
 import { randomBytes } from 'crypto';
 
 function uniqueUsername(prefix: string = 'cartuser'): string {
-  return `${prefix}${Date.now()}${randomBytes(4).toString('hex')}@`;
+  return `${prefix}_${Date.now()}_${randomBytes(4).toString('hex')}`;
 }
 
 test.describe('Cart & Inventory API', () => {

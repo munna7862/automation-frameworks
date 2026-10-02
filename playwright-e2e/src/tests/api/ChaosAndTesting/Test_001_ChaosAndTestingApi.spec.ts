@@ -1,11 +1,11 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../../core/base/api.fixture';
 import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import { randomBytes } from 'crypto';
 
 const commonUtil = new CommonFunctions();
 
 function uniqueUsername(prefix: string = 'chaosuser'): string {
-  return `${prefix}${Date.now()}${randomBytes(4).toString('hex')}@`;
+  return `${prefix}_${Date.now()}_${randomBytes(4).toString('hex')}`;
 }
 
 test.describe('Chaos and Testing Utilities API', () => {

@@ -1,4 +1,4 @@
-import { test, expect, type APIRequestContext } from '@playwright/test';
+import { test, expect, type APIRequestContext } from '../../../core/base/api.fixture';
 import { envConfig } from '../../../config/env.config';
 import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import testData from '../../../test-data/api/UserManagement/Test_001_RegisterAndLoginUser.json';

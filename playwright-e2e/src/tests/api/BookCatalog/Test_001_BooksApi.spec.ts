@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../../core/base/api.fixture';
 import type { Book, PaginatedBooks } from '@buggybooks/types';
 import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import testData from '../../../test-data/api/BookCatalog/Test_001_BooksApi.json';
