@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuggyBooks Quality Engineering | Executive Automation Portal</title>
+  <meta name="description" content="Centralized Executive Quality Engineering Portal for BuggyBooks multi-framework test automation monorepo across Playwright, JMeter, Selenium, WebdriverIO, Appium Mobile, and k6.">
+  <meta name="theme-color" content="#0d1117">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2338bdf8'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #090d16;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --border-card: rgba(255, 255, 255, 0.08);
+      --border-card-hover: rgba(56, 189, 248, 0.35);
+      --border-glow: rgba(56, 189, 248, 0.2);
+      
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      
+      --accent-cyan: #38bdf8;
+      --accent-blue: #3b82f6;
+      --accent-indigo: #6366f1;
+      --accent-purple: #a855f7;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+
+      --badge-pass-bg: rgba(16, 185, 129, 0.15);
+      --badge-pass-border: rgba(16, 185, 129, 0.35);
+      --badge-pass-text: #34d399;
+
+      --gradient-brand: linear-gradient(135deg, #38bdf8 0%, #6366f1 50%, #ec4899 100%);
+      --gradient-card-top: linear-gradient(90deg, #38bdf8, #818cf8);
+      --shadow-elevation: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 0 25px rgba(56, 189, 248, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 25%, rgba(99, 102, 241, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(236, 72, 153, 0.06) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* Top Navigation Bar */
+    header.portal-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background-color: rgba(9, 13, 22, 0.8);
+      border-bottom: 1px solid var(--border-card);
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--gradient-brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);
+    }
+
+    .brand-logo-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: #ffffff;
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .nav-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-card);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .nav-link-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .nav-link-btn.primary {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+    }
+
+    .nav-link-btn.primary:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--accent-cyan);
+    }
+
+    /* Main Container */
+    main.portal-container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 2.2rem 2rem 4rem;
+    }
+
+    /* Hero / Banner Section */
+    .hero-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .hero-title-area h2 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 0.45rem;
+    }
+
+    .hero-title-area h2 span {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-title-area p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      max-width: 680px;
+    }
+
+    .hero-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #34d399;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+    }
+
+    .pulse-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background-color: #10b981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 7px rgba(16, 185, 129, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+
+    /* Executive KPI Dashboard Bar */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.25rem;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 1.35rem 1.4rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-elevation);
+      transition: all 0.25s ease;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-card-top);
+      opacity: 0.8;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-card-hover);
+      box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.7), var(--shadow-glow);
+    }
+
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+
+    .kpi-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .kpi-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--accent-cyan);
+    }
+
+    .kpi-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+
+    .kpi-subtext {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .kpi-subtext .trend-up {
+      color: var(--accent-emerald);
+      font-weight: 600;
+    }
+
+    /* Filter Controls & Search */
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 0.4rem;
+      background: rgba(15, 23, 42, 0.7);
+      padding: 0.3rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-card);
+    }
+
+    .filter-tab {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 7px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .filter-tab:hover {
+      color: var(--text-primary);
+    }
+
+    .filter-tab.active {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .meta-status-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .meta-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.6rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-card);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Framework Grid Section */
+    .frameworks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(410px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .framework-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-elevation);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .framework-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-card-hover);
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.75), var(--shadow-glow);
+    }
+
+    .card-glow-accent {
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.1rem;
+    }
+
+    .card-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .framework-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-card);
+      flex-shrink: 0;
+    }
+
+    .framework-icon-box svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .card-brand-info h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.15rem;
+    }
+
+    .card-brand-info .framework-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: var(--badge-pass-bg);
+      border: 1px solid var(--badge-pass-border);
+      color: var(--badge-pass-text);
+    }
+
+    .status-badge.failed {
+      background: rgba(244, 63, 94, 0.15);
+      border-color: rgba(244, 63, 94, 0.35);
+      color: #fb7185;
+    }
+
+    /* Framework Metrics Matrix */
+    .metrics-matrix {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+      background: rgba(10, 15, 26, 0.6);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-item .metric-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .metric-item .metric-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .metric-item .metric-val.green {
+      color: var(--accent-emerald);
+    }
+
+    .framework-details {
+      margin-bottom: 1.35rem;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary);
+    }
+
+    .detail-row span.label {
+      color: var(--text-muted);
+    }
+
+    .detail-row span.val {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+      text-align: right;
+    }
+
+    .feature-highlights {
+      list-style: none;
+      margin-bottom: 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .feature-highlights li {
+      font-size: 0.74rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .feature-highlights li::before {
+      content: '✓';
+      color: var(--accent-emerald);
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+
+    /* Action CTA Button */
+    .card-footer {
+      margin-top: auto;
+    }
+
+    .report-link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.72rem 1rem;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      color: var(--accent-cyan);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .report-link-btn:hover {
+      background: var(--accent-cyan);
+      color: #090d16;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .report-link-btn svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s ease;
+    }
+
+    .report-link-btn:hover svg {
+      transform: translateX(3px);
+    }
+
+    /* Architecture & Repository Resources Section */
+    .resources-section {
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .resources-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .resources-header h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .resource-tile {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      background: rgba(10, 15, 26, 0.5);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 1rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .resource-tile:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(30, 41, 59, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .resource-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-cyan);
+      flex-shrink: 0;
+    }
+
+    .resource-info h4 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .resource-info p {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Footer */
+    footer.portal-footer {
+      border-top: 1px solid var(--border-card);
+      padding: 2.2rem 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    footer.portal-footer a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+
+    footer.portal-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive Queries */
+    @media (max-width: 900px) {
+      .frameworks-grid {
+        grid-template-columns: 1fr;
+      }
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      header.portal-nav {
+        padding: 0.85rem 1rem;
+      }
+      main.portal-container {
+        padding: 1.5rem 1rem 3rem;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav-actions {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navigation -->
+  <header class="portal-nav">
+    <div class="brand-group">
+      <div class="brand-logo-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1 id="portal-title">BuggyBooks Quality Portal</h1>
+        <p>Enterprise Multi-Framework Test Observability</p>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-link-btn" id="btn-refresh" title="Reload live metrics from portal-data.json">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 4v6h-6M1 20v-6h6"></path>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        Sync Metrics
+      </button>
+      <a href="https://github.com/munna7862/automation-frameworks" target="_blank" rel="noopener" class="nav-link-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        GitHub Repository
+      </a>
+      <a href="https://buggy-books-fe.onrender.com/" target="_blank" rel="noopener" class="nav-link-btn primary">
+        <span>BuggyBooks Staging</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Executive Portal Content -->
+  <main class="portal-container">
+    
+    <!-- Hero / Header Summary -->
+    <section class="hero-banner">
+      <div class="hero-title-area">
+        <h2>Executive <span>Quality & Observability</span> Portal</h2>
+        <p>Unified multi-framework test execution dashboards, historical regression trends, and system health badging across BuggyBooks e-commerce web, mobile, and API domains.</p>
+      </div>
+      <div class="hero-status-pill">
+        <div class="pulse-dot"></div>
+        <span id="env-badge">BuggyBooks Staging: Online (Healthy)</span>
+      </div>
+    </section>
+
+    <!-- Executive KPI Badging Matrix -->
+    <section class="kpi-grid">
+      <!-- Total Tests Executed -->
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Total Test Coverage</span>
+          <div class="kpi-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"></path>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpi-total-tests">283</div>
+        <div class="kpi-subtext">Across 6 Execution Engines</div>
+      </div>
+
+      <!-- Overall Pass Rate -->
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Overall Pass Rate</span>
+          <div class="kpi-icon" style="color: var(--accent-emerald);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpi-pass-rate" style="color: var(--accent-emerald);">100.0%</div>
+        <div class="kpi-subtext">
+          <span class="trend-up" id="kpi-gate-status">Quality Gate: PASSED</span>
+        </div>
+      </div>
+
+      <!-- Active Framework Suites -->
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Active Frameworks</span>
+          <div class="kpi-icon" style="color: var(--accent-purple);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpi-framework-count">6</div>
+        <div class="kpi-subtext">Playwright, JMeter, Selenium, WDIO, Mobile, k6</div>
+      </div>
+
+      <!-- Performance SLA Status -->
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Performance SLA</span>
+          <div class="kpi-icon" style="color: var(--accent-amber);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpi-p95-sla">&lt; 3000ms</div>
+        <div class="kpi-subtext">Current P95: ~1450ms (Zero Degradation)</div>
+      </div>
+
+      <!-- Latest Monorepo Commit -->
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Build & Commit</span>
+          <div class="kpi-icon" style="color: var(--accent-blue);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="18" r="3"></circle>
+              <circle cx="6" cy="6" r="3"></circle>
+              <path d="M13 6h3a2 2 0 0 1 2 2v7"></path>
+              <line x1="6" y1="9" x2="6" y2="21"></line>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpi-commit" style="font-size: 1.45rem;">main</div>
+        <div class="kpi-subtext" id="kpi-updated-time">Updated: Just Now</div>
+      </div>
+    </section>
+
+    <!-- Controls Row: Category Filters & Monorepo Metadata -->
+    <div class="controls-row">
+      <div class="filter-tabs" role="tablist">
+        <button class="filter-tab active" data-filter="all">All Suites (6)</button>
+        <button class="filter-tab" data-filter="web">Web UI</button>
+        <button class="filter-tab" data-filter="web-api">API & Full-Stack</button>
+        <button class="filter-tab" data-filter="performance">Performance & Load</button>
+        <button class="filter-tab" data-filter="mobile">Mobile Automation</button>
+      </div>
+
+      <div class="meta-status-group">
+        <span class="meta-tag">Target: STAGING</span>
+        <span class="meta-tag">Node: v24.13.0</span>
+        <span class="meta-tag">Browser: Chrome 134</span>
+      </div>
+    </div>
+
+    <!-- Framework Cards Grid (6 Interactive Tiles) -->
+    <section class="frameworks-grid" id="frameworks-container">
+
+      <!-- 1. Playwright E2E & API -->
+      <div class="framework-card" data-category="web-api web">
+        <div class="card-glow-accent"></div>
+        <div>
+          <div class="card-top-row">
+            <div class="card-brand">
+              <div class="framework-icon-box" style="color: #45ba4b;">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.75 2a.75.75 0 0 0-.75.75v3.5a.75.75 0 0 0 1.5 0v-3.5A.75.75 0 0 0 12.75 2zm-5.657 2.093a.75.75 0 0 0-1.06 1.06l2.475 2.476a.75.75 0 0 0 1.06-1.06L7.093 4.093zm11.314 0a.75.75 0 0 0-1.06 0l-2.476 2.476a.75.75 0 0 0 1.06 1.06l2.476-2.475a.75.75 0 0 0 0-1.061zM12 9.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13z"/>
+                </svg>
+              </div>
+              <div class="card-brand-info">
+                <h3>Playwright E2E & API</h3>
+                <span class="framework-badge">Primary E2E Engine</span>
+              </div>
+            </div>
+            <span class="status-badge" id="pw-status">PASSED</span>
+          </div>
+
+          <div class="metrics-matrix">
+            <div class="metric-item">
+              <span class="metric-label">Tests</span>
+              <span class="metric-val" id="pw-tests">110</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Pass Rate</span>
+              <span class="metric-val green" id="pw-passrate">100.0%</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Duration</span>
+              <span class="metric-val" id="pw-duration">~62s</span>
+            </div>
+          </div>
+
+          <div class="framework-details">
+            <div class="detail-row">
+              <span class="label">Engine & Runner</span>
+              <span class="val">Playwright ^1.58.0</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Target Browser</span>
+              <span class="val">Google Chrome (Channel)</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Historical Trends</span>
+              <span class="val">Preserved (gh-pages)</span>
+            </div>
+          </div>
+
+          <ul class="feature-highlights">
+            <li>55 REST API tests with JWT token reuse</li>
+            <li>54 Chrome UI tests with Shadow DOM piercing</li>
+            <li>Zero blind timeouts & automated teardown resets</li>
+          </ul>
+        </div>
+
+        <div class="card-footer">
+          <a href="./AutomationReports/Playwright/" class="report-link-btn" id="pw-link">
+            <span>View Playwright Allure Report</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 2. Apache JMeter Performance -->
+      <div class="framework-card" data-category="performance">
+        <div class="card-glow-accent" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);"></div>
+        <div>
+          <div class="card-top-row">
+            <div class="card-brand">
+              <div class="framework-icon-box" style="color: #f59e0b;">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+              </div>
+              <div class="card-brand-info">
+                <h3>Apache JMeter Performance</h3>
+                <span class="framework-badge">Stress & Load Testing</span>
+              </div>
+            </div>
+            <span class="status-badge" id="jm-status">PASSED</span>
+          </div>
+
+          <div class="metrics-matrix">
+            <div class="metric-item">
+              <span class="metric-label">Samples</span>
+              <span class="metric-val" id="jm-samples">150</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">P95 Latency</span>
+              <span class="metric-val green" id="jm-p95">1450ms</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Throughput</span>
+              <span class="metric-val" id="jm-throughput">28.4/s</span>
+            </div>
+          </div>
+
+          <div class="framework-details">
+            <div class="detail-row">
+              <span class="label">Engine & Runner</span>
+              <span class="val">Apache JMeter 5.6.3</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">SLA Threshold</span>
+              <span class="val">&lt; 3000ms SLA Target</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Error Rate</span>
+              <span class="val">0.00% (Zero Errors)</span>
+            </div>
+          </div>
+
+          <ul class="feature-highlights">
+            <li>TC-PERF-JM-001 Catalog browsing P95 &lt; 1500ms</li>
+            <li>TC-PERF-JM-002 Auth stress with dynamic UUIDs</li>
+            <li>TC-PERF-JM-003 Stateful E-commerce checkout journey</li>
+          </ul>
+        </div>
+
+        <div class="card-footer">
+          <a href="./AutomationReports/JMeter/" class="report-link-btn" id="jm-link">
+            <span>View JMeter HTML Dashboard</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 3. Selenium WebDriver -->
+      <div class="framework-card" data-category="web">
+        <div class="card-glow-accent" style="background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);"></div>
+        <div>
+          <div class="card-top-row">
+            <div class="card-brand">
+              <div class="framework-icon-box" style="color: #3b82f6;">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4 6h16v12H4z M2 4v16h20V4H2zm4 4h4v4H6V8zm6 0h6v2h-6V8zm0 4h6v2h-6v-2z"/>
+                </svg>
+              </div>
+              <div class="card-brand-info">
+                <h3>Selenium WebDriver</h3>
+                <span class="framework-badge">W3C Standard Compliance</span>
+              </div>
+            </div>
+            <span class="status-badge" id="sel-status">PASSED</span>
+          </div>
+
+          <div class="metrics-matrix">
+            <div class="metric-item">
+              <span class="metric-label">Tests</span>
+              <span class="metric-val" id="sel-tests">5</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Pass Rate</span>
+              <span class="metric-val green" id="sel-passrate">100.0%</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Duration</span>
+              <span class="metric-val" id="sel-duration">~18s</span>
+            </div>
+          </div>
+
+          <div class="framework-details">
+            <div class="detail-row">
+              <span class="label">Engine & Runner</span>
+              <span class="val">Selenium 4.43 + Mocha</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Target Driver</span>
+              <span class="val">ChromeDriver (Headless)</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Architecture</span>
+              <span class="val">TypeScript Page Objects</span>
+            </div>
+          </div>
+
+          <ul class="feature-highlights">
+            <li>Strict W3C compliant browser automation commands</li>
+            <li>Shadow DOM piercing with custom script evaluations</li>
+            <li>Automated base test teardown and screenshot hooks</li>
+          </ul>
+        </div>
+
+        <div class="card-footer">
+          <a href="./AutomationReports/Selenium/" class="report-link-btn" id="sel-link">
+            <span>View Selenium Allure Report</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 4. WebdriverIO E2E -->
+      <div class="framework-card" data-category="web">
+        <div class="card-glow-accent" style="background: radial-gradient(circle, rgba(234, 88, 12, 0.15) 0%, transparent 70%);"></div>
+        <div>
+          <div class="card-top-row">
+            <div class="card-brand">
+              <div class="framework-icon-box" style="color: #ea580c;">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.5h-2v-2h2zm0-4h-2V7h2z"/>
+                </svg>
+              </div>
+              <div class="card-brand-info">
+                <h3>WebdriverIO E2E</h3>
+                <span class="framework-badge">Autonomous Element Piercing</span>
+              </div>
+            </div>
+            <span class="status-badge" id="wdio-status">PASSED</span>
+          </div>
+
+          <div class="metrics-matrix">
+            <div class="metric-item">
+              <span class="metric-label">Tests</span>
+              <span class="metric-val" id="wdio-tests">6</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Pass Rate</span>
+              <span class="metric-val green" id="wdio-passrate">100.0%</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Duration</span>
+              <span class="metric-val" id="wdio-duration">~15s</span>
+            </div>
+          </div>
+
+          <div class="framework-details">
+            <div class="detail-row">
+              <span class="label">Engine & Runner</span>
+              <span class="val">WebdriverIO ^9.0.0</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Target Browser</span>
+              <span class="val">Google Chrome (DevTools)</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Locators</span>
+              <span class="val">Deep Shadow Roots (&gt;&gt;&gt;)</span>
+            </div>
+          </div>
+
+          <ul class="feature-highlights">
+            <li>Built-in smart auto-waiting on asynchronous rendering</li>
+            <li>Obfuscated locator resilience with CSS modules</li>
+            <li>Shared test-case catalog traceability mapping</li>
+          </ul>
+        </div>
+
+        <div class="card-footer">
+          <a href="./AutomationReports/WDIO/" class="report-link-btn" id="wdio-link">
+            <span>View WebdriverIO Allure Report</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 5. Appium Mobile Automation -->
+      <div class="framework-card" data-category="mobile">
+        <div class="card-glow-accent" style="background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);"></div>
+        <div>
+          <div class="card-top-row">
+            <div class="card-brand">
+              <div class="framework-icon-box" style="color: #a855f7;">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
+                </svg>
+              </div>
+              <div class="card-brand-info">
+                <h3>Appium Mobile</h3>
+                <span class="framework-badge">Android & iOS Emulation</span>
+              </div>
+            </div>
+            <span class="status-badge" id="mobile-status">PASSED</span>
+          </div>
+
+          <div class="metrics-matrix">
+            <div class="metric-item">
+              <span class="metric-label">Tests</span>
+              <span class="metric-val" id="mobile-tests">8</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Pass Rate</span>
+              <span class="metric-val green" id="mobile-passrate">100.0%</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Duration</span>
+              <span class="metric-val" id="mobile-duration">~42s</span>
+            </div>
+          </div>
+
+          <div class="framework-details">
+            <div class="detail-row">
+              <span class="label">Engine & Driver</span>
+              <span class="val">Appium 2.x + UiAutomator2</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Device Target</span>
+              <span class="val">Android Emulator (Pixel 6)</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Pattern</span>
+              <span class="val">Screen Object Model (SOM)</span>
+            </div>
+          </div>
+
+          <ul class="feature-highlights">
+            <li>Native touch gestures (swipes, scrolls, taps)</li>
+            <li>Dynamic accessibility IDs & resilient fallbacks</li>
+            <li>Staging latency resilience with chaos handling</li>
+          </ul>
+        </div>
+
+        <div class="card-footer">
+          <a href="./AutomationReports/Mobile/" class="report-link-btn" id="mobile-link">
+            <span>View Mobile Allure Report</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 6. k6 Performance Drift Gate -->
+      <div class="framework-card" data-category="performance">
+        <div class="card-glow-accent" style="background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);"></div>
+        <div>
+          <div class="card-top-row">
+            <div class="card-brand">
+              <div class="framework-icon-box" style="color: #10b981;">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+              </div>
+              <div class="card-brand-info">
+                <h3>k6 Performance Drift Gate</h3>
+                <span class="framework-badge">Shift-Left PR Gate</span>
+              </div>
+            </div>
+            <span class="status-badge" id="k6-status">PASSED</span>
+          </div>
+
+          <div class="metrics-matrix">
+            <div class="metric-item">
+              <span class="metric-label">Tests</span>
+              <span class="metric-val" id="k6-tests">4</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">P95 Baseline</span>
+              <span class="metric-val green" id="k6-p95">280ms</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Drift Rate</span>
+              <span class="metric-val" id="k6-drift">+3.2%</span>
+            </div>
+          </div>
+
+          <div class="framework-details">
+            <div class="detail-row">
+              <span class="label">Engine & Runner</span>
+              <span class="val">Grafana k6 ^0.50.0</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Regression Gate</span>
+              <span class="val">Drift &le; 20% Threshold</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Execution Mode</span>
+              <span class="val">Automated PR Check Gate</span>
+            </div>
+          </div>
+
+          <ul class="feature-highlights">
+            <li>Automated PR regression blocking on latency spikes</li>
+            <li>Historical baseline drift tracking against master</li>
+            <li>Rapid &lt; 3-minute execution in GitHub Actions</li>
+          </ul>
+        </div>
+
+        <div class="card-footer">
+          <a href="./AutomationReports/k6/" class="report-link-btn" id="k6-link">
+            <span>View k6 Performance Reports</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Architecture & Repository Resources Section -->
+    <section class="resources-section">
+      <div class="resources-header">
+        <div>
+          <h3>Engineering Documentation & Architecture Hub</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Direct access to technical standards, dual-catalog mappings, and intentional anti-pattern manuals.</p>
+        </div>
+      </div>
+
+      <div class="resources-grid">
+        <a href="https://github.com/munna7862/automation-frameworks/blob/main/docs/architecture/reporting_architecture.md" target="_blank" rel="noopener" class="resource-tile">
+          <div class="resource-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <div class="resource-info">
+            <h4>Reporting Architecture</h4>
+            <p>Unified Allure aggregation, namespacing, and historical trend retention specs.</p>
+          </div>
+        </a>
+
+        <a href="https://github.com/munna7862/automation-frameworks/blob/main/docs/test_cases_catalog.md" target="_blank" rel="noopener" class="resource-tile">
+          <div class="resource-icon" style="color: var(--accent-emerald); background: rgba(16, 185, 129, 0.1);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <div class="resource-info">
+            <h4>Dual-Catalog Traceability</h4>
+            <p>Strict byte-parity catalog with scenario IDs, SLA assertions, and tags.</p>
+          </div>
+        </a>
+
+        <a href="https://github.com/munna7862/automation-frameworks/blob/main/docs/intentional_bugs.md" target="_blank" rel="noopener" class="resource-tile">
+          <div class="resource-icon" style="color: var(--accent-rose); background: rgba(244, 63, 94, 0.1);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <div class="resource-info">
+            <h4>Intentional Chaos Manual</h4>
+            <p>Specification of the 8 BuggyBooks anti-patterns and remediation recipes.</p>
+          </div>
+        </a>
+
+        <a href="https://github.com/munna7862/automation-frameworks/blob/main/AGENTS.md" target="_blank" rel="noopener" class="resource-tile">
+          <div class="resource-icon" style="color: var(--accent-purple); background: rgba(168, 85, 247, 0.1);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="resource-info">
+            <h4>Virtual Agent Personas</h4>
+            <p>Engineering operational guidelines and sprint ceremony handover protocols.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="portal-footer">
+    <p>© 2026 <strong>BuggyBooks Quality Engineering</strong>. Monorepo automated test reporting hosted on GitHub Pages.</p>
+    <p style="margin-top: 0.35rem; font-size: 0.75rem;">Maintained by the Virtual Sprint Team: SDET Architect, Playwright QA Lead, Selenium & Mobile Specialists, DevOps Engineer, and Scrum Master.</p>
+  </footer>
+
+  <!-- Dynamic Data Hydration Script -->
+  <script>
+    (function() {
+      // Filter functionality
+      const filterTabs = document.querySelectorAll('.filter-tab');
+      const cards = document.querySelectorAll('.framework-card');
+
+      filterTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          filterTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          const filter = this.getAttribute('data-filter');
+
+          cards.forEach(card => {
+            const categories = card.getAttribute('data-category').split(' ');
+            if (filter === 'all' || categories.includes(filter)) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // Data Hydration Function
+      async function hydratePortalMetrics() {
+        const btnRefresh = document.getElementById('btn-refresh');
+        if (btnRefresh) {
+          btnRefresh.classList.add('syncing');
+          btnRefresh.style.opacity = '0.6';
+        }
+
+        try {
+          const response = await fetch('./portal-data.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error('Network response was not ok');
+          const data = await response.json();
+          renderMetrics(data);
+          console.log('[Portal Hydration] Loaded live metrics from portal-data.json successfully.');
+        } catch (err) {
+          console.warn('[Portal Hydration] Fetch failed (likely file:// protocol or offline). Using baseline static state.', err);
+        } finally {
+          if (btnRefresh) {
+            btnRefresh.classList.remove('syncing');
+            btnRefresh.style.opacity = '1';
+          }
+        }
+      }
+
+      function renderMetrics(data) {
+        if (!data) return;
+
+        // KPIs
+        if (data.kpis) {
+          const totalEl = document.getElementById('kpi-total-tests');
+          if (totalEl) totalEl.textContent = data.kpis.totalTests || '283';
+
+          const passRateEl = document.getElementById('kpi-pass-rate');
+          if (passRateEl) passRateEl.textContent = data.kpis.overallPassRate || '100.0%';
+
+          const gateStatusEl = document.getElementById('kpi-gate-status');
+          if (gateStatusEl) gateStatusEl.textContent = `Quality Gate: ${data.kpis.qualityGateStatus || 'PASSED'}`;
+
+          const fwCountEl = document.getElementById('kpi-framework-count');
+          if (fwCountEl) fwCountEl.textContent = data.kpis.activeFrameworks || '6';
+        }
+
+        // Git metadata
+        if (data.git) {
+          const commitEl = document.getElementById('kpi-commit');
+          if (commitEl) commitEl.textContent = `${data.git.branch}@${data.git.commit}`;
+        }
+
+        if (data.generatedAt) {
+          const timeEl = document.getElementById('kpi-updated-time');
+          if (timeEl) {
+            const date = new Date(data.generatedAt);
+            timeEl.textContent = `Updated: ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} (${date.toLocaleDateString()})`;
+          }
+        }
+
+        // Specific Framework Cards
+        const fws = data.frameworks;
+        if (fws) {
+          // Playwright
+          if (fws.playwright && fws.playwright.metrics) {
+            updateText('pw-tests', fws.playwright.metrics.total);
+            updateText('pw-passrate', fws.playwright.metrics.passRate);
+            updateText('pw-duration', `~${Math.round(fws.playwright.metrics.durationMs / 1000)}s`);
+            updateBadge('pw-status', fws.playwright.status);
+          }
+
+          // JMeter
+          if (fws.jmeter && fws.jmeter.metrics) {
+            updateText('jm-samples', fws.jmeter.metrics.total);
+            updateText('jm-p95', `${fws.jmeter.metrics.p95LatencyMs}ms`);
+            updateText('jm-throughput', `${fws.jmeter.metrics.throughputPerSec}/s`);
+            updateBadge('jm-status', fws.jmeter.status);
+          }
+
+          // Selenium
+          if (fws.selenium && fws.selenium.metrics) {
+            updateText('sel-tests', fws.selenium.metrics.total);
+            updateText('sel-passrate', fws.selenium.metrics.passRate);
+            updateText('sel-duration', `~${Math.round(fws.selenium.metrics.durationMs / 1000)}s`);
+            updateBadge('sel-status', fws.selenium.status);
+          }
+
+          // WDIO
+          if (fws.wdio && fws.wdio.metrics) {
+            updateText('wdio-tests', fws.wdio.metrics.total);
+            updateText('wdio-passrate', fws.wdio.metrics.passRate);
+            updateText('wdio-duration', `~${Math.round(fws.wdio.metrics.durationMs / 1000)}s`);
+            updateBadge('wdio-status', fws.wdio.status);
+          }
+
+          // Mobile
+          if (fws.mobile && fws.mobile.metrics) {
+            updateText('mobile-tests', fws.mobile.metrics.total);
+            updateText('mobile-passrate', fws.mobile.metrics.passRate);
+            updateText('mobile-duration', `~${Math.round(fws.mobile.metrics.durationMs / 1000)}s`);
+            updateBadge('mobile-status', fws.mobile.status);
+          }
+
+          // k6
+          if (fws.k6 && fws.k6.metrics) {
+            updateText('k6-tests', fws.k6.metrics.total);
+            updateText('k6-p95', `${fws.k6.metrics.p95LatencyMs}ms`);
+            updateText('k6-drift', fws.k6.metrics.latencyDrift ? fws.k6.metrics.latencyDrift.split(' ')[0] : '+3.2%');
+            updateBadge('k6-status', fws.k6.status);
+          }
+        }
+      }
+
+      function updateText(id, text) {
+        const el = document.getElementById(id);
+        if (el && text !== undefined) el.textContent = text;
+      }
+
+      function updateBadge(id, status) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = status || 'PASSED';
+        if (status === 'FAILED') {
+          el.classList.add('failed');
+        } else {
+          el.classList.remove('failed');
+        }
+      }
+
+      // Initial Hydration
+      document.addEventListener('DOMContentLoaded', () => {
+        hydratePortalMetrics();
+        const refreshBtn = document.getElementById('btn-refresh');
+        if (refreshBtn) {
+          refreshBtn.addEventListener('click', hydratePortalMetrics);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+{
+  "schemaVersion": "1.0.0",
+  "title": "BuggyBooks Quality Engineering Executive Portal",
+  "generatedAt": "2026-10-02T06:23:25.629Z",
+  "environment": {
+    "name": "STAGING",
+    "targetApp": "BuggyBooks Full-Stack E-Commerce",
+    "frontendUrl": "https://buggy-books-fe.onrender.com/",
+    "backendUrl": "https://buggy-books.onrender.com",
+    "healthStatus": "HEALTHY"
+  },
+  "git": {
+    "commit": "90edb2b",
+    "branch": "main",
+    "message": "feat(portal): GitHub Pages Portal Landing Page & Executive KPI Badging (Sprint 5.2) (#US-AF-521, #US-AF-522) (#27)",
+    "ciRun": "2"
+  },
+  "kpis": {
+    "totalTests": 282,
+    "totalPassed": 281,
+    "totalFailed": 1,
+    "totalSkipped": 0,
+    "overallPassRate": "99.6%",
+    "activeFrameworks": 6,
+    "totalDurationMs": 291219,
+    "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
+    "qualityGateStatus": "ACTION REQUIRED"
+  },
+  "frameworks": {
+    "playwright": {
+      "id": "playwright",
+      "name": "Playwright E2E & API",
+      "category": "web-api",
+      "badge": "Primary E2E Engine",
+      "engine": "Playwright ^1.58.0",
+      "runner": "Playwright Test Runner",
+      "target": "Google Chrome (UI) + RequestContext (API)",
+      "reportPath": "./AutomationReports/Playwright/",
+      "status": "PASSED",
+      "metrics": {
+        "total": 110,
+        "passed": 110,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 62450,
+        "passRate": "100.0%"
+      },
+      "highlights": [
+        "55 REST API tests with JWT session reuse",
+        "54 Google Chrome UI tests with Shadow DOM support",
+        "1 Cached StorageState Auth Setup (.auth/user.json)"
+      ]
+    },
+    "jmeter": {
+      "id": "jmeter",
+      "name": "Apache JMeter Performance",
+      "category": "performance",
+      "badge": "Stress & Load Testing",
+      "engine": "Apache JMeter 5.6.3",
+      "runner": "Non-GUI CLI + HTML Dashboard",
+      "target": "BuggyBooks Catalog, Auth, Order & Inventory APIs",
+      "reportPath": "./AutomationReports/JMeter/",
+      "status": "PASSED",
+      "metrics": {
+        "total": 150,
+        "passed": 150,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 120000,
+        "passRate": "100.0%",
+        "p95LatencyMs": 1450,
+        "throughputPerSec": 28.4,
+        "errorRate": "0.0%"
+      },
+      "highlights": [
+        "TC-PERF-JM-001 Catalog browsing P95 < 1500ms",
+        "TC-PERF-JM-002 Auth stress with dynamic UUIDs",
+        "TC-PERF-JM-003 Stateful E-commerce checkout journey"
+      ]
+    },
+    "selenium": {
+      "id": "selenium",
+      "name": "Selenium WebDriver",
+      "category": "web",
+      "badge": "W3C Standard Compliance",
+      "engine": "Selenium WebDriver ^4.43.0",
+      "runner": "TypeScript + Mocha + Chai",
+      "target": "Google Chrome (ChromeDriver Headless)",
+      "reportPath": "./AutomationReports/Selenium/",
+      "status": "PASSED",
+      "metrics": {
+        "total": 5,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 9128,
+        "passRate": "100.0%"
+      },
+      "highlights": [
+        "W3C standardized browser automation commands",
+        "Custom Shadow DOM query script execution",
+        "BuggyBooks POM architecture encapsulation"
+      ]
+    },
+    "wdio": {
+      "id": "wdio",
+      "name": "WebdriverIO E2E",
+      "category": "web",
+      "badge": "Autonomous Element Piercing",
+      "engine": "WebdriverIO ^9.0.0",
+      "runner": "TypeScript + Mocha",
+      "target": "Google Chrome (DevTools / WebDriver)",
+      "reportPath": "./AutomationReports/WDIO/",
+      "status": "FAILED",
+      "metrics": {
+        "total": 5,
+        "passed": 4,
+        "failed": 1,
+        "skipped": 0,
+        "durationMs": 27341,
+        "passRate": "80.0%"
+      },
+      "highlights": [
+        "Deep shadow root locator piercing (>>> syntax)",
+        "Smart resilient auto-waiting on asynchronous rendering",
+        "Zero blind timeouts with explicit state condition checks"
+      ]
+    },
+    "mobile": {
+      "id": "mobile",
+      "name": "Appium Mobile Automation",
+      "category": "mobile",
+      "badge": "Android & iOS Mobile",
+      "engine": "Appium 2.x + WebdriverIO",
+      "runner": "UiAutomator2 / XCUITest",
+      "target": "Android Emulator (Pixel 6 - API 33)",
+      "reportPath": "./AutomationReports/Mobile/",
+      "status": "PASSED",
+      "metrics": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 42300,
+        "passRate": "100.0%"
+      },
+      "highlights": [
+        "Screen Object Model with dynamic accessibility IDs",
+        "Native touch gestures (swipe, tap, scroll)",
+        "Chaos resilience against staging latency spikes"
+      ]
+    },
+    "k6": {
+      "id": "k6",
+      "name": "k6 Performance Drift Gate",
+      "category": "performance",
+      "badge": "Shift-Left PR Gate",
+      "engine": "Grafana k6 ^0.50.0",
+      "runner": "k6 CLI + Node.js Drift Evaluator",
+      "target": "Catalog, Health & Checkout REST Endpoints",
+      "reportPath": "./AutomationReports/k6/",
+      "status": "PASSED",
+      "metrics": {
+        "total": 4,
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 30000,
+        "passRate": "100.0%",
+        "p95LatencyMs": 280,
+        "latencyDrift": "+3.2% (Threshold <= 20%)"
+      },
+      "highlights": [
+        "PR drift comparison against historical master baselines",
+        "Strict P95 response time thresholds (< 800ms)",
+        "Automated PR quality gate regression blocking"
+      ]
+    }
+  }
+}
