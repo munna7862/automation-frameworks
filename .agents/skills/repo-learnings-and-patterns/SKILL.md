@@ -420,4 +420,22 @@ The entire roadmap is organized under [`planning/`](../../planning/):
   - Redundant copies of `base.page.ts`, `logger.ts`, and `common.util.ts` in `playwright-e2e/src/core/base/` must be permanently eliminated.
   - All Page Objects (`src/pages/*.ts`) and specs import `BasePage`, `CommonFunctions`, and `logger` directly from `@automationframeworks/playwright-utils`.
 
+---
+
+## 20. Automated Monorepo Health Auditing & Closed-Loop Governance
+
+- **Dual-Catalog Strict Parity Verification (`scripts/verify-catalog-sync.ts`)**:
+  - The repository maintains two synchronized test catalogs: central documentation (`docs/test_cases_catalog.md`) and the Playwright duplicate (`playwright-e2e/test_cases_catalog.md`).
+  - Automated verification is enforced in `pr-gate.yml` and locally via `npm run test:verify-catalog`.
+  - Normalizes CRLF/LF line endings and validates byte-for-byte character parity across 180+ test cases.
+  - Automatic remediation flag: `npx tsx scripts/verify-catalog-sync.ts --fix` synchronizes the Playwright catalog from `docs/` instantaneously.
+- **Closed-Loop Quarantine Governance (`docs/quarantine_lifecycle_guide.md`)**:
+  - Quarantined tests (`@quarantine`) are isolated from mainline CI to protect deployment velocity without allowing test erosion.
+  - Maximum retention SLA is **14 calendar days** (2 weekly cycles).
+  - Weekly scheduled pipeline (`.github/workflows/quarantine-audit.yml`, Mondays 02:00 UTC) executes all quarantined tests with **10x repetition** (`--repeat-each=10`).
+  - Generates the **Stability Index** table directly in GitHub Step Summary:
+    $$\text{Stability Index} = \left(\frac{\text{Passed Runs}}{\text{Total Runs} - \text{Skipped Runs}}\right) \times 100\%$$
+  - De-quarantine graduation requires a **100.0% Stability Index** (10/10 green passes), triggering an automated de-quarantine advisory.
+
+
 

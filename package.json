@@ -26,9 +26,12 @@
     "generate-allure:env": "node scripts/generate-allure-environment.js --all",
     "generate-portal:metadata": "node scripts/generate-portal-metadata.js",
     "test:portal": "node scripts/test-portal.js",
+    "test:verify-catalog": "tsx scripts/verify-catalog-sync.ts",
+    "test:quarantine:audit": "npm run test:quarantine:audit --workspace=playwright-e2e",
     "clean": "npm run clean --workspaces --if-present"
   },
   "devDependencies": {
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "tsx": "^4.19.0"
   }
 }

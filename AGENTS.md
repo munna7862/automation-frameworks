@@ -67,10 +67,12 @@ This document serves as the **always-on memory and operational baseline** for al
 - **CI Workflow**: `.github/workflows/jmeter-performance.yaml` supports on-demand parameterization (`threads`, `ramp_time`, `iterations`) and generates HTML dashboards + Step Summaries.
 
 ### 5. Documentation & Dual-Catalog Strict Parity
-- **Rule**: Whenever automated tests are added, modified, or removed, **both** catalog files must be updated in 100% lockstep:
+- **Rule**: Whenever automated tests are added, modified, or quarantined, **both** catalog files must be updated in 100% lockstep:
   1. `docs/test_cases_catalog.md`
   2. `playwright-e2e/test_cases_catalog.md`
 - **Format**: Table entry with `ID` (`TC-...`, `API-...`, `UI-...`), `Title`, `Description`, `Priority`, `Target Coverage`, `Tags`, and `Covered` status (spec path, runner command, assertion thresholds).
+- **Automated Gate**: Monorepo health is mechanically verified via `npm run test:verify-catalog` (`scripts/verify-catalog-sync.ts`), which is enforced as a required check in `.github/workflows/pr-gate.yml`. Any drift blocks PR merge.
+- **Quarantine Governance**: See [`docs/quarantine_lifecycle_guide.md`](docs/quarantine_lifecycle_guide.md) for the 14-day aging limit and closed-loop weekly 10x audit pipeline (`.github/workflows/quarantine-audit.yml`).
 
 ### 6. Git Hygiene & PR Conventions
 - **Secrets & Storage State**: `.auth/` and `reports/` must remain in `.gitignore`. Never commit session files.

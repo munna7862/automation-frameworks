@@ -24,6 +24,8 @@ allure-results/
 allure-report/
 **/allure-results/
 **/allure-report/
+quarantine-results.json
+**/quarantine-results.json
 coverage/
 .nyc_output/
 

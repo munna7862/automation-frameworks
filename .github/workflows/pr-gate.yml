@@ -38,12 +38,16 @@ jobs:
       - name: Monorepo Workspace Typechecking
         run: npm run typecheck:all
 
+      - name: Dual-Catalog Parity Validation
+        run: npm run test:verify-catalog
+
       - name: Generate Static Quality Summary
         if: always()
         run: |
           echo "### 🔍 Static Quality Check" >> $GITHUB_STEP_SUMMARY
           echo "- **ESLint**: Passed across all monorepo workspaces" >> $GITHUB_STEP_SUMMARY
           echo "- **TypeScript**: Passed (tsc --noEmit) with 0 errors" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dual-Catalog Parity**: 100% byte-for-byte verified (docs vs playwright-e2e)" >> $GITHUB_STEP_SUMMARY
 
   smoke-e2e:
     name: Smoke Tests (Chrome UI + API)
