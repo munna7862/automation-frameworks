@@ -13,8 +13,8 @@
     "test:smoke": "wdio run src/config/wdio.android.conf.ts --spec src/specs/auth.e2e.spec.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
-    "report:allure": "allure generate reports/allure-results --clean -o reports/allure-report",
-    "clean": "rimraf reports logs"
+    "report:allure": "node ../scripts/generate-allure-environment.js --framework=mobile && allure generate allure-results --clean -o allure-report",
+    "clean": "rimraf reports logs allure-results allure-report"
   },
   "dependencies": {
     "winston": "^3.17.0"

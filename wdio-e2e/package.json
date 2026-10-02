@@ -8,10 +8,10 @@
     "test": "wdio run src/config/wdio.conf.ts",
     "test:smoke": "wdio run src/config/wdio.conf.ts --mochaOpts.grep @smoke",
     "typecheck": "tsc --noEmit",
-    "generate-allure": "allure generate --clean reports/allure-results -o reports/allure-report",
-    "open-allure": "allure open reports/allure-report",
+    "generate-allure": "node ../scripts/generate-allure-environment.js --framework=wdio && allure generate --clean allure-results -o allure-report",
+    "open-allure": "allure open allure-report",
     "report": "npm run generate-allure && npm run open-allure",
-    "clean-reports": "rimraf reports logs"
+    "clean-reports": "rimraf reports logs allure-results allure-report"
   },
   "keywords": [],
   "author": "",
