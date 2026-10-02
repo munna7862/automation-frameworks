@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-02T06:23:25.629Z",
+  "generatedAt": "2026-10-02T06:25:31.661Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -22,7 +22,7 @@
     "totalSkipped": 0,
     "overallPassRate": "99.6%",
     "activeFrameworks": 6,
-    "totalDurationMs": 291219,
+    "totalDurationMs": 293360,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -93,7 +93,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "durationMs": 9128,
+        "durationMs": 11269,
         "passRate": "100.0%"
       },
       "highlights": [
