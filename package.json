@@ -24,6 +24,8 @@
     "perf:smoke": "npm run perf:smoke --workspace=k6-performance",
     "perf:drift-check": "npm run perf:drift-check --workspace=k6-performance",
     "generate-allure:env": "node scripts/generate-allure-environment.js --all",
+    "generate-portal:metadata": "node scripts/generate-portal-metadata.js",
+    "test:portal": "node scripts/test-portal.js",
     "clean": "npm run clean --workspaces --if-present"
   },
   "devDependencies": {

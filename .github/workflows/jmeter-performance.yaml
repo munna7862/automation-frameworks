@@ -233,6 +233,20 @@ jobs:
           destination_dir: AutomationReports/JMeter
           keep_files: true
 
+      - name: Generate Portal Metadata
+        if: always() && steps.detect-report.outputs.report_ready == 'true'
+        run: |
+          node scripts/generate-portal-metadata.js --output=docs/portal/portal-data.json
+
+      - name: Deploy Executive Portal to GitHub Pages Root
+        if: always() && steps.detect-report.outputs.report_ready == 'true'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: docs/portal
+          keep_files: true
+
       - name: Generate Quality Gate Step Summary
         if: always()
         shell: bash
@@ -255,5 +269,6 @@ jobs:
             echo "| **Success Rate** | \`${{ steps.parse-results.outputs.success_rate }}%\` |"
             echo "| **Avg Response Time** | \`${{ steps.parse-results.outputs.avg_response_time }} ms\` |"
             echo "| **Report Artifact** | \`jmeter-${TEST_PLAN}-report\` |"
+            echo "| **Executive Portal** | [View Quality Portal](https://${OWNER}.github.io/${REPO_NAME}/) |"
             echo "| **Live Dashboard** | [View JMeter Report](https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/JMeter/) |"
           } >> "${GITHUB_STEP_SUMMARY}"

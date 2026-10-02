@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../../core/base/api.fixture';
 import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import TestData from '../../../test-data/api/ChaosAndTesting/Test_002_VisualChaosApi.json';
 

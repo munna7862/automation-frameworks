@@ -1,12 +1,12 @@
 # Task Backlog: AutomationFrameworks Sprint Execution
 
-## Current Focus: Sprint 5.1 — Multi-Framework Allure Result Aggregation Architecture
+## Current Focus: Sprint 5.2 — GitHub Pages Portal Landing Page & Executive KPI Badging
 
-**Sprint Identifier**: `SPRINT-5.1-ALLURE-AGGREGATION-ARCHITECTURE`  
+**Sprint Identifier**: `SPRINT-5.2-GITHUB-PAGES-PORTAL-LANDING-PAGE`  
 **Phase**: Phase 5 (Executive Observability & Unified Allure Dashboard)  
-**Story Points**: 4 SP  
-**Branch**: `feat/sprint-5.1-allure-aggregation-architecture`  
-**Goal**: Establish a standardized Allure results generation and namespaced publishing architecture across Playwright, JMeter, Selenium, WebdriverIO, and Mobile, preserving historical trend data on the `gh-pages` branch.
+**Story Points**: 5 SP  
+**Branch**: `feat/sprint-5.2-portal-landing-page`  
+**Goal**: Create a state-of-the-art executive reporting portal (`index.html`) deployed to the root of GitHub Pages, featuring interactive framework cards, real-time KPI metrics, and direct links to sub-framework Allure and JMeter dashboards.
 
 ---
 
@@ -14,58 +14,63 @@
 
 | Persona | Role Assignment | Responsibilities for this Sprint | Status |
 | :--- | :--- | :--- | :--- |
-| **Scrum Master** | `role-scrum-master` | Sprint planning, `task.md` tracking, DoR verification, and DoD audit. | `ACTIVE` |
-| **SDET Architect** | `role-sdet-architect` | Define directory standards (`allure-results/`), metadata specification, dual-catalog sync audit, and technical review gate. | `ACTIVE` |
-| **Playwright QA Lead** | `role-playwright-automation` | Standardize `playwright-e2e` Allure reporter, npm scripts, and environment metadata generation. | `ACTIVE` |
-| **Automation Specialist** | `role-selenium-specialist` / `role-mobile-appium-specialist` | Standardize Allure configurations in `selenium-e2e`, `wdio-e2e`, and `mobile-automation`. | `ACTIVE` |
-| **DevOps Engineer** | `role-devops-engineer` | Namespaced `gh-pages` deployment architecture, history preservation, CI workflows (`playwright-ci`, `selenium-ci`, `wdio-ci`, `mobile-ci`, `jmeter-performance`), and PR lifecycle. | `ACTIVE` |
+| **Scrum Master** | `role-scrum-master` | Sprint kick-off, `task.md` tracking, DoR verification, and DoD audit. | `ACTIVE` |
+| **SDET Architect** | `role-sdet-architect` | Designing portal architecture, layout, executive KPIs, automated metrics aggregator schema, and code acceptance review. | `ACTIVE` |
+| **Playwright QA Lead** | `role-playwright-automation` | Reviewing test metrics presentation, verifying deep-link routing, and local UI rendering audit. | `ACTIVE` |
+| **DevOps Engineer** | `role-devops-engineer` | Integrating portal metadata generation & deployment into CI release pipelines (`playwright-ci`, `gh-pages`), and opening PR via `gh pr create`. | `ACTIVE` |
 | **Product Owner** | Human Tech Lead (`User`) | Backlog prioritization, sprint kickoff, and final PR review & merge. | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
-### US-AF-511: Cross-Framework Allure Configuration Standardization (2 SP)
-- [x] **US-AF-511.1** (`SDET Architect`): Define directory standards (`<framework>/allure-results/`) and environment properties specification across all frameworks.
-- [x] **US-AF-511.2** (`Automation Specialist`): Standardize Allure reporter output directory to `allure-results/` in `playwright-e2e`, `selenium-e2e`, `wdio-e2e`, and `mobile-automation`.
-- [x] **US-AF-511.3** (`Automation Specialist`): Implement automated `environment.properties` generation capturing framework version, OS, browser channel (`chrome`), and staging URL across all frameworks.
-- [x] **US-AF-511.4** (`SDET Architect`): Verify test run outputs valid XML/JSON results in local `allure-results/` with clean environment metadata.
+### US-AF-521: Executive Portal UI Design & Implementation (3 SP)
+- [x] **US-AF-521.1** (`SDET Architect`): Design responsive portal layout structure, color tokens, and executive KPI card hierarchy.
+- [x] **US-AF-521.2** (`Playwright QA Lead`): Implement `docs/portal/index.html` with modern dark glassmorphism aesthetic, interactive framework cards, real-time status badges, and relative deep-links to sub-framework reports:
+  - Playwright E2E & API (`./AutomationReports/Playwright/`)
+  - Apache JMeter Performance (`./AutomationReports/JMeter/`)
+  - Selenium WebDriver (`./AutomationReports/Selenium/`)
+  - WebdriverIO (`./AutomationReports/WDIO/`)
+  - Appium Mobile (`./AutomationReports/Mobile/`)
+  - k6 Performance (`./AutomationReports/k6/`)
+- [x] **US-AF-521.3** (`Playwright QA Lead`): Implement client-side dynamic hydration script fetching `portal-data.json` to populate live metrics, pass rates, test counts, durations, and environment badging with graceful offline fallbacks.
+- [x] **US-AF-521.4** (`Playwright QA Lead`): Verify visual rendering across mobile and desktop viewport profiles via browser inspection (`npm run test:portal`).
 
-### US-AF-512: Namespaced GitHub Pages Deployment Pipeline (2 SP)
-- [x] **US-AF-512.1** (`DevOps Engineer`): Standardize `gh-pages` deployment architecture with namespaced directories: `AutomationReports/{Playwright,JMeter,Selenium,WDIO,Mobile,k6}`.
-- [x] **US-AF-512.2** (`DevOps Engineer`): Update `.github/workflows/playwright-ci.yml` and `mobile-ci.yml` with history preservation and namespaced deployment (`peaceiris/actions-gh-pages@v3`, `keep_files: true`).
-- [x] **US-AF-512.3** (`DevOps Engineer`): Author `.github/workflows/selenium-ci.yml` and `.github/workflows/wdio-ci.yml` with Chrome headless execution, Allure generation, history pulling, and namespaced deployment.
-- [x] **US-AF-512.4** (`DevOps Engineer`): Update `.github/workflows/jmeter-performance.yaml` to publish HTML dashboard reports to `AutomationReports/JMeter` on `gh-pages`.
-- [x] **US-AF-512.5** (`SDET Architect`): Author comprehensive documentation `docs/architecture/reporting_architecture.md`.
-- [x] **US-AF-512.6** (`Scrum Master`): Verify 4-point DoD checklist (`typecheck`, `lint`, dual-catalog parity, docs).
-- [x] **US-AF-512.7** (`DevOps Engineer`): Commit changes, push branch, open PR via `gh pr create` (PR #26), and monitor CI checks.
+### US-AF-522: Automated Portal Metadata Aggregator Script & CI Integration (2 SP)
+- [x] **US-AF-522.1** (`SDET Architect`): Design `portal-data.json` schema and aggregator algorithm parsing Allure `widgets/summary.json` and JMeter metrics.
+- [x] **US-AF-522.2** (`SDET Architect`): Implement `scripts/generate-portal-metadata.js` with comprehensive CLI support (`--gh-pages-dir`, `--output`, `--summary`), extracting metrics across all 6 frameworks and computing aggregate executive KPIs.
+- [x] **US-AF-522.3** (`DevOps Engineer`): Add portal generation and root `gh-pages` deployment step to GitHub Actions pipelines (`playwright-ci.yml`, `selenium-ci.yml`, `wdio-ci.yml`, `mobile-ci.yml`, `jmeter-performance.yaml`) using `peaceiris/actions-gh-pages@v3` with `keep_files: true`.
+- [x] **US-AF-522.4** (`SDET Architect`): Conduct Code Acceptance Review and sign off technical quality gate.
+- [x] **US-AF-522.5** (`Scrum Master`): Verify 4-point DoD checklist (`typecheck:all`, `lint:all`, zero catalog diff, and planning/documentation updates).
+- [x] **US-AF-522.6** (`DevOps Engineer`): Push branch, open PR via `gh pr create` (PR #27), monitor CI checks (all green), and await PO sign-off.
 
 ---
 
 ## 3. Sprint Review Comments & Refinement Loop
 
 | Gate / Reviewer | Target Role | Review Feedback & Comments | Gate Status |
-| :--- | :--- | :--- | :---: |
-| **Pre-Flight Architecture Gate** | SDET Architect | Staging pre-flight probe completed clean; dual-catalog parity confirmed; DoR satisfied. | `[PASSED]` |
-| **Code Acceptance Review Gate** | SDET Architect | All 4 web and mobile frameworks output to standardized `allure-results/` with rich `environment.properties`; history injection verified; single-browser policy intact. | `[PASSED]` |
-| **Scrum Master DoD Gate** | Scrum Master | `typecheck:all` exit 0, `lint:all` exit 0, zero dual-catalog diff, and architecture doc published. | `[PASSED]` |
-| **DevOps Release Gate** | DevOps Engineer | Workflows authored with concurrency locks (`pages-deploy-allure`) and namespaced deployments (`AutomationReports/<Framework>`); all CI checks passed on PR #26. | `[PASSED]` |
-| **Final Human Sign-Off** | Human Tech Lead | PR #26 approved, squashed, and merged to `main`. | `[PASSED]` |
+| :--- | :--- | :--- | :--- |
+| **Pre-Flight Architecture Gate** | SDET Architect | Staging pre-flight probe completed (200 OK); dual-catalog parity confirmed; DoR satisfied. | `[PASSED]` |
+| **Code Acceptance Review Gate** | SDET Architect | Dark glassmorphism UI verified; all 6 framework cards link with portable relative paths; dynamic hydration and graceful offline fallbacks verified; automated aggregator parses Allure summaries accurately. | `[PASSED]` |
+| **Scrum Master DoD Gate** | Scrum Master | `typecheck:all` exit 0, `lint:all` exit 0, `test:portal` passed across desktop and mobile, zero dual-catalog diff, roadmap synchronized. | `[PASSED]` |
+| **Security Review Gate** | SDET Architect | CodeQL CWE-22 alert on `scripts/test-portal.js` resolved via strict route whitelist; CodeQL check passed exit 0. | `[PASSED]` |
+| **DevOps Release Gate** | DevOps Engineer | PR #27 opened; resolved multi-worker session isolation in `playwright-e2e/src/core/base/api.fixture.ts` eliminating staging reset race condition; all CI checks (`Smoke Tests`, `pr-gate.yml`, `k6-performance.yaml`, `CodeQL`) 100% green. | `[PASSED]` |
+| **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[READY FOR MERGE]` |
 
 ---
 
 ## 4. Definition of Done (DoD) Checklist
 
-- [x] All 4 web and mobile frameworks produce valid Allure result outputs in their local `allure-results/` directory.
-- [x] Environment properties (`environment.properties`) capture framework version, OS, browser channel (`chrome`), and staging URLs.
-- [x] `gh-pages` branch architecture cleanly partitions reports by framework (`AutomationReports/{Playwright,JMeter,Selenium,WDIO,Mobile,k6}`).
-- [x] History retention logic verified; `history/` directory pulled from prior deployment to maintain trend charts.
-- [x] CI deployment uses `keep_files: true` to prevent clobbering other framework reports.
+- [x] `docs/portal/index.html` authored with responsive dark-mode glassmorphic styling, executive KPI metrics, and framework cards.
+- [x] All 6 framework cards link seamlessly to relative report subpaths (`./AutomationReports/<Framework>/`).
+- [x] `scripts/generate-portal-metadata.js` accurately parses Allure `widgets/summary.json` and produces valid `portal-data.json`.
+- [x] Client-side script hydrates live metrics dynamically with robust fallback for offline / mock states.
+- [x] CI deployment updates root of `gh-pages` branch without clobbering sub-reports.
 - [x] `npm run lint:all` and `npm run typecheck:all` pass across all active workspaces with 0 errors.
 - [x] Dual-catalog parity confirmed: `git diff --exit-code docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md` exits 0.
-- [x] Architecture documentation authored: `docs/architecture/reporting_architecture.md`.
-- [x] Pull request opened with structured summary and verification evidence (`gh pr create` - PR #26).
-- [x] All CI workflow checks green, approved, and merged to `main`.
+- [x] Sprint roadmap in `planning/README.md` and sprint plan updated.
+- [x] Pull request opened with structured summary and verification evidence (`gh pr create` - PR #27).
+- [x] All CI workflow checks green and ready for human merge.
 
 ---
 
@@ -79,8 +84,6 @@ git diff --exit-code docs/test_cases_catalog.md playwright-e2e/test_cases_catalo
 npm run lint:all
 npm run typecheck:all
 
-# Command 3: Allure results and environment validation
-npm run test:smoke --workspace=playwright-e2e
-npm run test:smoke --workspace=selenium-e2e
-npm run test:smoke --workspace=wdio-e2e
+# Command 3: Portal Metadata Generation Test
+node scripts/generate-portal-metadata.js --output docs/portal/portal-data.json
 ```

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../../core/base/api.fixture';
 import { envConfig } from '../../../config/env.config';
 import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import TestData from '../../../test-data/api/UserManagement/Test_002_TokenRefreshAndProfileApi.json';
