@@ -12,10 +12,7 @@ concurrency:
   group: pr-gate-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  pull-requests: write
-  actions: read
+permissions: {}
 
 jobs:
   static-quality:
@@ -23,9 +20,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Setup Monorepo Environment
         uses: ./.github/actions/setup-monorepo
@@ -61,6 +63,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
+    permissions:
+      contents: read
+
     env:
       CI: 'true'
       ENV: INTEROP
@@ -73,6 +78,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Setup Monorepo Environment
         uses: ./.github/actions/setup-monorepo
@@ -113,14 +120,16 @@ jobs:
       - name: Generate PR Quality Gate Summary
         if: always()
         run: |
-          echo "### 🛡️ PR Quality Gate Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Stage | Result | Environment | Target / Browser |" >> $GITHUB_STEP_SUMMARY
-          echo "| :--- | :--- | :--- | :--- |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Static Quality & Linting** | ${{ needs.static-quality.result == 'success' && '✅ PASSED' || '❌ FAILED' }} | Monorepo Workspaces | Node.js $(cat .nvmrc) (lint + typecheck) |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Smoke Tests (UI & API)** | ${{ steps.tests.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }} | BuggyBooks Staging | Google Chrome (Channel: chrome) |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "> **Quality Gate SLA**: Fast-feedback verification (< 3 min) validating static quality, Render staging warm-up, single-browser Chrome smoke execution, and automated teardown state reset." >> $GITHUB_STEP_SUMMARY
+          {
+            echo "### 🛡️ PR Quality Gate Results"
+            echo ""
+            echo "| Stage | Result | Environment | Target / Browser |"
+            echo "| :--- | :--- | :--- | :--- |"
+            echo "| **Static Quality & Linting** | ${{ needs.static-quality.result == 'success' && '✅ PASSED' || '❌ FAILED' }} | Monorepo Workspaces | Node.js $(cat .nvmrc) (lint + typecheck) |"
+            echo "| **Smoke Tests (UI & API)** | ${{ steps.tests.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }} | BuggyBooks Staging | Google Chrome (Channel: chrome) |"
+            echo ""
+            echo "> **Quality Gate SLA**: Fast-feedback verification (< 3 min) validating static quality, Render staging warm-up, single-browser Chrome smoke execution, and automated teardown state reset."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail job if smoke tests failed
         if: always() && steps.tests.outcome == 'failure'

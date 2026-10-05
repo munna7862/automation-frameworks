@@ -37,6 +37,8 @@ on:
         default: 'https://buggy-books.onrender.com'
         type: string
 
+permissions: {}
+
 jobs:
   k6-benchmark-and-drift-gate:
     name: k6 Performance & Drift Gate
@@ -57,6 +59,7 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
         with:
           fetch-depth: 1
+          persist-credentials: false
 
       - name: Setup Monorepo Environment
         uses: ./.github/actions/setup-monorepo
@@ -74,8 +77,9 @@ jobs:
       - name: Execute k6 Performance Benchmark
         id: run-k6
         shell: bash
+        env:
+          SCENARIO: ${{ inputs.scenario || 'smoke-load.js' }}
         run: |
-          SCENARIO="${{ inputs.scenario || 'smoke-load.js' }}"
           echo "Executing k6 scenario: ${SCENARIO} with ${VUS} VUs for ${DURATION}..."
           npm run perf:smoke --workspace=k6-performance
 

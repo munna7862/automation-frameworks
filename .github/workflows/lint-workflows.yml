@@ -1,0 +1,67 @@
+# ==============================================================================
+# BuggyBooks — Workflow Security & Syntax Linting (actionlint & zizmor)
+# ==============================================================================
+
+name: Security - Workflow Linting
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: lint-workflows-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  actionlint:
+    name: Actionlint Workflow Linter
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Run actionlint in Docker
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest -ignore 'SC\d+'
+
+  zizmor:
+    name: Zizmor Workflow Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Run Zizmor Workflow Audit
+        id: zizmor
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pipx run zizmor --format sarif .github/workflows/ > zizmor.sarif
+
+      - name: Upload Zizmor SARIF to Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@1190a975f95ce23525efb6a3fc21ea29567c1b52 # v3
+        continue-on-error: true
+        with:
+          sarif_file: zizmor.sarif
+          category: zizmor
