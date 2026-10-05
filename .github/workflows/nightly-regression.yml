@@ -1,0 +1,130 @@
+# ==============================================================================
+# BuggyBooks — Scheduled Nightly Multi-Framework Regression Suite
+#
+# Target Environment: BuggyBooks Render Staging (https://buggy-books-fe.onrender.com)
+# Note: Targets Render staging until Sprint 7.1 switches execution to local DOCKER services.
+#
+# Schedule: Runs daily at 01:30 UTC (cron: '30 1 * * *')
+# Orchestration: Executes Playwright (4 native shards), Selenium WebDriver,
+#                and WebdriverIO in parallel via _reusable-e2e.yml.
+# Governance: Aggregates execution outcomes into a unified executive step summary.
+# ==============================================================================
+
+name: Nightly Regression Suite
+
+on:
+  schedule:
+    - cron: '30 1 * * *'
+  workflow_dispatch:
+    inputs:
+      headless:
+        description: 'Run browser in headless mode'
+        required: false
+        default: 'true'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  # ============================================================================
+  # 1. Playwright Sharded Regression (4 Shards, Chrome + API)
+  # ============================================================================
+  playwright-regression:
+    name: Playwright Regression
+    uses: ./.github/workflows/_reusable-e2e.yml
+    with:
+      framework: playwright
+      shards: 4
+      publish-allure: true
+      allure-namespace: Playwright
+      headless: ${{ inputs.headless || 'true' }}
+    secrets: inherit
+
+  # ============================================================================
+  # 2. Selenium WebDriver Regression (Chrome Headless)
+  # ============================================================================
+  selenium-regression:
+    name: Selenium Regression
+    uses: ./.github/workflows/_reusable-e2e.yml
+    with:
+      framework: selenium
+      shards: 1
+      publish-allure: true
+      allure-namespace: Selenium
+      headless: ${{ inputs.headless || 'true' }}
+    secrets: inherit
+
+  # ============================================================================
+  # 3. WebdriverIO Regression (Chrome Headless)
+  # ============================================================================
+  wdio-regression:
+    name: WebdriverIO Regression
+    uses: ./.github/workflows/_reusable-e2e.yml
+    with:
+      framework: wdio
+      shards: 1
+      publish-allure: true
+      allure-namespace: WDIO
+      headless: ${{ inputs.headless || 'true' }}
+    secrets: inherit
+
+  # ============================================================================
+  # 4. Consolidated Nightly Summary
+  # ============================================================================
+  nightly-summary:
+    name: Nightly Quality Matrix Summary
+    needs: [playwright-regression, selenium-regression, wdio-regression]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Build Consolidated Step Summary Table
+        shell: bash
+        env:
+          PW_RESULT: ${{ needs.playwright-regression.result }}
+          SEL_RESULT: ${{ needs.selenium-regression.result }}
+          WDIO_RESULT: ${{ needs.wdio-regression.result }}
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          OWNER="${GITHUB_REPOSITORY%/*}"
+          PORTAL_URL="https://${OWNER}.github.io/${REPO_NAME}/"
+          PW_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Playwright/"
+          SEL_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Selenium/"
+          WDIO_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/WDIO/"
+
+          format_status() {
+            if [ "$1" = "success" ]; then
+              echo "✅ PASSED"
+            elif [ "$1" = "failure" ]; then
+              echo "❌ FAILED"
+            else
+              echo "⚠️ $1"
+            fi
+          }
+
+          PW_STATUS=$(format_status "$PW_RESULT")
+          SEL_STATUS=$(format_status "$SEL_RESULT")
+          WDIO_STATUS=$(format_status "$WDIO_RESULT")
+
+          echo "## 🌙 BuggyBooks Nightly Multi-Framework Quality Matrix" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> **Target Environment**: BuggyBooks Render Staging (\`https://buggy-books-fe.onrender.com/\`)" >> $GITHUB_STEP_SUMMARY
+          echo "> *Note: Regression targets Render staging until Sprint 7.1 migrates execution to local containerized DOCKER services.*" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Framework | Outcome | Shards / Strategy | Environment | Allure Dashboard |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :--- | :--- | :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Playwright E2E** | ${PW_STATUS} | 4 Native Shards (Chrome + API) | Render Staging | [View Allure](${PW_URL}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Selenium WebDriver** | ${SEL_STATUS} | 1 Shard (Chrome Headless) | Render Staging | [View Allure](${SEL_URL}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **WebdriverIO** | ${WDIO_STATUS} | 1 Shard (Chrome Headless) | Render Staging | [View Allure](${WDIO_URL}) |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🏛️ **Unified Portal**: [BuggyBooks Executive Quality Portal](${PORTAL_URL})" >> $GITHUB_STEP_SUMMARY
+
+      - name: Enforce Nightly Regression Outcome Gate
+        if: always() && (needs.playwright-regression.result == 'failure' || needs.selenium-regression.result == 'failure' || needs.wdio-regression.result == 'failure')
+        shell: bash
+        run: |
+          echo "::error::Nightly regression failed — one or more frameworks reported failing tests."
+          exit 1

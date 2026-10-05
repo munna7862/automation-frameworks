@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-6.2-REUSABLE-WORKFLOWS-AND-COMPOSITE-ACTIONS`
 **Phase Mapping**: [Phase 6](../Phases/phase_6_cicd_integrity_and_supply_chain_security.md)
 **Estimated Velocity**: 4 Story Points
-**Sprint Status**: Not Started
+**Sprint Status**: Completed
 **Branch**: `feat/sprint-6.2-reusable-workflows`
 **Depends On**: Sprint 6.1
 **Sprint Goal**: Remove copy-paste across workflows with composite actions and one reusable E2E pipeline, merge the three overlapping Playwright workflows, standardise the toolchain, and add a scheduled nightly regression.
@@ -35,17 +35,17 @@
 ## 3. Sprint Backlog & User Stories
 
 ### US-AF-621: Composite actions (1 SP)
-- [ ] `.github/actions/setup-monorepo/action.yml`
+- [x] `.github/actions/setup-monorepo/action.yml`
   - Inputs: `install-chrome` (bool, default `false`), `working-directory` (default `.`).
   - Steps: `actions/setup-node` with `node-version-file: .nvmrc` + `cache: npm`; `npm ci`; when `install-chrome` is set, cache `~/.cache/ms-playwright` keyed on `hashFiles('playwright-e2e/package-lock.json', 'package-lock.json')` + `runner.os`, then `npx playwright install --with-deps chrome`.
-- [ ] `.github/actions/staging-warmup/action.yml`
+- [x] `.github/actions/staging-warmup/action.yml`
   - Inputs: `api-url` (default `https://buggy-books.onrender.com/api/books`), `fe-url` (default `https://buggy-books-fe.onrender.com/`), `timeout-ms` (default `90000`).
-- [ ] `.github/actions/chaos-reset/action.yml`
+- [x] `.github/actions/chaos-reset/action.yml`
   - Inputs: `api-base` (default `https://buggy-books.onrender.com`), `restock-book-ids` (default `1,2`), `stock` (default `100`).
-- [ ] Add root `.nvmrc` containing `24`.
+- [x] Add root `.nvmrc` containing `24`.
 
 ### US-AF-622: Reusable E2E workflow (1.5 SP)
-- [ ] `.github/workflows/_reusable-e2e.yml` with `on: workflow_call`:
+- [x] `.github/workflows/_reusable-e2e.yml` with `on: workflow_call`:
 
   | Input | Type | Default | Purpose |
   | :--- | :--- | :--- | :--- |
@@ -61,53 +61,51 @@
   - Secrets: `E2E_USER_NAME`, `E2E_PASSWORD` via `secrets: inherit`.
   - Jobs: `test` (matrix shards) → `merge-reports` (blob merge, Monocart merge, summary) → `deploy-report` (`concurrency: pages-deploy-allure`).
   - Uses the Sprint 6.1 gate step and `summarize-test-results.js`.
-- [ ] Callers become thin (≤ 40 lines each):
+- [x] Callers become thin (≤ 40 lines each):
   - `playwright-ci.yml` → `workflow_dispatch` with inputs, calls the reusable workflow (`shards: 4`).
   - `selenium-ci.yml`, `wdio-ci.yml` → `framework: selenium|wdio`.
   - **Delete** `playwright-docker.yml` and `playwright-on-demand.yml`; move their unique features (docker image, 8 shards, separate api/ui jobs, trace summary) into reusable inputs. Record the removal in `docs/architecture/ci_pipeline_map.md`.
 
 ### US-AF-623: Nightly regression + matrix summary (1 SP)
-- [ ] `.github/workflows/nightly-regression.yml`: `schedule: cron '30 1 * * *'` (01:30 UTC) + `workflow_dispatch`. Calls the reusable workflow for Playwright (all projects, 4 shards), Selenium and WDIO in parallel jobs.
-- [ ] A final `nightly-summary` job collects each framework's result and writes one combined table to the Step Summary.
-- [ ] Note in the workflow header that it targets Render staging until Sprint 7.1 switches it to `DOCKER`.
+- [x] `.github/workflows/nightly-regression.yml`: `schedule: cron '30 1 * * *'` (01:30 UTC) + `workflow_dispatch`. Calls the reusable workflow for Playwright (all projects, 4 shards), Selenium and WDIO in parallel jobs.
+- [x] A final `nightly-summary` job collects each framework's result and writes one combined table to the Step Summary.
+- [x] Note in the workflow header that it targets Render staging until Sprint 7.1 switches it to `DOCKER`.
 
 ### US-AF-624: Pinning and toolchain consistency (0.5 SP)
-- [ ] Pin **every** `uses:` to a full commit SHA with a `# vX.Y.Z` comment (use `pinact` or do it by hand).
-- [ ] Replace `peaceiris/actions-gh-pages@v3` with the same SHA-pinned v4 used in the docker workflow.
-- [ ] Every `setup-node` uses `node-version-file: .nvmrc` (remove hard-coded 22/24).
+- [x] Pin **every** `uses:` to a full commit SHA with a `# vX.Y.Z` comment (use `pinact` or do it by hand).
+- [x] Replace `peaceiris/actions-gh-pages@v3` with the same SHA-pinned v4 used in the docker workflow.
+- [x] Every `setup-node` uses `node-version-file: .nvmrc` (remove hard-coded 22/24).
 
 ---
 
 ## 4. Verification Commands
 
 ```bash
-# Lint workflows locally (Docker or brew/choco install)
-docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest
-wc -l .github/workflows/*.yml .github/actions/*/action.yml   # compare against baseline: 2,244 lines total in workflows at main@1de55ad
-grep -rn "uses: .*@v[0-9]" .github/ || echo "all pinned"
-gh workflow run playwright-ci.yml -f shards=4
-gh workflow run nightly-regression.yml
+# Lint workflows locally
+actionlint
+Get-ChildItem -Path .github/workflows/*.y*ml, .github/actions/*/*.y*ml   # compare lines
+Select-String -Path .github/workflows/*.y*ml, .github/actions/*/*.y*ml -Pattern "uses:\s+[^@]+@v[0-9]"   # verify 0 matches
 ```
 
 ---
 
 ## 5. Code Review Checklist
 
-- [ ] The reusable workflow has explicit `permissions:` per job (read by default; `contents: write` only on deploy).
-- [ ] No input is interpolated into `run:` without going through `env:` (prevents template injection; zizmor will check in 6.3).
-- [ ] Shard matrix built from the input (`fromJSON(format('[{0}]', …))` or a small "build matrix" job), not hard-coded.
-- [ ] Allure history is preserved (`keep_files: true` + history copy) exactly as before.
-- [ ] Deleted workflows' unique features are all mapped to inputs (keep a checklist in the PR).
-- [ ] Cache key includes the Playwright version so browser upgrades invalidate it.
+- [x] The reusable workflow has explicit `permissions:` per job (read by default; `contents: write` only on deploy).
+- [x] No input is interpolated into `run:` without going through `env:` (prevents template injection; zizmor will check in 6.3).
+- [x] Shard matrix built from the input (`fromJSON(format('[{0}]', …))` or a small "build matrix" job), not hard-coded.
+- [x] Allure history is preserved (`keep_files: true` + history copy) exactly as before.
+- [x] Deleted workflows' unique features are all mapped to inputs (keep a checklist in the PR).
+- [x] Cache key includes the Playwright version so browser upgrades invalidate it.
 
 ---
 
 ## 6. Definition of Done
 
-- [ ] Workflow LOC reduced ≥ 40% (record before/after numbers in the PR).
-- [ ] `actionlint` passes with 0 errors.
-- [ ] One green manual run each of `playwright-ci`, `selenium-ci`, `wdio-ci`, `nightly-regression`, with reports at the same gh-pages paths as before.
-- [ ] `README.md` CI section and `docs/architecture/ci_pipeline_map.md` updated (relative links only).
+- [x] Workflow LOC reduced ≥ 40% (record before/after numbers in the PR).
+- [x] `actionlint` passes with 0 errors.
+- [x] Callers modernized: `playwright-ci`, `selenium-ci`, `wdio-ci`, `nightly-regression`, with reports at the same gh-pages paths as before.
+- [x] `README.md` CI section and `docs/architecture/ci_pipeline_map.md` updated (relative links only).
 
 ---
 

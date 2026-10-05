@@ -1,17 +1,42 @@
+# ==============================================================================
+# BuggyBooks — Playwright Automation CI (Thin Caller)
+# ==============================================================================
+
 name: Playwright Automation CI
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'playwright-e2e/**'
+      - 'packages/playwright-utils/**'
+      - '.github/workflows/playwright-ci.yml'
+      - '.github/workflows/_reusable-e2e.yml'
+      - '.github/actions/**'
   workflow_dispatch:
     inputs:
       headless:
-        description: 'Run browser in headless mode (true or false)'
+        description: 'Run browser in headless mode'
         required: false
         default: 'true'
-      branch:
-        description: 'Git branch to checkout for this run'
+      project:
+        description: 'Playwright project (chrome, api, or blank for all)'
         required: false
-        default: 'main'
-
+        default: ''
+      grep:
+        description: 'Tag or title filter pattern (e.g. @smoke)'
+        required: false
+        default: ''
+      shards:
+        description: 'Playwright shard count'
+        required: false
+        default: 4
+        type: number
+      use-docker-image:
+        description: 'Run in official Playwright Docker container'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -19,168 +44,15 @@ permissions:
   id-token: write
 
 jobs:
-  # JOB 1: Run Sharded Tests
-  test:
-    name: UI & API Automation
-    concurrency:
-      group: buggybooks-staging-state
-      cancel-in-progress: false
-    runs-on: ubuntu-latest
-    
-    env:
-      ENV: INTEROP
-      BASE_URL: https://buggy-books-fe.onrender.com/
-      API_BASE_URL: https://buggy-books.onrender.com
-      HEADLESS: ${{ github.event.inputs.headless || 'true' }}
-      BROWSER: chrome
-      USER_NAME: ${{ secrets.E2E_USER_NAME }}
-      PASSWORD: ${{ secrets.E2E_PASSWORD }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch || github.ref }}
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      
-      - name: Install dependencies
-        run: |
-          npm ci
-          npx playwright install --with-deps chrome
-
-      - name: Run Monorepo Static Analysis
-        run: |
-          npm run lint:all
-          npm run typecheck:all
-
-      - name: Render Staging Warm-Up Pre-Flight Probe
-        run: |
-          curl -s -o /dev/null https://buggy-books.onrender.com/api/books || true
-          curl -s -o /dev/null https://buggy-books-fe.onrender.com/ || true
-          npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
-          npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
-
-      - name: Run tests
-        id: tests
-        env:
-          ENVIRONMENT: INTEROP
-          TZ: Australia/Adelaide
-          USER_NAME: ${{ secrets.E2E_USER_NAME }}
-          PASSWORD: ${{ secrets.E2E_PASSWORD }}
-        run: |
-          npm run test --workspace=playwright-e2e
-        continue-on-error: true
-
-      - name: Generate Standardized Allure Environment Metadata
-        if: always()
-        run: |
-          node scripts/generate-allure-environment.js --framework=playwright
-
-      - name: Upload Allure Results Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-allure-results
-          path: playwright-e2e/allure-results
-          retention-days: 7
-
-      - name: Summarize Test Results
-        if: always()
-        run: |
-          node scripts/summarize-test-results.js playwright-e2e/test-results/results.json
-
-      - name: Fail job if tests failed
-        if: always() && steps.tests.outcome == 'failure'
-        run: |
-          echo "::error::Test execution failed — see Allure/Monocart report"
-          exit 1
-
-
-  # JOB 2: Merge and Deploy
-  deploy-report:
-    name: Deploy Playwright Allure Report
-    concurrency:
-      group: pages-deploy-allure
-      cancel-in-progress: false
-    needs: [test]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Install Allure CLI
-        run: npm install -g allure-commandline
-
-      - name: Checkout gh-pages for Historical Trend Data
-        uses: actions/checkout@v4
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages-branch
-
-      - name: Download Allure Results Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: playwright-allure-results
-          path: playwright-allure-results
-
-      - name: Inject Previous Allure History
-        run: |
-          if [ -d "gh-pages-branch/AutomationReports/Playwright/history" ]; then
-            echo "Found existing Allure history for Playwright. Injecting into results..."
-            mkdir -p playwright-allure-results/history
-            cp -r gh-pages-branch/AutomationReports/Playwright/history/* playwright-allure-results/history/
-          else
-            echo "No previous history found for Playwright. Starting fresh trend baseline."
-          fi
-
-      - name: Generate Allure Report
-        run: |
-          allure generate playwright-allure-results --clean -o playwright-allure-report
-
-      - name: Deploy Allure Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: playwright-allure-report
-          destination_dir: AutomationReports/Playwright
-          keep_files: true
-
-      - name: Generate Portal Metadata
-        run: |
-          node scripts/generate-portal-metadata.js --gh-pages-dir=gh-pages-branch --output=docs/portal/portal-data.json
-
-      - name: Deploy Executive Portal to GitHub Pages Root
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: docs/portal
-          keep_files: true
-
-      - name: Append Quality Gate Step Summary
-        run: |
-          REPO_NAME="${{ github.event.repository.name }}"
-          OWNER="${{ github.repository_owner }}"
-          REPORT_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Playwright/"
-          PORTAL_URL="https://${OWNER}.github.io/${REPO_NAME}/"
-          echo "## 📊 Playwright Allure Report & Executive Portal Published" >> $GITHUB_STEP_SUMMARY
-          echo "- **Executive Portal**: [BuggyBooks Quality Portal](${PORTAL_URL})" >> $GITHUB_STEP_SUMMARY
-          echo "- **Playwright Dashboard**: [View Playwright Allure Dashboard](${REPORT_URL})" >> $GITHUB_STEP_SUMMARY
-          echo "- **Namespace**: \`AutomationReports/Playwright\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **History Preservation**: Enabled (Trend charts preserved on \`gh-pages\`)" >> $GITHUB_STEP_SUMMARY
+  playwright-e2e:
+    uses: ./.github/workflows/_reusable-e2e.yml
+    with:
+      framework: playwright
+      project: ${{ inputs.project || '' }}
+      grep: ${{ inputs.grep || '' }}
+      shards: ${{ inputs.shards || 4 }}
+      use-docker-image: ${{ inputs.use-docker-image || false }}
+      publish-allure: true
+      allure-namespace: Playwright
+      headless: ${{ inputs.headless || 'true' }}
+    secrets: inherit

@@ -1,0 +1,43 @@
+name: 'BuggyBooks Chaos & State Reset'
+description: 'Resets chaos parameters, clears application state, and restocks catalog books'
+
+inputs:
+  api-base:
+    description: 'BuggyBooks API base URL'
+    required: false
+    default: 'https://buggy-books.onrender.com'
+  restock-book-ids:
+    description: 'Comma-separated book IDs to restock'
+    required: false
+    default: '1,2'
+  stock:
+    description: 'Stock quantity to set'
+    required: false
+    default: '100'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Reset chaos and restock books
+      shell: bash
+      env:
+        RESET_API_BASE: ${{ inputs.api-base }}
+        RESET_BOOK_IDS: ${{ inputs.restock-book-ids }}
+        RESET_STOCK: ${{ inputs.stock }}
+      run: |
+        echo "Resetting chaos configuration on $RESET_API_BASE..."
+        curl -s -X POST "$RESET_API_BASE/api/test/config" \
+          -H "Content-Type: application/json" \
+          -d '{"checkoutFailureRate": 0, "inventoryDelayMs": 0, "visualChaos": false}' || true
+        echo "Resetting application test state..."
+        curl -s -X POST "$RESET_API_BASE/api/test/reset" || true
+        IFS=',' read -ra IDS <<< "$RESET_BOOK_IDS"
+        for id in "${IDS[@]}"; do
+          clean_id=$(echo "$id" | tr -d '[:space:]')
+          if [ -n "$clean_id" ]; then
+            echo "Restocking book $clean_id to $RESET_STOCK..."
+            curl -s -X POST "$RESET_API_BASE/api/test/books/$clean_id/stock" \
+              -H "Content-Type: application/json" \
+              -d "{\"stock\": $RESET_STOCK}" || true
+          fi
+        done

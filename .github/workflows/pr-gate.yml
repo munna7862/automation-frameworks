@@ -1,3 +1,7 @@
+# ==============================================================================
+# BuggyBooks — PR Quality Gate (Fast-Feedback CI SLA < 3m)
+# ==============================================================================
+
 name: PR Quality Gate
 
 on:
@@ -21,16 +25,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Monorepo Environment
+        uses: ./.github/actions/setup-monorepo
         with:
-          node-version: 22
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
+          install-chrome: 'false'
 
       - name: Monorepo Workspace Linting
         id: lint
@@ -72,38 +72,18 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Monorepo Environment
+        uses: ./.github/actions/setup-monorepo
         with:
-          node-version: 22
-          cache: 'npm'
+          install-chrome: 'true'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Render Staging Warm-Up
+        uses: ./.github/actions/staging-warmup
 
-      - name: Render Staging Warm-Up Pre-Flight Probe
-        run: |
-          echo "Probing BuggyBooks staging endpoints for cold-start wake-up..."
-          curl -s -o /dev/null https://buggy-books.onrender.com/api/books || true
-          curl -s -o /dev/null https://buggy-books-fe.onrender.com/ || true
-          npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
-          npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
-          echo "Restoring clean staging application state and resetting chaos parameters..."
-          curl -s -X POST https://buggy-books.onrender.com/api/test/config \
-            -H "Content-Type: application/json" \
-            -d '{"checkoutFailureRate": 0, "inventoryDelayMs": 0, "visualChaos": false}' || true
-          curl -s -X POST https://buggy-books.onrender.com/api/test/reset || true
-          curl -s -X POST https://buggy-books.onrender.com/api/test/books/1/stock \
-            -H "Content-Type: application/json" \
-            -d '{"stock": 100}' || true
-          curl -s -X POST https://buggy-books.onrender.com/api/test/books/2/stock \
-            -H "Content-Type: application/json" \
-            -d '{"stock": 100}' || true
-
-      - name: Install Google Chrome
-        run: npx playwright install --with-deps chrome
+      - name: Pre-Flight Staging State Reset
+        uses: ./.github/actions/chaos-reset
 
       - name: Run Smoke Tests
         id: tests
@@ -112,22 +92,11 @@ jobs:
 
       - name: Teardown Staging State Reset
         if: always()
-        run: |
-          echo "Restoring staging application state and resetting chaos parameters..."
-          curl -s -X POST https://buggy-books.onrender.com/api/test/config \
-            -H "Content-Type: application/json" \
-            -d '{"checkoutFailureRate": 0, "inventoryDelayMs": 0, "visualChaos": false}' || true
-          curl -s -X POST https://buggy-books.onrender.com/api/test/reset || true
-          curl -s -X POST https://buggy-books.onrender.com/api/test/books/1/stock \
-            -H "Content-Type: application/json" \
-            -d '{"stock": 100}' || true
-          curl -s -X POST https://buggy-books.onrender.com/api/test/books/2/stock \
-            -H "Content-Type: application/json" \
-            -d '{"stock": 100}' || true
+        uses: ./.github/actions/chaos-reset
 
       - name: Upload Test Artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
         with:
           name: pr-gate-smoke-artifacts
           path: |
@@ -148,7 +117,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Stage | Result | Environment | Target / Browser |" >> $GITHUB_STEP_SUMMARY
           echo "| :--- | :--- | :--- | :--- |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Static Quality & Linting** | ${{ needs.static-quality.result == 'success' && '✅ PASSED' || '❌ FAILED' }} | Monorepo Workspaces | Node.js 22 (lint + typecheck) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Static Quality & Linting** | ${{ needs.static-quality.result == 'success' && '✅ PASSED' || '❌ FAILED' }} | Monorepo Workspaces | Node.js $(cat .nvmrc) (lint + typecheck) |" >> $GITHUB_STEP_SUMMARY
           echo "| **Smoke Tests (UI & API)** | ${{ steps.tests.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }} | BuggyBooks Staging | Google Chrome (Channel: chrome) |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "> **Quality Gate SLA**: Fast-feedback verification (< 3 min) validating static quality, Render staging warm-up, single-browser Chrome smoke execution, and automated teardown state reset." >> $GITHUB_STEP_SUMMARY

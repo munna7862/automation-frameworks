@@ -1,25 +1,23 @@
+# ==============================================================================
+# BuggyBooks — Selenium Automation CI (Thin Caller)
+# ==============================================================================
+
 name: Selenium Automation CI
 
 on:
-  workflow_dispatch:
-    inputs:
-      headless:
-        description: 'Run browser in headless mode (true or false)'
-        required: false
-        default: 'true'
-      branch:
-        description: 'Git branch to checkout for this run'
-        required: false
-        default: 'main'
   push:
     branches: [main]
     paths:
       - 'selenium-e2e/**'
       - '.github/workflows/selenium-ci.yml'
-
-concurrency:
-  group: pages-deploy-allure
-  cancel-in-progress: false
+      - '.github/workflows/_reusable-e2e.yml'
+      - '.github/actions/**'
+  workflow_dispatch:
+    inputs:
+      headless:
+        description: 'Run browser in headless mode'
+        required: false
+        default: 'true'
 
 permissions:
   contents: write
@@ -27,157 +25,12 @@ permissions:
   id-token: write
 
 jobs:
-  test:
-    name: Selenium WebDriver Tests
-    runs-on: ubuntu-latest
-
-    env:
-      ENVIRONMENT: INTEROP
-      BASE_URL: https://buggy-books-fe.onrender.com/
-      API_BASE_URL: https://buggy-books.onrender.com
-      HEADLESS: ${{ github.event.inputs.headless || 'true' }}
-      BROWSER: chrome
-      TZ: Australia/Adelaide
-      USER_NAME: ${{ secrets.E2E_USER_NAME }}
-      PASSWORD: ${{ secrets.E2E_PASSWORD }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch || github.ref }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: |
-          npm ci
-          npx playwright install --with-deps chrome
-
-      - name: Run Monorepo Static Analysis
-        run: |
-          npm run typecheck --workspace=selenium-e2e
-
-      - name: Render Staging Warm-Up Pre-Flight Probe
-        run: |
-          curl -s -o /dev/null https://buggy-books.onrender.com/api/books || true
-          curl -s -o /dev/null https://buggy-books-fe.onrender.com/ || true
-          npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
-          npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
-
-      - name: Run Selenium Tests
-        id: tests
-        run: |
-          npm test --workspace=selenium-e2e
-        continue-on-error: true
-
-      - name: Generate Standardized Allure Environment Metadata
-        if: always()
-        run: |
-          node scripts/generate-allure-environment.js --framework=selenium
-
-      - name: Upload Allure Results Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: selenium-allure-results
-          path: selenium-e2e/allure-results
-          retention-days: 7
-
-      - name: Fail job if tests failed
-        if: always() && steps.tests.outcome == 'failure'
-        run: |
-          echo "::error::Test execution failed — see Allure/Monocart report"
-          exit 1
-
-  deploy-report:
-    name: Deploy Selenium Allure Report
-    needs: [test]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Install Allure CLI
-        run: npm install -g allure-commandline
-
-      - name: Checkout gh-pages for Historical Trend Data
-        uses: actions/checkout@v4
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages-branch
-
-      - name: Download Allure Results Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: selenium-allure-results
-          path: selenium-allure-results
-
-      - name: Inject Previous Allure History
-        run: |
-          if [ -d "gh-pages-branch/AutomationReports/Selenium/history" ]; then
-            echo "Found existing Allure history for Selenium. Injecting into results..."
-            mkdir -p selenium-allure-results/history
-            cp -r gh-pages-branch/AutomationReports/Selenium/history/* selenium-allure-results/history/
-          else
-            echo "No previous history found for Selenium. Starting fresh trend baseline."
-          fi
-
-      - name: Generate Allure Report
-        run: |
-          allure generate selenium-allure-results --clean -o selenium-allure-report
-
-      - name: Summarize Test Results
-        if: always()
-        run: |
-          node scripts/summarize-test-results.js selenium-allure-report/widgets/summary.json
-
-      - name: Deploy Allure Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: selenium-allure-report
-          destination_dir: AutomationReports/Selenium
-          keep_files: true
-
-      - name: Generate Portal Metadata
-        run: |
-          node scripts/generate-portal-metadata.js --gh-pages-dir=gh-pages-branch --output=docs/portal/portal-data.json
-
-      - name: Deploy Executive Portal to GitHub Pages Root
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: docs/portal
-          keep_files: true
-
-      - name: Append Quality Gate Step Summary
-        run: |
-          REPO_NAME="${{ github.event.repository.name }}"
-          OWNER="${{ github.repository_owner }}"
-          REPORT_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Selenium/"
-          PORTAL_URL="https://${OWNER}.github.io/${REPO_NAME}/"
-          echo "## 📊 Selenium Allure Report & Executive Portal Published" >> $GITHUB_STEP_SUMMARY
-          echo "- **Executive Portal**: [BuggyBooks Quality Portal](${PORTAL_URL})" >> $GITHUB_STEP_SUMMARY
-          echo "- **Selenium Dashboard**: [View Selenium Allure Dashboard](${REPORT_URL})" >> $GITHUB_STEP_SUMMARY
-          echo "- **Namespace**: \`AutomationReports/Selenium\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **History Preservation**: Enabled (Trend charts preserved on \`gh-pages\`)" >> $GITHUB_STEP_SUMMARY
+  selenium-e2e:
+    uses: ./.github/workflows/_reusable-e2e.yml
+    with:
+      framework: selenium
+      shards: 1
+      publish-allure: true
+      allure-namespace: Selenium
+      headless: ${{ inputs.headless || 'true' }}
+    secrets: inherit

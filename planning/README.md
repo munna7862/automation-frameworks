@@ -144,8 +144,8 @@ Suggested order: `6.1 → 6.2 → 7.1 → 6.3 → 6.4 → 7.2 → 8.1 → 10.1 �
 
 | Sprint ID | Sprint Title | Phase | Est. SP | Lead Persona | Status |
 | :--- | :--- | :--- | :---: | :--- | :---: |
-| **SPRINT-6.1** | [Trustworthy Pipelines Hot-Fix](Sprints/sprint_6_1_trustworthy_pipelines_hotfix.md) | Phase 6 | 4 SP | DevOps Engineer | Not Started |
-| **SPRINT-6.2** | [Reusable Workflows & Composite Actions](Sprints/sprint_6_2_reusable_workflows_and_composite_actions.md) | Phase 6 | 4 SP | DevOps Engineer | Not Started |
+| **SPRINT-6.1** | [Trustworthy Pipelines Hot-Fix](Sprints/sprint_6_1_trustworthy_pipelines_hotfix.md) | Phase 6 | 4 SP | DevOps Engineer | Done |
+| **SPRINT-6.2** | [Reusable Workflows & Composite Actions](Sprints/sprint_6_2_reusable_workflows_and_composite_actions.md) | Phase 6 | 4 SP | DevOps Engineer | Done |
 | **SPRINT-6.3** | [Supply-Chain & Repository Security](Sprints/sprint_6_3_supply_chain_and_repository_security.md) | Phase 6 | 5 SP | DevOps Engineer | Not Started |
 | **SPRINT-6.4** | [Repository Governance & Contributor Experience](Sprints/sprint_6_4_repository_governance_and_contributor_experience.md) | Phase 6 | 3 SP | SDET Architect | Not Started |
 | **SPRINT-7.1** | [Ephemeral BuggyBooks Environment in CI](Sprints/sprint_7_1_ephemeral_buggybooks_environment_in_ci.md) | Phase 7 | 6 SP | DevOps Engineer | Not Started |
@@ -165,7 +165,7 @@ Suggested order: `6.1 → 6.2 → 7.1 → 6.3 → 6.4 → 7.2 → 8.1 → 10.1 �
 | **SPRINT-12.1** | [Test Analytics & Failure Intelligence](Sprints/sprint_12_1_test_analytics_and_failure_intelligence.md) | Phase 12 | 5 SP | SDET Architect | Not Started |
 | **SPRINT-12.2** | [AI-Assisted Triage & Self-Healing Loop](Sprints/sprint_12_2_ai_assisted_triage_and_self_healing_loop.md) | Phase 12 | 4 SP | SDET Architect | Not Started |
 | **SPRINT-12.3** | [Free Cloud-Native Execution Platform](Sprints/sprint_12_3_free_cloud_native_execution_platform.md) | Phase 12 | 4 SP | DevOps Engineer | Not Started |
-| **TOTAL** | **21 Sprints across 7 Phases** | **6–12** | **95 SP** | **Virtual Sprint Team + Claude review** | **0/95 SP** |
+| **TOTAL** | **21 Sprints across 7 Phases** | **6–12** | **95 SP** | **Virtual Sprint Team + Claude review** | **In Progress (8/95 SP)** |
 
 ---
 

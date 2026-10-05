@@ -1,0 +1,629 @@
+# ==============================================================================
+# BuggyBooks — Reusable Multi-Framework E2E Test Pipeline
+#
+# Supports: Playwright (with native dynamic sharding), Selenium WebDriver, WebdriverIO
+# Features: Monorepo setup, browser caching, staging warm-up, chaos reset teardown,
+#           Allure report aggregation with trend history, Monocart offline reports,
+#           and GitHub Pages portal deployment.
+# ==============================================================================
+
+name: Reusable E2E Workflow
+
+on:
+  workflow_call:
+    inputs:
+      framework:
+        description: 'Test automation framework to execute (playwright, selenium, wdio)'
+        required: false
+        default: 'playwright'
+        type: string
+      project:
+        description: 'Playwright project filter (chrome, api, or blank for all)'
+        required: false
+        default: ''
+        type: string
+      grep:
+        description: 'Tag or title filter pattern (e.g. @smoke)'
+        required: false
+        default: ''
+        type: string
+      shards:
+        description: 'Playwright shard count (matrix built dynamically)'
+        required: false
+        default: 1
+        type: number
+      use-docker-image:
+        description: 'Run tests inside official Playwright Docker container'
+        required: false
+        default: false
+        type: boolean
+      publish-allure:
+        description: 'Generate Allure reports and deploy to GitHub Pages'
+        required: false
+        default: true
+        type: boolean
+      allure-namespace:
+        description: 'Target subfolder on gh-pages under AutomationReports/'
+        required: false
+        default: 'Playwright'
+        type: string
+      target-env:
+        description: 'Target test environment (STAGING or later DOCKER)'
+        required: false
+        default: 'STAGING'
+        type: string
+      headless:
+        description: 'Run browser in headless mode'
+        required: false
+        default: 'true'
+        type: string
+      branch:
+        description: 'Branch ref to checkout'
+        required: false
+        default: ''
+        type: string
+    secrets:
+      E2E_USER_NAME:
+        required: false
+      E2E_PASSWORD:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  # ============================================================================
+  # STAGE 1: Build Shard Matrix
+  # ============================================================================
+  build-matrix:
+    name: Build Shard Matrix
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      shard-indices: ${{ steps.set-shards.outputs.indices }}
+      shard-total: ${{ steps.set-shards.outputs.total }}
+    steps:
+      - name: Generate shard array
+        id: set-shards
+        shell: bash
+        env:
+          FRAMEWORK: ${{ inputs.framework }}
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          node -e '
+            const fw = (process.env.FRAMEWORK || "playwright").toLowerCase();
+            let count = parseInt(process.env.SHARDS || "1", 10);
+            if (isNaN(count) || count < 1 || fw !== "playwright") {
+              count = 1;
+            }
+            const indices = Array.from({ length: count }, (_, i) => i + 1);
+            const fs = require("fs");
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `indices=${JSON.stringify(indices)}\n`);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `total=${count}\n`);
+          '
+
+  # ============================================================================
+  # STAGE 2A: Test Execution on Host Runner
+  # ============================================================================
+  test-host:
+    name: ${{ inputs.framework }} (Host) - Shard ${{ matrix.shardIndex }}/${{ needs.build-matrix.outputs.shard-total }}
+    if: ${{ !inputs.use-docker-image }}
+    needs: [build-matrix]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: buggybooks-staging-state
+      cancel-in-progress: false
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: ${{ fromJSON(needs.build-matrix.outputs.shard-indices) }}
+
+    env:
+      FRAMEWORK: ${{ inputs.framework }}
+      PROJECT: ${{ inputs.project }}
+      GREP: ${{ inputs.grep }}
+      SHARD_INDEX: ${{ matrix.shardIndex }}
+      SHARD_TOTAL: ${{ needs.build-matrix.outputs.shard-total }}
+      HEADLESS: ${{ inputs.headless }}
+      ENVIRONMENT: ${{ inputs.target-env }}
+      BASE_URL: https://buggy-books-fe.onrender.com/
+      API_BASE_URL: https://buggy-books.onrender.com
+      USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      PASSWORD: ${{ secrets.E2E_PASSWORD }}
+      TZ: Australia/Adelaide
+      CI: 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          ref: ${{ inputs.branch || github.ref }}
+
+      - name: Setup Monorepo Environment
+        uses: ./.github/actions/setup-monorepo
+        with:
+          install-chrome: 'true'
+
+      - name: Render Staging Warm-Up
+        uses: ./.github/actions/staging-warmup
+
+      - name: Execute Test Suite
+        id: tests
+        shell: bash
+        run: |
+          if [ "$FRAMEWORK" = "selenium" ]; then
+            echo "Executing Selenium E2E Suite"
+            npm run typecheck --workspace=selenium-e2e
+            npm test --workspace=selenium-e2e
+          elif [ "$FRAMEWORK" = "wdio" ]; then
+            echo "Executing WebdriverIO E2E Suite"
+            npm run typecheck --workspace=wdio-e2e
+            npm test --workspace=wdio-e2e
+          else
+            ARGS=("--config=src/config/playwright.config.ts")
+            if [ -n "$PROJECT" ]; then
+              ARGS+=("--project=$PROJECT")
+            fi
+            if [ -n "$GREP" ]; then
+              ARGS+=("--grep=$GREP")
+            fi
+            if [ "$SHARD_TOTAL" -gt 1 ]; then
+              ARGS+=("--shard=$SHARD_INDEX/$SHARD_TOTAL")
+              export MONOCART_REPORT_PATH="reports/monocart-shard-$SHARD_INDEX/index.html"
+            fi
+            echo "Executing: npx playwright test ${ARGS[*]}"
+            cd playwright-e2e
+            npx playwright test "${ARGS[@]}"
+          fi
+        continue-on-error: true
+
+      - name: Generate Standardized Allure Metadata
+        if: always()
+        shell: bash
+        run: node scripts/generate-allure-environment.js --framework="$FRAMEWORK"
+
+      - name: Reset Chaos State Teardown
+        if: always()
+        uses: ./.github/actions/chaos-reset
+
+      - name: Upload Allure Results Artifact
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: allure-results-shard-${{ matrix.shardIndex }}
+          path: |
+            playwright-e2e/allure-results
+            selenium-e2e/allure-results
+            wdio-e2e/allure-results
+          retention-days: 7
+
+      - name: Upload Blob Report (Playwright)
+        if: always() && inputs.framework == 'playwright'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: blob-report-${{ matrix.shardIndex }}
+          path: playwright-e2e/blob-report
+          retention-days: 7
+
+      - name: Upload Monocart Report (Playwright)
+        if: always() && inputs.framework == 'playwright'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: monocart-report-${{ matrix.shardIndex }}
+          path: |
+            playwright-e2e/reports/monocart-shard-${{ matrix.shardIndex }}
+            playwright-e2e/reports/monocart-report
+          retention-days: 7
+
+      - name: Upload Failure Traces & Artifacts
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: failure-traces-shard-${{ matrix.shardIndex }}
+          path: |
+            playwright-e2e/test-results/
+            playwright-e2e/reports/test-artifacts/
+            selenium-e2e/test-results/
+            wdio-e2e/test-results/
+          retention-days: 7
+
+      - name: Summarize Shard Results
+        if: always()
+        shell: bash
+        run: |
+          if [ -f "playwright-e2e/test-results/results.json" ]; then
+            node scripts/summarize-test-results.js playwright-e2e/test-results/results.json
+          fi
+
+      - name: Fail job if tests failed
+        if: always() && steps.tests.outcome == 'failure'
+        shell: bash
+        run: |
+          echo "::error::Test execution failed on Shard ${{ matrix.shardIndex }}/${{ needs.build-matrix.outputs.shard-total }}"
+          exit 1
+
+  # ============================================================================
+  # STAGE 2B: Test Execution inside Docker Container
+  # ============================================================================
+  test-docker:
+    name: ${{ inputs.framework }} (Docker) - Shard ${{ matrix.shardIndex }}/${{ needs.build-matrix.outputs.shard-total }}
+    if: ${{ inputs.use-docker-image }}
+    needs: [build-matrix]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.0-jammy
+    concurrency:
+      group: buggybooks-staging-state
+      cancel-in-progress: false
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: ${{ fromJSON(needs.build-matrix.outputs.shard-indices) }}
+
+    env:
+      FRAMEWORK: ${{ inputs.framework }}
+      PROJECT: ${{ inputs.project }}
+      GREP: ${{ inputs.grep }}
+      SHARD_INDEX: ${{ matrix.shardIndex }}
+      SHARD_TOTAL: ${{ needs.build-matrix.outputs.shard-total }}
+      HEADLESS: ${{ inputs.headless }}
+      ENVIRONMENT: ${{ inputs.target-env }}
+      BASE_URL: https://buggy-books-fe.onrender.com/
+      API_BASE_URL: https://buggy-books.onrender.com
+      USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      PASSWORD: ${{ secrets.E2E_PASSWORD }}
+      TZ: Australia/Adelaide
+      CI: 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          ref: ${{ inputs.branch || github.ref }}
+
+      - name: Setup Monorepo Dependencies
+        shell: bash
+        run: |
+          npm ci
+          npx playwright install --with-deps chrome
+
+      - name: Render Staging Warm-Up
+        uses: ./.github/actions/staging-warmup
+
+      - name: Execute Test Suite
+        id: tests
+        shell: bash
+        run: |
+          if [ "$FRAMEWORK" = "selenium" ]; then
+            echo "Executing Selenium E2E Suite"
+            npm run typecheck --workspace=selenium-e2e
+            npm test --workspace=selenium-e2e
+          elif [ "$FRAMEWORK" = "wdio" ]; then
+            echo "Executing WebdriverIO E2E Suite"
+            npm run typecheck --workspace=wdio-e2e
+            npm test --workspace=wdio-e2e
+          else
+            ARGS=("--config=src/config/playwright.config.ts")
+            if [ -n "$PROJECT" ]; then
+              ARGS+=("--project=$PROJECT")
+            fi
+            if [ -n "$GREP" ]; then
+              ARGS+=("--grep=$GREP")
+            fi
+            if [ "$SHARD_TOTAL" -gt 1 ]; then
+              ARGS+=("--shard=$SHARD_INDEX/$SHARD_TOTAL")
+              export MONOCART_REPORT_PATH="reports/monocart-shard-$SHARD_INDEX/index.html"
+            fi
+            echo "Executing: npx playwright test ${ARGS[*]}"
+            cd playwright-e2e
+            npx playwright test "${ARGS[@]}"
+          fi
+        continue-on-error: true
+
+      - name: Generate Standardized Allure Metadata
+        if: always()
+        shell: bash
+        run: node scripts/generate-allure-environment.js --framework="$FRAMEWORK"
+
+      - name: Reset Chaos State Teardown
+        if: always()
+        uses: ./.github/actions/chaos-reset
+
+      - name: Upload Allure Results Artifact
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: allure-results-shard-${{ matrix.shardIndex }}
+          path: |
+            playwright-e2e/allure-results
+            selenium-e2e/allure-results
+            wdio-e2e/allure-results
+          retention-days: 7
+
+      - name: Upload Blob Report (Playwright)
+        if: always() && inputs.framework == 'playwright'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: blob-report-${{ matrix.shardIndex }}
+          path: playwright-e2e/blob-report
+          retention-days: 7
+
+      - name: Upload Monocart Report (Playwright)
+        if: always() && inputs.framework == 'playwright'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: monocart-report-${{ matrix.shardIndex }}
+          path: |
+            playwright-e2e/reports/monocart-shard-${{ matrix.shardIndex }}
+            playwright-e2e/reports/monocart-report
+          retention-days: 7
+
+      - name: Upload Failure Traces & Artifacts
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: failure-traces-shard-${{ matrix.shardIndex }}
+          path: |
+            playwright-e2e/test-results/
+            playwright-e2e/reports/test-artifacts/
+            selenium-e2e/test-results/
+            wdio-e2e/test-results/
+          retention-days: 7
+
+      - name: Summarize Shard Results
+        if: always()
+        shell: bash
+        run: |
+          if [ -f "playwright-e2e/test-results/results.json" ]; then
+            node scripts/summarize-test-results.js playwright-e2e/test-results/results.json
+          fi
+
+      - name: Fail job if tests failed
+        if: always() && steps.tests.outcome == 'failure'
+        shell: bash
+        run: |
+          echo "::error::Test execution failed on Docker Shard ${{ matrix.shardIndex }}/${{ needs.build-matrix.outputs.shard-total }}"
+          exit 1
+
+  # ============================================================================
+  # STAGE 3: Merge Shard Reports & Aggregate Results
+  # ============================================================================
+  merge-reports:
+    name: Merge Reports & Consolidate Results
+    needs: [build-matrix, test-host, test-docker]
+    if: always() && !cancelled() && (needs.test-host.result == 'success' || needs.test-host.result == 'failure' || needs.test-docker.result == 'success' || needs.test-docker.result == 'failure')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          ref: ${{ inputs.branch || github.ref }}
+
+      - name: Setup Monorepo Environment
+        uses: ./.github/actions/setup-monorepo
+        with:
+          install-chrome: 'false'
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.3.0
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Allure CLI
+        shell: bash
+        run: npm install -g allure-commandline
+
+      - name: Download all Allure Results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: allure-results-shard-*
+          path: all-allure-results
+          merge-multiple: true
+
+      - name: Prepare Consolidated Allure Results
+        shell: bash
+        run: |
+          mkdir -p consolidated-allure-results
+          find all-allure-results -type f \( -name "*.json" -o -name "*.txt" -o -name "*.png" -o -name "*.properties" \) -exec cp {} consolidated-allure-results/ \; 2>/dev/null || true
+          echo "Total Allure result files prepared: $(find consolidated-allure-results -type f | wc -l)"
+
+      - name: Download all Blob Reports (Playwright)
+        if: inputs.framework == 'playwright'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        continue-on-error: true
+        with:
+          pattern: blob-report-*
+          path: playwright-e2e/all-blobs
+          merge-multiple: true
+
+      - name: Merge Playwright Blob Reports into HTML Report
+        if: inputs.framework == 'playwright'
+        shell: bash
+        continue-on-error: true
+        run: |
+          if [ -d "playwright-e2e/all-blobs" ] && [ "$(ls -A playwright-e2e/all-blobs 2>/dev/null)" ]; then
+            cd playwright-e2e
+            npx playwright merge-reports --reporter=html all-blobs
+          fi
+
+      - name: Upload Consolidated Playwright HTML Report
+        if: always() && inputs.framework == 'playwright'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        continue-on-error: true
+        with:
+          name: playwright-html-report
+          path: playwright-e2e/playwright-report
+          retention-days: 7
+
+      - name: Download all Monocart Reports (Playwright)
+        if: inputs.framework == 'playwright'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        continue-on-error: true
+        with:
+          pattern: monocart-report-*
+          path: playwright-e2e/all-monocart
+          merge-multiple: false
+
+      - name: Merge Monocart Reports into HTML Report
+        if: inputs.framework == 'playwright'
+        shell: bash
+        continue-on-error: true
+        run: |
+          if [ -d "playwright-e2e/all-monocart" ]; then
+            cd playwright-e2e
+            node scripts/merge-monocart.js all-monocart reports/monocart-report/index.html
+          fi
+
+      - name: Upload Consolidated Monocart Report
+        if: always() && inputs.framework == 'playwright'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        continue-on-error: true
+        with:
+          name: playwright-monocart-report
+          path: playwright-e2e/reports/monocart-report
+          retention-days: 7
+
+      - name: Generate Consolidated Allure Report
+        shell: bash
+        run: |
+          allure generate consolidated-allure-results --clean -o consolidated-allure-report
+
+      - name: Summarize Test Results into Step Summary
+        if: always()
+        shell: bash
+        run: |
+          node scripts/summarize-test-results.js consolidated-allure-report/widgets/summary.json
+
+      - name: Upload Consolidated Allure Results Artifact
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+        with:
+          name: consolidated-allure-results
+          path: consolidated-allure-results
+          retention-days: 7
+
+  # ============================================================================
+  # STAGE 4: Deploy Allure Report to GitHub Pages
+  # ============================================================================
+  deploy-report:
+    name: Deploy Allure Report to GitHub Pages
+    needs: [build-matrix, test-host, test-docker, merge-reports]
+    if: always() && !cancelled() && inputs.publish-allure && (needs.merge-reports.result == 'success' || needs.merge-reports.result == 'failure')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: pages-deploy-allure
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          ref: ${{ inputs.branch || github.ref }}
+
+      - name: Setup Monorepo Environment
+        uses: ./.github/actions/setup-monorepo
+        with:
+          install-chrome: 'false'
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.3.0
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Allure CLI
+        shell: bash
+        run: npm install -g allure-commandline
+
+      - name: Checkout gh-pages for Historical Trend Data
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages-branch
+
+      - name: Download Consolidated Allure Results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: consolidated-allure-results
+          path: consolidated-allure-results
+
+      - name: Inject Previous Allure History
+        shell: bash
+        env:
+          ALLURE_NS: ${{ inputs.allure-namespace }}
+        run: |
+          DEST_DIR="gh-pages-branch/AutomationReports/${ALLURE_NS}/history"
+          if [ -d "$DEST_DIR" ]; then
+            echo "Found existing Allure history for ${ALLURE_NS}. Injecting into results..."
+            mkdir -p consolidated-allure-results/history
+            cp -r "$DEST_DIR"/* consolidated-allure-results/history/
+          else
+            echo "No previous history found for ${ALLURE_NS}. Starting fresh trend baseline."
+          fi
+
+      - name: Generate Final Allure Report with History
+        shell: bash
+        run: |
+          allure generate consolidated-allure-results --clean -o final-allure-report
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: final-allure-report
+          destination_dir: AutomationReports/${{ inputs.allure-namespace }}
+          keep_files: true
+
+      - name: Generate Portal Metadata
+        shell: bash
+        run: |
+          node scripts/generate-portal-metadata.js --gh-pages-dir=gh-pages-branch --output=docs/portal/portal-data.json
+
+      - name: Deploy Executive Portal to GitHub Pages Root
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: docs/portal
+          keep_files: true
+
+      - name: Append Quality Gate Step Summary
+        shell: bash
+        env:
+          ALLURE_NS: ${{ inputs.allure-namespace }}
+          FRAMEWORK: ${{ inputs.framework }}
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          OWNER="${GITHUB_REPOSITORY%/*}"
+          REPORT_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/${ALLURE_NS}/"
+          PORTAL_URL="https://${OWNER}.github.io/${REPO_NAME}/"
+          echo "## 📊 ${ALLURE_NS} Allure Report & Executive Portal Published" >> $GITHUB_STEP_SUMMARY
+          echo "- **Executive Portal**: [BuggyBooks Quality Portal](${PORTAL_URL})" >> $GITHUB_STEP_SUMMARY
+          echo "- **Framework Dashboard**: [View ${ALLURE_NS} Allure Dashboard](${REPORT_URL})" >> $GITHUB_STEP_SUMMARY
+          echo "- **Namespace**: \`AutomationReports/${ALLURE_NS}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **History Preservation**: Enabled (Trend charts preserved on \`gh-pages\`)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail workflow if test jobs failed
+        if: always() && (needs.test-host.result == 'failure' || needs.test-docker.result == 'failure')
+        shell: bash
+        run: |
+          echo "::error::One or more test executions failed in upstream jobs"
+          exit 1

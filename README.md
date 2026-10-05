@@ -175,17 +175,30 @@ Each Node-based framework writes reports in its own project directory.
 | WebdriverIO | `npm run report` | `wdio-e2e/reports/allure-report` |
 | JMeter | JMeter CLI or GUI | `jmeter/Results` |
 
-## CI/CD
+## CI/CD Architecture & Workflows
 
-GitHub Actions workflows are stored under `.github/workflows`.
+GitHub Actions workflows are maintained under `.github/workflows/` and powered by composite actions under `.github/actions/`. See [CI Pipeline Architecture Map](docs/architecture/ci_pipeline_map.md) for full architectural blueprints, contracts, and migration history.
 
-Current workflow coverage includes:
+### Active Workflows
 
-- Playwright CI execution
-- Playwright Docker execution
-- Sharded Playwright execution variants
-- BuggyBooks JMeter performance test workflows (`jmeter-performance.yaml`)
-- Legacy JMeter CRUD performance workflow (`jmeter.yml`)
+| Workflow | Path | Trigger | Purpose |
+| :--- | :--- | :--- | :--- |
+| **PR Quality Gate** | [`.github/workflows/pr-gate.yml`](.github/workflows/pr-gate.yml) | `pull_request` | Fast-feedback check (< 3 min): linting, typechecking, catalog parity, Render warm-up, Chrome smoke tests. |
+| **Reusable E2E Pipeline** | [`.github/workflows/_reusable-e2e.yml`](.github/workflows/_reusable-e2e.yml) | `workflow_call` | Core execution engine for Playwright (sharded), Selenium, and WDIO with Allure and Monocart reporting. |
+| **Playwright CI** | [`.github/workflows/playwright-ci.yml`](.github/workflows/playwright-ci.yml) | `push [main]`, dispatch | Thin caller invoking `_reusable-e2e.yml` with 4 native shards. |
+| **Selenium CI** | [`.github/workflows/selenium-ci.yml`](.github/workflows/selenium-ci.yml) | `push [main]`, dispatch | Thin caller invoking `_reusable-e2e.yml` for Selenium WebDriver. |
+| **WebdriverIO CI** | [`.github/workflows/wdio-ci.yml`](.github/workflows/wdio-ci.yml) | `push [main]`, dispatch | Thin caller invoking `_reusable-e2e.yml` for WebdriverIO. |
+| **Nightly Regression** | [`.github/workflows/nightly-regression.yml`](.github/workflows/nightly-regression.yml) | Cron `30 1 * * *` (01:30 UTC), dispatch | Parallel execution of Playwright (4 shards), Selenium, and WDIO with consolidated matrix summary. |
+| **JMeter Performance** | [`.github/workflows/jmeter-performance.yaml`](.github/workflows/jmeter-performance.yaml) | `workflow_dispatch` | Parameterized Apache JMeter load tests with HTML dashboard reporting. |
+| **k6 Performance** | [`.github/workflows/k6-performance.yaml`](.github/workflows/k6-performance.yaml) | `pull_request`, dispatch | Developer k6 benchmark with automated baseline drift regression gate. |
+| **Mobile CI** | [`.github/workflows/mobile-ci.yml`](.github/workflows/mobile-ci.yml) | Cron nightly, dispatch | Headless Appium Android emulator test execution on macOS runners. |
+| **Quarantine Audit** | [`.github/workflows/quarantine-audit.yml`](.github/workflows/quarantine-audit.yml) | Cron weekly, dispatch | 10x repetition stability audit for quarantined tests. |
+
+### Shared Composite Actions
+
+- **`setup-monorepo`** ([`.github/actions/setup-monorepo`](.github/actions/setup-monorepo/action.yml)): Node.js 24 LTS via `.nvmrc`, npm caching, and Chrome browser caching.
+- **`staging-warmup`** ([`.github/actions/staging-warmup`](.github/actions/staging-warmup/action.yml)): Staging pre-flight wake-up probe with `wait-on`.
+- **`chaos-reset`** ([`.github/actions/chaos-reset`](.github/actions/chaos-reset/action.yml)): Reset chaos parameters and restore stock baseline for catalog books.
 
 ## Engineering Principles
 
