@@ -1,5 +1,6 @@
 import allureReporter from '@wdio/allure-reporter';
 import { browser } from '@wdio/globals';
+import { redactHeaders } from '@automationframeworks/playwright-utils';
 
 export type NetworkCaptureMode = 'all' | 'api-only';
 
@@ -85,7 +86,7 @@ export class NetworkInterceptor {
       url: params.request?.url,
       method: params.request?.method,
       resourceType,
-      headers: params.request?.headers || {}
+      headers: redactHeaders(params.request?.headers || {})
     };
 
     this.requestMap.set(params.requestId, entry);
@@ -101,7 +102,7 @@ export class NetworkInterceptor {
     entry.endedAt = new Date().toISOString();
     entry.response = {
       status: params.response?.status,
-      headers: params.response?.headers || {}
+      headers: redactHeaders(params.response?.headers || {})
     };
   }
 

@@ -83,6 +83,8 @@ This document serves as the **always-on memory and operational baseline** for al
 - **PR Description**: Every pull request must contain structured sections:
   - `## 📌 Summary of Changes`
   - `## 🧪 Verification` (with actual command output and test counts)
+- **Trustworthy Pipelines & Gated Test Execution**: Test steps must be gated; never rely on `continue-on-error` alone. Workflows running tests under `continue-on-error: true` (to ensure Allure/Monocart reporting steps execute) must assign `id: tests` to the test execution step and terminate with an explicit gate: `if: always() && steps.tests.outcome == 'failure' run: exit 1`. Un-gated execution steps produce false-positive green badges over failing test runs.
+- **Staging Concurrency Lock**: Any workflow or test job that mutates shared staging state (`/api/test/config`, `/api/test/reset`, user registration, or stock manipulation) must declare `concurrency: { group: buggybooks-staging-state, cancel-in-progress: false }` to prevent concurrent jobs from corrupting shared staging state.
 
 ### 7. Virtual Sprint Team & Agent Personas
 The monorepo operates with 7 specialized virtual agent personas to drive execution sprint-by-sprint:

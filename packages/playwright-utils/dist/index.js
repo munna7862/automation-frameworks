@@ -17,3 +17,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./core/base/base.page"), exports);
 __exportStar(require("./utils/common.util"), exports);
 __exportStar(require("./logger/logger"), exports);
+__exportStar(require("./security/redact"), exports);

@@ -21,8 +21,8 @@ on:
         default: '10'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: buggybooks-staging-state
+  cancel-in-progress: false
 
 permissions:
   contents: read

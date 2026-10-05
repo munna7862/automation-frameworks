@@ -183,17 +183,35 @@ with:
 | [`.github/workflows/mobile-ci.yml`](../../.github/workflows/mobile-ci.yml) | Appium 2.x Mobile | `AutomationReports/Mobile` | Yes | `pages-deploy-allure` |
 | [`.github/workflows/jmeter-performance.yaml`](../../.github/workflows/jmeter-performance.yaml) | Apache JMeter 5.6+ | `AutomationReports/JMeter` | N/A (Static HTML) | `pages-deploy-allure` |
 
-### B. Concurrency Mutex Locks
-Because multiple workflows or framework jobs can trigger concurrently on `main` or via `workflow_dispatch`, deploying directly to Git references without synchronization can produce `non-fast-forward` ref collision errors.
+### B. Concurrency Mutex Locks & Staging Isolation
+Two distinct concurrency groups protect repository infrastructure from race conditions:
 
-All publishing workflows declare:
-```yaml
-concurrency:
-  group: pages-deploy-allure
-  cancel-in-progress: false
-```
-- `group: pages-deploy-allure`: Ensures all report deployment jobs share a single mutex queue.
-- `cancel-in-progress: false`: Ensures pending deployments wait their turn rather than canceling previous builds, guaranteeing that every completed run publishes its results.
+1. **GitHub Pages Deployment Mutex (`pages-deploy-allure`)**:
+   Because multiple workflows or framework jobs can trigger concurrently on `main` or via `workflow_dispatch`, deploying directly to Git references without synchronization can produce `non-fast-forward` ref collision errors.
+   All publishing workflows declare:
+   ```yaml
+   concurrency:
+     group: pages-deploy-allure
+     cancel-in-progress: false
+   ```
+   - `group: pages-deploy-allure`: Ensures all report deployment jobs share a single mutex queue.
+   - `cancel-in-progress: false`: Ensures pending deployments wait their turn rather than canceling previous builds, guaranteeing that every completed run publishes its results.
+
+2. **Staging Environment Mutex (`buggybooks-staging-state`)**:
+   Established in Sprint 6.1. All CI test jobs that interact with or mutate shared staging state (via `/api/test/config`, `/api/test/reset`, user registration, or inventory manipulation) declare:
+   ```yaml
+   concurrency:
+     group: buggybooks-staging-state
+     cancel-in-progress: false
+   ```
+   - Workflows protected: `pr-gate.yml` (smoke test job), `playwright-ci.yml`, `playwright-on-demand.yml`, `mobile-ci.yml`, and `quarantine-audit.yml`.
+   - `cancel-in-progress: false`: Enqueues concurrent PRs and workflow runs sequentially, completely eliminating shared database race conditions and false-positive test failures caused by competing chaos states.
+
+### C. Automated GitHub Step Summaries (`scripts/summarize-test-results.js`)
+All test workflows incorporate an honest, auto-detecting test summarizer:
+- **Inputs**: Auto-detects Playwright `results.json` or Allure `widgets/summary.json`.
+- **Output**: Formats a Markdown summary table (Total, Passed, Failed, Flaky, Skipped, Duration) appended to `$GITHUB_STEP_SUMMARY`, along with the top 10 failing test titles when failures occur.
+- **Fail-Safe**: Always exits with code 0 so reporting pipelines never halt unexpectedly, while explicit job gates (`steps.tests.outcome == 'failure'`) enforce build failures.
 
 ---
 

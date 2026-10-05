@@ -12,9 +12,6 @@ on:
         required: false
         default: 'main'
 
-concurrency:
-  group: pages-deploy-allure
-  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -25,6 +22,9 @@ jobs:
   # JOB 1: Run Sharded Tests
   test:
     name: UI & API Automation
+    concurrency:
+      group: buggybooks-staging-state
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     
     env:
@@ -63,6 +63,7 @@ jobs:
           npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
 
       - name: Run tests
+        id: tests
         env:
           ENVIRONMENT: INTEROP
           TZ: Australia/Adelaide
@@ -85,10 +86,24 @@ jobs:
           path: playwright-e2e/allure-results
           retention-days: 7
 
+      - name: Summarize Test Results
+        if: always()
+        run: |
+          node scripts/summarize-test-results.js playwright-e2e/test-results/results.json
+
+      - name: Fail job if tests failed
+        if: always() && steps.tests.outcome == 'failure'
+        run: |
+          echo "::error::Test execution failed — see Allure/Monocart report"
+          exit 1
+
 
   # JOB 2: Merge and Deploy
   deploy-report:
     name: Deploy Playwright Allure Report
+    concurrency:
+      group: pages-deploy-allure
+      cancel-in-progress: false
     needs: [test]
     if: always()
     runs-on: ubuntu-latest

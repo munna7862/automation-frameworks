@@ -2,6 +2,7 @@ import { logger, errorLogger } from '../logger/logger';
 import { expect, Locator } from '@playwright/test';
 import * as allure from 'allure-js-commons';
 import { randomInt } from 'crypto';
+import { redactString } from '../security/redact';
 
 export class CommonFunctions {
   /**
@@ -145,17 +146,18 @@ export class CommonFunctions {
     const logLevel = levelMap[sLogLevel] || sLogLevel.toLowerCase();
     const reportLevel = sLogLevel.toUpperCase();
     const timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
+    const safeMessage = redactString(sMessage);
 
     // Use errorLogger for failures to log to separate error file
     if (sLogLevel === 'FAIL') {
-      errorLogger.log({ level: logLevel, message: sMessage });
+      errorLogger.log({ level: logLevel, message: safeMessage });
     }
 
     // Always log to main framework log
-    logger.log({ level: logLevel, message: sMessage });
+    logger.log({ level: logLevel, message: safeMessage });
 
     const emoji = sLogLevel === 'PASS' ? '✅' : sLogLevel === 'FAIL' ? '❌' : '';
-    await allure.step(`${emoji} [${timestamp}] [${reportLevel}] ${sMessage}`, async () => { });
+    await allure.step(`${emoji} [${timestamp}] [${reportLevel}] ${safeMessage}`, async () => { });
   }
 
   public generateRandomString(length: number): string {

@@ -112,9 +112,6 @@ on:
         default: ''
         type: string
 
-concurrency:
-  group: on-demand-${{ github.ref }}-${{ github.run_id }}
-  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -127,6 +124,9 @@ jobs:
   # ============================================================================
   api-tests:
     name: API Automation
+    concurrency:
+      group: buggybooks-staging-state
+      cancel-in-progress: false
     if: >-
       ${{
         !cancelled() &&
@@ -165,6 +165,20 @@ jobs:
           npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
           npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
 
+      - name: Validate required secrets
+        env:
+          USER_NAME: ${{ secrets.E2E_USER_NAME }}
+          PASSWORD: ${{ secrets.E2E_PASSWORD }}
+        run: |
+          if [ -z "$USER_NAME" ]; then
+            echo "::error::E2E_USER_NAME secret is not configured"
+            exit 1
+          fi
+          if [ -z "$PASSWORD" ]; then
+            echo "::error::E2E_PASSWORD secret is not configured"
+            exit 1
+          fi
+
       - name: Run API Automation Tests
         working-directory: playwright-e2e
         env:
@@ -174,8 +188,8 @@ jobs:
           API_BASE_URL: https://buggy-books.onrender.com
           HEADLESS: ${{ github.event.inputs.headless || 'true' }}
           BROWSER: chrome
-          USER_NAME: ${{ secrets.E2E_USER_NAME || 'admin' }}
-          PASSWORD: ${{ secrets.E2E_PASSWORD || 'password123' }}
+          USER_NAME: ${{ secrets.E2E_USER_NAME }}
+          PASSWORD: ${{ secrets.E2E_PASSWORD }}
           PLAYWRIGHT_JSON_OUTPUT_NAME: test-results/api-results.json
           MONOCART_REPORT_PATH: reports/monocart-api/index.html
         run: |
@@ -311,6 +325,9 @@ jobs:
   # ============================================================================
   ui-tests:
     name: UI Automation (${{ github.event.inputs.project || 'chrome' }})
+    concurrency:
+      group: buggybooks-staging-state
+      cancel-in-progress: false
     if: >-
       ${{
         !cancelled() &&
@@ -355,6 +372,20 @@ jobs:
           npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
           npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
 
+      - name: Validate required secrets
+        env:
+          USER_NAME: ${{ secrets.E2E_USER_NAME }}
+          PASSWORD: ${{ secrets.E2E_PASSWORD }}
+        run: |
+          if [ -z "$USER_NAME" ]; then
+            echo "::error::E2E_USER_NAME secret is not configured"
+            exit 1
+          fi
+          if [ -z "$PASSWORD" ]; then
+            echo "::error::E2E_PASSWORD secret is not configured"
+            exit 1
+          fi
+
       - name: Run UI Automation Tests
         working-directory: playwright-e2e
         env:
@@ -364,8 +395,8 @@ jobs:
           API_BASE_URL: https://buggy-books.onrender.com
           HEADLESS: ${{ github.event.inputs.headless || 'true' }}
           BROWSER: chrome
-          USER_NAME: ${{ secrets.E2E_USER_NAME || 'admin' }}
-          PASSWORD: ${{ secrets.E2E_PASSWORD || 'password123' }}
+          USER_NAME: ${{ secrets.E2E_USER_NAME }}
+          PASSWORD: ${{ secrets.E2E_PASSWORD }}
           PLAYWRIGHT_JSON_OUTPUT_NAME: test-results/ui-results.json
           MONOCART_REPORT_PATH: reports/monocart-ui/index.html
         run: |
