@@ -59,7 +59,7 @@
 | **Pre-Flight Architecture Gate** | SDET Architect | Staging pre-flight probe and DoR audit. Verified online (HTTP 200). | `[PASSED]` |
 | **Code Acceptance Review Gate** | SDET Architect | Verify least-privilege permissions (`permissions: {}`), SHA pinning, gitleaks narrow scope, SBOM & license compliance. | `[PASSED]` |
 | **Scrum Master DoD Gate** | Scrum Master | Audit actionlint (0 errors), zizmor (0 medium/high findings), gitleaks (0 leaks), monorepo static quality (lint/typecheck exit 0). | `[PASSED]` |
-| **DevOps Release Gate** | DevOps Engineer | PR created with complete evidence; CI checks monitored. | `[READY]` |
+| **DevOps Release Gate** | DevOps Engineer | PR created with complete evidence; CI checks monitored. | `[PASSED]` |
 | **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[PENDING]` |
 
 ---
@@ -76,7 +76,7 @@
 - [x] `docs/security/repo_security_controls.md` documents control matrix, risk register, and branch protection checks.
 - [x] `npm run lint:all`, `npm run typecheck:all`, and `npm run test:verify-catalog` all exit 0.
 - [x] Pull request opened with structured summary and verification evidence (`gh pr create`).
-- [x] All CI workflow checks green.
+- [x] All CI workflow checks green (13/13 passing status checks).
 
 ---
 
