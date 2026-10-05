@@ -9,14 +9,22 @@ This directory houses the complete engineering roadmap, architectural decomposit
 ```text
 planning/
 ├── Master/
-│   └── master_plan.md                 # Strategic Master Plan & 10 Transformation Pillars
+│   ├── master_plan.md                 # Roadmap v1: Strategic Master Plan & 10 Transformation Pillars (Phases 1–5, done)
+│   └── enhancement_roadmap_v2.md      # Roadmap v2: assessment, decisions & sequencing (Phases 6–12)
 │
 ├── Phases/
 │   ├── phase_1_monorepo_foundations_pipeline_hygiene_and_utility_unification.md
 │   ├── phase_2_documentation_integrity_anti_pattern_manual_and_quality_gates.md
 │   ├── phase_3_webdriverio_and_selenium_alignment_to_buggybooks.md
 │   ├── phase_4_mobile_automation_appium_and_webdriverio.md
-│   └── phase_5_executive_observability_and_unified_allure_dashboard.md
+│   ├── phase_5_executive_observability_and_unified_allure_dashboard.md
+│   ├── phase_6_cicd_integrity_and_supply_chain_security.md
+│   ├── phase_7_hermetic_environments_test_data_and_developer_experience.md
+│   ├── phase_8_api_depth_typed_clients_schemas_and_contracts.md
+│   ├── phase_9_security_testing_dast_and_appsec.md
+│   ├── phase_10_ui_quality_web_vitals_and_framework_parity.md
+│   ├── phase_11_performance_engineering_and_observability.md
+│   └── phase_12_intelligent_qualityops_and_free_cloud_native_platform.md
 │
 ├── Sprints/
 │   ├── sprint_1_1_workflow_cleanup_and_extensionless_file_purge.md
@@ -33,7 +41,28 @@ planning/
 │   ├── sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md
 │   ├── sprint_5_1_multi_framework_allure_result_aggregation_architecture.md
 │   ├── sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md
-│   └── sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md
+│   ├── sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md
+│   ├── sprint_6_1_trustworthy_pipelines_hotfix.md
+│   ├── sprint_6_2_reusable_workflows_and_composite_actions.md
+│   ├── sprint_6_3_supply_chain_and_repository_security.md
+│   ├── sprint_6_4_repository_governance_and_contributor_experience.md
+│   ├── sprint_7_1_ephemeral_buggybooks_environment_in_ci.md
+│   ├── sprint_7_2_test_data_engineering_and_typed_configuration.md
+│   ├── sprint_7_3_dev_container_and_local_developer_experience.md
+│   ├── sprint_8_1_typed_api_client_layer_and_schema_validation.md
+│   ├── sprint_8_2_api_coverage_gaps_and_negative_matrix.md
+│   ├── sprint_8_3_openapi_specification_and_contract_testing.md
+│   ├── sprint_9_1_dast_pipeline_with_owasp_zap.md
+│   ├── sprint_9_2_appsec_security_test_suite.md
+│   ├── sprint_10_1_ui_determinism_and_lint_enforcement.md
+│   ├── sprint_10_2_accessibility_web_vitals_and_visual_hardening.md
+│   ├── sprint_10_3_selenium_and_wdio_parity_expansion.md
+│   ├── sprint_11_1_k6_performance_maturity.md
+│   ├── sprint_11_2_jmeter_engineering_and_taurus_gating.md
+│   ├── sprint_11_3_observability_stack_and_performance_reporting.md
+│   ├── sprint_12_1_test_analytics_and_failure_intelligence.md
+│   ├── sprint_12_2_ai_assisted_triage_and_self_healing_loop.md
+│   └── sprint_12_3_free_cloud_native_execution_platform.md
 │
 └── README.md                          # Executive index (this document)
 ```
@@ -87,8 +116,56 @@ The Master Plan establishes the foundational principles, target architecture, an
 | **SPRINT-4.2** | [Appium Android/iOS Smoke & Chaos E2E Verification](Sprints/sprint_4_2_appium_android_ios_smoke_and_chaos_e2e_verification.md) | Phase 4 | 5 SP | Mobile QA Specialist | Done |
 | **SPRINT-4.3** | [Mobile CI Pipeline & Emulator Execution Workflows](Sprints/sprint_4_3_mobile_ci_pipeline_and_emulator_execution_workflows.md) | Phase 4 | 5 SP | DevOps Engineer | Done |
 | **SPRINT-5.1** | [Multi-Framework Allure Aggregation Architecture](Sprints/sprint_5_1_multi_framework_allure_result_aggregation_architecture.md) | Phase 5 | 4 SP | DevOps Engineer | Done |
+| **SPRINT-5.2** | [GitHub Pages Portal Landing Page & KPI Badging](Sprints/sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md) | Phase 5 | 5 SP | DevOps Engineer | Done |
 | **SPRINT-5.3** | [Automated Monorepo Health Auditing & Closed-Loop Governance](Sprints/sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md) | Phase 5 | 4 SP | SDET Architect | Done |
 | **TOTAL** | **15 Sprints across 5 Phases** | **All** | **63 SP** | **Virtual Sprint Team** | **Completed (63/63 SP)** |
+
+---
+
+## 🚀 Roadmap v2 — Phases 6–12 & 21 Sprints (95 Story Points)
+
+👉 [**`planning/Master/enhancement_roadmap_v2.md`**](Master/enhancement_roadmap_v2.md) — repository assessment, critical findings (F1–F11), PO decisions (no Azure → free alternatives, GHCR images approved, Google Chrome preferred), dependency graph and suggested execution order.
+
+**Execution model**: Antigravity persona team implements each sprint; Claude reviews each PR against the sprint's **Code Review Checklist**; the PO merges.
+
+| Phase & Specification | Theme & Scope | Estimated Velocity | Associated Sprints |
+| :--- | :--- | :--- | :--- |
+| **[Phase 6](Phases/phase_6_cicd_integrity_and_supply_chain_security.md)** | **CI/CD Integrity & Supply-Chain Security** | **16 SP** | • [Sprint 6.1: Trustworthy Pipelines Hot-Fix](Sprints/sprint_6_1_trustworthy_pipelines_hotfix.md) (4 SP)<br>• [Sprint 6.2: Reusable Workflows & Composite Actions](Sprints/sprint_6_2_reusable_workflows_and_composite_actions.md) (4 SP)<br>• [Sprint 6.3: Supply-Chain & Repository Security](Sprints/sprint_6_3_supply_chain_and_repository_security.md) (5 SP)<br>• [Sprint 6.4: Repository Governance & Contributor Experience](Sprints/sprint_6_4_repository_governance_and_contributor_experience.md) (3 SP) |
+| **[Phase 7](Phases/phase_7_hermetic_environments_test_data_and_developer_experience.md)** | **Hermetic Environments, Test Data & DX** | **14 SP** | • [Sprint 7.1: Ephemeral BuggyBooks Environment in CI](Sprints/sprint_7_1_ephemeral_buggybooks_environment_in_ci.md) (6 SP)<br>• [Sprint 7.2: Test Data Engineering & Typed Configuration](Sprints/sprint_7_2_test_data_engineering_and_typed_configuration.md) (4 SP)<br>• [Sprint 7.3: Dev Container & Local DX](Sprints/sprint_7_3_dev_container_and_local_developer_experience.md) (4 SP) |
+| **[Phase 8](Phases/phase_8_api_depth_typed_clients_schemas_and_contracts.md)** | **API Depth: Typed Clients, Schemas & Contracts** | **14 SP** | • [Sprint 8.1: Typed API Client Layer & Schema Validation](Sprints/sprint_8_1_typed_api_client_layer_and_schema_validation.md) (5 SP)<br>• [Sprint 8.2: API Coverage Gaps & Negative Matrix](Sprints/sprint_8_2_api_coverage_gaps_and_negative_matrix.md) (5 SP)<br>• [Sprint 8.3: OpenAPI & Contract Testing](Sprints/sprint_8_3_openapi_specification_and_contract_testing.md) (4 SP) |
+| **[Phase 9](Phases/phase_9_security_testing_dast_and_appsec.md)** | **Security Testing (DAST + AppSec)** | **10 SP** | • [Sprint 9.1: DAST Pipeline with OWASP ZAP](Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md) (4 SP)<br>• [Sprint 9.2: AppSec Security Test Suite](Sprints/sprint_9_2_appsec_security_test_suite.md) (6 SP) |
+| **[Phase 10](Phases/phase_10_ui_quality_web_vitals_and_framework_parity.md)** | **UI Quality, A11y, Web Vitals & Framework Parity** | **13 SP** | • [Sprint 10.1: UI Determinism & Lint Enforcement](Sprints/sprint_10_1_ui_determinism_and_lint_enforcement.md) (4 SP)<br>• [Sprint 10.2: Accessibility, Web Vitals & Visual Hardening](Sprints/sprint_10_2_accessibility_web_vitals_and_visual_hardening.md) (5 SP)<br>• [Sprint 10.3: Selenium & WDIO Parity Expansion](Sprints/sprint_10_3_selenium_and_wdio_parity_expansion.md) (4 SP) |
+| **[Phase 11](Phases/phase_11_performance_engineering_and_observability.md)** | **Performance Engineering & Observability** | **15 SP** | • [Sprint 11.1: k6 Performance Maturity](Sprints/sprint_11_1_k6_performance_maturity.md) (5 SP)<br>• [Sprint 11.2: JMeter Engineering & Taurus Gating](Sprints/sprint_11_2_jmeter_engineering_and_taurus_gating.md) (5 SP)<br>• [Sprint 11.3: Observability Stack & Perf Reporting](Sprints/sprint_11_3_observability_stack_and_performance_reporting.md) (5 SP) |
+| **[Phase 12](Phases/phase_12_intelligent_qualityops_and_free_cloud_native_platform.md)** | **Intelligent QualityOps & Free Cloud-Native Platform** | **13 SP** | • [Sprint 12.1: Test Analytics & Failure Intelligence](Sprints/sprint_12_1_test_analytics_and_failure_intelligence.md) (5 SP)<br>• [Sprint 12.2: AI-Assisted Triage & Healer Loop](Sprints/sprint_12_2_ai_assisted_triage_and_self_healing_loop.md) (4 SP)<br>• [Sprint 12.3: Free Cloud-Native Platform (kind + Helm + k6-operator)](Sprints/sprint_12_3_free_cloud_native_execution_platform.md) (4 SP) |
+
+### Roadmap v2 Sprint Execution Matrix
+
+Suggested order: `6.1 → 6.2 → 7.1 → 6.3 → 6.4 → 7.2 → 8.1 → 10.1 → 8.2 → 7.3 → 8.3 → 9.1 → 9.2 → 10.2 → 10.3 → 11.1 → 11.2 → 11.3 → 12.1 → 12.2 → 12.3`
+
+| Sprint ID | Sprint Title | Phase | Est. SP | Lead Persona | Status |
+| :--- | :--- | :--- | :---: | :--- | :---: |
+| **SPRINT-6.1** | [Trustworthy Pipelines Hot-Fix](Sprints/sprint_6_1_trustworthy_pipelines_hotfix.md) | Phase 6 | 4 SP | DevOps Engineer | Not Started |
+| **SPRINT-6.2** | [Reusable Workflows & Composite Actions](Sprints/sprint_6_2_reusable_workflows_and_composite_actions.md) | Phase 6 | 4 SP | DevOps Engineer | Not Started |
+| **SPRINT-6.3** | [Supply-Chain & Repository Security](Sprints/sprint_6_3_supply_chain_and_repository_security.md) | Phase 6 | 5 SP | DevOps Engineer | Not Started |
+| **SPRINT-6.4** | [Repository Governance & Contributor Experience](Sprints/sprint_6_4_repository_governance_and_contributor_experience.md) | Phase 6 | 3 SP | SDET Architect | Not Started |
+| **SPRINT-7.1** | [Ephemeral BuggyBooks Environment in CI](Sprints/sprint_7_1_ephemeral_buggybooks_environment_in_ci.md) | Phase 7 | 6 SP | DevOps Engineer | Not Started |
+| **SPRINT-7.2** | [Test Data Engineering & Typed Configuration](Sprints/sprint_7_2_test_data_engineering_and_typed_configuration.md) | Phase 7 | 4 SP | SDET Architect | Not Started |
+| **SPRINT-7.3** | [Dev Container & Local Developer Experience](Sprints/sprint_7_3_dev_container_and_local_developer_experience.md) | Phase 7 | 4 SP | DevOps Engineer | Not Started |
+| **SPRINT-8.1** | [Typed API Client Layer & Schema Validation](Sprints/sprint_8_1_typed_api_client_layer_and_schema_validation.md) | Phase 8 | 5 SP | Playwright QA Lead | Not Started |
+| **SPRINT-8.2** | [API Coverage Gaps & Negative Matrix](Sprints/sprint_8_2_api_coverage_gaps_and_negative_matrix.md) | Phase 8 | 5 SP | Playwright QA Lead | Not Started |
+| **SPRINT-8.3** | [OpenAPI Specification & Contract Testing](Sprints/sprint_8_3_openapi_specification_and_contract_testing.md) | Phase 8 | 4 SP | SDET Architect | Not Started |
+| **SPRINT-9.1** | [DAST Pipeline with OWASP ZAP](Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md) | Phase 9 | 4 SP | Security Test Engineer | Not Started |
+| **SPRINT-9.2** | [AppSec Security Test Suite](Sprints/sprint_9_2_appsec_security_test_suite.md) | Phase 9 | 6 SP | Security Test Engineer | Not Started |
+| **SPRINT-10.1** | [UI Determinism & Lint Enforcement](Sprints/sprint_10_1_ui_determinism_and_lint_enforcement.md) | Phase 10 | 4 SP | Playwright QA Lead | Not Started |
+| **SPRINT-10.2** | [Accessibility, Web Vitals & Visual Hardening](Sprints/sprint_10_2_accessibility_web_vitals_and_visual_hardening.md) | Phase 10 | 5 SP | Playwright QA Lead | Not Started |
+| **SPRINT-10.3** | [Selenium & WDIO Parity Expansion](Sprints/sprint_10_3_selenium_and_wdio_parity_expansion.md) | Phase 10 | 4 SP | Selenium Specialist | Not Started |
+| **SPRINT-11.1** | [k6 Performance Maturity](Sprints/sprint_11_1_k6_performance_maturity.md) | Phase 11 | 5 SP | Performance Engineer | Not Started |
+| **SPRINT-11.2** | [JMeter Engineering & Taurus Gating](Sprints/sprint_11_2_jmeter_engineering_and_taurus_gating.md) | Phase 11 | 5 SP | Performance Engineer | Not Started |
+| **SPRINT-11.3** | [Observability Stack & Performance Reporting](Sprints/sprint_11_3_observability_stack_and_performance_reporting.md) | Phase 11 | 5 SP | Performance Engineer | Not Started |
+| **SPRINT-12.1** | [Test Analytics & Failure Intelligence](Sprints/sprint_12_1_test_analytics_and_failure_intelligence.md) | Phase 12 | 5 SP | SDET Architect | Not Started |
+| **SPRINT-12.2** | [AI-Assisted Triage & Self-Healing Loop](Sprints/sprint_12_2_ai_assisted_triage_and_self_healing_loop.md) | Phase 12 | 4 SP | SDET Architect | Not Started |
+| **SPRINT-12.3** | [Free Cloud-Native Execution Platform](Sprints/sprint_12_3_free_cloud_native_execution_platform.md) | Phase 12 | 4 SP | DevOps Engineer | Not Started |
+| **TOTAL** | **21 Sprints across 7 Phases** | **6–12** | **95 SP** | **Virtual Sprint Team + Claude review** | **0/95 SP** |
 
 ---
 
@@ -128,6 +205,7 @@ Every sprint is executed through a specialized 7-agent persona team defined in `
 5. [**`role-mobile-appium-specialist`**](../.agents/skills/role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
 6. [**`role-performance-engineer`**](../.agents/skills/role-performance-engineer/SKILL.md): Apache JMeter 5.6+ enterprise stress plans and k6 baseline drift gates.
 7. [**`role-devops-engineer`**](../.agents/skills/role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.
+8. **`role-security-engineer`** *(planned — created in [Sprint 9.1](Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md))*: OWASP ZAP DAST, `@security` AppSec suite, OWASP mapping, scope guard (attack payloads only against the disposable DOCKER env).
 
 ---
 

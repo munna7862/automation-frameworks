@@ -102,6 +102,7 @@ The monorepo operates with 7 specialized virtual agent personas to drive executi
 - **Roadmap Location**: [`planning/README.md`](planning/README.md) and [`planning/Master/master_plan.md`](planning/Master/master_plan.md).
 - **Structure**: 5 Phases (Foundations 10 SP, Multi-Framework 12 SP, Resilience & Mobile 14 SP, Governance 14 SP, Enterprise Maturity 13 SP) decomposed into 15 granular Sprints.
 - **Execution Standards**: Every sprint has clear DoD (Definition of Done), persona assignments, verification scripts, and breadcrumb navigation.
+- **Roadmap v2 (Phases 6–12, 21 Sprints, 95 SP)**: [`planning/Master/enhancement_roadmap_v2.md`](planning/Master/enhancement_roadmap_v2.md) — Phases 1–5 are complete. New sprints (`sprint_6_1` … `sprint_12_3`) each include a **Code Review Checklist** used as the external review gate before the PO merges. PO decisions: no paid cloud (free/OSS alternatives only), BuggyBooks images may be published to GHCR, Google Chrome preferred for every browser-based tool.
 
 ### 10. Sprint Execution Protocol, Persona Handover Sequence & `task.md`
 Whenever a sprint is kicked off (e.g. by the human user saying "Execute Sprint X.Y"):

@@ -1,6 +1,6 @@
 # Sprint 5.3: Automated Monorepo Health Auditing & Closed-Loop Governance
 
-**Navigation**: [⬅️ Previous: Sprint 5.2](sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md) | [🗺️ Planning Hub](../README.md) | **Sprint 5.3 (Final Milestone)**
+**Navigation**: [⬅️ Previous: Sprint 5.2](sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md) | [🗺️ Planning Hub](../README.md) | **Sprint 5.3 (Final Milestone of Roadmap v1)** | [Next: Sprint 6.1 ➡️](sprint_6_1_trustworthy_pipelines_hotfix.md)
 
 **Sprint Identifier**: `SPRINT-5.3-HEALTH-AUDITING-AND-GOVERNANCE`  
 **Phase Mapping**: [Phase 5: Executive Observability & Unified Allure Dashboard](../Phases/phase_5_executive_observability_and_unified_allure_dashboard.md)  
