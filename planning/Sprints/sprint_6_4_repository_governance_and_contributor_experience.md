@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-6.4-REPO-GOVERNANCE-AND-CONTRIBUTOR-EXPERIENCE`
 **Phase Mapping**: [Phase 6](../Phases/phase_6_cicd_integrity_and_supply_chain_security.md)
 **Estimated Velocity**: 3 Story Points
-**Sprint Status**: Not Started
+**Sprint Status**: In Progress
 **Branch**: `chore/sprint-6.4-repo-governance`
 **Depends On**: Sprint 6.2
 **Sprint Goal**: Enforce conventions mechanically (commits, formatting, lint coverage, ownership, release versioning) and clean up the hygiene debt found in the review.

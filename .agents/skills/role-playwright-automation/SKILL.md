@@ -12,11 +12,13 @@ When acting as the **Playwright QA Specialist**, your primary mission is to auth
 ## 1. Core Architecture & Standards
 
 ### A. Workspace Packaging & Page Object Model
+
 - **Package Hierarchy**: All Page Objects in `playwright-e2e/src/pages/` extend `BasePage` from `@automationframeworks/playwright-utils`.
 - **Encapsulation**: Private locator getters at the top of the class; public action methods below.
 - **Action Wrappers**: Interactions must utilize `BasePage` action methods (`doClick`, `doEnterText`, `doGetText`, `mouseHover`) which provide Winston structured logging and Allure step tracking.
 
 ### B. Project Structure & Single-Browser Policy
+
 - **Playwright Configuration**: `src/config/playwright.config.ts` must declare **strictly 3 projects**:
   1. `setup`: Runs `auth.setup.ts` using `channel: 'chrome'` to cache storage state (`.auth/user.json`).
   2. `api`: Runs `src/tests/api/` purely via Playwright `request` context (no browser launched).
@@ -25,15 +27,17 @@ When acting as the **Playwright QA Specialist**, your primary mission is to auth
 - **Setup Project Trap**: `auth.setup.ts` **must** specify `use: { channel: 'chrome' }`. Omitting this causes Playwright to default to bundled `chromium_headless_shell` (which is absent in CI), causing `setup` to crash and all 54 UI tests to skip!
 
 ### C. Locator Strategy for BuggyBooks
+
 1. **Semantic ARIA Locators**: `getByRole`, `getByLabel`, `getByPlaceholder`, `getByTestId`.
 2. **CSS / ID Selectors**: Use when semantic roles are absent.
 3. **Relative XPath with Axes**: Because BuggyBooks intentionally features obfuscated CSS classes and lacks static test IDs, relative XPath using axes (e.g. `//label[text()='Username']/following-sibling::input`) is a sanctioned fallback. Absolute XPath (`/html/body/...`) is forbidden.
 4. **Shadow DOM Encapsulation**: Pierce custom Web Components (e.g. `<order-summary-box>`) using Playwright's native shadow boundary traversal:
    ```typescript
-   page.locator('order-summary-box').locator('span.order-total')
+   page.locator('order-summary-box').locator('span.order-total');
    ```
 
 ### D. Visual Regression Snapshot Calibration
+
 - Visual tests in `src/tests/ui/VisualRegression/Test_010_VisualRegressionChaos.spec.ts` must use calibrated snapshots:
   - `catalog-baseline-chrome-linux.png`
   - `catalog-baseline-chrome-win32.png`
@@ -42,7 +46,7 @@ When acting as the **Playwright QA Specialist**, your primary mission is to auth
   await expect(page).toHaveScreenshot('catalog-baseline.png', {
     maxDiffPixelRatio: 0.05,
     threshold: 0.2,
-    animations: 'disabled',
+    animations: 'disabled'
   });
   ```
 
@@ -51,6 +55,7 @@ When acting as the **Playwright QA Specialist**, your primary mission is to auth
 ## 2. Test Execution & Self-Healing Protocol
 
 ### Local Test Execution
+
 ```bash
 # Warm up staging backend
 npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
@@ -66,7 +71,9 @@ npm run test:api
 ```
 
 ### Self-Healing Broken Locators
+
 When a test fails:
+
 1. Inspect failure artifacts written by `failure-hook.ts`:
    - `reports/snapshots/failure-context.json`
    - `reports/snapshots/failure-dom.html`

@@ -31,7 +31,7 @@ function createSummaryHandler(options = {}) {
     const htmlContent = generateHtmlReport(data, {
       title,
       baselineData: options.baselineData || null,
-      isRegressionSimulated: !!options.isRegressionSimulated,
+      isRegressionSimulated: !!options.isRegressionSimulated
     });
 
     const result = {};
@@ -40,9 +40,10 @@ function createSummaryHandler(options = {}) {
     result['report.html'] = htmlContent;
 
     if (options.customStdout) {
-      result['stdout'] = typeof options.customStdout === 'function'
-        ? options.customStdout(data)
-        : options.customStdout;
+      result['stdout'] =
+        typeof options.customStdout === 'function'
+          ? options.customStdout(data)
+          : options.customStdout;
     }
 
     return result;
@@ -50,5 +51,5 @@ function createSummaryHandler(options = {}) {
 }
 
 module.exports = {
-  createSummaryHandler,
+  createSummaryHandler
 };

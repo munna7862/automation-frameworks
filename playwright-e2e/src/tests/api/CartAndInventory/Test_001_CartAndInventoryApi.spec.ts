@@ -6,8 +6,9 @@ function uniqueUsername(prefix: string = 'cartuser'): string {
 }
 
 test.describe('Cart & Inventory API', () => {
-
-  test('API_CART_01: Cart persistence after server crash @smoke @regression', async ({ request }) => {
+  test('API_CART_01: Cart persistence after server crash @smoke @regression', async ({
+    request
+  }) => {
     // 1. Register a new user
     const username = uniqueUsername();
     const password = 'Password123!';
@@ -43,7 +44,11 @@ test.describe('Cart & Inventory API', () => {
     const response = await request.get('/api/inventory/report');
 
     expect(response.status()).toBe(200);
-    const data = await response.json() as { totalBooks: number; totalValue: number; timestamp: string };
+    const data = (await response.json()) as {
+      totalBooks: number;
+      totalValue: number;
+      timestamp: string;
+    };
     expect(data.totalBooks).toBe(15);
     expect(data.totalValue).toBeCloseTo(196.91, 2);
     expect(data.timestamp).toBeTruthy();

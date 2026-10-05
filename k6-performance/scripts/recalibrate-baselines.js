@@ -20,44 +20,44 @@ const TIER_MAPPINGS = {
     summaryFile: 'perf-summary-smoke.json',
     baselineFile: 'baseline-smoke.json',
     description: 'BuggyBooks PR API Smoke Golden Baseline (5 VUs)',
-    script: 'performance/k6/smoke-load.js',
+    script: 'performance/k6/smoke-load.js'
   },
   catalog: {
     summaryFile: 'perf-summary-catalog.json',
     baselineFile: 'baseline-catalog.json',
     description: 'BuggyBooks Main Catalog Load Golden Baseline (50 VUs)',
-    script: 'performance/k6/catalog-load.js',
+    script: 'performance/k6/catalog-load.js'
   },
   inventory: {
     summaryFile: 'perf-summary-inventory.json',
     baselineFile: 'baseline-inventory.json',
     description: 'BuggyBooks Inventory Stress Golden Baseline (30 VUs)',
-    script: 'performance/k6/inventory-stress.js',
+    script: 'performance/k6/inventory-stress.js'
   },
   journey: {
     summaryFile: 'perf-summary-journey.json',
     baselineFile: 'baseline-journey.json',
     description: 'BuggyBooks E-Commerce User Journey Golden Baseline (50 VUs)',
-    script: 'performance/scenarios/ecommerce-journey.js',
+    script: 'performance/scenarios/ecommerce-journey.js'
   },
   auth: {
     summaryFile: 'perf-summary-auth.json',
     baselineFile: 'baseline-auth.json',
     description: 'BuggyBooks Authentication Burst Golden Baseline (40 VUs)',
-    script: 'performance/k6/auth-stress.js',
+    script: 'performance/k6/auth-stress.js'
   },
   checkout: {
     summaryFile: 'perf-summary-checkout.json',
     baselineFile: 'baseline-checkout.json',
     description: 'BuggyBooks Checkout Contention Golden Baseline (100 VUs)',
-    script: 'performance/k6/checkout-stress.js',
+    script: 'performance/k6/checkout-stress.js'
   },
   soak: {
     summaryFile: 'perf-summary-soak.json',
     baselineFile: 'baseline-soak.json',
     description: 'BuggyBooks Endurance Soak Golden Baseline (25 VUs)',
-    script: 'performance/scenarios/soak-load.js',
-  },
+    script: 'performance/scenarios/soak-load.js'
+  }
 };
 
 function formatNum(val, decimals = 2) {
@@ -94,7 +94,9 @@ function buildDurationObject(metricObj) {
 function recalibrateTier(tierKey, customSummaryPath = null) {
   const config = TIER_MAPPINGS[tierKey];
   if (!config) {
-    throw new Error(`Unknown performance tier: "${tierKey}". Valid choices: ${Object.keys(TIER_MAPPINGS).join(', ')}`);
+    throw new Error(
+      `Unknown performance tier: "${tierKey}". Valid choices: ${Object.keys(TIER_MAPPINGS).join(', ')}`
+    );
   }
 
   const baseDir = path.resolve(__dirname, 'baselines');
@@ -104,7 +106,9 @@ function recalibrateTier(tierKey, customSummaryPath = null) {
     : path.resolve(process.cwd(), config.summaryFile);
 
   if (!fs.existsSync(summaryPath)) {
-    throw new Error(`Summary JSON not found for tier "${tierKey}" at ${summaryPath}. Ensure k6 run completed.`);
+    throw new Error(
+      `Summary JSON not found for tier "${tierKey}" at ${summaryPath}. Ensure k6 run completed.`
+    );
   }
 
   const rawSummary = fs.readFileSync(summaryPath, 'utf8');
@@ -124,7 +128,8 @@ function recalibrateTier(tierKey, customSummaryPath = null) {
   // Construct new metrics
   const newMetrics = {};
 
-  const httpReqDuration = metrics['http_req_duration'] || metrics['http_req_duration{expected_response:true}'];
+  const httpReqDuration =
+    metrics['http_req_duration'] || metrics['http_req_duration{expected_response:true}'];
   if (httpReqDuration) {
     newMetrics.http_req_duration = buildDurationObject(httpReqDuration);
   }
@@ -142,11 +147,12 @@ function recalibrateTier(tierKey, customSummaryPath = null) {
   // Error rate
   const failedMetric = metrics['http_req_failed'];
   if (failedMetric) {
-    const rate = extractMetricVal(failedMetric, 'rate') !== undefined
-      ? extractMetricVal(failedMetric, 'rate')
-      : extractMetricVal(failedMetric, 'value');
+    const rate =
+      extractMetricVal(failedMetric, 'rate') !== undefined
+        ? extractMetricVal(failedMetric, 'rate')
+        : extractMetricVal(failedMetric, 'value');
     newMetrics.http_req_failed = {
-      rate: Number(Number(rate || 0).toFixed(4)),
+      rate: Number(Number(rate || 0).toFixed(4))
     };
   }
 
@@ -156,7 +162,7 @@ function recalibrateTier(tierKey, customSummaryPath = null) {
     const rate = extractMetricVal(reqsMetric, 'rate');
     if (rate !== undefined) {
       newMetrics.http_reqs = {
-        rate: Number(Number(rate).toFixed(1)),
+        rate: Number(Number(rate).toFixed(1))
       };
     }
   }
@@ -170,7 +176,7 @@ function recalibrateTier(tierKey, customSummaryPath = null) {
     generated_at: new Date().toISOString(),
     commit_sha: commitSha,
     environment,
-    metrics: newMetrics,
+    metrics: newMetrics
   };
 
   fs.writeFileSync(baselinePath, JSON.stringify(newBaseline, null, 2) + '\n', 'utf8');
@@ -181,7 +187,7 @@ function recalibrateTier(tierKey, customSummaryPath = null) {
 }
 
 function bumpMinorVersion(versionStr = '1.0.0') {
-  const parts = versionStr.split('.').map(p => parseInt(p, 10));
+  const parts = versionStr.split('.').map((p) => parseInt(p, 10));
   if (parts.length === 3 && !parts.some(isNaN)) {
     parts[1] += 1;
     return parts.join('.');
@@ -195,28 +201,30 @@ function generateDiffMarkdown(tierKey, oldBaseline, newBaseline) {
   md += `| Metric / Percentile | Old Baseline | New Baseline | Delta (%) | Status |\n`;
   md += `| :--- | :---: | :---: | :---: | :---: |\n`;
 
-  const oldMetrics = (oldBaseline && oldBaseline.metrics) ? oldBaseline.metrics : {};
+  const oldMetrics = oldBaseline && oldBaseline.metrics ? oldBaseline.metrics : {};
   const newMetrics = newBaseline.metrics || {};
 
   const keysToCheck = [
     { key: 'http_req_duration', subKey: 'avg', label: 'http_req_duration (avg)' },
     { key: 'http_req_duration', subKey: 'p(95)', label: 'http_req_duration (p95)' },
-    { key: 'http_req_duration', subKey: 'p(99)', label: 'http_req_duration (p99)' },
+    { key: 'http_req_duration', subKey: 'p(99)', label: 'http_req_duration (p99)' }
   ];
 
-  for (const [metricKey, metricVal] of Object.entries(newMetrics)) {
+  for (const metricKey of Object.keys(newMetrics)) {
     if (metricKey.endsWith('_duration') && metricKey !== 'http_req_duration') {
       keysToCheck.push({ key: metricKey, subKey: 'p(95)', label: `${metricKey} (p95)` });
     }
   }
 
   for (const item of keysToCheck) {
-    const oldVal = (oldMetrics[item.key] && oldMetrics[item.key][item.subKey] !== undefined)
-      ? oldMetrics[item.key][item.subKey]
-      : undefined;
-    const newVal = (newMetrics[item.key] && newMetrics[item.key][item.subKey] !== undefined)
-      ? newMetrics[item.key][item.subKey]
-      : undefined;
+    const oldVal =
+      oldMetrics[item.key] && oldMetrics[item.key][item.subKey] !== undefined
+        ? oldMetrics[item.key][item.subKey]
+        : undefined;
+    const newVal =
+      newMetrics[item.key] && newMetrics[item.key][item.subKey] !== undefined
+        ? newMetrics[item.key][item.subKey]
+        : undefined;
 
     if (newVal !== undefined) {
       let deltaStr = '—';
@@ -225,7 +233,7 @@ function generateDiffMarkdown(tierKey, oldBaseline, newBaseline) {
         const delta = ((newVal - oldVal) / oldVal) * 100;
         const sign = delta > 0 ? '+' : '';
         deltaStr = `${sign}${delta.toFixed(2)}%`;
-        statusStr = delta <= 0 ? '🟢 IMPROVED' : (delta <= 10 ? '🟡 WITHIN 10%' : '🔴 DEGRADED');
+        statusStr = delta <= 0 ? '🟢 IMPROVED' : delta <= 10 ? '🟡 WITHIN 10%' : '🔴 DEGRADED';
       }
       md += `| \`${item.label}\` | \`${oldVal !== undefined ? formatNum(oldVal, 2) + ' ms' : '—'}\` | \`${formatNum(newVal, 2)} ms\` | \`${deltaStr}\` | ${statusStr} |\n`;
     }
@@ -257,9 +265,7 @@ Supported Tiers:
   const targetTier = args[0].toLowerCase();
   const customSummary = args[1] || null;
 
-  const tiersToRun = targetTier === 'all'
-    ? Object.keys(TIER_MAPPINGS)
-    : [targetTier];
+  const tiersToRun = targetTier === 'all' ? Object.keys(TIER_MAPPINGS) : [targetTier];
 
   let combinedMarkdown = `# 🎯 Automated Performance Golden Baseline Recalibration\n\n`;
   let successCount = 0;

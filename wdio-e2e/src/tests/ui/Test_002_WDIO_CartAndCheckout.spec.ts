@@ -102,7 +102,9 @@ describe('BuggyBooks WDIO Cart & Checkout — TC-WDIO-003, TC-WDIO-004, TC-WDIO-
 
     // 6. Complete Order Submission & Assert Confirmation Message
     const confirmationText = await checkoutPage.getOrderConfirmationMessage();
-    const isSuccess = confirmationText.includes('Payment Successful') || confirmationText.includes('Thank you for your order');
+    const isSuccess =
+      confirmationText.includes('Payment Successful') ||
+      confirmationText.includes('Thank you for your order');
     expect(isSuccess).toBe(true);
   });
 });

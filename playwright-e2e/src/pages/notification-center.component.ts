@@ -2,7 +2,6 @@ import { BasePage } from '@automationframeworks/playwright-utils';
 import { Locator } from '@playwright/test';
 
 export class NotificationCenterComponent extends BasePage {
-
   // Private getters for locators at top of class
   private get btnBellNotification(): Locator {
     return this.page.locator('#ws-notification-btn');
@@ -21,7 +20,9 @@ export class NotificationCenterComponent extends BasePage {
   }
 
   private get eleToastNotification(): Locator {
-    return this.page.locator('div[role="status"], .react-hot-toast, div:has-text("🛒"), div:has-text("🔥")');
+    return this.page.locator(
+      'div[role="status"], .react-hot-toast, div:has-text("🛒"), div:has-text("🔥")'
+    );
   }
 
   private get eleStatusConnected(): Locator {
@@ -30,7 +31,7 @@ export class NotificationCenterComponent extends BasePage {
 
   // Action and state query methods
   public async clickBellButton(): Promise<void> {
-    await this.doClick(this.btnBellNotification, "Clicking on WebSocket Notification Bell button");
+    await this.doClick(this.btnBellNotification, 'Clicking on WebSocket Notification Bell button');
   }
 
   public async isStatusConnected(): Promise<boolean> {
@@ -69,5 +70,4 @@ export class NotificationCenterComponent extends BasePage {
       return false;
     }
   }
-
 }

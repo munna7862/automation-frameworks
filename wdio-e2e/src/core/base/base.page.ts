@@ -30,7 +30,11 @@ export class BasePage extends CommonFunctions {
     await locator.click();
   }
 
-  public async doEnterText(locator: ChainablePromiseElement, sValue: string, sLogMessage: string): Promise<void> {
+  public async doEnterText(
+    locator: ChainablePromiseElement,
+    sValue: string,
+    sLogMessage: string
+  ): Promise<void> {
     await this.logMessage('INFO', sLogMessage);
     await locator.waitForDisplayed({ timeout: BasePage.DEFAULT_TIMEOUT });
     await locator.setValue(sValue);
@@ -42,7 +46,11 @@ export class BasePage extends CommonFunctions {
     return locator.getText();
   }
 
-  public async doGetAttribute(locator: ChainablePromiseElement, sAttribute: string, sLogMessage: string): Promise<string | null> {
+  public async doGetAttribute(
+    locator: ChainablePromiseElement,
+    sAttribute: string,
+    sLogMessage: string
+  ): Promise<string | null> {
     await this.logMessage('INFO', sLogMessage);
     await locator.waitForDisplayed({ timeout: BasePage.DEFAULT_TIMEOUT });
     const value = await locator.getAttribute(sAttribute);
@@ -56,7 +64,10 @@ export class BasePage extends CommonFunctions {
     await locator.moveTo();
   }
 
-  public async clearAndSetInputValue(inputField: ChainablePromiseElement, inputValue: string): Promise<void> {
+  public async clearAndSetInputValue(
+    inputField: ChainablePromiseElement,
+    inputValue: string
+  ): Promise<void> {
     await inputField.waitForDisplayed({ timeout: BasePage.DEFAULT_TIMEOUT });
     await inputField.click();
     await inputField.clearValue();
@@ -65,31 +76,49 @@ export class BasePage extends CommonFunctions {
     await this.logMessage('INFO', `Set input value to ${inputValue}`);
   }
 
-  public async addTextFieldValue(value: string, fieldLocator: ChainablePromiseElement): Promise<void> {
+  public async addTextFieldValue(
+    value: string,
+    fieldLocator: ChainablePromiseElement
+  ): Promise<void> {
     await fieldLocator.waitForDisplayed({ timeout: BasePage.DEFAULT_TIMEOUT });
     await fieldLocator.click();
     await fieldLocator.addValue(value);
   }
 
-  public async doesElementExist(locator: ChainablePromiseElement, sLogMessage: string): Promise<boolean> {
+  public async doesElementExist(
+    locator: ChainablePromiseElement,
+    sLogMessage: string
+  ): Promise<boolean> {
     try {
       const isVisible = await locator.isDisplayed();
-      await this.logMessage('INFO', `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`);
+      await this.logMessage(
+        'INFO',
+        `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`
+      );
       return isVisible;
     } catch {
       return false;
     }
   }
 
-  public async waitForVisible(locator: ChainablePromiseElement, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<void> {
+  public async waitForVisible(
+    locator: ChainablePromiseElement,
+    timeoutMs = BasePage.DEFAULT_TIMEOUT
+  ): Promise<void> {
     await locator.waitForDisplayed({ timeout: timeoutMs });
   }
 
-  public async waitForClickable(locator: ChainablePromiseElement, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<void> {
+  public async waitForClickable(
+    locator: ChainablePromiseElement,
+    timeoutMs = BasePage.DEFAULT_TIMEOUT
+  ): Promise<void> {
     await locator.waitForClickable({ timeout: timeoutMs });
   }
 
-  public async waitForHidden(locator: ChainablePromiseElement, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<void> {
+  public async waitForHidden(
+    locator: ChainablePromiseElement,
+    timeoutMs = BasePage.DEFAULT_TIMEOUT
+  ): Promise<void> {
     await locator.waitForDisplayed({ timeout: timeoutMs, reverse: true });
   }
 }

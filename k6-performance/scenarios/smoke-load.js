@@ -20,14 +20,14 @@ export const options = {
     http_req_duration: [`p(95)<${P95_THRESHOLD}`, 'p(99)<1200'],
     catalog_duration: [`p(95)<${P95_THRESHOLD}`],
     http_req_failed: ['rate<0.02'],
-    api_error_rate: ['rate<0.02'],
-  },
+    api_error_rate: ['rate<0.02']
+  }
 };
 
 export default function () {
   const sessionId = `k6-smoke-vu-${__VU}`;
   const params = {
-    headers: getStandardHeaders(sessionId),
+    headers: getStandardHeaders(sessionId)
   };
 
   // 1. Benchmark: Catalog Browsing (GET /api/books)
@@ -37,11 +37,11 @@ export default function () {
     'catalog returns items': (r) => {
       try {
         const body = JSON.parse(r.body);
-        return Array.isArray(body) ? body.length > 0 : (body.books && body.books.length > 0);
+        return Array.isArray(body) ? body.length > 0 : body.books && body.books.length > 0;
       } catch {
         return false;
       }
-    },
+    }
   });
   catalogDuration.add(catalogRes.timings.duration);
   errorRate.add(!catalogOk);
@@ -59,7 +59,7 @@ export default function () {
       } catch {
         return false;
       }
-    },
+    }
   });
   searchDuration.add(searchRes.timings.duration);
   errorRate.add(!searchOk);
@@ -77,7 +77,7 @@ export default function () {
       } catch {
         return false;
       }
-    },
+    }
   });
   detailDuration.add(detailRes.timings.duration);
   errorRate.add(!detailOk);
@@ -88,5 +88,5 @@ export default function () {
 export const handleSummary = createSummaryHandler({
   jsonFilename: 'perf-summary-smoke.json',
   htmlFilename: 'performance/report-smoke.html',
-  title: 'PR API Smoke Benchmark (5 VUs)',
+  title: 'PR API Smoke Benchmark (5 VUs)'
 });

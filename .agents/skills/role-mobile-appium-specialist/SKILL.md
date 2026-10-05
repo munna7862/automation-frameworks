@@ -24,7 +24,9 @@ When acting as the **Mobile QA Specialist**, your primary mission is to engineer
 ## 2. Core Architecture & Patterns
 
 ### A. Screen Object Model (SOM)
+
 All mobile screens in `mobile-automation/src/screens/` must extend `BaseMobileScreen`:
+
 - `BaseMobileScreen.ts`: Common locator wrappers, gesture helpers, and wait routines.
 - `LoginScreen.ts`: Mobile authentication inputs, biometric toggles, error toasts.
 - `CatalogScreen.ts`: Vertical scrolling list, book card tap, bottom-sheet detail modal.
@@ -34,7 +36,9 @@ All mobile screens in `mobile-automation/src/screens/` must extend `BaseMobileSc
 - `NavigationTab.ts`: Bottom navigation tab bar (Catalog, Cart, Profile, Settings).
 
 ### B. Mobile Gesture & Touch Primitives
+
 Never use static sleeps. Rely on native W3C pointer actions encapsulated in `BaseMobileScreen.ts`:
+
 ```typescript
 export class BaseMobileScreen {
   /**
@@ -46,7 +50,8 @@ export class BaseMobileScreen {
     const startY = height * 0.8;
     const endY = height * (0.8 - distanceMultiplier);
 
-    await driver.action('pointer')
+    await driver
+      .action('pointer')
       .move({ duration: 0, x: startX, y: startY })
       .down({ button: 0 })
       .pause(200)
@@ -70,7 +75,9 @@ export class BaseMobileScreen {
 ```
 
 ### C. Mobile Chaos & Resilience Testing
+
 Automate mobile-specific edge cases:
+
 1. **Screen Orientation Chaos (`orientation_chaos.e2e.spec.ts`)**:
    Verify cart items and form inputs remain intact across orientation shifts:
    ```typescript
@@ -100,20 +107,21 @@ Automate mobile-specific edge cases:
 
 ## 3. Test Cases Catalog Alignment (`TC-MOB-001` .. `TC-MOB-006`)
 
-| ID | Title | Spec File | Key Assertions / Verifications |
-| :--- | :--- | :--- | :--- |
-| **`TC-MOB-001`** | Mobile User Authentication | `auth.e2e.spec.ts` | Invalid credentials toast, valid login with obfuscated locators, session logout. |
-| **`TC-MOB-002`** | Mobile Catalog Gestures | `catalog.e2e.spec.ts` | W3C `swipeUp`, book card tap, bottom-sheet modal interaction and closure. |
-| **`TC-MOB-003`** | Payment Gateway Chaos | `checkout_chaos.e2e.spec.ts` | Form fill with keyboard occlusion dismissal, 500 error banner retry loop. |
-| **`TC-MOB-004`** | Orientation Toggle | `orientation_chaos.e2e.spec.ts` | Portrait -> Landscape layout shift, form integrity, orientation restoration. |
-| **`TC-MOB-005`** | Cart Mutation & Offline Sync | `catalog.e2e.spec.ts` | Cart mutation, simulated offline mode toggle, floating offline banner check. |
-| **`TC-MOB-006`** | Backgrounding Lifecycle | `auth.e2e.spec.ts` | App backgrounding (3-5s), session persistence, and UI integrity upon resume. |
+| ID               | Title                        | Spec File                       | Key Assertions / Verifications                                                   |
+| :--------------- | :--------------------------- | :------------------------------ | :------------------------------------------------------------------------------- |
+| **`TC-MOB-001`** | Mobile User Authentication   | `auth.e2e.spec.ts`              | Invalid credentials toast, valid login with obfuscated locators, session logout. |
+| **`TC-MOB-002`** | Mobile Catalog Gestures      | `catalog.e2e.spec.ts`           | W3C `swipeUp`, book card tap, bottom-sheet modal interaction and closure.        |
+| **`TC-MOB-003`** | Payment Gateway Chaos        | `checkout_chaos.e2e.spec.ts`    | Form fill with keyboard occlusion dismissal, 500 error banner retry loop.        |
+| **`TC-MOB-004`** | Orientation Toggle           | `orientation_chaos.e2e.spec.ts` | Portrait -> Landscape layout shift, form integrity, orientation restoration.     |
+| **`TC-MOB-005`** | Cart Mutation & Offline Sync | `catalog.e2e.spec.ts`           | Cart mutation, simulated offline mode toggle, floating offline banner check.     |
+| **`TC-MOB-006`** | Backgrounding Lifecycle      | `auth.e2e.spec.ts`              | App backgrounding (3-5s), session persistence, and UI integrity upon resume.     |
 
 ---
 
 ## 4. Local Execution & CI Commands
 
 ### Local Android Emulator Execution
+
 ```bash
 # Start Appium server
 appium --port 4723 --use-drivers uiautomator2
@@ -125,6 +133,7 @@ npm run test:mobile:smoke
 ```
 
 ### Local iOS Simulator Execution
+
 ```bash
 # Start Appium server
 appium --port 4723 --use-drivers xcuitest
@@ -134,6 +143,6 @@ npm run test:ios --workspace=mobile-automation
 ```
 
 ### CI Pipeline (`.github/workflows/mobile-ci.yml`)
+
 - Executes headlessly using `reactivecircus/android-emulator-runner@v2` with `api-level: 31`, `arch: x86_64`, and snapshot caching.
 - Employs Render pre-flight warm-up probe before launching Appium.
-

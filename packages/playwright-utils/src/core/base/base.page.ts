@@ -43,7 +43,11 @@ export class BasePage extends CommonFunctions {
     return (await locator.textContent({ timeout: BasePage.DEFAULT_TIMEOUT })) ?? '';
   }
 
-  public async doGetAttribute(locator: Locator, sAttribute: string, sLogMessage: string): Promise<string | null> {
+  public async doGetAttribute(
+    locator: Locator,
+    sAttribute: string,
+    sLogMessage: string
+  ): Promise<string | null> {
     await this.logMessage('INFO', sLogMessage);
     const value = await locator.getAttribute(sAttribute, { timeout: BasePage.DEFAULT_TIMEOUT });
     await this.logMessage('INFO', `Attribute ${sAttribute} has value: ${value}`);
@@ -71,7 +75,10 @@ export class BasePage extends CommonFunctions {
   public async doesElementExist(locator: Locator, sLogMessage: string): Promise<boolean> {
     try {
       const isVisible = await locator.isVisible();
-      await this.logMessage('INFO', `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`);
+      await this.logMessage(
+        'INFO',
+        `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`
+      );
       return isVisible;
     } catch {
       await this.logMessage('INFO', `${sLogMessage} - Element is not visible`);

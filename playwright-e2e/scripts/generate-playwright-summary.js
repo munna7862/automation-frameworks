@@ -21,9 +21,12 @@ function formatDuration(ms) {
 function cleanErrorMessage(msg) {
   if (!msg) return 'Unknown error';
   // Strip ANSI color codes
-  const stripped = msg.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+  const stripped = msg.replace(
+    /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+    ''
+  );
   // Keep first 2 lines
-  const lines = stripped.split('\n').filter(l => l.trim().length > 0);
+  const lines = stripped.split('\n').filter((l) => l.trim().length > 0);
   const summary = lines.slice(0, 2).join(' — ').trim();
   return summary.length > 250 ? summary.substring(0, 247) + '...' : summary;
 }
@@ -38,15 +41,18 @@ function extractSpecs(suite, failures = [], allSpecs = []) {
         if (test.status === 'unexpected') {
           for (const result of test.results || []) {
             if (result.status === 'failed' || result.status === 'timedOut') {
-              const errMsg = result.errors && result.errors.length > 0
-                ? result.errors[0].message
-                : (result.error ? result.error.message : 'Test failed without explicit message');
+              const errMsg =
+                result.errors && result.errors.length > 0
+                  ? result.errors[0].message
+                  : result.error
+                    ? result.error.message
+                    : 'Test failed without explicit message';
               failures.push({
                 title: spec.title,
                 file: spec.file || suite.file || 'unknown',
                 projectName: test.projectName || 'default',
                 error: cleanErrorMessage(errMsg),
-                duration: result.duration || 0,
+                duration: result.duration || 0
               });
             }
           }
@@ -68,7 +74,7 @@ function generateMarkdown(results, title, artifactName = 'playwright-traces') {
   const unexpected = stats.unexpected || 0;
   const flaky = stats.flaky || 0;
   const skipped = stats.skipped || 0;
-  const total = (stats.total !== undefined) ? stats.total : (expected + unexpected + flaky + skipped);
+  const total = stats.total !== undefined ? stats.total : expected + unexpected + flaky + skipped;
   const duration = stats.duration || 0;
 
   const isPassing = unexpected === 0;
@@ -108,7 +114,9 @@ function generateMarkdown(results, title, artifactName = 'playwright-traces') {
 function main() {
   const args = process.argv.slice(2);
   if (args.length === 0) {
-    console.error('Usage: node scripts/generate-playwright-summary.js <results-json-path> [job-title] [artifact-name]');
+    console.error(
+      'Usage: node scripts/generate-playwright-summary.js <results-json-path> [job-title] [artifact-name]'
+    );
     process.exit(1);
   }
 
@@ -117,7 +125,9 @@ function main() {
   const artifactName = args[2] || 'playwright-traces';
 
   if (!fs.existsSync(jsonPath)) {
-    console.warn(`Warning: Playwright results JSON not found at ${jsonPath}. Generating fallback summary.`);
+    console.warn(
+      `Warning: Playwright results JSON not found at ${jsonPath}. Generating fallback summary.`
+    );
     const fallbackMd = `\n### 🎭 Playwright Quality Gate Summary: ${title}\n\n⚠️ No JSON test report found at \`${jsonPath}\`.\n\n---\n`;
     const stepSummaryFile = process.env.GITHUB_STEP_SUMMARY;
     if (stepSummaryFile) {

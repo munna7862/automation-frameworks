@@ -54,12 +54,15 @@ export class CatalogScreen extends BaseMobileScreen {
   }
 
   async quickAddToCart(bookId: string): Promise<void> {
-    await this.step(`Quick add book "${bookId}" to cart (handling dynamic delay MOB-B3)`, async () => {
-      const btn = this.getItemQuickAddButton(bookId);
-      await this.clickElement(btn);
-      // Wait for dynamic delay to resolve (500-3500ms in live mode)
-      await driver.pause(4000);
-    });
+    await this.step(
+      `Quick add book "${bookId}" to cart (handling dynamic delay MOB-B3)`,
+      async () => {
+        const btn = this.getItemQuickAddButton(bookId);
+        await this.clickElement(btn);
+        // Wait for dynamic delay to resolve (500-3500ms in live mode)
+        await driver.pause(4000);
+      }
+    );
   }
 
   async openBookDetail(bookId: string): Promise<void> {

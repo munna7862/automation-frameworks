@@ -2,7 +2,6 @@ import { BasePage } from '@automationframeworks/playwright-utils';
 import { expect, Locator, Page } from '@playwright/test';
 
 export class ProfilePage extends BasePage {
-
   // Locators
   private get avatarPreview(): Locator {
     return this.page.locator('#profile-avatar-preview');
@@ -43,11 +42,13 @@ export class ProfilePage extends BasePage {
   // Actions and Interaction Methods
   public async clickProfileLink(): Promise<void> {
     await this.ensureNavElementVisible(this.navProfileLink);
-    await this.doClick(this.navProfileLink, "Clicking on Profile navbar link");
+    await this.doClick(this.navProfileLink, 'Clicking on Profile navbar link');
   }
 
   public async openProfile(): Promise<void> {
-    const responsePromise = this.page.waitForResponse(res => res.url().includes('/api/profile') && res.status() === 200).catch(() => undefined);
+    const responsePromise = this.page
+      .waitForResponse((res) => res.url().includes('/api/profile') && res.status() === 200)
+      .catch(() => undefined);
     await this.clickProfileLink();
     await responsePromise;
     await this.headingUserProfile.waitFor({ state: 'visible', timeout: 10000 });
@@ -59,40 +60,45 @@ export class ProfilePage extends BasePage {
   }
 
   public async clickUploadButton(): Promise<void> {
-    await this.doClick(this.uploadButton, "Clicking Upload Image button");
+    await this.doClick(this.uploadButton, 'Clicking Upload Image button');
   }
 
   public async uploadAvatar(filePath: string): Promise<void> {
     await this.selectAvatarFile(filePath);
     await expect(this.uploadButton).toBeEnabled({ timeout: 5000 });
-    const responsePromise = this.page.waitForResponse(res => res.url().includes('/api/profile/upload')).catch(() => undefined);
+    const responsePromise = this.page
+      .waitForResponse((res) => res.url().includes('/api/profile/upload'))
+      .catch(() => undefined);
     await this.clickUploadButton();
     await responsePromise;
     // Wait for either success status or error banner to appear in DOM so React has finished state update
     await Promise.race([
       this.uploadStatusSuccess.waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined),
-      this.uploadStatusError.waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined),
+      this.uploadStatusError.waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined)
     ]);
   }
 
   public async getAvatarPreviewSrc(): Promise<string> {
-    await this.logMessage('INFO', "Getting profile avatar preview image src");
+    await this.logMessage('INFO', 'Getting profile avatar preview image src');
     await this.avatarPreview.waitFor({ state: 'visible', timeout: 10000 });
-    await expect(this.avatarPreview).toHaveAttribute('src', /\/uploads\//, { timeout: 5000 }).catch(() => undefined);
+    await expect(this.avatarPreview)
+      .toHaveAttribute('src', /\/uploads\//, { timeout: 5000 })
+      .catch(() => undefined);
     return (await this.avatarPreview.getAttribute('src')) ?? '';
   }
 
   public async getSuccessMessageText(): Promise<string> {
-    return await this.doGetText(this.uploadStatusSuccess, "Getting upload success message text");
+    return await this.doGetText(this.uploadStatusSuccess, 'Getting upload success message text');
   }
 
   public async getProfileInfoText(): Promise<string> {
     await this.profileInfoSection.waitFor({ state: 'visible', timeout: 10000 });
-    return (await this.doGetText(this.profileInfoSection, "Getting profile info section text")) || '';
+    return (
+      (await this.doGetText(this.profileInfoSection, 'Getting profile info section text')) || ''
+    );
   }
 
   public async getErrorMessageText(): Promise<string> {
-    return await this.doGetText(this.uploadStatusError, "Getting upload error message text");
+    return await this.doGetText(this.uploadStatusError, 'Getting upload error message text');
   }
-
 }

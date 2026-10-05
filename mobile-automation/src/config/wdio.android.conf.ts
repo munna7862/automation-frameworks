@@ -15,7 +15,7 @@ export const config: WebdriverIO.Config = {
       'appium:newCommandTimeout': 240,
       'appium:uiautomator2ServerLaunchTimeout': 60000,
       'appium:ensureWebviewsHavePages': true,
-      'appium:nativeWebScreenshot': true,
-    },
-  ],
+      'appium:nativeWebScreenshot': true
+    }
+  ]
 };

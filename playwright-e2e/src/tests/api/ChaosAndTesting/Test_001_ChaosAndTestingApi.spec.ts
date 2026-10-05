@@ -9,7 +9,6 @@ function uniqueUsername(prefix: string = 'chaosuser'): string {
 }
 
 test.describe('Chaos and Testing Utilities API', () => {
-
   test.beforeEach(async ({ request }) => {
     // Clean up state before each test in the isolated session
     const resetRes = await request.post('/api/test/reset');
@@ -24,7 +23,9 @@ test.describe('Chaos and Testing Utilities API', () => {
     await request.post('/api/test/reset');
   });
 
-  test('API_TEST_01: Global reset clears all non-default users and carts @smoke @regression', async ({ request }) => {
+  test('API_TEST_01: Global reset clears all non-default users and carts @smoke @regression', async ({
+    request
+  }) => {
     const username = uniqueUsername();
     const password = 'Password123!';
     const fullName = 'Chaos Test User';
@@ -126,7 +127,7 @@ test.describe('Chaos and Testing Utilities API', () => {
 
     expect(response.status()).toBe(200);
     await commonUtil.logMessage('INFO', `Inventory report request took: ${elapsedMs} ms`);
-    
+
     // We expect at least 3000ms delay, allowing a 100ms grace threshold
     expect(elapsedMs).toBeGreaterThanOrEqual(2900);
   });

@@ -22,7 +22,13 @@ function loadTestSuite() {
 }
 
 const browserArgs = envConfig.headless
-  ? ['--headless=new', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080']
+  ? [
+      '--headless=new',
+      '--disable-gpu',
+      '--no-sandbox',
+      '--disable-dev-shm-usage',
+      '--window-size=1920,1080'
+    ]
   : ['--start-maximized', '--no-sandbox'];
 
 export const config = {
@@ -40,21 +46,24 @@ export const config = {
   framework: 'mocha',
   reporters: [
     'spec',
-    ['allure', {
-      outputDir: path.resolve(__dirname, '../..', 'allure-results'),
-      disableWebdriverStepsReporting: true,
-      disableWebdriverScreenshotsReporting: false,
-      addConsoleLogs: true,
-      reportedEnvironmentVars: {
-        Framework: 'WebdriverIO (TypeScript + Mocha)',
-        Environment: envConfig.env || 'STAGING',
-        Suite: envConfig.SUITENAME || 'Default',
-        Browser: 'Google Chrome (DevTools/WebDriver)',
-        BaseURL: envConfig.baseUrl,
-        OS: `${process.platform} (${process.arch})`,
-        NodeVersion: process.version
+    [
+      'allure',
+      {
+        outputDir: path.resolve(__dirname, '../..', 'allure-results'),
+        disableWebdriverStepsReporting: true,
+        disableWebdriverScreenshotsReporting: false,
+        addConsoleLogs: true,
+        reportedEnvironmentVars: {
+          Framework: 'WebdriverIO (TypeScript + Mocha)',
+          Environment: envConfig.env || 'STAGING',
+          Suite: envConfig.SUITENAME || 'Default',
+          Browser: 'Google Chrome (DevTools/WebDriver)',
+          BaseURL: envConfig.baseUrl,
+          OS: `${process.platform} (${process.arch})`,
+          NodeVersion: process.version
+        }
       }
-    }]
+    ]
   ],
   onPrepare: function () {
     try {
@@ -63,16 +72,17 @@ export const config = {
         fs.mkdirSync(resultsDir, { recursive: true });
       }
       const envPropsPath = path.join(resultsDir, 'environment.properties');
-      const props = [
-        `Framework=WebdriverIO (TypeScript + Mocha)`,
-        `Framework.Version=^9.0.0`,
-        `Test.Environment=${envConfig.env || 'STAGING'}`,
-        `Base.URL=${envConfig.baseUrl}`,
-        `Browser.Target=Google Chrome (DevTools/WebDriver)`,
-        `Operating.System=${process.platform} (${process.arch})`,
-        `Node.Version=${process.version}`,
-        `Timestamp=${new Date().toISOString()}`
-      ].join('\n') + '\n';
+      const props =
+        [
+          `Framework=WebdriverIO (TypeScript + Mocha)`,
+          `Framework.Version=^9.0.0`,
+          `Test.Environment=${envConfig.env || 'STAGING'}`,
+          `Base.URL=${envConfig.baseUrl}`,
+          `Browser.Target=Google Chrome (DevTools/WebDriver)`,
+          `Operating.System=${process.platform} (${process.arch})`,
+          `Node.Version=${process.version}`,
+          `Timestamp=${new Date().toISOString()}`
+        ].join('\n') + '\n';
       fs.writeFileSync(envPropsPath, props, 'utf-8');
     } catch {
       // Non-blocking
@@ -82,16 +92,18 @@ export const config = {
     ui: 'bdd',
     timeout: 120000
   },
-  capabilities: [{
-    browserName: 'chrome',
-    acceptInsecureCerts: true,
-    'goog:loggingPrefs': {
-      performance: 'ALL'
-    },
-    'goog:chromeOptions': {
-      args: browserArgs
+  capabilities: [
+    {
+      browserName: 'chrome',
+      acceptInsecureCerts: true,
+      'goog:loggingPrefs': {
+        performance: 'ALL'
+      },
+      'goog:chromeOptions': {
+        args: browserArgs
+      }
     }
-  }],
+  ],
   afterTest: async function (_test: unknown, _context: unknown, result: { passed: boolean }) {
     if (!result.passed) {
       await browser.takeScreenshot();

@@ -42,6 +42,10 @@ jobs:
         id: typecheck
         run: npm run typecheck:all
 
+      - name: Prettier Code Formatting
+        id: prettier
+        run: npm run format:check
+
       - name: Dual-Catalog Parity Validation
         id: catalog
         run: npm run test:verify-catalog
@@ -52,14 +56,36 @@ jobs:
           echo "### 🔍 Static Quality Check" >> $GITHUB_STEP_SUMMARY
           echo "- **ESLint**: ${{ steps.lint.outcome == 'success' && '✅ Passed across all monorepo workspaces' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
           echo "- **TypeScript**: ${{ steps.typecheck.outcome == 'success' && '✅ Passed (tsc --noEmit) with 0 errors' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Prettier**: ${{ steps.prettier.outcome == 'success' && '✅ Passed with consistent code style' || '❌ Formatting issues detected' }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Dual-Catalog Parity**: ${{ steps.catalog.outcome == 'success' && '✅ 100% byte-for-byte verified (docs vs playwright-e2e)' || '❌ Out of sync' }}" >> $GITHUB_STEP_SUMMARY
+
+  commitlint:
+    name: Conventional Commits Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate PR Commits with Commitlint
+        uses: wagoid/commitlint-github-action@b9424163f3357ab7269d9e27e165578c9507730a # v6.2.1
+        with:
+          configFile: commitlint.config.cjs
 
   smoke-e2e:
     name: Smoke Tests (Chrome UI + API)
     concurrency:
       group: buggybooks-staging-state
       cancel-in-progress: false
-    needs: static-quality
+    needs: [static-quality, commitlint]
     runs-on: ubuntu-latest
     timeout-minutes: 10
 

@@ -128,16 +128,18 @@ export class CatalogPage extends BasePage {
     const isClearVisible = await this.btnClearSearch.isDisplayed().catch(() => false);
     if (isClearVisible) {
       await this.doClick(this.btnClearSearch, 'Clicking Clear Search button');
-      await browser.waitUntil(
-        async () => {
-          const count = await this.eleBooks.length;
-          return count > 1;
-        },
-        {
-          timeout: 15000,
-          timeoutMsg: 'Catalog did not reset after clearing search'
-        }
-      ).catch(() => undefined);
+      await browser
+        .waitUntil(
+          async () => {
+            const count = await this.eleBooks.length;
+            return count > 1;
+          },
+          {
+            timeout: 15000,
+            timeoutMsg: 'Catalog did not reset after clearing search'
+          }
+        )
+        .catch(() => undefined);
     } else {
       await this.clearAndSetInputValue(this.inputSearch, '');
       await this.doClick(this.btnSearch, 'Clicking Search button with empty query');
@@ -166,16 +168,20 @@ export class CatalogPage extends BasePage {
       await this.doClick(fallbackBtn, 'Clicking Add to Cart button for first book');
     }
     // Wait for the async addToCart (500-2000ms delay + API request) to finish and toast to appear
-    await browser.waitUntil(
-      async () => {
-        const toast = await $('//*[contains(text(), "Added to cart!")]').isDisplayed().catch(() => false);
-        return toast;
-      },
-      {
-        timeout: 15000,
-        timeoutMsg: 'Toast "Added to cart!" did not appear within 15s'
-      }
-    ).catch(() => undefined);
+    await browser
+      .waitUntil(
+        async () => {
+          const toast = await $('//*[contains(text(), "Added to cart!")]')
+            .isDisplayed()
+            .catch(() => false);
+          return toast;
+        },
+        {
+          timeout: 15000,
+          timeoutMsg: 'Toast "Added to cart!" did not appear within 15s'
+        }
+      )
+      .catch(() => undefined);
     // Pause briefly to ensure cart state update settles in backend
     await browser.pause(1000);
   }
@@ -184,16 +190,20 @@ export class CatalogPage extends BasePage {
     const btn = $(`#add-to-cart-${bookId}`);
     await this.waitForClickable(btn);
     await this.doClick(btn, `Clicking Add to Cart button for book ID: ${bookId}`);
-    await browser.waitUntil(
-      async () => {
-        const toast = await $('//*[contains(text(), "Added to cart!")]').isDisplayed().catch(() => false);
-        return toast;
-      },
-      {
-        timeout: 15000,
-        timeoutMsg: 'Toast "Added to cart!" did not appear within 15s'
-      }
-    ).catch(() => undefined);
+    await browser
+      .waitUntil(
+        async () => {
+          const toast = await $('//*[contains(text(), "Added to cart!")]')
+            .isDisplayed()
+            .catch(() => false);
+          return toast;
+        },
+        {
+          timeout: 15000,
+          timeoutMsg: 'Toast "Added to cart!" did not appear within 15s'
+        }
+      )
+      .catch(() => undefined);
     await browser.pause(1000);
   }
 

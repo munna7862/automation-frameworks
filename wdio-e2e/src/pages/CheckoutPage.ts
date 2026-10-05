@@ -26,7 +26,9 @@ export class CheckoutPage extends BasePage {
 
   // Step 2: Payment Locators
   private get inputCardNumber(): ChainablePromiseElement {
-    return $('input[name="creditCard"], input[name="txt_c99"], input[placeholder="16-digit card number"]');
+    return $(
+      'input[name="creditCard"], input[name="txt_c99"], input[placeholder="16-digit card number"]'
+    );
   }
 
   private get inputExpiry(): ChainablePromiseElement {
@@ -100,7 +102,10 @@ export class CheckoutPage extends BasePage {
   }
 
   public async isPaymentStepVisible(): Promise<boolean> {
-    return await this.inputCardNumber.waitForDisplayed({ timeout: 15000 }).then(() => true).catch(() => false);
+    return await this.inputCardNumber
+      .waitForDisplayed({ timeout: 15000 })
+      .then(() => true)
+      .catch(() => false);
   }
 
   // Step 2: Payment Actions
@@ -116,7 +121,11 @@ export class CheckoutPage extends BasePage {
     await this.clearAndSetInputValue(this.inputCvv, cvv);
   }
 
-  public async fillPaymentDetails(cardNumber: string, expiry = '12/30', cvv = '123'): Promise<void> {
+  public async fillPaymentDetails(
+    cardNumber: string,
+    expiry = '12/30',
+    cvv = '123'
+  ): Promise<void> {
     await this.logMessage('INFO', 'Entering payment details');
     await this.enterCardNumber(cardNumber);
     await this.enterExpiry(expiry);
@@ -136,7 +145,9 @@ export class CheckoutPage extends BasePage {
     // Dismiss any overlapping promo toasts / floating banners
     await browser.execute(() => {
       try {
-        document.querySelectorAll('div[role="status"], .react-hot-toast, [class*="toast"]').forEach(el => el.remove());
+        document
+          .querySelectorAll('div[role="status"], .react-hot-toast, [class*="toast"]')
+          .forEach((el) => el.remove());
       } catch {
         // ignore
       }
@@ -148,7 +159,9 @@ export class CheckoutPage extends BasePage {
       await browser.pause(1000);
     }
 
-    const submitBtn = $('button.primary-x2, button.submit-action-btn, button[name="btn_submit_rnd"]');
+    const submitBtn = $(
+      'button.primary-x2, button.submit-action-btn, button[name="btn_submit_rnd"]'
+    );
     await submitBtn.waitForDisplayed({ timeout: 15000 });
     await submitBtn.scrollIntoView();
 
@@ -156,10 +169,16 @@ export class CheckoutPage extends BasePage {
       await submitBtn.waitForClickable({ timeout: 5000 });
       await submitBtn.click();
     } catch {
-      await this.logMessage('INFO', 'Clicking submit button via JS execute to bypass floating overlay');
-      await browser.execute((el) => {
-        (el as HTMLElement).click();
-      }, await submitBtn);
+      await this.logMessage(
+        'INFO',
+        'Clicking submit button via JS execute to bypass floating overlay'
+      );
+      await browser.execute(
+        (el) => {
+          (el as HTMLElement).click();
+        },
+        await submitBtn
+      );
     }
   }
 
@@ -175,7 +194,9 @@ export class CheckoutPage extends BasePage {
   public async getOrderSummaryTotal(): Promise<string> {
     await this.logMessage('INFO', 'Piercing Shadow DOM to extract total from <order-summary-box>');
     await this.orderSummaryHost.waitForDisplayed({ timeout: 15000 });
-    const shadowTotal = this.orderSummaryHost.shadow$('.total-amount, .summary-total, .summary-box, p');
+    const shadowTotal = this.orderSummaryHost.shadow$(
+      '.total-amount, .summary-total, .summary-box, p'
+    );
     await shadowTotal.waitForDisplayed({ timeout: 15000 });
     const total = await shadowTotal.getText();
     await this.logMessage('INFO', `Extracted Shadow DOM summary total: ${total}`);
@@ -183,7 +204,10 @@ export class CheckoutPage extends BasePage {
   }
 
   public async getOrderSummarySubtotal(): Promise<string> {
-    await this.logMessage('INFO', 'Piercing Shadow DOM to extract subtotal from <order-summary-box>');
+    await this.logMessage(
+      'INFO',
+      'Piercing Shadow DOM to extract subtotal from <order-summary-box>'
+    );
     await this.orderSummaryHost.waitForDisplayed({ timeout: 15000 });
     const shadowSubtotal = this.orderSummaryHost.shadow$('.subtotal, .total-amount, .summary-box');
     await shadowSubtotal.waitForDisplayed({ timeout: 15000 });
@@ -204,7 +228,9 @@ export class CheckoutPage extends BasePage {
   }
 
   public async isOrderConfirmed(): Promise<boolean> {
-    const text = await $('main').getText().catch(() => '');
+    const text = await $('main')
+      .getText()
+      .catch(() => '');
     return text.includes('Payment Successful') || text.includes('Thank you for your order');
   }
 
@@ -217,15 +243,17 @@ export class CheckoutPage extends BasePage {
 
       await this.clickCompletePayment();
 
-      const confirmed = await browser.waitUntil(
-        async () => {
-          return await this.isOrderConfirmed();
-        },
-        {
-          timeout: 20000,
-          interval: 1000
-        }
-      ).catch(() => false);
+      const confirmed = await browser
+        .waitUntil(
+          async () => {
+            return await this.isOrderConfirmed();
+          },
+          {
+            timeout: 20000,
+            interval: 1000
+          }
+        )
+        .catch(() => false);
 
       if (confirmed) {
         const text = await $('main').getText();
@@ -233,7 +261,10 @@ export class CheckoutPage extends BasePage {
       }
 
       if (attempt < maxAttempts) {
-        await this.logMessage('WARN', `Order confirmation not visible after 20s on attempt ${attempt}. Retrying submit...`);
+        await this.logMessage(
+          'WARN',
+          `Order confirmation not visible after 20s on attempt ${attempt}. Retrying submit...`
+        );
         await browser.pause(2000);
       }
     }

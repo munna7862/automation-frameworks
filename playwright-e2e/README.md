@@ -14,10 +14,10 @@ This repository contains a TypeScript-based Playwright automation framework for 
 
 ## Application Under Test
 
-| Layer | Default URL |
-| --- | --- |
-| UI | `https://buggy-books-fe.onrender.com/` |
-| API | `https://buggy-books.onrender.com` |
+| Layer | Default URL                            |
+| ----- | -------------------------------------- |
+| UI    | `https://buggy-books-fe.onrender.com/` |
+| API   | `https://buggy-books.onrender.com`     |
 
 These values are configurable through environment variables.
 
@@ -98,7 +98,7 @@ npx playwright install
 The configured Playwright project uses the local Chrome channel:
 
 ```ts
-channel: 'chrome'
+channel: 'chrome';
 ```
 
 Make sure Google Chrome is installed on the execution machine.
@@ -120,20 +120,21 @@ PASSWORD=your_password
 
 Configuration defaults are defined in `src/config/env.config.ts`.
 
-| Variable | Purpose | Default |
-| --- | --- | --- |
-| `ENV` | Logical environment name used in reports | `INTEROP` |
-| `BASE_URL` | BuggyBooks UI base URL | Render UI URL |
-| `API_BASE_URL` | BuggyBooks API base URL | Render API URL |
-| `ELEMENT_TIMEOUT`| Default action and locator timeout in ms | `15000` |
-| `HEADLESS` | Runs browser in headless mode when `true` | `false` |
-| `BROWSER` | Browser identifier for future extension | `chrome` |
-| `USER_NAME` | Existing user for login and checkout tests | Required for login tests |
-| `PASSWORD` | Password for existing user | Required for login tests |
+| Variable          | Purpose                                    | Default                  |
+| ----------------- | ------------------------------------------ | ------------------------ |
+| `ENV`             | Logical environment name used in reports   | `INTEROP`                |
+| `BASE_URL`        | BuggyBooks UI base URL                     | Render UI URL            |
+| `API_BASE_URL`    | BuggyBooks API base URL                    | Render API URL           |
+| `ELEMENT_TIMEOUT` | Default action and locator timeout in ms   | `15000`                  |
+| `HEADLESS`        | Runs browser in headless mode when `true`  | `false`                  |
+| `BROWSER`         | Browser identifier for future extension    | `chrome`                 |
+| `USER_NAME`       | Existing user for login and checkout tests | Required for login tests |
+| `PASSWORD`        | Password for existing user                 | Required for login tests |
 
 ## Running Tests
 
 ### Complete Test Suite (Dynamic Discovery)
+
 Run all 26 UI and API specs:
 
 ```bash
@@ -143,26 +144,31 @@ npm test
 ### Tag-Based Execution Filtering
 
 Run only Smoke tests:
+
 ```bash
 npx playwright test --grep "@smoke" --config=src/config/playwright.config.ts
 ```
 
 Run only Regression tests:
+
 ```bash
 npx playwright test --grep "@regression" --config=src/config/playwright.config.ts
 ```
 
 Run only Chaos & Resilience tests:
+
 ```bash
 npx playwright test --grep "@chaos" --config=src/config/playwright.config.ts
 ```
 
 Run only Accessibility (a11y) tests:
+
 ```bash
 npx playwright test --grep "@a11y" --config=src/config/playwright.config.ts
 ```
 
 ### Specific Spec Execution
+
 Run a specific spec file:
 
 ```bash
@@ -170,11 +176,13 @@ npx playwright test src/tests/api/BookCatalog/Test_001_BooksApi.spec.ts --config
 ```
 
 ### Headless & Custom Timeout Execution
+
 ```bash
 npx cross-env HEADLESS=true ELEMENT_TIMEOUT=20000 npm test
 ```
 
 On Windows PowerShell:
+
 ```powershell
 $env:HEADLESS="true"; $env:ELEMENT_TIMEOUT="20000"; npm test
 ```
@@ -201,14 +209,14 @@ npm run clean-reports
 
 Generated output:
 
-| Path | Description |
-| --- | --- |
-| `playwright-report/` | Playwright HTML report |
-| `reports/allure-results/` | Raw Allure results |
-| `reports/allure-report/` | Generated Allure report |
+| Path                      | Description                                  |
+| ------------------------- | -------------------------------------------- |
+| `playwright-report/`      | Playwright HTML report                       |
+| `reports/allure-results/` | Raw Allure results                           |
+| `reports/allure-report/`  | Generated Allure report                      |
 | `reports/test-artifacts/` | Screenshots, videos, traces, and attachments |
-| `logs/framework.log` | Framework execution logs |
-| `logs/errors.log` | Error-level framework logs |
+| `logs/framework.log`      | Framework execution logs                     |
+| `logs/errors.log`         | Error-level framework logs                   |
 
 ## Network Logging
 
@@ -237,7 +245,7 @@ This enables hybrid API and UI authentication patterns where tests can avoid rep
 The current checkout and login flows read credentials using:
 
 ```ts
-getLoginCredentials()
+getLoginCredentials();
 ```
 
 Credentials must be supplied through `USER_NAME` and `PASSWORD`.

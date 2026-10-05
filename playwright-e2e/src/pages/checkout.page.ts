@@ -27,7 +27,9 @@ export class CheckoutPage extends BasePage {
   }
 
   private get cardNumberInput(): Locator {
-    return this.page.locator('input[name="creditCard"], input[name="txt_c99"], input[placeholder="16-digit card number"]');
+    return this.page.locator(
+      'input[name="creditCard"], input[name="txt_c99"], input[placeholder="16-digit card number"]'
+    );
   }
 
   private get expiryInput(): Locator {
@@ -82,13 +84,15 @@ export class CheckoutPage extends BasePage {
     super(page);
   }
 
-
   // Actions and Interaction Methods
   public async getOrderTotalAmountText(): Promise<string> {
     await this.logMessage('INFO', 'Getting checkout order total amount');
     await this.checkoutSummary.waitFor({ state: 'visible', timeout: 60000 });
-    const text = await this.checkoutSummary.textContent() ?? '';
-    await this.logMessage('INFO', `Checkout summary is visible, retrieving total amount text is: ${text}`);
+    const text = (await this.checkoutSummary.textContent()) ?? '';
+    await this.logMessage(
+      'INFO',
+      `Checkout summary is visible, retrieving total amount text is: ${text}`
+    );
     return text;
   }
 
@@ -106,7 +110,11 @@ export class CheckoutPage extends BasePage {
   }
 
   public async enterShippingAddress(address: string): Promise<void> {
-    await this.doEnterText(this.shippingAddressInput, address, `Entering shipping address: ${address}`);
+    await this.doEnterText(
+      this.shippingAddressInput,
+      address,
+      `Entering shipping address: ${address}`
+    );
   }
 
   public async enterCity(city: string): Promise<void> {
@@ -140,9 +148,14 @@ export class CheckoutPage extends BasePage {
   }
 
   public async isStepIndicatorActive(stepNumber: 1 | 2 | 3): Promise<boolean> {
-    const locator = stepNumber === 1 ? this.stepIndicator1 : stepNumber === 2 ? this.stepIndicator2 : this.stepIndicator3;
+    const locator =
+      stepNumber === 1
+        ? this.stepIndicator1
+        : stepNumber === 2
+          ? this.stepIndicator2
+          : this.stepIndicator3;
     await locator.waitFor({ state: 'visible', timeout: 10000 });
-    const classAttr = await locator.getAttribute('class') ?? '';
+    const classAttr = (await locator.getAttribute('class')) ?? '';
     return classAttr.includes('step-active');
   }
 
@@ -174,12 +187,16 @@ export class CheckoutPage extends BasePage {
     return await this.cvvInput.inputValue();
   }
 
-
   public async clickFinalSubmit(): Promise<void> {
-    if (await this.doesElementExist(this.nextStepButton, 'Checking if Next Step button is visible')) {
+    if (
+      await this.doesElementExist(this.nextStepButton, 'Checking if Next Step button is visible')
+    ) {
       await this.doClick(this.nextStepButton, 'Clicking on Next Step button on Payment page');
     } else {
-      await this.doClick(this.finalSubmitButton, 'Clicking on Complete Payment button on Confirm page');
+      await this.doClick(
+        this.finalSubmitButton,
+        'Clicking on Complete Payment button on Confirm page'
+      );
     }
   }
 
@@ -198,14 +215,21 @@ export class CheckoutPage extends BasePage {
   }
 
   private async waitForConfirmationMessage(expectedMessage: string): Promise<void> {
-    await this.logMessage('INFO', `Waiting for confirmation message containing: ${expectedMessage}`);
+    await this.logMessage(
+      'INFO',
+      `Waiting for confirmation message containing: ${expectedMessage}`
+    );
     await expect(this.orderConfirmationMessage).toBeVisible({ timeout: 15000 });
-    const cardText = (await this.page.getByRole('main').textContent() || '').replace(/\s+/g, ' ');
+    const cardText = ((await this.page.getByRole('main').textContent()) || '').replace(/\s+/g, ' ');
     expect(cardText).toContain('Payment Successful');
     expect(cardText).toContain('Thank you for your order');
   }
 
-  private async submitPaymentUntilConfirmation(expectedMessage: string, maxAttempts: number, successMessage: string): Promise<void> {
+  private async submitPaymentUntilConfirmation(
+    expectedMessage: string,
+    maxAttempts: number,
+    successMessage: string
+  ): Promise<void> {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       if (await this.orderConfirmationMessage.isVisible().catch(() => false)) {
         await this.waitForConfirmationMessage(expectedMessage);
@@ -221,14 +245,17 @@ export class CheckoutPage extends BasePage {
         if (attempt === maxAttempts) {
           throw error;
         }
-        await this.logMessage('WARN', `Payment attempt ${attempt} did not complete successfully. Retrying payment.`);
+        await this.logMessage(
+          'WARN',
+          `Payment attempt ${attempt} did not complete successfully. Retrying payment.`
+        );
       }
     }
   }
 
   public async getOrderConfirmationMessage(): Promise<string> {
     await this.orderConfirmationMessage.waitFor({ state: 'visible', timeout: 15000 });
-    const text = await this.page.getByRole('main').textContent() ?? '';
+    const text = (await this.page.getByRole('main').textContent()) ?? '';
     return text.replace(/\s+/g, ' ').trim();
   }
 
@@ -236,37 +263,82 @@ export class CheckoutPage extends BasePage {
     await this.waitForConfirmationMessage(expectedMessage);
   }
 
-  public async completePaymentSuccessfully(firstName: string, lastName: string, cardNumber: string, expectedMessage: string, maxAttempts: number = 3): Promise<void> {
+  public async completePaymentSuccessfully(
+    firstName: string,
+    lastName: string,
+    cardNumber: string,
+    expectedMessage: string,
+    maxAttempts: number = 3
+  ): Promise<void> {
     await this.fillShippingDetails(firstName, lastName);
     await this.fillPaymentDetails(cardNumber);
-    if (await this.doesElementExist(this.nextStepButton, 'Checking if Next Step button is visible on Payment Step')) {
-      await this.doClick(this.nextStepButton, 'Clicking on Next Step button on Payment page to advance to Confirm step');
-      await this.finalSubmitButton.waitFor({ state: 'visible', timeout: 15000 }).catch(() => undefined);
+    if (
+      await this.doesElementExist(
+        this.nextStepButton,
+        'Checking if Next Step button is visible on Payment Step'
+      )
+    ) {
+      await this.doClick(
+        this.nextStepButton,
+        'Clicking on Next Step button on Payment page to advance to Confirm step'
+      );
+      await this.finalSubmitButton
+        .waitFor({ state: 'visible', timeout: 15000 })
+        .catch(() => undefined);
     }
-    await this.submitPaymentUntilConfirmation(expectedMessage, maxAttempts, 'Payment completed successfully and order confirmation message is displayed.');
+    await this.submitPaymentUntilConfirmation(
+      expectedMessage,
+      maxAttempts,
+      'Payment completed successfully and order confirmation message is displayed.'
+    );
   }
 
-  public async completePaymentAfterInvalidCardRetry(firstName: string, lastName: string, invalidCardNumber: string, validCardNumber: string, expectedMessage: string, retryAttempts: number = 3): Promise<void> {
+  public async completePaymentAfterInvalidCardRetry(
+    firstName: string,
+    lastName: string,
+    invalidCardNumber: string,
+    validCardNumber: string,
+    expectedMessage: string,
+    retryAttempts: number = 3
+  ): Promise<void> {
     await this.fillShippingDetails(firstName, lastName);
     await this.enterCardNumber(invalidCardNumber);
     await this.enterExpiry('12/30');
     await this.enterCvv('123');
-    if (await this.doesElementExist(this.nextStepButton, 'Checking if Next Step button is visible')) {
-      await this.doClick(this.nextStepButton, 'Clicking on Next Step button to advance to Confirm step');
-      await this.finalSubmitButton.waitFor({ state: 'visible', timeout: 15000 }).catch(() => undefined);
+    if (
+      await this.doesElementExist(this.nextStepButton, 'Checking if Next Step button is visible')
+    ) {
+      await this.doClick(
+        this.nextStepButton,
+        'Clicking on Next Step button to advance to Confirm step'
+      );
+      await this.finalSubmitButton
+        .waitFor({ state: 'visible', timeout: 15000 })
+        .catch(() => undefined);
     }
     await this.clickFinalSubmit();
     await this.logMessage('WARN', 'Invalid card entered; retrying with valid card number');
     await this.fillPaymentDetails(validCardNumber);
-    if (await this.doesElementExist(this.nextStepButton, 'Checking if Next Step button is visible')) {
-      await this.doClick(this.nextStepButton, 'Clicking on Next Step button to advance to Confirm step');
-      await this.finalSubmitButton.waitFor({ state: 'visible', timeout: 15000 }).catch(() => undefined);
+    if (
+      await this.doesElementExist(this.nextStepButton, 'Checking if Next Step button is visible')
+    ) {
+      await this.doClick(
+        this.nextStepButton,
+        'Clicking on Next Step button to advance to Confirm step'
+      );
+      await this.finalSubmitButton
+        .waitFor({ state: 'visible', timeout: 15000 })
+        .catch(() => undefined);
     }
-    await this.submitPaymentUntilConfirmation(expectedMessage, retryAttempts, 'Payment completed successfully after correcting card number.');
+    await this.submitPaymentUntilConfirmation(
+      expectedMessage,
+      retryAttempts,
+      'Payment completed successfully after correcting card number.'
+    );
   }
 
   public async getNextStepButtonMarginLeft(): Promise<string> {
-    return await this.nextStepButton.evaluate(el => getComputedStyle(el).marginLeft);
+    return await this.nextStepButton.evaluate((el) => getComputedStyle(el).marginLeft);
   }
 
   public async waitForNextStepButton(): Promise<void> {

@@ -17,12 +17,23 @@ export class ApiUtil {
     responseType?: 'data' | 'status' | 'headers' | 'full';
     timeout?: number;
   }): Promise<any> {
-    const { method, url, data, headers = {}, logMessage, responseType = 'data', timeout = 30000 } = options;
+    const {
+      method,
+      url,
+      data,
+      headers = {},
+      logMessage,
+      responseType = 'data',
+      timeout = 30000
+    } = options;
 
     try {
       await this.objCommonFunctions.logMessage('INFO', `Making ${method} request to ${url}`);
       if (data) {
-        await this.objCommonFunctions.logMessage('INFO', `Request Payload: ${JSON.stringify(data, null, 2)}`);
+        await this.objCommonFunctions.logMessage(
+          'INFO',
+          `Request Payload: ${JSON.stringify(data, null, 2)}`
+        );
       }
 
       const config: any = {
@@ -38,11 +49,20 @@ export class ApiUtil {
 
       const response = await axios(config);
 
-      await this.objCommonFunctions.logMessage('PASS', `${logMessage} Success. Status: ${response.status} ${response.statusText}`);
+      await this.objCommonFunctions.logMessage(
+        'PASS',
+        `${logMessage} Success. Status: ${response.status} ${response.statusText}`
+      );
       if (response.headers['trace-id']) {
-        await this.objCommonFunctions.logMessage('INFO', `Trace ID: ${response.headers['trace-id']}`);
+        await this.objCommonFunctions.logMessage(
+          'INFO',
+          `Trace ID: ${response.headers['trace-id']}`
+        );
       }
-      await this.objCommonFunctions.logMessage('INFO', `Response Payload: ${JSON.stringify(response.data, null, 2)}`);
+      await this.objCommonFunctions.logMessage(
+        'INFO',
+        `Response Payload: ${JSON.stringify(response.data, null, 2)}`
+      );
 
       return responseType === 'full' ? response : response[responseType];
     } catch (error: any) {
@@ -80,7 +100,10 @@ export class ApiUtil {
       'Content-Type': 'application/x-www-form-urlencoded'
     };
 
-    await this.objCommonFunctions.logMessage('INFO', `Fetching Bearer Token from ${url} with data: ${requestData.toString()}`);
+    await this.objCommonFunctions.logMessage(
+      'INFO',
+      `Fetching Bearer Token from ${url} with data: ${requestData.toString()}`
+    );
     const response = await this.makeRequest({
       method: 'POST',
       url,

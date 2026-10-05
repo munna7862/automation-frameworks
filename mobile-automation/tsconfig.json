@@ -10,19 +10,8 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "noImplicitAny": true,
-    "types": [
-      "node",
-      "@wdio/globals/types",
-      "@wdio/mocha-framework",
-      "mocha"
-    ]
+    "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework", "mocha"]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "reports",
-    "dist"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "reports", "dist"]
 }

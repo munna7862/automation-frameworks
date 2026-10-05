@@ -14,12 +14,20 @@ export class CommonFunctions {
    * @param description Business description of the assertion step.
    * @param soft If true, uses expect.soft to allow subsequent assertions to run.
    */
-  public async verifyValue<T>(actual: T, expected: T, description: string, soft: boolean = false): Promise<void> {
+  public async verifyValue<T>(
+    actual: T,
+    expected: T,
+    description: string,
+    soft: boolean = false
+  ): Promise<void> {
     const isMatch = actual === expected;
     if (isMatch) {
       await this.logMessage('PASS', `${description} - Matched: [${String(actual)}]`);
     } else {
-      await this.logMessage('FAIL', `${description} - Expected: [${String(expected)}] but Received: [${String(actual)}]`);
+      await this.logMessage(
+        'FAIL',
+        `${description} - Expected: [${String(expected)}] but Received: [${String(actual)}]`
+      );
     }
     if (soft) {
       expect.soft(actual, description).toBe(expected);
@@ -35,7 +43,11 @@ export class CommonFunctions {
    * @param description Business description of what condition represents.
    * @param soft If true, uses expect.soft.
    */
-  public async verifyCondition(condition: boolean, description: string, soft: boolean = false): Promise<void> {
+  public async verifyCondition(
+    condition: boolean,
+    description: string,
+    soft: boolean = false
+  ): Promise<void> {
     if (condition) {
       await this.logMessage('PASS', `${description} - Condition met (true)`);
     } else {
@@ -65,7 +77,10 @@ export class CommonFunctions {
   ): Promise<void> {
     await this.logMessage('INFO', `Checking text: ${description}`);
     try {
-      await expect(locator, description).toHaveText(expectedText, timeout ? { timeout } : undefined);
+      await expect(locator, description).toHaveText(
+        expectedText,
+        timeout ? { timeout } : undefined
+      );
       await this.logMessage('PASS', `Verified text for: ${description} -> "${expectedText}"`);
     } catch (error) {
       await this.logMessage('FAIL', `Text verification failed for: ${description} - ${error}`);
@@ -89,10 +104,16 @@ export class CommonFunctions {
   ): Promise<void> {
     await this.logMessage('INFO', `Checking item count: ${description}`);
     try {
-      await expect(locator, description).toHaveCount(expectedCount, timeout ? { timeout } : undefined);
+      await expect(locator, description).toHaveCount(
+        expectedCount,
+        timeout ? { timeout } : undefined
+      );
       await this.logMessage('PASS', `Verified count [${expectedCount}] for: ${description}`);
     } catch (error) {
-      await this.logMessage('FAIL', `Count verification failed for: ${description} - Expected: [${expectedCount}] - ${error}`);
+      await this.logMessage(
+        'FAIL',
+        `Count verification failed for: ${description} - Expected: [${expectedCount}] - ${error}`
+      );
       throw error;
     }
   }
@@ -123,13 +144,23 @@ export class CommonFunctions {
    * Legacy comparison helper that returns a boolean.
    * @deprecated Use `verifyValue` or `verifyCondition` for direct Playwright assertion diffs and fail-fast behavior.
    */
-  public async compareTwoValues(sActualValue: any, sExpectedValue: any, sLogMessage: string): Promise<boolean> {
+  public async compareTwoValues(
+    sActualValue: any,
+    sExpectedValue: any,
+    sLogMessage: string
+  ): Promise<boolean> {
     let bValidation = false;
     if (sActualValue === sExpectedValue) {
-      await this.logMessage('PASS', ` ${sLogMessage} Success !! Actual and Expected Values are:: ${sActualValue}`);
+      await this.logMessage(
+        'PASS',
+        ` ${sLogMessage} Success !! Actual and Expected Values are:: ${sActualValue}`
+      );
       bValidation = true;
     } else {
-      await this.logMessage('FAIL', ` ${sLogMessage} Failed!! Expected Value:: ${sExpectedValue} || Actual Value:: ${sActualValue}`);
+      await this.logMessage(
+        'FAIL',
+        ` ${sLogMessage} Failed!! Expected Value:: ${sExpectedValue} || Actual Value:: ${sActualValue}`
+      );
     }
     expect.soft(sActualValue, sLogMessage).toBe(sExpectedValue);
     return bValidation;
@@ -137,10 +168,10 @@ export class CommonFunctions {
 
   public async logMessage(sLogLevel: string, sMessage: string): Promise<void> {
     const levelMap: Record<string, string> = {
-      'PASS': 'info',
-      'FAIL': 'error',
-      'INFO': 'info',
-      'WARN': 'warn'
+      PASS: 'info',
+      FAIL: 'error',
+      INFO: 'info',
+      WARN: 'warn'
     };
 
     const logLevel = levelMap[sLogLevel] || sLogLevel.toLowerCase();
@@ -157,7 +188,7 @@ export class CommonFunctions {
     logger.log({ level: logLevel, message: safeMessage });
 
     const emoji = sLogLevel === 'PASS' ? '✅' : sLogLevel === 'FAIL' ? '❌' : '';
-    await allure.step(`${emoji} [${timestamp}] [${reportLevel}] ${safeMessage}`, async () => { });
+    await allure.step(`${emoji} [${timestamp}] [${reportLevel}] ${safeMessage}`, async () => {});
   }
 
   public generateRandomString(length: number): string {

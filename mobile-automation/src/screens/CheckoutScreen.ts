@@ -69,30 +69,33 @@ export class CheckoutScreen extends BaseMobileScreen {
    * Submits the order and handles stochastic 500 retry loop (MOB-B4).
    */
   async submitOrderWithRetryLoop(maxRetries = 3): Promise<boolean> {
-    return this.step('Submit order and handle stochastic 500 gateway retry loop (MOB-B4)', async () => {
-      // Scroll down to ensure place order button is visible
-      await this.swipeUp();
+    return this.step(
+      'Submit order and handle stochastic 500 gateway retry loop (MOB-B4)',
+      async () => {
+        // Scroll down to ensure place order button is visible
+        await this.swipeUp();
 
-      await this.clickElement(this.placeOrderButton);
+        await this.clickElement(this.placeOrderButton);
 
-      for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        // Check if order confirmation appeared
-        if (await this.isDisplayed(this.orderConfirmation, 5000)) {
-          return true;
-        }
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+          // Check if order confirmation appeared
+          if (await this.isDisplayed(this.orderConfirmation, 5000)) {
+            return true;
+          }
 
-        // Check if stochastic 500 error banner appeared
-        if (await this.isDisplayed(this.errorBanner, 3000)) {
-          if (await this.isDisplayed(this.retryPaymentButton, 3000)) {
-            await this.clickElement(this.retryPaymentButton);
+          // Check if stochastic 500 error banner appeared
+          if (await this.isDisplayed(this.errorBanner, 3000)) {
+            if (await this.isDisplayed(this.retryPaymentButton, 3000)) {
+              await this.clickElement(this.retryPaymentButton);
+            }
           }
         }
-      }
 
-      // Final wait for confirmation
-      await this.waitForElement(this.orderConfirmation, 10000);
-      return true;
-    });
+        // Final wait for confirmation
+        await this.waitForElement(this.orderConfirmation, 10000);
+        return true;
+      }
+    );
   }
 
   async isOrderConfirmed(): Promise<boolean> {

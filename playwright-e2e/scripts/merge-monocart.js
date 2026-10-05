@@ -29,7 +29,9 @@ async function main() {
   const reportFiles = findIndexJsonFiles(path.resolve(process.cwd(), inputDir));
 
   if (reportFiles.length === 0) {
-    console.log(`[monocart-merge] No index.json files found in ${inputDir}. Creating fallback report.`);
+    console.log(
+      `[monocart-merge] No index.json files found in ${inputDir}. Creating fallback report.`
+    );
     const outDir = path.dirname(path.resolve(process.cwd(), outputFile));
     if (!fs.existsSync(outDir)) {
       fs.mkdirSync(outDir, { recursive: true });
@@ -57,11 +59,23 @@ async function main() {
     outputFile: path.resolve(process.cwd(), outputFile),
     tags: {
       smoke: { style: { background: '#28a745', color: '#fff' }, description: 'Smoke Tests' },
-      regression: { style: { background: '#17a2b8', color: '#fff' }, description: 'Regression Tests' },
-      chaos: { style: { background: '#dc3545', color: '#fff' }, description: 'Chaos Resilience Tests' },
-      visual: { style: { background: '#6f42c1', color: '#fff' }, description: 'Visual Regression Tests' },
+      regression: {
+        style: { background: '#17a2b8', color: '#fff' },
+        description: 'Regression Tests'
+      },
+      chaos: {
+        style: { background: '#dc3545', color: '#fff' },
+        description: 'Chaos Resilience Tests'
+      },
+      visual: {
+        style: { background: '#6f42c1', color: '#fff' },
+        description: 'Visual Regression Tests'
+      },
       a11y: { style: { background: '#ffc107', color: '#000' }, description: 'Accessibility Scans' },
-      quarantine: { style: { background: '#6c757d', color: '#fff' }, description: 'Quarantined Tests' }
+      quarantine: {
+        style: { background: '#6c757d', color: '#fff' },
+        description: 'Quarantined Tests'
+      }
     }
   });
 

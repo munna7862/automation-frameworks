@@ -55,21 +55,30 @@ function parsePlaywrightResults(data) {
   const failed = stats.unexpected || 0;
   const flaky = stats.flaky || 0;
   const skipped = stats.skipped || 0;
-  const total = (stats.total !== undefined) ? stats.total : (passed + failed + flaky + skipped);
+  const total = stats.total !== undefined ? stats.total : passed + failed + flaky + skipped;
   const duration = formatDuration(stats.duration);
 
   const failingTitles = [];
 
   function collectFailures(suite, suitePrefix = '') {
-    const title = suite.title ? (suitePrefix ? `${suitePrefix} > ${suite.title}` : suite.title) : suitePrefix;
+    const title = suite.title
+      ? suitePrefix
+        ? `${suitePrefix} > ${suite.title}`
+        : suite.title
+      : suitePrefix;
 
     if (Array.isArray(suite.specs)) {
       for (const spec of suite.specs) {
         const specTitle = title ? `${title} > ${spec.title}` : spec.title;
-        const isFailed = !spec.ok || (spec.tests && spec.tests.some(t =>
-          t.status === 'unexpected' ||
-          (t.results && t.results.some(r => r.status === 'failed' || r.status === 'timedOut'))
-        ));
+        const isFailed =
+          !spec.ok ||
+          (spec.tests &&
+            spec.tests.some(
+              (t) =>
+                t.status === 'unexpected' ||
+                (t.results &&
+                  t.results.some((r) => r.status === 'failed' || r.status === 'timedOut'))
+            ));
 
         if (isFailed) {
           failingTitles.push(specTitle);
@@ -139,7 +148,9 @@ function main() {
   const targetFile = resolveInputFile(argFile);
 
   if (!targetFile) {
-    console.log(`ℹ️ [summarize-test-results] No test results file found (searched: ${argFile || 'default locations'}).`);
+    console.log(
+      `ℹ️ [summarize-test-results] No test results file found (searched: ${argFile || 'default locations'}).`
+    );
     if (process.env.GITHUB_STEP_SUMMARY) {
       fs.appendFileSync(
         process.env.GITHUB_STEP_SUMMARY,
@@ -156,7 +167,9 @@ function main() {
     const rawContent = fs.readFileSync(targetFile, 'utf8');
     parsedData = JSON.parse(rawContent);
   } catch (err) {
-    console.warn(`⚠️ [summarize-test-results] Could not parse JSON from ${targetFile}: ${err.message}`);
+    console.warn(
+      `⚠️ [summarize-test-results] Could not parse JSON from ${targetFile}: ${err.message}`
+    );
     process.exit(0);
   }
 

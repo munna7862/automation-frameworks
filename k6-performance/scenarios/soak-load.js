@@ -28,9 +28,9 @@ const SOAK_VUS = parseInt(__ENV.SOAK_VUS || __ENV.VUS || '25', 10);
 
 export const options = {
   stages: [
-    { duration: '30s', target: SOAK_VUS },             // Warm-up ramp
-    { duration: SOAK_DURATION, target: SOAK_VUS },     // Sustained endurance soak load
-    { duration: '30s', target: 0 },                    // Graceful ramp-down
+    { duration: '30s', target: SOAK_VUS }, // Warm-up ramp
+    { duration: SOAK_DURATION, target: SOAK_VUS }, // Sustained endurance soak load
+    { duration: '30s', target: 0 } // Graceful ramp-down
   ],
   thresholds: {
     // US-PERF-501 & US-PERF-601 Acceptance Criteria: p95 latency < 300ms, p99 < 600ms, error rate < 0.1%, heap drift < 30%
@@ -42,16 +42,16 @@ export const options = {
     http_req_failed: ['rate<0.01'],
     api_error_rate: ['rate<0.01'],
     memory_leak_detected: ['rate<0.01'],
-    node_event_loop_lag_ms: ['p(95)<50'],
-  },
+    node_event_loop_lag_ms: ['p(95)<50']
+  }
 };
 
 export function setup() {
   const params = {
     headers: {
-      'Accept': 'application/json',
-      'x-bypass-rate-limit': 'true',
-    },
+      Accept: 'application/json',
+      'x-bypass-rate-limit': 'true'
+    }
   };
 
   // Prime endpoints so initial module caches and catalog data are initialized
@@ -74,11 +74,13 @@ export function setup() {
 
   const initialHeapMb = (initialMemory.heapUsed / (1024 * 1024)).toFixed(2);
   const initialRssMb = (initialMemory.rss / (1024 * 1024)).toFixed(2);
-  console.log(`[Soak Setup] Initial Node.js Process Memory: heapUsed=${initialHeapMb} MB, rss=${initialRssMb} MB`);
+  console.log(
+    `[Soak Setup] Initial Node.js Process Memory: heapUsed=${initialHeapMb} MB, rss=${initialRssMb} MB`
+  );
 
   return {
     initialMemory,
-    startTime: new Date().toISOString(),
+    startTime: new Date().toISOString()
   };
 }
 
@@ -87,10 +89,10 @@ export default function () {
   const params = {
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'x-test-session-id': sessionId,
-      'x-bypass-rate-limit': 'true',
-    },
+      'x-bypass-rate-limit': 'true'
+    }
   };
 
   // 1. Benchmark: Catalog Browsing (GET /api/books)
@@ -100,11 +102,11 @@ export default function () {
     'catalog returns items': (r) => {
       try {
         const body = JSON.parse(r.body);
-        return Array.isArray(body) ? body.length > 0 : (body.books && body.books.length > 0);
+        return Array.isArray(body) ? body.length > 0 : body.books && body.books.length > 0;
       } catch {
         return false;
       }
-    },
+    }
   });
   catalogDuration.add(catalogRes.timings.duration);
   soakReqDuration.add(catalogRes.timings.duration);
@@ -123,7 +125,7 @@ export default function () {
       } catch {
         return false;
       }
-    },
+    }
   });
   searchDuration.add(searchRes.timings.duration);
   soakReqDuration.add(searchRes.timings.duration);
@@ -142,7 +144,7 @@ export default function () {
       } catch {
         return false;
       }
-    },
+    }
   });
   detailDuration.add(detailRes.timings.duration);
   soakReqDuration.add(detailRes.timings.duration);
@@ -161,7 +163,10 @@ export default function () {
           rssTrend.add(healthData.memory.rss / (1024 * 1024));
         }
         if (healthData.eventLoop) {
-          const lag = healthData.eventLoop.p95 !== undefined ? healthData.eventLoop.p95 : (healthData.eventLoop.mean || 0);
+          const lag =
+            healthData.eventLoop.p95 !== undefined
+              ? healthData.eventLoop.p95
+              : healthData.eventLoop.mean || 0;
           eventLoopLagTrend.add(lag);
         }
         if (healthData.cpu && typeof healthData.cpu.percent === 'number') {
@@ -180,9 +185,9 @@ export default function () {
 export function teardown(data) {
   const params = {
     headers: {
-      'Accept': 'application/json',
-      'x-bypass-rate-limit': 'true',
-    },
+      Accept: 'application/json',
+      'x-bypass-rate-limit': 'true'
+    }
   };
   const finalRes = http.get(`${BASE_URL}/api/health`, params);
   let finalMemory = { heapUsed: 0, heapTotal: 0, rss: 0 };
@@ -213,7 +218,7 @@ export function teardown(data) {
 
   check(finalRes, {
     'heapUsed memory drift within 30% threshold': () => isMemoryStable,
-    'backend health status is ok': (r) => r.status === 200,
+    'backend health status is ok': (r) => r.status === 200
   });
 
   const initHeapMb = (initialHeap / (1024 * 1024)).toFixed(2);
@@ -239,5 +244,5 @@ Memory Stability : ${isMemoryStable ? 'PASSED 🟢 (No memory leak detected)' : 
 export const handleSummary = createSummaryHandler({
   jsonFilename: 'perf-summary-soak.json',
   htmlFilename: 'performance/report-soak.html',
-  title: 'Endurance Soak Benchmark (25 VUs)',
+  title: 'Endurance Soak Benchmark (25 VUs)'
 });

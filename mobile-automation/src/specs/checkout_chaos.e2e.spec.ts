@@ -46,7 +46,7 @@ describe('Checkout Occlusion & Stochastic Gateway Retry Loop (TC-MOB-003, MOB_E2
       firstName: 'Jane',
       lastName: 'Doe',
       address: '123 Buggy Lane, Suite 404',
-      cardNumber: '4242424242424242',
+      cardNumber: '4242424242424242'
     });
   });
 

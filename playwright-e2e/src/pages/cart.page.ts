@@ -42,7 +42,7 @@ export class CartPage extends BasePage {
   // Actions and Interaction Methods
   public async clickCartLink(): Promise<void> {
     await this.ensureNavElementVisible(this.cartLink);
-    await this.doClick(this.cartLink, "Clicking on Cart link");
+    await this.doClick(this.cartLink, 'Clicking on Cart link');
   }
 
   public async openCart(): Promise<void> {
@@ -50,32 +50,38 @@ export class CartPage extends BasePage {
     await this.cartHeader.waitFor({ state: 'visible', timeout: 10000 });
   }
 
-
   public async getCartItemsCount(): Promise<number> {
-    await this.cartItems.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
+    await this.cartItems
+      .first()
+      .waitFor({ state: 'visible', timeout: 5000 })
+      .catch(() => undefined);
     return await this.cartItems.count();
   }
 
-
   public async getCartItemText(): Promise<string> {
-    await this.logMessage('INFO', "Getting cart item text");
+    await this.logMessage('INFO', 'Getting cart item text');
     await this.cartItems.first().waitFor({ state: 'visible', timeout: 60000 });
     return (await this.cartItems.allTextContents()).join(' ');
   }
 
   public async removeFirstCartItem(): Promise<void> {
     const initialCount = await this.getCartItemsCount();
-    await this.doClick(this.removeButtons.first(), "Clicking Remove item button");
+    await this.doClick(this.removeButtons.first(), 'Clicking Remove item button');
     // Wait until item count decreases or cart becomes empty
     if (initialCount > 1) {
-      await this.cartItems.nth(initialCount - 1).waitFor({ state: 'detached', timeout: 10000 }).catch(() => undefined);
+      await this.cartItems
+        .nth(initialCount - 1)
+        .waitFor({ state: 'detached', timeout: 10000 })
+        .catch(() => undefined);
     } else {
-      await this.emptyCartMessage.waitFor({ state: 'visible', timeout: 10000 }).catch(() => undefined);
+      await this.emptyCartMessage
+        .waitFor({ state: 'visible', timeout: 10000 })
+        .catch(() => undefined);
     }
   }
 
   public async getCartTotalText(): Promise<string> {
-    return await this.doGetText(this.cartTotalHeading, "Getting cart total text");
+    return await this.doGetText(this.cartTotalHeading, 'Getting cart total text');
   }
 
   public async getCartTotalAmount(): Promise<number> {
@@ -85,13 +91,16 @@ export class CartPage extends BasePage {
   }
 
   public async isCartEmpty(): Promise<boolean> {
-    const isEmptyMsgVisible = await this.doesElementExist(this.emptyCartMessage, "Checking if 'Your cart is empty.' message is visible");
+    const isEmptyMsgVisible = await this.doesElementExist(
+      this.emptyCartMessage,
+      "Checking if 'Your cart is empty.' message is visible"
+    );
     const count = await this.getCartItemsCount();
     return isEmptyMsgVisible || count === 0;
   }
 
   public async clickClearAll(): Promise<void> {
-    await this.doClick(this.clearAllButton, "Clicking on Clear All button");
+    await this.doClick(this.clearAllButton, 'Clicking on Clear All button');
   }
 
   public async clearAllItemsIfPresent(): Promise<void> {
@@ -103,7 +112,7 @@ export class CartPage extends BasePage {
   }
 
   public async clickProceedToCheckout(): Promise<void> {
-    await this.doClick(this.proceedToCheckoutButton, "Clicking on Proceed to Checkout button");
+    await this.doClick(this.proceedToCheckoutButton, 'Clicking on Proceed to Checkout button');
   }
 
   public async proceedToCheckout(): Promise<void> {

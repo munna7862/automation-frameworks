@@ -189,7 +189,9 @@ function getGitMetadata() {
   try {
     const commitHash = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
     const branch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
-    const lastCommitMsg = execSync('git log -1 --pretty=%B', { encoding: 'utf-8' }).trim().split('\n')[0];
+    const lastCommitMsg = execSync('git log -1 --pretty=%B', { encoding: 'utf-8' })
+      .trim()
+      .split('\n')[0];
     return { commitHash, branch, lastCommitMsg };
   } catch (err) {
     return {
@@ -248,7 +250,9 @@ function aggregateMetrics(options) {
     path.join(rootDir, 'playwright-allure-report', 'widgets', 'summary.json')
   ];
   for (const dir of searchDirs) {
-    pwSummaryPaths.push(path.join(dir, 'AutomationReports', 'Playwright', 'widgets', 'summary.json'));
+    pwSummaryPaths.push(
+      path.join(dir, 'AutomationReports', 'Playwright', 'widgets', 'summary.json')
+    );
   }
   const pwSummary = tryReadAllureSummary(pwSummaryPaths);
   if (pwSummary && pwSummary.statistic) {
@@ -269,9 +273,7 @@ function aggregateMetrics(options) {
   }
 
   // 2. JMeter
-  const jmStatsPaths = [
-    path.join(rootDir, 'jmeter', 'Reports', 'statistics.json')
-  ];
+  const jmStatsPaths = [path.join(rootDir, 'jmeter', 'Reports', 'statistics.json')];
   for (const dir of searchDirs) {
     jmStatsPaths.push(path.join(dir, 'AutomationReports', 'JMeter', 'statistics.json'));
   }
@@ -301,7 +303,9 @@ function aggregateMetrics(options) {
     path.join(rootDir, 'selenium-allure-report', 'widgets', 'summary.json')
   ];
   for (const dir of searchDirs) {
-    selSummaryPaths.push(path.join(dir, 'AutomationReports', 'Selenium', 'widgets', 'summary.json'));
+    selSummaryPaths.push(
+      path.join(dir, 'AutomationReports', 'Selenium', 'widgets', 'summary.json')
+    );
   }
   const selSummary = tryReadAllureSummary(selSummaryPaths);
   if (selSummary && selSummary.statistic) {
@@ -351,7 +355,9 @@ function aggregateMetrics(options) {
     path.join(rootDir, 'mobile-allure-report', 'widgets', 'summary.json')
   ];
   for (const dir of searchDirs) {
-    mobileSummaryPaths.push(path.join(dir, 'AutomationReports', 'Mobile', 'widgets', 'summary.json'));
+    mobileSummaryPaths.push(
+      path.join(dir, 'AutomationReports', 'Mobile', 'widgets', 'summary.json')
+    );
   }
   const mobileSummary = tryReadAllureSummary(mobileSummaryPaths);
   if (mobileSummary && mobileSummary.statistic) {
@@ -386,9 +392,10 @@ function aggregateMetrics(options) {
     totalDurationMs += m.durationMs || 0;
   }
 
-  const overallPassRate = totalTests > 0
-    ? `${((totalPassed / (totalTests - totalSkipped)) * 100).toFixed(1)}%`
-    : '100.0%';
+  const overallPassRate =
+    totalTests > 0
+      ? `${((totalPassed / (totalTests - totalSkipped)) * 100).toFixed(1)}%`
+      : '100.0%';
 
   const nowIso = new Date().toISOString();
 
@@ -442,7 +449,9 @@ function main() {
   console.log(`[Portal Metadata] Aggregate KPIs:`);
   console.log(`  - Total Tests: ${data.kpis.totalTests}`);
   console.log(`  - Overall Pass Rate: ${data.kpis.overallPassRate}`);
-  console.log(`  - Passed: ${data.kpis.totalPassed} | Failed: ${data.kpis.totalFailed} | Skipped: ${data.kpis.totalSkipped}`);
+  console.log(
+    `  - Passed: ${data.kpis.totalPassed} | Failed: ${data.kpis.totalFailed} | Skipped: ${data.kpis.totalSkipped}`
+  );
   console.log(`  - Active Frameworks: ${data.kpis.activeFrameworks}`);
   console.log(`  - Git Commit: ${data.git.commit} (${data.git.branch})`);
 }

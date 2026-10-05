@@ -1,0 +1,24 @@
+# Global monorepo default owner
+* @munna7862
+
+# Performance Testing Frameworks
+/jmeter/ @munna7862
+/k6-performance/ @munna7862
+
+# Mobile Automation
+/mobile-automation/ @munna7862
+
+# Web Automation Frameworks
+/playwright-e2e/ @munna7862
+/selenium-e2e/ @munna7862
+/wdio-e2e/ @munna7862
+
+# Shared Libraries & Tooling
+/packages/ @munna7862
+/tools/ @munna7862
+/scripts/ @munna7862
+
+# CI/CD Workflows & Governance
+/.github/ @munna7862
+/docs/ @munna7862
+/planning/ @munna7862

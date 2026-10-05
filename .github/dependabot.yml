@@ -8,68 +8,68 @@
 version: 2
 updates:
   # Monorepo NPM Dependencies (Root & Workspaces)
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "Etc/UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'Etc/UTC'
     open-pull-requests-limit: 5
     labels:
-      - "dependencies"
-      - "javascript"
+      - 'dependencies'
+      - 'javascript'
     commit-message:
-      prefix: "chore(deps)"
+      prefix: 'chore(deps)'
     groups:
       playwright:
         patterns:
-          - "@playwright/*"
-          - "playwright*"
-          - "@automationframeworks/playwright-utils"
+          - '@playwright/*'
+          - 'playwright*'
+          - '@automationframeworks/playwright-utils'
       wdio:
         patterns:
-          - "@wdio/*"
-          - "webdriverio*"
-          - "devtools*"
-          - "appium*"
-          - "@appium/*"
+          - '@wdio/*'
+          - 'webdriverio*'
+          - 'devtools*'
+          - 'appium*'
+          - '@appium/*'
       eslint:
         patterns:
-          - "eslint*"
-          - "@typescript-eslint/*"
+          - 'eslint*'
+          - '@typescript-eslint/*'
       types:
         patterns:
-          - "@types/*"
-          - "typescript"
+          - '@types/*'
+          - 'typescript'
       allure:
         patterns:
-          - "allure-*"
-          - "@allurereport/*"
+          - 'allure-*'
+          - '@allurereport/*'
       minor-and-patch:
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
     cooldown:
       default-days: 7
 
   # GitHub Actions Workflow Dependencies
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "Etc/UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'Etc/UTC'
     open-pull-requests-limit: 5
     labels:
-      - "dependencies"
-      - "github-actions"
+      - 'dependencies'
+      - 'github-actions'
     commit-message:
-      prefix: "chore(ci)"
+      prefix: 'chore(ci)'
     groups:
       github-actions:
         patterns:
-          - "*"
+          - '*'
     cooldown:
       default-days: 7

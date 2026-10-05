@@ -7,6 +7,7 @@
 ## 🏛️ Strategic Engineering Planning & Delivery Roadmap
 
 The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven by a specialized 7-agent virtual persona team:
+
 - 📖 [**Master Plan (`planning/Master/master_plan.md`)**](planning/Master/master_plan.md)
 - 🗺️ [**Planning & Sprint Sitemap (`planning/README.md`)**](planning/README.md)
 - 📋 [**Test Cases Catalog (`docs/test_cases_catalog.md`)**](docs/test_cases_catalog.md)
@@ -17,15 +18,15 @@ The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven 
 
 ## 🧭 Multi-Framework Architecture
 
-| Framework / Package | Technology Stack | Scope & Status |
-| :--- | :--- | :--- |
-| **`playwright-e2e`** | Playwright, TypeScript, Allure | **Primary Web & API**: Strictly Google Chrome (`channel: 'chrome'`) and headless API (~110 tests). |
-| **`packages/playwright-utils`**| `@automationframeworks/playwright-utils` | Shared BasePage, Winston loggers, and typed assertion helpers. |
-| **`selenium-e2e`** | Selenium WebDriver, TypeScript, Mocha, Chai | W3C compliant E2E web automation on Google Chrome with WebDriverWait & Shadow DOM piercing. |
-| **`wdio-e2e`** | WebdriverIO, TypeScript, Mocha, Allure | Modern WebdriverIO web automation targeting BuggyBooks with `shadow$` selectors. |
-| **`mobile-automation`** | Appium 2.x, WebdriverIO | Android (`UiAutomator2`) & iOS (`XCUITest`) Screen Objects & mobile chaos resilience. |
-| **`jmeter`** | Apache JMeter 5.6+ | Enterprise stress, high-concurrency load, and HTML reporting dashboards. |
-| **`k6-performance`** | k6 (JavaScript) | Fast PR baseline drift regression gates (`<= 20%` drift threshold). |
+| Framework / Package             | Technology Stack                            | Scope & Status                                                                                     |
+| :------------------------------ | :------------------------------------------ | :------------------------------------------------------------------------------------------------- |
+| **`playwright-e2e`**            | Playwright, TypeScript, Allure              | **Primary Web & API**: Strictly Google Chrome (`channel: 'chrome'`) and headless API (~110 tests). |
+| **`packages/playwright-utils`** | `@automationframeworks/playwright-utils`    | Shared BasePage, Winston loggers, and typed assertion helpers.                                     |
+| **`selenium-e2e`**              | Selenium WebDriver, TypeScript, Mocha, Chai | W3C compliant E2E web automation on Google Chrome with WebDriverWait & Shadow DOM piercing.        |
+| **`wdio-e2e`**                  | WebdriverIO, TypeScript, Mocha, Allure      | Modern WebdriverIO web automation targeting BuggyBooks with `shadow$` selectors.                   |
+| **`mobile-automation`**         | Appium 2.x, WebdriverIO                     | Android (`UiAutomator2`) & iOS (`XCUITest`) Screen Objects & mobile chaos resilience.              |
+| **`jmeter`**                    | Apache JMeter 5.6+                          | Enterprise stress, high-concurrency load, and HTML reporting dashboards.                           |
+| **`k6-performance`**            | k6 (JavaScript)                             | Fast PR baseline drift regression gates (`<= 20%` drift threshold).                                |
 
 ---
 
@@ -39,7 +40,6 @@ The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven 
    ```
 3. **Intentional Chaos Containment**: Any test toggling chaos knobs via `POST /api/test/config` must restore defaults via `POST /api/test/reset` in `afterEach`.
 4. **Dual-Catalog Parity**: Both `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` must remain 100% synchronized.
-
 
 ## Playwright E2E
 
@@ -115,6 +115,7 @@ jmeter/
     BuggyBooks_Auth_Stress.jmx
     BuggyBooks_Ecommerce_Journey.jmx
     BuggyBooks_Inventory_Stress.jmx
+  Legacy/
     CRUDPerformanceTest.jmx
   TestData/
     catalog_search.csv
@@ -140,27 +141,27 @@ More details: [jmeter/README.md](./jmeter/README.md)
 
 ## Common Prerequisites
 
-- Node.js 18 or higher
+- Node.js 24 LTS (or version specified in `.nvmrc`)
 - npm
-- Google Chrome or another supported browser
-- Java Runtime Environment for Allure and JMeter
-- Apache JMeter for performance test execution
+- Google Chrome (single-browser policy strictly enforced per AGENTS.md §1)
+- Java Runtime Environment (JRE 17+) for Allure and JMeter
+- Apache JMeter 5.6+ for performance test execution
 
 ## Environment Variables
 
 Environment handling is framework-specific. Common variables used across projects include:
 
-| Variable | Purpose |
-| --- | --- |
-| `ENV` or `ENVIRONMENT` | Logical environment name |
-| `BASE_URL` | UI application base URL |
-| `API_BASE_URL` | API application base URL |
-| `POSTS_BASE_URL` | JSONPlaceholder API base URL used by sample API tests |
-| `HEADLESS` | Runs browser tests in headless mode when set to `true` |
-| `BROWSER` | Browser selection, such as `chrome`, `firefox`, or `edge` |
-| `SUITENAME` | Optional suite file selector |
-| `USER_NAME` | Login user for authenticated tests |
-| `PASSWORD` | Login password for authenticated tests |
+| Variable               | Purpose                                                           |
+| ---------------------- | ----------------------------------------------------------------- |
+| `ENV` or `ENVIRONMENT` | Logical environment name                                          |
+| `BASE_URL`             | UI application base URL (`https://buggy-books-fe.onrender.com`)   |
+| `API_BASE_URL`         | API application base URL (`https://buggy-books.onrender.com/api`) |
+| `POSTS_BASE_URL`       | JSONPlaceholder API base URL used by sample API tests             |
+| `HEADLESS`             | Runs browser tests in headless mode when set to `true`            |
+| `BROWSER`              | Browser selection (`chrome` strictly enforced; see AGENTS.md §1)  |
+| `SUITENAME`            | Optional suite file selector                                      |
+| `USER_NAME`            | Login user for authenticated tests                                |
+| `PASSWORD`             | Login password for authenticated tests                            |
 
 Create a `.env` file inside the framework directory when local overrides are needed.
 
@@ -168,12 +169,12 @@ Create a `.env` file inside the framework directory when local overrides are nee
 
 Each Node-based framework writes reports in its own project directory.
 
-| Framework | Report Command | Output |
-| --- | --- | --- |
-| Playwright | `npm run report` | `playwright-e2e/reports/allure-report` |
-| Selenium | `npm run report` | `selenium-e2e/allure-report` |
-| WebdriverIO | `npm run report` | `wdio-e2e/reports/allure-report` |
-| JMeter | JMeter CLI or GUI | `jmeter/Results` |
+| Framework   | Report Command    | Output                                 |
+| ----------- | ----------------- | -------------------------------------- |
+| Playwright  | `npm run report`  | `playwright-e2e/reports/allure-report` |
+| Selenium    | `npm run report`  | `selenium-e2e/allure-report`           |
+| WebdriverIO | `npm run report`  | `wdio-e2e/reports/allure-report`       |
+| JMeter      | JMeter CLI or GUI | `jmeter/Results`                       |
 
 ## CI/CD Architecture & Workflows
 
@@ -181,18 +182,18 @@ GitHub Actions workflows are maintained under `.github/workflows/` and powered b
 
 ### Active Workflows
 
-| Workflow | Path | Trigger | Purpose |
-| :--- | :--- | :--- | :--- |
-| **PR Quality Gate** | [`.github/workflows/pr-gate.yml`](.github/workflows/pr-gate.yml) | `pull_request` | Fast-feedback check (< 3 min): linting, typechecking, catalog parity, Render warm-up, Chrome smoke tests. |
-| **Reusable E2E Pipeline** | [`.github/workflows/_reusable-e2e.yml`](.github/workflows/_reusable-e2e.yml) | `workflow_call` | Core execution engine for Playwright (sharded), Selenium, and WDIO with Allure and Monocart reporting. |
-| **Playwright CI** | [`.github/workflows/playwright-ci.yml`](.github/workflows/playwright-ci.yml) | `push [main]`, dispatch | Thin caller invoking `_reusable-e2e.yml` with 4 native shards. |
-| **Selenium CI** | [`.github/workflows/selenium-ci.yml`](.github/workflows/selenium-ci.yml) | `push [main]`, dispatch | Thin caller invoking `_reusable-e2e.yml` for Selenium WebDriver. |
-| **WebdriverIO CI** | [`.github/workflows/wdio-ci.yml`](.github/workflows/wdio-ci.yml) | `push [main]`, dispatch | Thin caller invoking `_reusable-e2e.yml` for WebdriverIO. |
-| **Nightly Regression** | [`.github/workflows/nightly-regression.yml`](.github/workflows/nightly-regression.yml) | Cron `30 1 * * *` (01:30 UTC), dispatch | Parallel execution of Playwright (4 shards), Selenium, and WDIO with consolidated matrix summary. |
-| **JMeter Performance** | [`.github/workflows/jmeter-performance.yaml`](.github/workflows/jmeter-performance.yaml) | `workflow_dispatch` | Parameterized Apache JMeter load tests with HTML dashboard reporting. |
-| **k6 Performance** | [`.github/workflows/k6-performance.yaml`](.github/workflows/k6-performance.yaml) | `pull_request`, dispatch | Developer k6 benchmark with automated baseline drift regression gate. |
-| **Mobile CI** | [`.github/workflows/mobile-ci.yml`](.github/workflows/mobile-ci.yml) | Cron nightly, dispatch | Headless Appium Android emulator test execution on macOS runners. |
-| **Quarantine Audit** | [`.github/workflows/quarantine-audit.yml`](.github/workflows/quarantine-audit.yml) | Cron weekly, dispatch | 10x repetition stability audit for quarantined tests. |
+| Workflow                  | Path                                                                                     | Trigger                                 | Purpose                                                                                                   |
+| :------------------------ | :--------------------------------------------------------------------------------------- | :-------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| **PR Quality Gate**       | [`.github/workflows/pr-gate.yml`](.github/workflows/pr-gate.yml)                         | `pull_request`                          | Fast-feedback check (< 3 min): linting, typechecking, catalog parity, Render warm-up, Chrome smoke tests. |
+| **Reusable E2E Pipeline** | [`.github/workflows/_reusable-e2e.yml`](.github/workflows/_reusable-e2e.yml)             | `workflow_call`                         | Core execution engine for Playwright (sharded), Selenium, and WDIO with Allure and Monocart reporting.    |
+| **Playwright CI**         | [`.github/workflows/playwright-ci.yml`](.github/workflows/playwright-ci.yml)             | `push [main]`, dispatch                 | Thin caller invoking `_reusable-e2e.yml` with 4 native shards.                                            |
+| **Selenium CI**           | [`.github/workflows/selenium-ci.yml`](.github/workflows/selenium-ci.yml)                 | `push [main]`, dispatch                 | Thin caller invoking `_reusable-e2e.yml` for Selenium WebDriver.                                          |
+| **WebdriverIO CI**        | [`.github/workflows/wdio-ci.yml`](.github/workflows/wdio-ci.yml)                         | `push [main]`, dispatch                 | Thin caller invoking `_reusable-e2e.yml` for WebdriverIO.                                                 |
+| **Nightly Regression**    | [`.github/workflows/nightly-regression.yml`](.github/workflows/nightly-regression.yml)   | Cron `30 1 * * *` (01:30 UTC), dispatch | Parallel execution of Playwright (4 shards), Selenium, and WDIO with consolidated matrix summary.         |
+| **JMeter Performance**    | [`.github/workflows/jmeter-performance.yaml`](.github/workflows/jmeter-performance.yaml) | `workflow_dispatch`                     | Parameterized Apache JMeter load tests with HTML dashboard reporting.                                     |
+| **k6 Performance**        | [`.github/workflows/k6-performance.yaml`](.github/workflows/k6-performance.yaml)         | `pull_request`, dispatch                | Developer k6 benchmark with automated baseline drift regression gate.                                     |
+| **Mobile CI**             | [`.github/workflows/mobile-ci.yml`](.github/workflows/mobile-ci.yml)                     | Cron nightly, dispatch                  | Headless Appium Android emulator test execution on macOS runners.                                         |
+| **Quarantine Audit**      | [`.github/workflows/quarantine-audit.yml`](.github/workflows/quarantine-audit.yml)       | Cron weekly, dispatch                   | 10x repetition stability audit for quarantined tests.                                                     |
 
 ### Shared Composite Actions
 

@@ -7,6 +7,7 @@
     "test": "cross-env ENVIRONMENT=INTEROP TZ=Australia/Adelaide mocha",
     "test:smoke": "cross-env ENVIRONMENT=INTEROP TZ=Australia/Adelaide mocha --grep @smoke",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
     "generate-allure": "node ../scripts/generate-allure-environment.js --framework=selenium && allure generate --clean allure-results -o allure-report",
     "open-allure": "allure open allure-report",
     "report": "npm run generate-allure && npm run open-allure",
@@ -17,6 +18,7 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
     "@types/node": "^25.6.0",
@@ -24,12 +26,16 @@
     "allure-commandline": "^2.38.1",
     "allure-mocha": "^3.7.1",
     "chai": "^4.5.0",
+    "eslint": "^10.10.0",
+    "eslint-plugin-mocha": "^11.0.0",
+    "globals": "^17.12.0",
     "mocha": "^11.7.5",
     "rimraf": "^6.1.3",
     "selenium-webdriver": "^4.43.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^8.70.0"
   },
   "dependencies": {
     "axios": "^1.15.0",

@@ -1,6 +1,6 @@
 import allureReporter from '@wdio/allure-reporter';
 import { Status } from 'allure-js-commons';
-import { Logger } from '../utils/Logger.js';
+import { Logger } from './Logger.js';
 
 export abstract class BaseMobileScreen {
   protected screenName: string;
@@ -50,7 +50,10 @@ export abstract class BaseMobileScreen {
   async waitForElement(selector: string, timeout = 15000): Promise<ChainablePromiseElement> {
     return this.step(`Wait for element visible: ${selector}`, async () => {
       const el = this.getElement(selector);
-      await el.waitForDisplayed({ timeout, timeoutMsg: `Element ${selector} not displayed after ${timeout}ms` });
+      await el.waitForDisplayed({
+        timeout,
+        timeoutMsg: `Element ${selector} not displayed after ${timeout}ms`
+      });
       return el;
     });
   }
@@ -131,56 +134,62 @@ export abstract class BaseMobileScreen {
    * Perform vertical upward swipe / scroll down gesture using W3C pointer actions.
    */
   async swipeUp(distanceMultiplier = 0.5): Promise<void> {
-    await this.step(`Swipe up gesture (scroll down by multiplier ${distanceMultiplier})`, async () => {
-      const { width, height } = await driver.getWindowSize();
-      const startX = Math.floor(width / 2);
-      const startY = Math.floor(height * 0.75);
-      const endY = Math.floor(height * (0.75 - distanceMultiplier));
+    await this.step(
+      `Swipe up gesture (scroll down by multiplier ${distanceMultiplier})`,
+      async () => {
+        const { width, height } = await driver.getWindowSize();
+        const startX = Math.floor(width / 2);
+        const startY = Math.floor(height * 0.75);
+        const endY = Math.floor(height * (0.75 - distanceMultiplier));
 
-      await driver.performActions([
-        {
-          type: 'pointer',
-          id: 'finger1',
-          parameters: { pointerType: 'touch' },
-          actions: [
-            { type: 'pointerMove', duration: 0, x: startX, y: startY },
-            { type: 'pointerDown', button: 0 },
-            { type: 'pause', duration: 200 },
-            { type: 'pointerMove', duration: 600, x: startX, y: Math.max(10, endY) },
-            { type: 'pointerUp', button: 0 },
-          ],
-        },
-      ]);
-      await driver.releaseActions();
-    });
+        await driver.performActions([
+          {
+            type: 'pointer',
+            id: 'finger1',
+            parameters: { pointerType: 'touch' },
+            actions: [
+              { type: 'pointerMove', duration: 0, x: startX, y: startY },
+              { type: 'pointerDown', button: 0 },
+              { type: 'pause', duration: 200 },
+              { type: 'pointerMove', duration: 600, x: startX, y: Math.max(10, endY) },
+              { type: 'pointerUp', button: 0 }
+            ]
+          }
+        ]);
+        await driver.releaseActions();
+      }
+    );
   }
 
   /**
    * Perform vertical downward swipe / scroll up gesture using W3C pointer actions.
    */
   async swipeDown(distanceMultiplier = 0.5): Promise<void> {
-    await this.step(`Swipe down gesture (scroll up by multiplier ${distanceMultiplier})`, async () => {
-      const { width, height } = await driver.getWindowSize();
-      const startX = Math.floor(width / 2);
-      const startY = Math.floor(height * 0.25);
-      const endY = Math.floor(height * (0.25 + distanceMultiplier));
+    await this.step(
+      `Swipe down gesture (scroll up by multiplier ${distanceMultiplier})`,
+      async () => {
+        const { width, height } = await driver.getWindowSize();
+        const startX = Math.floor(width / 2);
+        const startY = Math.floor(height * 0.25);
+        const endY = Math.floor(height * (0.25 + distanceMultiplier));
 
-      await driver.performActions([
-        {
-          type: 'pointer',
-          id: 'finger1',
-          parameters: { pointerType: 'touch' },
-          actions: [
-            { type: 'pointerMove', duration: 0, x: startX, y: startY },
-            { type: 'pointerDown', button: 0 },
-            { type: 'pause', duration: 200 },
-            { type: 'pointerMove', duration: 600, x: startX, y: Math.min(height - 10, endY) },
-            { type: 'pointerUp', button: 0 },
-          ],
-        },
-      ]);
-      await driver.releaseActions();
-    });
+        await driver.performActions([
+          {
+            type: 'pointer',
+            id: 'finger1',
+            parameters: { pointerType: 'touch' },
+            actions: [
+              { type: 'pointerMove', duration: 0, x: startX, y: startY },
+              { type: 'pointerDown', button: 0 },
+              { type: 'pause', duration: 200 },
+              { type: 'pointerMove', duration: 600, x: startX, y: Math.min(height - 10, endY) },
+              { type: 'pointerUp', button: 0 }
+            ]
+          }
+        ]);
+        await driver.releaseActions();
+      }
+    );
   }
 
   /**
@@ -199,7 +208,9 @@ export abstract class BaseMobileScreen {
         await this.swipeUp(0.4);
         await driver.pause(500);
       }
-      throw new Error(`Failed to scroll to element containing text: "${text}" within ${maxSwipes} swipes`);
+      throw new Error(
+        `Failed to scroll to element containing text: "${text}" within ${maxSwipes} swipes`
+      );
     });
   }
 
@@ -231,8 +242,8 @@ export abstract class BaseMobileScreen {
             { type: 'pointerDown', button: 0 },
             { type: 'pause', duration: 100 },
             { type: 'pointerMove', duration: 600, x: f1StartX, y: f1EndY },
-            { type: 'pointerUp', button: 0 },
-          ],
+            { type: 'pointerUp', button: 0 }
+          ]
         },
         {
           type: 'pointer',
@@ -243,9 +254,9 @@ export abstract class BaseMobileScreen {
             { type: 'pointerDown', button: 0 },
             { type: 'pause', duration: 100 },
             { type: 'pointerMove', duration: 600, x: f2StartX, y: f2EndY },
-            { type: 'pointerUp', button: 0 },
-          ],
-        },
+            { type: 'pointerUp', button: 0 }
+          ]
+        }
       ]);
       await driver.releaseActions();
     });

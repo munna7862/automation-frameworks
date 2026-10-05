@@ -49,13 +49,12 @@ const server = http.createServer((req, res) => {
   });
 });
 
-
 server.listen(8099, async () => {
   try {
     const browser = await chromium.launch({ channel: 'chrome' });
     const page = await browser.newPage();
     const errors = [];
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       console.log('BROWSER LOG:', msg.type(), msg.text());
       if (msg.type() === 'error') errors.push(msg.text());
     });

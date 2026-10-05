@@ -1,13 +1,16 @@
 ---
-description: "Workflow governance: branch policies, Definition of Done, prohibited actions, and GitHub Actions matrix synchronization"
-applyTo: "**"
+description: 'Workflow governance: branch policies, Definition of Done, prohibited actions, and GitHub Actions matrix synchronization'
+applyTo: '**'
 ---
+
 # Workflow Governance rules
 
 Always-on process rules for all work in this repository.
 
 ## Pull Request & Git Workflow (MANDATORY)
+
 When implementing code, test, or instruction changes:
+
 1. **Branch Policy**: Never commit directly to `main`. Create a new branch from latest `main`:
    - `feature/<name>` — new tests, page objects, or capabilities
    - `bugfix/<name>` — fixing broken tests or security alerts
@@ -22,7 +25,9 @@ When implementing code, test, or instruction changes:
 5. **Update PR Description on Re-work**: When pushing follow-up commits or lint fixes to an existing PR, update the PR description using `gh pr edit <pr-number> --body-file <path>` to keep the PR summary completely up to date.
 
 ## Definition of Done
+
 A test automation change is complete ONLY when all apply:
+
 - [ ] UI specs use fixture injection (`../../../core/base/base.fixture`) and `test.step(...)` blocks; API specs use native `test`/`expect` from `@playwright/test`.
 - [ ] Zero inline selectors in specs — all locators declared in Page Objects as private getters.
 - [ ] Locator hierarchy followed: `getByRole` > `getByLabel`/`getByPlaceholder`/`getByTestId`/`getByText` > CSS > relative XPath (axes only). **Zero absolute XPaths.**
@@ -35,6 +40,7 @@ A test automation change is complete ONLY when all apply:
 - [ ] Branch pushed and PR created with structured description.
 
 ## Prohibited actions
+
 - Do NOT push directly to `main` or force-push shared branches.
 - Do NOT bypass failure hooks or skip tests to force green builds.
 - Do NOT hardcode credentials, URLs, or secrets in code or test data files.

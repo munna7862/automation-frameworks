@@ -23,12 +23,18 @@ type CompleteBookPurchaseTestData = {
   };
 };
 
-const testDataPath = path.join(__dirname, '../../../test-data/ui/Checkout/Test_001_CompleteBookPurchase.json');
+const testDataPath = path.join(
+  __dirname,
+  '../../../test-data/ui/Checkout/Test_001_CompleteBookPurchase.json'
+);
 const TestData = require(testDataPath) as CompleteBookPurchaseTestData;
 
 test.describe('Complete Book Purchase', () => {
-
-  test('Testcase 1: Complete book purchase successfully @smoke @regression', async ({ catalogPage, commonFunctions, page }) => {
+  test('Testcase 1: Complete book purchase successfully @smoke @regression', async ({
+    catalogPage,
+    commonFunctions,
+    page
+  }) => {
     test.setTimeout(60000);
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
@@ -38,13 +44,17 @@ test.describe('Complete Book Purchase', () => {
     });
 
     await test.step('Verify Pre-Authenticated Session', async () => {
-      await commonFunctions.verifyValue(await catalogPage.isLogoutVisible(), true, "Verifying user is pre-authenticated via storageState");
+      await commonFunctions.verifyValue(
+        await catalogPage.isLogoutVisible(),
+        true,
+        'Verifying user is pre-authenticated via storageState'
+      );
     });
 
     await test.step('Prepare Empty Cart', async () => {
       await cartPage.openCart();
       await cartPage.clearAllItemsIfPresent();
-      await catalogPage.clickNavigateLink("Catalog");
+      await catalogPage.clickNavigateLink('Catalog');
     });
 
     await test.step('Add First Book to Cart', async () => {
@@ -64,13 +74,21 @@ test.describe('Complete Book Purchase', () => {
     });
 
     await test.step('Complete Payment', async () => {
-      await checkoutPage.completePaymentSuccessfully(TestData.payment.firstName, TestData.payment.lastName, TestData.payment.cardNumber, TestData.expected.paymentSuccessMessage);
+      await checkoutPage.completePaymentSuccessfully(
+        TestData.payment.firstName,
+        TestData.payment.lastName,
+        TestData.payment.cardNumber,
+        TestData.expected.paymentSuccessMessage
+      );
     });
 
     await test.step('Logout', async () => {
       await catalogPage.clickLogout();
-      await commonFunctions.verifyValue(await catalogPage.isLoginVisible(), true, "Verifying if user logged out successfully");
+      await commonFunctions.verifyValue(
+        await catalogPage.isLoginVisible(),
+        true,
+        'Verifying if user logged out successfully'
+      );
     });
   });
-
 });

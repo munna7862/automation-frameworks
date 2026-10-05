@@ -3,8 +3,9 @@ import { randomBytes } from 'crypto';
 import { envConfig } from '../../../config/env.config';
 
 test.describe('Session-Partitioned Data Sandboxing & Multi-Tenant Isolation', () => {
-
-  test('API_SAN_01: Concurrent sessions maintain 100% data isolation for cart and user state @smoke @regression @sandboxing', async ({ playwright }, testInfo) => {
+  test('API_SAN_01: Concurrent sessions maintain 100% data isolation for cart and user state @smoke @regression @sandboxing', async ({
+    playwright
+  }, testInfo) => {
     const testSessionId = `pw-w${testInfo.workerIndex}-${testInfo.parallelIndex}-${Date.now()}-${randomBytes(4).toString('hex')}`;
     const sessionA = `${testSessionId}-worker-a`;
     const sessionB = `${testSessionId}-worker-b`;
@@ -18,16 +19,16 @@ test.describe('Session-Partitioned Data Sandboxing & Multi-Tenant Isolation', ()
       baseURL: envConfig.apiBaseUrl,
       extraHTTPHeaders: {
         'x-test-session-id': sessionA,
-        'x-bypass-rate-limit': 'true',
-      },
+        'x-bypass-rate-limit': 'true'
+      }
     });
 
     const requestB = await playwright.request.newContext({
       baseURL: envConfig.apiBaseUrl,
       extraHTTPHeaders: {
         'x-test-session-id': sessionB,
-        'x-bypass-rate-limit': 'true',
-      },
+        'x-bypass-rate-limit': 'true'
+      }
     });
 
     try {
@@ -103,5 +104,4 @@ test.describe('Session-Partitioned Data Sandboxing & Multi-Tenant Isolation', ()
       await requestB.dispose();
     }
   });
-
 });

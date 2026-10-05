@@ -40,7 +40,8 @@ describe('Security Redaction Utilities', () => {
     });
 
     it('should mask standard JWT tokens', () => {
-      const fakeJwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      const fakeJwt =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
       const input = `Received session token: ${fakeJwt} from auth`;
       const actual = redactString(input);
       assert.ok(!actual.includes(fakeJwt));
@@ -48,9 +49,13 @@ describe('Security Redaction Utilities', () => {
     });
 
     it('should mask key=value credentials in query or form strings', () => {
-      const input = 'https://example.com/api?user=admin&password=SuperSecretPassword123!&token=xyz987';
+      const input =
+        'https://example.com/api?user=admin&password=SuperSecretPassword123!&token=xyz987';
       const actual = redactString(input);
-      assert.equal(actual, 'https://example.com/api?user=admin&password=[REDACTED]&token=[REDACTED]');
+      assert.equal(
+        actual,
+        'https://example.com/api?user=admin&password=[REDACTED]&token=[REDACTED]'
+      );
     });
 
     it('should return non-string inputs unchanged', () => {
@@ -63,13 +68,13 @@ describe('Security Redaction Utilities', () => {
   describe('redactHeaders', () => {
     it('should redact sensitive headers case-insensitively', () => {
       const headers = {
-        'Authorization': 'Bearer my-token',
-        'COOKIE': 'sessionId=abc1234',
+        Authorization: 'Bearer my-token',
+        COOKIE: 'sessionId=abc1234',
         'set-cookie': 'refreshToken=xyz987; Path=/',
         'X-API-KEY': 'super-secret-key',
         'x-csrf-token': 'csrf-token-abc',
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json'
       };
 
       const redacted = redactHeaders(headers);
@@ -84,7 +89,7 @@ describe('Security Redaction Utilities', () => {
     });
 
     it('should not mutate the original headers object', () => {
-      const original = { 'Authorization': 'Bearer secret', 'Host': 'localhost' };
+      const original = { Authorization: 'Bearer secret', Host: 'localhost' };
       const originalCopy = { ...original };
       redactHeaders(original);
       assert.deepEqual(original, originalCopy);
@@ -179,7 +184,10 @@ describe('Security Redaction Utilities', () => {
       const formString = 'client_id=myApp&client_secret=superSecret123&scope=read';
       const redacted = redactBody(formString) as string;
       assert.ok(!redacted.includes('superSecret123'));
-      assert.ok(redacted.includes('client_secret=%5BREDACTED%5D') || redacted.includes('client_secret=[REDACTED]'));
+      assert.ok(
+        redacted.includes('client_secret=%5BREDACTED%5D') ||
+          redacted.includes('client_secret=[REDACTED]')
+      );
 
       const params = new URLSearchParams({
         client_id: 'app1',

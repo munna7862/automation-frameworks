@@ -14,6 +14,7 @@
     "perf:breakpoint": "node scripts/run-k6.js scenarios/breakpoint-test.js",
     "perf:drift-check": "node scripts/report-perf-summary.js --check-drift",
     "perf:recalibrate": "node scripts/recalibrate-baselines.js",
+    "lint": "eslint scripts/ utils/ __tests__/",
     "test": "node --test __tests__/*.test.js",
     "test:perf": "npm run perf:smoke",
     "test:perf:smoke": "npm run perf:smoke",

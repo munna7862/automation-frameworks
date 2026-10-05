@@ -9,18 +9,20 @@ function askQuestion(query: string): Promise<string> {
     input: process.stdin,
     output: process.stdout
   });
-  return new Promise(resolve => rl.question(query, ans => {
-    rl.close();
-    resolve(ans);
-  }));
+  return new Promise((resolve) =>
+    rl.question(query, (ans) => {
+      rl.close();
+      resolve(ans);
+    })
+  );
 }
 
 async function main() {
   const argv = process.argv.slice(2);
-  
+
   // Basic positional arguments
-  const positionalArgs = argv.filter(arg => !arg.startsWith('-'));
-  
+  const positionalArgs = argv.filter((arg) => !arg.startsWith('-'));
+
   if (positionalArgs.length < 2) {
     console.log(`
 Usage: ts-node scripts/save-snapshot.ts <url> <page-name> [options]
@@ -42,7 +44,7 @@ Options:
 
   // Parse option flags
   const isInteractive = argv.includes('--interactive') || argv.includes('-i');
-  
+
   let waitMs = 0;
   const waitIndex = argv.indexOf('--wait');
   if (waitIndex !== -1 && waitIndex + 1 < argv.length) {
@@ -111,8 +113,12 @@ Options:
     if (isInteractive) {
       console.log('\n--- INTERACTIVE MODE ACTIVE ---');
       console.log('A headful browser window has been opened.');
-      console.log('You can log in, perform manual navigation, scroll, or let dynamic loading finish.');
-      await askQuestion('==> Press [ENTER] in this terminal when you are ready to capture the snapshot...');
+      console.log(
+        'You can log in, perform manual navigation, scroll, or let dynamic loading finish.'
+      );
+      await askQuestion(
+        '==> Press [ENTER] in this terminal when you are ready to capture the snapshot...'
+      );
     }
 
     console.log('Capturing DOM and ARIA snapshots...');
@@ -140,7 +146,7 @@ Options:
   }
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('Unhandled fatal error in save-snapshot:', err);
   process.exit(1);
 });

@@ -1,0 +1,67 @@
+name: New Test Case Proposal
+description: Propose a new manual or automated test case for BuggyBooks.
+title: '[TEST-PROPOSAL]: '
+labels: ['test-design', 'catalog-update']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Propose a new test case. All approved test cases must be added in lockstep to both `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` per AGENTS.md §5.
+  - type: input
+    id: test_id
+    attributes:
+      label: Proposed Test Case ID
+      description: Follow naming conventions (e.g. TC-UI-..., TC-API-..., TC-PERF-...).
+      placeholder: TC-UI-CHECKOUT-005
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Test Title
+      description: Concise summary of what is being validated.
+      placeholder: Validate checkout fallback when inventory delay exceeds threshold
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Test Priority
+      options:
+        - Critical (P0)
+        - High (P1)
+        - Medium (P2)
+        - Low (P3)
+    validations:
+      required: true
+  - type: dropdown
+    id: target_framework
+    attributes:
+      label: Target Framework / Runner
+      options:
+        - playwright-e2e (Chrome UI)
+        - playwright-e2e (API)
+        - selenium-e2e
+        - wdio-e2e
+        - mobile-automation
+        - k6-performance
+        - jmeter
+    validations:
+      required: true
+  - type: textarea
+    id: scenario_steps
+    attributes:
+      label: Scenario Steps & Expected Assertions
+      description: Step-by-step user journey, inputs, and expected outcomes.
+      placeholder: |
+        1. Given ...
+        2. When ...
+        3. Then ...
+    validations:
+      required: true
+  - type: textarea
+    id: chaos_knobs
+    attributes:
+      label: Chaos & Failure Mode Dependencies
+      description: Does this test utilize intentional chaos endpoints or rate limits? If yes, describe required configuration and mandatory reset.
+      placeholder: 'Requires checkoutFailureRate: 0.5. Must reset in test.afterEach.'

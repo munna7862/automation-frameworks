@@ -1,13 +1,15 @@
 ---
-description: "Autonomously explore app, generate Playwright tests, run and self-heal failures"
-name: "Playwright Autopilot Cycle"
-argument-hint: "Base URL, environment, feature scope, and target path"
-agent: "Playwright Autopilot"
+description: 'Autonomously explore app, generate Playwright tests, run and self-heal failures'
+name: 'Playwright Autopilot Cycle'
+argument-hint: 'Base URL, environment, feature scope, and target path'
+agent: 'Playwright Autopilot'
 ---
+
 Run an autonomous Playwright cycle for this repository.
 Shared conventions live in `.github/copilot-instructions.md` and `.github/instructions/` — follow them; do not restate them.
 
 Inputs:
+
 - Base URL: <https://...>
 - Environment: <defaults from env.config.ts or .env>
 - Feature scope: <area/workflow to cover>
@@ -16,6 +18,7 @@ Inputs:
 - Auth context: <how credentials/login should be handled via getLoginCredentials()>
 
 Execution requirements:
+
 - Assume the Playwright MCP server is already running and connected — do NOT attempt to start, restart, or verify server startup. Use the available MCP browser tools directly.
 - Explore the workflow first using live app state (MCP required):
   - Navigate to the app and complete authentication per Auth context.
@@ -31,6 +34,7 @@ Execution requirements:
   `npx cross-env HEADLESS=true npx playwright test <target-spec-path> --config=src/config/playwright.config.ts`
 
 Deliverables:
+
 - Changed files.
 - Commands executed.
 - Test results before/after healing.

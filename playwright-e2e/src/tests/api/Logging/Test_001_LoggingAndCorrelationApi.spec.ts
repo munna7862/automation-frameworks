@@ -10,7 +10,6 @@ function uniqueUsername(prefix: string = 'loguser'): string {
 }
 
 test.describe('Structured JSON Logging & Correlation ID API Suite', () => {
-
   test('API_LOG_01: Correlation ID Header Generation @smoke @regression', async ({ request }) => {
     const res = await request.get('/api/books');
     expect(res.status()).toBe(200);
@@ -42,16 +41,19 @@ test.describe('Structured JSON Logging & Correlation ID API Suite', () => {
     const customCorrelationId = TestData.CUSTOM_CORRELATION_ID + '_err';
 
     const res = await request.post('/api/test/config', {
-      data: { visualChaos: "invalid_string_type" },
+      data: { visualChaos: 'invalid_string_type' },
       headers: { 'x-correlation-id': customCorrelationId }
     });
 
     await commonUtil.logMessage('INFO', 'Verifying status code is 400 Bad Request');
     expect(res.status()).toBe(400);
 
-    const body = await res.json() as { correlationId?: string };
+    const body = (await res.json()) as { correlationId?: string };
     const bodyCorrelationId = body?.correlationId;
-    await commonUtil.logMessage('INFO', 'Verifying error response body contains exact same correlationId');
+    await commonUtil.logMessage(
+      'INFO',
+      'Verifying error response body contains exact same correlationId'
+    );
     expect(bodyCorrelationId).toBe(customCorrelationId);
   });
 
@@ -93,5 +95,4 @@ test.describe('Structured JSON Logging & Correlation ID API Suite', () => {
     await commonUtil.logMessage('INFO', 'Verifying correlation ID preserved in checkout response');
     expect(returnedCorrelationId).toBe(customCorrelationId);
   });
-
 });

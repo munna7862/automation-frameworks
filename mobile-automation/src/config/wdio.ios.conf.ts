@@ -10,7 +10,7 @@ export const config: WebdriverIO.Config = {
       'appium:platformVersion': process.env.IOS_PLATFORM_VERSION || '17.0',
       'appium:bundleId': 'com.buggybooks.app',
       'appium:autoAcceptAlerts': true,
-      'appium:newCommandTimeout': 240,
-    },
-  ],
+      'appium:newCommandTimeout': 240
+    }
+  ]
 };

@@ -14,18 +14,18 @@ const P95_INV_LIMIT = __ENV.P95_INV_LIMIT || (__ENV.CI ? '1500' : '2500');
 
 export const options = {
   stages: [
-    { duration: '5s', target: 15 },  // Ramp to 15 VUs
+    { duration: '5s', target: 15 }, // Ramp to 15 VUs
     { duration: '10s', target: 30 }, // Stress with 30 concurrent reporting workers
     { duration: '10s', target: 30 }, // Sustained load
-    { duration: '5s', target: 0 },   // Cool-down
+    { duration: '5s', target: 0 } // Cool-down
   ],
   thresholds: {
     // Inventory reporting delayed endpoint throughput thresholds
     http_req_duration: [`p(95)<${P95_INV_LIMIT}`, 'p(99)<3000'],
     inventory_duration: [`p(95)<${P95_INV_LIMIT}`],
     http_req_failed: ['rate<0.02'],
-    inventory_success_rate: ['rate>0.98'],
-  },
+    inventory_success_rate: ['rate>0.98']
+  }
 };
 
 export default function () {
@@ -33,10 +33,10 @@ export default function () {
   const params = {
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'x-test-session-id': sessionId,
-      'x-bypass-rate-limit': 'true',
-    },
+      'x-bypass-rate-limit': 'true'
+    }
   };
 
   const res = http.get(`${BASE_URL}/api/inventory/report`, params);
@@ -57,7 +57,7 @@ export default function () {
       } catch {
         return false;
       }
-    },
+    }
   });
 
   inventoryDuration.add(res.timings.duration);
@@ -73,8 +73,8 @@ export function teardown() {
   const params = {
     headers: {
       'Content-Type': 'application/json',
-      'x-bypass-rate-limit': 'true',
-    },
+      'x-bypass-rate-limit': 'true'
+    }
   };
   http.post(`${BASE_URL}/api/test/reset`, null, params);
 }
@@ -82,5 +82,5 @@ export function teardown() {
 export const handleSummary = createSummaryHandler({
   jsonFilename: 'perf-summary-inventory.json',
   htmlFilename: 'performance/report-inventory.html',
-  title: 'Inventory Stress Benchmark (30 VUs)',
+  title: 'Inventory Stress Benchmark (30 VUs)'
 });

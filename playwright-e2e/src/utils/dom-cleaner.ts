@@ -46,7 +46,11 @@ export async function getCleanDom(page: Page): Promise<string> {
       // Check visibility (skip elements that are hidden/zero size)
       const rect = el.getBoundingClientRect();
       const style = window.getComputedStyle(el);
-      const isVisible = rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden';
+      const isVisible =
+        rect.width > 0 &&
+        rect.height > 0 &&
+        style.display !== 'none' &&
+        style.visibility !== 'hidden';
       if (!isVisible) {
         return null;
       }
@@ -54,9 +58,20 @@ export async function getCleanDom(page: Page): Promise<string> {
       // Extract attributes we care about for creating locators
       const attrs: Record<string, string> = {};
       const allowedAttrs = [
-        'id', 'class', 'name', 'type', 'placeholder', 'value',
-        'href', 'data-testid', 'data-qa', 'role',
-        'aria-label', 'aria-expanded', 'aria-selected', 'disabled'
+        'id',
+        'class',
+        'name',
+        'type',
+        'placeholder',
+        'value',
+        'href',
+        'data-testid',
+        'data-qa',
+        'role',
+        'aria-label',
+        'aria-expanded',
+        'aria-selected',
+        'disabled'
       ];
 
       for (const attr of allowedAttrs) {
@@ -93,8 +108,35 @@ export async function getCleanDom(page: Page): Promise<string> {
 
       // Filter out redundant containers to reduce token size.
       // A div or span with no relevant attributes, no text, and 0 or 1 children can be optimized/flattened.
-      const _isSemanticTag = ['button', 'input', 'select', 'textarea', 'a', 'form', 'table', 'tr', 'td', 'th', 'label', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li'].includes(tagName);
-      const hasSemanticAttr = attrs.id || attrs['data-testid'] || attrs['data-qa'] || attrs.role || attrs.name || attrs.placeholder;
+      const _isSemanticTag = [
+        'button',
+        'input',
+        'select',
+        'textarea',
+        'a',
+        'form',
+        'table',
+        'tr',
+        'td',
+        'th',
+        'label',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'ul',
+        'ol',
+        'li'
+      ].includes(tagName);
+      const hasSemanticAttr =
+        attrs.id ||
+        attrs['data-testid'] ||
+        attrs['data-qa'] ||
+        attrs.role ||
+        attrs.name ||
+        attrs.placeholder;
 
       if ((tagName === 'div' || tagName === 'span') && !hasSemanticAttr) {
         if (children.length === 0) {
@@ -116,19 +158,14 @@ export async function getCleanDom(page: Page): Promise<string> {
 
     function serializeToHtml(node: CleanNode): string {
       if (node.type === 'text') {
-        return (node.text || '')
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;');
+        return (node.text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       }
 
       const attrStr = Object.entries(node.attributes || {})
         .map(([k, v]) => ` ${k}="${v}"`)
         .join('');
 
-      const childrenStr = node.children
-        .map(c => serializeToHtml(c))
-        .join('');
+      const childrenStr = node.children.map((c) => serializeToHtml(c)).join('');
 
       return `<${node.tagName}${attrStr}>${childrenStr}</${node.tagName}>`;
     }

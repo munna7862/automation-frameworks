@@ -5,8 +5,9 @@ import TestData from '../../../test-data/api/ChaosAndTesting/Test_002_VisualChao
 const commonUtil = new CommonFunctions();
 
 test.describe('Visual Chaos Configuration API Suite', () => {
-
-  test('API_VIS_01: Toggle visualChaos Config via API @smoke @regression @chaos', async ({ request }) => {
+  test('API_VIS_01: Toggle visualChaos Config via API @smoke @regression @chaos', async ({
+    request
+  }) => {
     try {
       const configRes = await request.post('/api/test/config', {
         data: TestData.TOGGLE_PAYLOAD
@@ -49,7 +50,11 @@ test.describe('Visual Chaos Configuration API Suite', () => {
 
     const errorData = await configRes.json();
     const errorText = JSON.stringify(errorData).toLowerCase();
-    const isValidErr = errorText.includes('expected boolean') || errorText.includes('invalid') || errorText.includes('validation failed') || errorText.includes('bad request');
+    const isValidErr =
+      errorText.includes('expected boolean') ||
+      errorText.includes('invalid') ||
+      errorText.includes('validation failed') ||
+      errorText.includes('bad request');
     expect(isValidErr).toBe(true);
   });
 
@@ -74,5 +79,4 @@ test.describe('Visual Chaos Configuration API Suite', () => {
       });
     }
   });
-
 });

@@ -47,7 +47,9 @@ export class AuthUtility {
       return { context, page };
     } catch (error) {
       logger.error(`❌ Failed to load authentication state: ${error}`);
-      throw new Error(`Authentication state file not found or invalid. Please run login test first. Path: ${targetPath}`);
+      throw new Error(
+        `Authentication state file not found or invalid. Please run login test first. Path: ${targetPath}`
+      );
     }
   }
 

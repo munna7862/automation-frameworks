@@ -18,9 +18,9 @@ const P95_AUTH_LIMIT = __ENV.P95_AUTH_LIMIT || (__ENV.CI ? '400' : '1000');
 export const options = {
   stages: [
     { duration: '5s', target: Math.min(15, TARGET_VUS) }, // Ramp-up
-    { duration: STAGE_DURATION, target: TARGET_VUS },      // Surge to 40 concurrent authentication VUs
-    { duration: STAGE_DURATION, target: TARGET_VUS },      // Sustained bcrypt saturation stress
-    { duration: '5s', target: 0 },                        // Cool-down
+    { duration: STAGE_DURATION, target: TARGET_VUS }, // Surge to 40 concurrent authentication VUs
+    { duration: STAGE_DURATION, target: TARGET_VUS }, // Sustained bcrypt saturation stress
+    { duration: '5s', target: 0 } // Cool-down
   ],
   thresholds: {
     // US-PERF-805 Acceptance Criteria:
@@ -29,35 +29,43 @@ export const options = {
     auth_login_duration: [`p(95)<${P95_AUTH_LIMIT}`, 'p(99)<1500'],
     auth_refresh_duration: ['p(95)<500'],
     http_req_failed: ['rate<0.02'],
-    auth_error_rate: ['rate<0.02'],
-  },
+    auth_error_rate: ['rate<0.02']
+  }
 };
 
 export function setup() {
   const params = {
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'x-bypass-rate-limit': 'true',
-      'x-bypass-csrf': 'true',
-    },
+      'x-bypass-csrf': 'true'
+    }
   };
 
   // Ensure chaos config has no artificial delay or failures for baseline accuracy
-  http.post(`${BASE_URL}/api/test/config`, JSON.stringify({
-    checkoutFailureRate: 0,
-    inventoryLockingRate: 0,
-    inventoryDelayMs: 0,
-  }), params);
+  http.post(
+    `${BASE_URL}/api/test/config`,
+    JSON.stringify({
+      checkoutFailureRate: 0,
+      inventoryLockingRate: 0,
+      inventoryDelayMs: 0
+    }),
+    params
+  );
 
   // Validate seeded user credentials are ready
-  const primeRes = http.post(`${BASE_URL}/api/login`, JSON.stringify({
-    username: 'testuser',
-    password: 'buggybooks',
-  }), params);
+  const primeRes = http.post(
+    `${BASE_URL}/api/login`,
+    JSON.stringify({
+      username: 'testuser',
+      password: 'buggybooks'
+    }),
+    params
+  );
 
   check(primeRes, {
-    'setup: login endpoint operational': (r) => r.status === 200,
+    'setup: login endpoint operational': (r) => r.status === 200
   });
 
   return { primed: true };
@@ -68,17 +76,17 @@ export default function () {
   const params = {
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'x-test-session-id': sessionId,
       'x-bypass-rate-limit': 'true',
-      'x-bypass-csrf': 'true',
-    },
+      'x-bypass-csrf': 'true'
+    }
   };
 
   // 1. Benchmark: POST /api/login (bcrypt.compare CPU saturation)
   const loginPayload = JSON.stringify({
     username: 'testuser',
-    password: 'buggybooks',
+    password: 'buggybooks'
   });
 
   const loginRes = http.post(`${BASE_URL}/api/login`, loginPayload, params);
@@ -91,7 +99,7 @@ export default function () {
       } catch {
         return false;
       }
-    },
+    }
   });
 
   loginDuration.add(loginRes.timings.duration);
@@ -115,7 +123,7 @@ export default function () {
       } catch {
         return false;
       }
-    },
+    }
   });
 
   refreshDuration.add(refreshRes.timings.duration);
@@ -133,8 +141,8 @@ export function teardown() {
   const params = {
     headers: {
       'Content-Type': 'application/json',
-      'x-bypass-rate-limit': 'true',
-    },
+      'x-bypass-rate-limit': 'true'
+    }
   };
   http.post(`${BASE_URL}/api/test/reset`, null, params);
 }
@@ -142,5 +150,5 @@ export function teardown() {
 export const handleSummary = createSummaryHandler({
   jsonFilename: 'perf-summary-auth.json',
   htmlFilename: 'performance/report-auth.html',
-  title: 'Authentication Burst & Bcrypt Saturation Benchmark (40 VUs)',
+  title: 'Authentication Burst & Bcrypt Saturation Benchmark (40 VUs)'
 });

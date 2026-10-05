@@ -25,7 +25,9 @@ export class CartPage extends BasePage {
   }
 
   private get btnProceedToCheckout(): ChainablePromiseElement {
-    return $('//button[contains(text(), "Proceed to Checkout")] | //a[contains(text(), "Proceed to Checkout")]');
+    return $(
+      '//button[contains(text(), "Proceed to Checkout")] | //a[contains(text(), "Proceed to Checkout")]'
+    );
   }
 
   private get msgEmptyCart(): ChainablePromiseElement {
@@ -50,23 +52,27 @@ export class CartPage extends BasePage {
   }
 
   public async waitForCartLoaded(timeoutMs = 15000): Promise<void> {
-    await browser.waitUntil(
-      async () => {
-        const headerVisible = await this.cartHeader.isDisplayed().catch(() => false);
-        return headerVisible;
-      },
-      {
-        timeout: timeoutMs,
-        timeoutMsg: 'Cart page header did not load within timeout'
-      }
-    ).catch(() => undefined);
+    await browser
+      .waitUntil(
+        async () => {
+          const headerVisible = await this.cartHeader.isDisplayed().catch(() => false);
+          return headerVisible;
+        },
+        {
+          timeout: timeoutMs,
+          timeoutMsg: 'Cart page header did not load within timeout'
+        }
+      )
+      .catch(() => undefined);
   }
 
   // Cart operations
   public async getCartItemsCount(): Promise<number> {
     await this.waitForCartLoaded();
     // Wait for at least one cart item to be visible, or empty state
-    await $('.cart-item').waitForDisplayed({ timeout: 10000 }).catch(() => undefined);
+    await $('.cart-item')
+      .waitForDisplayed({ timeout: 10000 })
+      .catch(() => undefined);
     return await this.cartItems.length;
   }
 
@@ -99,16 +105,18 @@ export class CartPage extends BasePage {
     if (removeCount > 0) {
       const removes = await this.removeButtons;
       await removes[0].click();
-      await browser.waitUntil(
-        async () => {
-          const currentCount = await this.getCartItemsCount();
-          return currentCount < initialCount || (await this.isCartEmpty());
-        },
-        {
-          timeout: 10000,
-          timeoutMsg: 'Cart item count did not decrease after removal'
-        }
-      ).catch(() => undefined);
+      await browser
+        .waitUntil(
+          async () => {
+            const currentCount = await this.getCartItemsCount();
+            return currentCount < initialCount || (await this.isCartEmpty());
+          },
+          {
+            timeout: 10000,
+            timeoutMsg: 'Cart item count did not decrease after removal'
+          }
+        )
+        .catch(() => undefined);
     }
   }
 

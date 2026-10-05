@@ -16,14 +16,17 @@ async function syncVisualChaos(request: any, state: boolean) {
     if (current === state) {
       break;
     }
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 300));
   }
 }
 
 test.describe('Visual Regression & Layout Chaos Suite', () => {
   test.setTimeout(60000); // Visual snapshot baseline & chaos suite override
   // Visual baseline comparison currently calibrated for Desktop Chromium
-  test.skip(({ browserName, isMobile }) => browserName !== 'chromium' || isMobile, 'Visual baseline comparison currently calibrated for Desktop Chromium');
+  test.skip(
+    ({ browserName, isMobile }) => browserName !== 'chromium' || isMobile,
+    'Visual baseline comparison currently calibrated for Desktop Chromium'
+  );
 
   // Use clean unauthenticated storage state for visual baseline & explicit login test
   test.use({ storageState: { cookies: [], origins: [] } });
@@ -33,7 +36,11 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     await request.post(RESET_URL);
   });
 
-  test('VIS_REG_01: Baseline Catalog Screenshot @regression @visual', async ({ page, request, catalogPage }) => {
+  test('VIS_REG_01: Baseline Catalog Screenshot @regression @visual', async ({
+    page,
+    request,
+    catalogPage
+  }) => {
     await test.step('Ensure visualChaos is disabled', async () => {
       await syncVisualChaos(request, false);
     });
@@ -48,12 +55,17 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
       await expect(page).toHaveScreenshot('catalog-baseline.png', {
         maxDiffPixelRatio: 0.05,
         threshold: 0.2,
-        animations: 'disabled',
+        animations: 'disabled'
       });
     });
   });
 
-  test('VIS_REG_02: Chaos-Enabled Catalog Pixel Diff @regression @chaos', async ({ commonFunctions, page, request, catalogPage }) => {
+  test('VIS_REG_02: Chaos-Enabled Catalog Pixel Diff @regression @chaos', async ({
+    commonFunctions,
+    page,
+    request,
+    catalogPage
+  }) => {
     let diffDetected = false;
     await test.step('Enable visualChaos', async () => {
       await syncVisualChaos(request, true);
@@ -64,16 +76,28 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
       await catalogPage.waitForVisualChaosActive();
       await catalogPage.waitForBookCardSelector();
       try {
-        await expect(page).toHaveScreenshot('catalog-baseline.png', { maxDiffPixelRatio: 0.0001, timeout: 2000 });
+        await expect(page).toHaveScreenshot('catalog-baseline.png', {
+          maxDiffPixelRatio: 0.0001,
+          timeout: 2000
+        });
       } catch {
         // Visual diff expected when chaos mode is active
         diffDetected = true;
       }
-      await commonFunctions.verifyValue(diffDetected, true, "Verifying visual pixel diff detected under chaos mode");
+      await commonFunctions.verifyValue(
+        diffDetected,
+        true,
+        'Verifying visual pixel diff detected under chaos mode'
+      );
     });
   });
 
-  test('VIS_REG_03: Book Card Border Color Assertion @regression @chaos', async ({ commonFunctions, page, request, catalogPage }) => {
+  test('VIS_REG_03: Book Card Border Color Assertion @regression @chaos', async ({
+    commonFunctions,
+    page,
+    request,
+    catalogPage
+  }) => {
     await test.step('Enable visualChaos', async () => {
       await syncVisualChaos(request, true);
     });
@@ -94,7 +118,12 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     });
   });
 
-  test('VIS_REG_04: Book Cover Blur Filter Assertion @regression @chaos', async ({ commonFunctions, page, request, catalogPage }) => {
+  test('VIS_REG_04: Book Cover Blur Filter Assertion @regression @chaos', async ({
+    commonFunctions,
+    page,
+    request,
+    catalogPage
+  }) => {
     await test.step('Enable visualChaos', async () => {
       await syncVisualChaos(request, true);
     });
@@ -111,7 +140,12 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     });
   });
 
-  test('VIS_REG_05: Search Bar Displacement Assertion @regression @chaos', async ({ commonFunctions, page, request, catalogPage }) => {
+  test('VIS_REG_05: Search Bar Displacement Assertion @regression @chaos', async ({
+    commonFunctions,
+    page,
+    request,
+    catalogPage
+  }) => {
     await test.step('Enable visualChaos', async () => {
       await syncVisualChaos(request, true);
     });
@@ -128,7 +162,12 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     });
   });
 
-  test('VIS_REG_06: Price Tag Rotation Assertion @regression @chaos', async ({ commonFunctions, page, request, catalogPage }) => {
+  test('VIS_REG_06: Price Tag Rotation Assertion @regression @chaos', async ({
+    commonFunctions,
+    page,
+    request,
+    catalogPage
+  }) => {
     await test.step('Enable visualChaos', async () => {
       await syncVisualChaos(request, true);
     });
@@ -145,7 +184,12 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     });
   });
 
-  test('VIS_REG_07: Checkout Button Margin Shift @regression @chaos', async ({ commonFunctions, page, request, catalogPage }) => {
+  test('VIS_REG_07: Checkout Button Margin Shift @regression @chaos', async ({
+    commonFunctions,
+    page,
+    request,
+    catalogPage
+  }) => {
     await test.step('Enable visualChaos', async () => {
       await syncVisualChaos(request, true);
     });
@@ -157,12 +201,12 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
       });
 
       await page.goto(envConfig.baseUrl);
-      await catalogPage.clickNavigateLink("Login");
+      await catalogPage.clickNavigateLink('Login');
       const signUpPage = new SignUpPage(page);
       await signUpPage.login(testUser, 'Password123!');
 
       await catalogPage.waitForVisualChaosActive();
-      await catalogPage.clickNavigateLink("Checkout");
+      await catalogPage.clickNavigateLink('Checkout');
       const checkoutPage = new CheckoutPage(page);
       await checkoutPage.waitForNextStepButton();
 
@@ -174,7 +218,12 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     });
   });
 
-  test('VIS_REG_08: Book Card Text Line Height Chaos @regression @chaos', async ({ commonFunctions, page, request, catalogPage }) => {
+  test('VIS_REG_08: Book Card Text Line Height Chaos @regression @chaos', async ({
+    commonFunctions,
+    page,
+    request,
+    catalogPage
+  }) => {
     await test.step('Enable visualChaos', async () => {
       await syncVisualChaos(request, true);
     });
@@ -183,7 +232,8 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForVisualChaosActive();
       await catalogPage.waitForBookCardSelector();
-      const { fontSize: fontSizeStr, lineHeight: lineHeightStr } = await catalogPage.getFirstBookCardH3Styles();
+      const { fontSize: fontSizeStr, lineHeight: lineHeightStr } =
+        await catalogPage.getFirstBookCardH3Styles();
 
       const fontSize = parseFloat(fontSizeStr);
       const lineHeight = parseFloat(lineHeightStr);
@@ -197,7 +247,11 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     });
   });
 
-  test('VIS_REG_09: Reset Restores Visual Baseline @regression @chaos', async ({ page, request, catalogPage }) => {
+  test('VIS_REG_09: Reset Restores Visual Baseline @regression @chaos', async ({
+    page,
+    request,
+    catalogPage
+  }) => {
     await test.step('Enable visualChaos first', async () => {
       await syncVisualChaos(request, true);
     });
@@ -205,7 +259,7 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     await test.step('Call reset endpoint to clear chaos', async () => {
       await request.post(RESET_URL);
       // Wait for polling
-      await new Promise(r => setTimeout(r, 3500));
+      await new Promise((r) => setTimeout(r, 3500));
     });
 
     await test.step('Navigate to catalog and assert screenshot matches baseline', async () => {
@@ -215,9 +269,8 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
       await expect(page).toHaveScreenshot('catalog-baseline.png', {
         maxDiffPixelRatio: 0.05,
         threshold: 0.2,
-        animations: 'disabled',
+        animations: 'disabled'
       });
     });
   });
-
 });

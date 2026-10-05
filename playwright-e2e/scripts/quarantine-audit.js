@@ -21,10 +21,14 @@ function runPlaywrightQuarantine() {
   const legacyConfigReport = path.join(playwrightDir, 'src', 'config', 'quarantine-results.json');
 
   if (fs.existsSync(tempReportFile)) {
-    try { fs.unlinkSync(tempReportFile); } catch (e) {}
+    try {
+      fs.unlinkSync(tempReportFile);
+    } catch (e) {}
   }
   if (fs.existsSync(legacyConfigReport)) {
-    try { fs.unlinkSync(legacyConfigReport); } catch (e) {}
+    try {
+      fs.unlinkSync(legacyConfigReport);
+    } catch (e) {}
   }
 
   const cmd = `npx playwright test --config=src/config/playwright.config.ts --grep "@quarantine" --grep-invert "" --repeat-each=${REPEAT_COUNT} --pass-with-no-tests --reporter=json`;
@@ -39,11 +43,11 @@ function runPlaywrightQuarantine() {
       env: {
         ...process.env,
         RUN_QUARANTINE: 'true',
-        PLAYWRIGHT_JSON_OUTPUT_NAME: tempReportFile,
+        PLAYWRIGHT_JSON_OUTPUT_NAME: tempReportFile
       },
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe'],
-      maxBuffer: 10 * 1024 * 1024,
+      maxBuffer: 10 * 1024 * 1024
     });
   } catch (err) {
     stdout = err.stdout ? err.stdout.toString() : '';
@@ -87,7 +91,7 @@ function extractQuarantineTests(suite, testMap = {}) {
           passed: 0,
           failed: 0,
           flaky: 0,
-          skipped: 0,
+          skipped: 0
         };
       }
 
@@ -136,7 +140,7 @@ function generateAuditReport(results) {
 
   for (const item of entries) {
     const totalEffectiveRuns = item.runs - item.skipped;
-    const stabilityPercent = totalEffectiveRuns > 0 ? ((item.passed / totalEffectiveRuns) * 100) : 0;
+    const stabilityPercent = totalEffectiveRuns > 0 ? (item.passed / totalEffectiveRuns) * 100 : 0;
     const isStable = stabilityPercent === 100.0 && totalEffectiveRuns >= REPEAT_COUNT;
 
     let recommendation;
@@ -191,7 +195,9 @@ function main() {
     }
   }
 
-  console.log(`✨ Quarantine audit completed successfully. Quarantined tests analyzed: ${entries.length}.`);
+  console.log(
+    `✨ Quarantine audit completed successfully. Quarantined tests analyzed: ${entries.length}.`
+  );
 }
 
 if (require.main === module) {

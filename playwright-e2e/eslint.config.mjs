@@ -12,42 +12,42 @@ export default defineConfig([
     'node_modules/**',
     '.auth/**',
     'playwright-report/**',
-    'coverage/**',
+    'coverage/**'
   ]),
   {
     files: ['src/**/*.ts', 'scripts/**/*.ts'],
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-    ],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
       globals: {
         ...globals.node,
-        ...globals.browser,
-      },
+        ...globals.browser
+      }
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-require-imports': 'off',
       'no-empty-pattern': 'off',
       'preserve-caught-error': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
-      'no-console': 'off',
-    },
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }
+      ],
+      'no-console': 'off'
+    }
   },
   {
     files: ['src/tests/**/*.ts'],
     plugins: {
-      playwright,
+      playwright
     },
     rules: {
       'playwright/missing-playwright-await': 'error',
       'playwright/no-wait-for-timeout': 'error',
       'playwright/no-element-handle': 'error',
       'playwright/no-eval': 'error',
-      'playwright/prefer-web-first-assertions': 'error',
-    },
-  },
+      'playwright/prefer-web-first-assertions': 'error'
+    }
+  }
 ]);

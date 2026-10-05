@@ -11,7 +11,7 @@ type CheckResult = {
 const args = process.argv.slice(2);
 const shouldRun = args.includes('run') || args.includes('--run');
 const isAllPoms = args.includes('--all-poms');
-const targetArg = args.find(arg => arg !== 'run' && !arg.startsWith('--'));
+const targetArg = args.find((arg) => arg !== 'run' && !arg.startsWith('--'));
 
 if (!isAllPoms && !targetArg) {
   console.error('Usage: npm run finalize-spec -- <spec-path|page-path> [run]');
@@ -28,20 +28,25 @@ function normalizePath(filePath: string): string {
 }
 
 function runTypeScriptCheck(): CheckResult {
-  const compileResult = spawnSync(process.execPath, [require.resolve('typescript/bin/tsc'), '--noEmit'], {
-    cwd: projectRoot,
-    stdio: 'pipe',
-    encoding: 'utf-8'
-  });
+  const compileResult = spawnSync(
+    process.execPath,
+    [require.resolve('typescript/bin/tsc'), '--noEmit'],
+    {
+      cwd: projectRoot,
+      stdio: 'pipe',
+      encoding: 'utf-8'
+    }
+  );
 
   return {
     name: 'TypeScript compilation',
     passed: compileResult.status === 0,
-    detail: compileResult.status === 0
-      ? 'Project compiles with no TypeScript errors.'
-      : compileResult.error
-        ? `TypeScript compiler could not start: ${compileResult.error.message}`
-        : `TypeScript compiler failed:\n${compileResult.stdout || compileResult.stderr || 'Unknown error'}`
+    detail:
+      compileResult.status === 0
+        ? 'Project compiles with no TypeScript errors.'
+        : compileResult.error
+          ? `TypeScript compiler could not start: ${compileResult.error.message}`
+          : `TypeScript compiler failed:\n${compileResult.stdout || compileResult.stderr || 'Unknown error'}`
   };
 }
 
@@ -65,32 +70,40 @@ function validatePageObjectFile(pagePath: string): CheckResult[] {
   results.push({
     name: 'BasePage inheritance',
     passed: extendsBasePage,
-    detail: extendsBasePage
-      ? 'Class extends BasePage.'
-      : 'Page Object class must extend BasePage.'
+    detail: extendsBasePage ? 'Class extends BasePage.' : 'Page Object class must extend BasePage.'
   });
 
   // Rule 2: No forbidden raw page interaction calls (must use BasePage wrappers)
-  const forbiddenRawCalls = content.match(/\b(?:this\.)?page\.(?:click|fill|textContent|dblclick|check|uncheck)\s*\(/g) ?? [];
+  const forbiddenRawCalls =
+    content.match(/\b(?:this\.)?page\.(?:click|fill|textContent|dblclick|check|uncheck)\s*\(/g) ??
+    [];
   results.push({
     name: 'Wrapper method usage',
     passed: forbiddenRawCalls.length === 0,
-    detail: forbiddenRawCalls.length === 0
-      ? 'No prohibited raw page.click/fill/textContent calls found; all actions use BasePage wrappers.'
-      : `Found ${forbiddenRawCalls.length} raw Playwright call(s) (${forbiddenRawCalls.slice(0, 3).join(', ')}); must use BasePage wrapper methods (this.doClick, this.doEnterText, this.doGetText).`
+    detail:
+      forbiddenRawCalls.length === 0
+        ? 'No prohibited raw page.click/fill/textContent calls found; all actions use BasePage wrappers.'
+        : `Found ${forbiddenRawCalls.length} raw Playwright call(s) (${forbiddenRawCalls.slice(0, 3).join(', ')}); must use BasePage wrapper methods (this.doClick, this.doEnterText, this.doGetText).`
   });
 
   // Rule 3: Locators must be defined as private getters or helper methods (no public locators, no class property locators)
-  const publicLocatorMatches = content.match(/public\s+(?:readonly\s+)?(?:get\s+)?([a-zA-Z0-9_$]+)\s*(?:\(\s*\))?\s*:\s*Locator\b/g) ?? [];
-  const propertyLocatorMatches = content.match(/(?:private|protected)\s+(?:readonly\s+)?([a-zA-Z0-9_$]+)\s*:\s*Locator\s*;/g) ?? [];
-  const totalLocatorEncapsulationViolations = publicLocatorMatches.length + propertyLocatorMatches.length;
+  const publicLocatorMatches =
+    content.match(
+      /public\s+(?:readonly\s+)?(?:get\s+)?([a-zA-Z0-9_$]+)\s*(?:\(\s*\))?\s*:\s*Locator\b/g
+    ) ?? [];
+  const propertyLocatorMatches =
+    content.match(/(?:private|protected)\s+(?:readonly\s+)?([a-zA-Z0-9_$]+)\s*:\s*Locator\s*;/g) ??
+    [];
+  const totalLocatorEncapsulationViolations =
+    publicLocatorMatches.length + propertyLocatorMatches.length;
 
   results.push({
     name: 'Locator encapsulation',
     passed: totalLocatorEncapsulationViolations === 0,
-    detail: totalLocatorEncapsulationViolations === 0
-      ? 'All locators are properly encapsulated as private getters or private helper methods.'
-      : `Found locator encapsulation issue(s): ${publicLocatorMatches.length} public locator(s), ${propertyLocatorMatches.length} property field locator(s). Define locators as 'private get <name>(): Locator'.`
+    detail:
+      totalLocatorEncapsulationViolations === 0
+        ? 'All locators are properly encapsulated as private getters or private helper methods.'
+        : `Found locator encapsulation issue(s): ${publicLocatorMatches.length} public locator(s), ${propertyLocatorMatches.length} property field locator(s). Define locators as 'private get <name>(): Locator'.`
   });
 
   // Rule 4: No static waits (waitForTimeout)
@@ -98,9 +111,10 @@ function validatePageObjectFile(pagePath: string): CheckResult[] {
   results.push({
     name: 'No static waits',
     passed: staticWaits.length === 0,
-    detail: staticWaits.length === 0
-      ? 'No waitForTimeout calls found.'
-      : `Found ${staticWaits.length} waitForTimeout call(s); use dynamic Playwright locator waits or expectations.`
+    detail:
+      staticWaits.length === 0
+        ? 'No waitForTimeout calls found.'
+        : `Found ${staticWaits.length} waitForTimeout call(s); use dynamic Playwright locator waits or expectations.`
   });
 
   return results;
@@ -158,24 +172,32 @@ if (isAllPoms) {
     console.log(`FAIL | ${tsCheck.name} | ${tsCheck.detail}`);
   }
 
-  console.log(`\nPage Object Validation Summary: ${passedChecks}/${totalChecks} checks passed across ${pomFiles.length} Page Objects.`);
+  console.log(
+    `\nPage Object Validation Summary: ${passedChecks}/${totalChecks} checks passed across ${pomFiles.length} Page Objects.`
+  );
   process.exit(hasAnyFailure ? 1 : 0);
 }
 
 // Single target execution (Page Object or Spec)
 const targetPath = isAbsolute(targetArg!) ? resolve(targetArg!) : resolve(projectRoot, targetArg!);
 const relativePagesPath = relative(pagesRoot, targetPath);
-const isPageObject = relativePagesPath.length > 0
-  && !relativePagesPath.startsWith('..')
-  && (targetPath.endsWith('.page.ts') || targetPath.endsWith('.component.ts') || targetPath.endsWith('.ts'));
+const isPageObject =
+  relativePagesPath.length > 0 &&
+  !relativePagesPath.startsWith('..') &&
+  (targetPath.endsWith('.page.ts') ||
+    targetPath.endsWith('.component.ts') ||
+    targetPath.endsWith('.ts'));
 
 const relativeSpecPath = relative(testsRoot, targetPath);
-const isSpec = relativeSpecPath.length > 0
-  && !relativeSpecPath.startsWith('..')
-  && relativeSpecPath.endsWith('.spec.ts');
+const isSpec =
+  relativeSpecPath.length > 0 &&
+  !relativeSpecPath.startsWith('..') &&
+  relativeSpecPath.endsWith('.spec.ts');
 
 if (isPageObject) {
-  console.log(`\nFinalize Page Object Results: ${normalizePath(relative(projectRoot, targetPath))}\n`);
+  console.log(
+    `\nFinalize Page Object Results: ${normalizePath(relative(projectRoot, targetPath))}\n`
+  );
   const results = validatePageObjectFile(targetPath);
   const tsCheck = runTypeScriptCheck();
   results.push(tsCheck);
@@ -184,7 +206,7 @@ if (isPageObject) {
     console.log(`${result.passed ? 'PASS' : 'FAIL'} | ${result.name} | ${result.detail}`);
   }
 
-  const failed = results.filter(r => !r.passed);
+  const failed = results.filter((r) => !r.passed);
   console.log(`\n${results.length - failed.length}/${results.length} checks passed.`);
   process.exit(failed.length === 0 ? 0 : 1);
 }
@@ -196,48 +218,92 @@ function addResult(name: string, passed: boolean, detail: string): void {
   results.push({ name, passed, detail });
 }
 
-addResult('Spec path', isSpec && existsSync(targetPath), isSpec
-  ? normalizePath(relative(projectRoot, targetPath))
-  : 'Path must reference an existing .spec.ts file under src/tests/ or a Page Object under src/pages/.');
+addResult(
+  'Spec path',
+  isSpec && existsSync(targetPath),
+  isSpec
+    ? normalizePath(relative(projectRoot, targetPath))
+    : 'Path must reference an existing .spec.ts file under src/tests/ or a Page Object under src/pages/.'
+);
 
 if (isSpec && existsSync(targetPath)) {
   const specContent = readFileSync(targetPath, 'utf-8');
   const pathParts = normalizePath(relativeSpecPath).split('/');
   const isUiSpec = pathParts[0] === 'ui';
   const staticWaitMatches = specContent.match(/\bwaitForTimeout\s*\(/g) ?? [];
-  const absoluteXPathMatches = specContent.match(/\.locator\(\s*['"`]\/(?!\/)[^'"`]*['"`]\s*\)/g) ?? [];
-  const inlineLocatorMatches = specContent.match(/\bpage\.(?:locator|getByRole|getByLabel|getByPlaceholder|getByTestId|getByText)\s*\(/g) ?? [];
+  const absoluteXPathMatches =
+    specContent.match(/\.locator\(\s*['"`]\/(?!\/)[^'"`]*['"`]\s*\)/g) ?? [];
+  const inlineLocatorMatches =
+    specContent.match(
+      /\bpage\.(?:locator|getByRole|getByLabel|getByPlaceholder|getByTestId|getByText)\s*\(/g
+    ) ?? [];
 
-  addResult('No static waits', staticWaitMatches.length === 0, staticWaitMatches.length === 0
-    ? 'No waitForTimeout calls found.'
-    : `Found ${staticWaitMatches.length} waitForTimeout call(s).`);
-  addResult('No absolute XPath', absoluteXPathMatches.length === 0, absoluteXPathMatches.length === 0
-    ? 'No absolute XPath locators found.'
-    : `Found ${absoluteXPathMatches.length} absolute XPath locator(s).`);
-  addResult('No inline selectors', inlineLocatorMatches.length === 0, inlineLocatorMatches.length === 0
-    ? 'No inline page selectors found.'
-    : `Found ${inlineLocatorMatches.length} inline page selector(s); move them to a Page Object.`);
+  addResult(
+    'No static waits',
+    staticWaitMatches.length === 0,
+    staticWaitMatches.length === 0
+      ? 'No waitForTimeout calls found.'
+      : `Found ${staticWaitMatches.length} waitForTimeout call(s).`
+  );
+  addResult(
+    'No absolute XPath',
+    absoluteXPathMatches.length === 0,
+    absoluteXPathMatches.length === 0
+      ? 'No absolute XPath locators found.'
+      : `Found ${absoluteXPathMatches.length} absolute XPath locator(s).`
+  );
+  addResult(
+    'No inline selectors',
+    inlineLocatorMatches.length === 0,
+    inlineLocatorMatches.length === 0
+      ? 'No inline page selectors found.'
+      : `Found ${inlineLocatorMatches.length} inline page selector(s); move them to a Page Object.`
+  );
 
-  const booleanAccumulatorMatches = specContent.match(/expect\s*\([\s\S]*?\)\s*\.toBeTruthy\s*\(/g)?.filter(match => match.includes('&&')) ?? [];
-  addResult('No boolean accumulator assertions', booleanAccumulatorMatches.length === 0, booleanAccumulatorMatches.length === 0
-    ? 'No boolean accumulator assertions found.'
-    : `Found ${booleanAccumulatorMatches.length} boolean accumulator assertion(s); use direct Playwright assertions or CommonFunctions verification helpers.`);
+  const booleanAccumulatorMatches =
+    specContent
+      .match(/expect\s*\([\s\S]*?\)\s*\.toBeTruthy\s*\(/g)
+      ?.filter((match) => match.includes('&&')) ?? [];
+  addResult(
+    'No boolean accumulator assertions',
+    booleanAccumulatorMatches.length === 0,
+    booleanAccumulatorMatches.length === 0
+      ? 'No boolean accumulator assertions found.'
+      : `Found ${booleanAccumulatorMatches.length} boolean accumulator assertion(s); use direct Playwright assertions or CommonFunctions verification helpers.`
+  );
 
   if (isUiSpec) {
-    const usesCustomFixture = /import\s*\{[^}]*\btest\b[^}]*\}\s*from\s*['"][^'"]*core\/base\/base\.fixture['"]/.test(specContent);
+    const usesCustomFixture =
+      /import\s*\{[^}]*\btest\b[^}]*\}\s*from\s*['"][^'"]*core\/base\/base\.fixture['"]/.test(
+        specContent
+      );
     const testStepMatches = specContent.match(/\btest\.step\s*\(/g) ?? [];
-    addResult('UI fixture import', usesCustomFixture, usesCustomFixture
-      ? 'UI test uses the custom base fixture.'
-      : 'UI tests must import test from core/base/base.fixture.');
-    addResult('UI test.step usage', testStepMatches.length > 0, testStepMatches.length > 0
-      ? `Found ${testStepMatches.length} test.step block(s).`
-      : 'UI tests must wrap meaningful business flows in test.step blocks.');
+    addResult(
+      'UI fixture import',
+      usesCustomFixture,
+      usesCustomFixture
+        ? 'UI test uses the custom base fixture.'
+        : 'UI tests must import test from core/base/base.fixture.'
+    );
+    addResult(
+      'UI test.step usage',
+      testStepMatches.length > 0,
+      testStepMatches.length > 0
+        ? `Found ${testStepMatches.length} test.step block(s).`
+        : 'UI tests must wrap meaningful business flows in test.step blocks.'
+    );
   } else {
-    const nativePlaywrightImport = specContent.match(/import\s*\{([^}]*)\}\s*from\s*['"]@playwright\/test['"]/)?.[1] ?? '';
-    const usesNativePlaywrightTest = /\btest\b/.test(nativePlaywrightImport) && /\bexpect\b/.test(nativePlaywrightImport);
-    addResult('API test import', pathParts[0] === 'api' && usesNativePlaywrightTest, pathParts[0] === 'api' && usesNativePlaywrightTest
-      ? 'API test uses native Playwright test/expect.'
-      : 'API specs must live under src/tests/api and import from @playwright/test.');
+    const nativePlaywrightImport =
+      specContent.match(/import\s*\{([^}]*)\}\s*from\s*['"]@playwright\/test['"]/)?.[1] ?? '';
+    const usesNativePlaywrightTest =
+      /\btest\b/.test(nativePlaywrightImport) && /\bexpect\b/.test(nativePlaywrightImport);
+    addResult(
+      'API test import',
+      pathParts[0] === 'api' && usesNativePlaywrightTest,
+      pathParts[0] === 'api' && usesNativePlaywrightTest
+        ? 'API test uses native Playwright test/expect.'
+        : 'API specs must live under src/tests/api and import from @playwright/test.'
+    );
   }
 
   const dataRelativePath = relativeSpecPath.replace(/\.spec\.ts$/, '.json');
@@ -255,53 +321,86 @@ if (isSpec && existsSync(targetPath)) {
     }
   }
 
-  if (!results.some(result => result.name === 'Mirrored test data')) {
-    addResult('Mirrored test data', hasTestData, hasTestData ? testDataDetail : `${testDataDetail} is missing.`);
+  if (!results.some((result) => result.name === 'Mirrored test data')) {
+    addResult(
+      'Mirrored test data',
+      hasTestData,
+      hasTestData ? testDataDetail : `${testDataDetail} is missing.`
+    );
   }
 
   if (pathParts[0] === 'ui' && pathParts.length > 2) {
     const area = pathParts[1];
-    const workflowPath = resolve(projectRoot, '..', '.github', 'workflows', 'playwright-docker.yml');
+    const workflowPath = resolve(
+      projectRoot,
+      '..',
+      '.github',
+      'workflows',
+      'playwright-docker.yml'
+    );
     const workflowContent = existsSync(workflowPath) ? readFileSync(workflowPath, 'utf-8') : '';
-    const hasDynamicSharding = workflowContent.includes('shardIndex') || workflowContent.includes('--shard');
-    const registrationPattern = new RegExp(`folder["']?\\s*:\\s*["']ui/${area.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["']`);
+    const hasDynamicSharding =
+      workflowContent.includes('shardIndex') || workflowContent.includes('--shard');
+    const registrationPattern = new RegExp(
+      `folder["']?\\s*:\\s*["']ui/${area.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["']`
+    );
     const isCovered = hasDynamicSharding || registrationPattern.test(workflowContent);
-    addResult('Docker matrix registration', isCovered, isCovered
-      ? (hasDynamicSharding
+    addResult(
+      'Docker matrix registration',
+      isCovered,
+      isCovered
+        ? hasDynamicSharding
           ? `ui/${area} is covered by Playwright dynamic sharding in .github/workflows/playwright-docker.yml.`
-          : `ui/${area} is registered in .github/workflows/playwright-docker.yml.`)
-      : `ui/${area} is not registered in .github/workflows/playwright-docker.yml.`);
+          : `ui/${area} is registered in .github/workflows/playwright-docker.yml.`
+        : `ui/${area} is not registered in .github/workflows/playwright-docker.yml.`
+    );
   } else if (pathParts[0] === 'api') {
     addResult('Docker matrix registration', true, 'API specs are covered by the api shard.');
   } else {
-    addResult('Docker matrix registration', false, `${normalizePath(relativeSpecPath)} is not covered by the ui or api CI shards.`);
+    addResult(
+      'Docker matrix registration',
+      false,
+      `${normalizePath(relativeSpecPath)} is not covered by the ui or api CI shards.`
+    );
   }
 
   const tsCheck = runTypeScriptCheck();
   results.push(tsCheck);
 
-  if (shouldRun && results.every(result => result.passed)) {
-    const testResult = spawnSync(process.execPath, [
-      require.resolve('@playwright/test/cli'),
-      'test',
-      normalizePath(relative(projectRoot, targetPath)),
-      '--config=src/config/playwright.config.ts',
-      '--workers=1'
-    ], {
-      cwd: projectRoot,
-      env: { ...process.env, TZ: 'Australia/Adelaide' },
-      stdio: 'inherit'
-    });
+  if (shouldRun && results.every((result) => result.passed)) {
+    const testResult = spawnSync(
+      process.execPath,
+      [
+        require.resolve('@playwright/test/cli'),
+        'test',
+        normalizePath(relative(projectRoot, targetPath)),
+        '--config=src/config/playwright.config.ts',
+        '--workers=1'
+      ],
+      {
+        cwd: projectRoot,
+        env: { ...process.env, TZ: 'Australia/Adelaide' },
+        stdio: 'inherit'
+      }
+    );
 
-    addResult('Isolated test run', testResult.status === 0, testResult.status === 0
-      ? 'Targeted spec passed with one worker.'
-      : testResult.error
-        ? `Targeted spec could not start: ${testResult.error.message}`
-        : `Targeted spec exited with code ${testResult.status ?? 'unknown'}.`);
+    addResult(
+      'Isolated test run',
+      testResult.status === 0,
+      testResult.status === 0
+        ? 'Targeted spec passed with one worker.'
+        : testResult.error
+          ? `Targeted spec could not start: ${testResult.error.message}`
+          : `Targeted spec exited with code ${testResult.status ?? 'unknown'}.`
+    );
   } else if (!shouldRun) {
     addResult('Isolated test run', true, 'Skipped; append run to execute the targeted spec.');
   } else {
-    addResult('Isolated test run', false, 'Skipped because one or more prerequisite checks failed.');
+    addResult(
+      'Isolated test run',
+      false,
+      'Skipped because one or more prerequisite checks failed.'
+    );
   }
 }
 
@@ -310,7 +409,6 @@ for (const result of results) {
   console.log(`${result.passed ? 'PASS' : 'FAIL'} | ${result.name} | ${result.detail}`);
 }
 
-const failed = results.filter(result => !result.passed);
+const failed = results.filter((result) => !result.passed);
 console.log(`\n${results.length - failed.length}/${results.length} checks passed.`);
 process.exit(failed.length === 0 ? 0 : 1);
-

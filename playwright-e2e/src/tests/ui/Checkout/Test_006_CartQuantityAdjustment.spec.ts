@@ -19,7 +19,10 @@ type CartQuantityTestData = {
   };
 };
 
-const testDataPath = path.join(__dirname, '../../../test-data/ui/Checkout/Test_006_CartQuantityAdjustment.json');
+const testDataPath = path.join(
+  __dirname,
+  '../../../test-data/ui/Checkout/Test_006_CartQuantityAdjustment.json'
+);
 const TestData = require(testDataPath) as CartQuantityTestData;
 
 function uniqueUsername(prefix: string = 'cart_qty_user'): string {
@@ -31,8 +34,12 @@ function uniqueUsername(prefix: string = 'cart_qty_user'): string {
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe('Cart Quantity & Total Adjustment', () => {
-
-  test('UI_CART_04: Cart item addition and removal dynamically recalculates item count and order total @regression', async ({ signUpPage, catalogPage, commonFunctions, page }) => {
+  test('UI_CART_04: Cart item addition and removal dynamically recalculates item count and order total @regression', async ({
+    signUpPage,
+    catalogPage,
+    commonFunctions,
+    page
+  }) => {
     const cartPage = new CartPage(page);
     const username = uniqueUsername();
     let initialSinglePrice = 0;
@@ -40,7 +47,12 @@ test.describe('Cart Quantity & Total Adjustment', () => {
     await test.step('Register new user session', async () => {
       await catalogPage.navigateToCatalog(envConfig.baseUrl);
       await catalogPage.clickNavigateLink('Sign Up');
-      await signUpPage.registerNewUser(TestData.user.fullName, username, TestData.user.password, TestData.user.password);
+      await signUpPage.registerNewUser(
+        TestData.user.fullName,
+        username,
+        TestData.user.password,
+        TestData.user.password
+      );
     });
 
     await test.step('Add first book to cart and verify single item total', async () => {
@@ -54,7 +66,10 @@ test.describe('Cart Quantity & Total Adjustment', () => {
       initialSinglePrice = await cartPage.getCartTotalAmount();
 
       await commonFunctions.verifyValue(count, 1, 'Verifying 1 item in cart');
-      await commonFunctions.verifyCondition(initialSinglePrice > 0, 'Verifying non-zero initial cart total price');
+      await commonFunctions.verifyCondition(
+        initialSinglePrice > 0,
+        'Verifying non-zero initial cart total price'
+      );
     });
 
     await test.step('Add second book to cart and verify dynamic subtotal increment', async () => {
@@ -67,8 +82,15 @@ test.describe('Cart Quantity & Total Adjustment', () => {
       const updatedCount = await cartPage.getCartItemsCount();
       const updatedTotal = await cartPage.getCartTotalAmount();
 
-      await commonFunctions.verifyValue(updatedCount, 2, 'Verifying cart item count increased to 2');
-      await commonFunctions.verifyCondition(updatedTotal > initialSinglePrice, 'Verifying grand total updated dynamically upon adding second item');
+      await commonFunctions.verifyValue(
+        updatedCount,
+        2,
+        'Verifying cart item count increased to 2'
+      );
+      await commonFunctions.verifyCondition(
+        updatedTotal > initialSinglePrice,
+        'Verifying grand total updated dynamically upon adding second item'
+      );
     });
 
     await test.step('Remove first book and verify cart total decreases dynamically', async () => {
@@ -79,8 +101,10 @@ test.describe('Cart Quantity & Total Adjustment', () => {
       const finalTotal = await cartPage.getCartTotalAmount();
 
       await commonFunctions.verifyValue(finalCount, 1, 'Verifying cart item count decreased to 1');
-      await commonFunctions.verifyCondition(finalTotal < totalBeforeRemove, 'Verifying grand total reduced dynamically after item removal');
+      await commonFunctions.verifyCondition(
+        finalTotal < totalBeforeRemove,
+        'Verifying grand total reduced dynamically after item removal'
+      );
     });
   });
-
 });

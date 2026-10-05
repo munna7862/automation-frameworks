@@ -9,10 +9,7 @@ const rawBaseUrl =
   process.env.STAGING_URL ||
   'http://127.0.0.1:5173';
 
-const rawApiUrl =
-  process.env.E2E_API_URL ||
-  process.env.API_BASE_URL ||
-  'http://127.0.0.1:4000';
+const rawApiUrl = process.env.E2E_API_URL || process.env.API_BASE_URL || 'http://127.0.0.1:4000';
 
 // Strip trailing slash or /api for consistent baseURL joining
 const normalizedApiBase = rawApiUrl.replace(/\/api\/?$/, '').replace(/\/+$/, '');
@@ -23,7 +20,10 @@ export const envConfig = {
   baseUrl: normalizedBaseUrl,
   apiBaseUrl: normalizedApiBase,
   apiUrl: `${normalizedApiBase}/api`,
-  headless: process.env.HEADLESS === 'true' || process.env.HEADLESS === undefined ? true : process.env.HEADLESS === 'true',
+  headless:
+    process.env.HEADLESS === 'true' || process.env.HEADLESS === undefined
+      ? true
+      : process.env.HEADLESS === 'true',
   browser: process.env.BROWSER || 'chromium',
   timeout: parseInt(process.env.ELEMENT_TIMEOUT || '15000', 10),
   SUITENAME: process.env.SUITENAME || 'Default'
@@ -39,7 +39,7 @@ const DEFAULT_SEED_FALLBACKS: Record<string, string> = {
   PASSWORD: 'password123',
   E2E_USER_NAME: 'admin',
   E2E_USER_EMAIL: 'admin',
-  E2E_USER_PASSWORD: 'password123',
+  E2E_USER_PASSWORD: 'password123'
 };
 
 export const getRequiredEnv = (key: string, fallback?: string): string => {
@@ -56,12 +56,6 @@ export const getRequiredEnv = (key: string, fallback?: string): string => {
 
 export const getLoginCredentials = () => ({
   userName:
-    process.env.E2E_USER_NAME ||
-    process.env.E2E_USER_EMAIL ||
-    process.env.USER_NAME ||
-    'admin',
-  password:
-    process.env.E2E_USER_PASSWORD ||
-    process.env.PASSWORD ||
-    'password123'
+    process.env.E2E_USER_NAME || process.env.E2E_USER_EMAIL || process.env.USER_NAME || 'admin',
+  password: process.env.E2E_USER_PASSWORD || process.env.PASSWORD || 'password123'
 });
