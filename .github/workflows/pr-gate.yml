@@ -120,14 +120,16 @@ jobs:
       - name: Generate PR Quality Gate Summary
         if: always()
         run: |
-          echo "### 🛡️ PR Quality Gate Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Stage | Result | Environment | Target / Browser |" >> $GITHUB_STEP_SUMMARY
-          echo "| :--- | :--- | :--- | :--- |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Static Quality & Linting** | ${{ needs.static-quality.result == 'success' && '✅ PASSED' || '❌ FAILED' }} | Monorepo Workspaces | Node.js $(cat .nvmrc) (lint + typecheck) |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Smoke Tests (UI & API)** | ${{ steps.tests.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }} | BuggyBooks Staging | Google Chrome (Channel: chrome) |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "> **Quality Gate SLA**: Fast-feedback verification (< 3 min) validating static quality, Render staging warm-up, single-browser Chrome smoke execution, and automated teardown state reset." >> $GITHUB_STEP_SUMMARY
+          {
+            echo "### 🛡️ PR Quality Gate Results"
+            echo ""
+            echo "| Stage | Result | Environment | Target / Browser |"
+            echo "| :--- | :--- | :--- | :--- |"
+            echo "| **Static Quality & Linting** | ${{ needs.static-quality.result == 'success' && '✅ PASSED' || '❌ FAILED' }} | Monorepo Workspaces | Node.js $(cat .nvmrc) (lint + typecheck) |"
+            echo "| **Smoke Tests (UI & API)** | ${{ steps.tests.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }} | BuggyBooks Staging | Google Chrome (Channel: chrome) |"
+            echo ""
+            echo "> **Quality Gate SLA**: Fast-feedback verification (< 3 min) validating static quality, Render staging warm-up, single-browser Chrome smoke execution, and automated teardown state reset."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail job if smoke tests failed
         if: always() && steps.tests.outcome == 'failure'

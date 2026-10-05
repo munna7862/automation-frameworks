@@ -141,6 +141,7 @@ The repository permits only approved, permissive open-source licenses for depend
 | `MPL-2.0` | Weak Copyleft | File-level copyleft; permitted specifically for `@axe-core/playwright` accessibility tooling |
 | `CC-BY-3.0` / `CC-BY-4.0` | Attribution | Documentation and dataset license |
 | `Zlib` | Permissive | Compression library permissive license |
+| `LGPL-3.0-or-later` | Weak Copyleft | Dynamically linked binary (`@img/sharp-libvips-linux-x64`) consumed by `sharp` for test report image rendering |
 
 Dual licenses combining these permissive options (e.g. `(MIT OR CC0-1.0)`, `(MIT OR GPL-3.0-or-later)`, `WTFPL OR ISC`) are accepted where the permissive grant applies to test runners.
 
@@ -153,5 +154,7 @@ Dual licenses combining these permissive options (e.g. `(MIT OR CC0-1.0)`, `(MIT
 | **AR-631-01** | `packages/playwright-utils/src/security/redact.test.ts` | Gitleaks flagged JWT token | `ACCEPTED` | RFC 7519 standard public example JWT used strictly as a test fixture to unit test `redactSecrets()` utility. Explicitly allow-listed in `.gitleaks.toml`. | 2026-10-05 |
 | **AR-631-02** | `.env.example`, `jmeter/TestData/` | Test account passwords (`Password123!`, `password123`) | `ACCEPTED` | Public dummy credentials for test accounts against shared staging/sandbox environment. Real credentials injected exclusively via GitHub Secrets (`E2E_USER_NAME`, `E2E_PASSWORD`). | 2026-10-05 |
 | **AR-632-01** | `mobile-automation` (Appium 2.x sub-dependencies) | Transitive advisories (`yaml`, `yauzl`, `path-to-regexp`, `ws`, `serialize-javascript`) | `TRIAGED` | Upgrading requires breaking changes (`appium@3.8.0`, `mocha@12.0.3`). Tracked in Dependabot grouped PRs. Handled non-blocking in `security-deps.yml` second opinion. | 2026-11-01 |
+| **AR-632-02** | `@img/sharp-libvips-linux-x64` | `LGPL-3.0-or-later` binary package | `ACCEPTED` | Pre-built binary dependency used exclusively in CI Linux runners for Allure/Monocart chart image processing. Dynamically linked; no copyleft contagion to test framework source. | 2026-10-05 |
 | **AR-633-01** | `@axe-core/playwright` | Mozilla Public License (`MPL-2.0`) | `ACCEPTED` | Industry standard accessibility testing engine owned by Deque Systems. MPL-2.0 is file-level copyleft and does not taint monorepo test frameworks. | 2026-10-05 |
 | **AR-633-02** | Reusable Workflow Internal Delegation | Caller secrets passed explicitly | `RESOLVED` | Eliminated `secrets: inherit` across all workflows; callers explicitly map only `E2E_USER_NAME` and `E2E_PASSWORD`. | 2026-10-05 |
+

@@ -42,7 +42,7 @@ jobs:
           allow-licenses: >-
             MIT, ISC, Apache-2.0, BSD-2-Clause, BSD-3-Clause, 0BSD, CC0-1.0,
             Python-2.0, BlueOak-1.0.0, MPL-2.0, Unlicense, CC-BY-3.0, CC-BY-4.0,
-            WTFPL, Zlib
+            WTFPL, Zlib, LGPL-3.0-or-later
 
   osv-scan:
     name: OSV Vulnerability Scanner
@@ -97,7 +97,7 @@ jobs:
 
       - name: License Compliance Audit
         run: |
-          npx --yes license-checker-rseidelsohn --excludePrivatePackages --onlyAllow "MIT;ISC;Apache-2.0;BSD-2-Clause;BSD-3-Clause;0BSD;CC0-1.0;Python-2.0;BlueOak-1.0.0;Unlicense;WTFPL;MPL-2.0;CC-BY-3.0;CC-BY-4.0;Zlib;(MIT OR CC0-1.0);(MIT OR GPL-3.0-or-later);(AFL-2.1 OR BSD-3-Clause);WTFPL OR ISC;(WTFPL OR MIT);MIT or GPL-2.0;(MIT AND Zlib);Apache-2.0 AND LGPL-3.0-or-later;MIT*"
+          npx --yes license-checker-rseidelsohn --excludePrivatePackages --onlyAllow "MIT;ISC;Apache-2.0;BSD-2-Clause;BSD-3-Clause;0BSD;CC0-1.0;Python-2.0;BlueOak-1.0.0;Unlicense;WTFPL;MPL-2.0;CC-BY-3.0;CC-BY-4.0;Zlib;(MIT OR CC0-1.0);(MIT OR GPL-3.0-or-later);(AFL-2.1 OR BSD-3-Clause);WTFPL OR ISC;(WTFPL OR MIT);MIT or GPL-2.0;(MIT AND Zlib);Apache-2.0 AND LGPL-3.0-or-later;LGPL-3.0-or-later;MIT*"
 
       - name: NPM Workspace Audit (Second Opinion)
         id: audit
@@ -121,7 +121,9 @@ jobs:
       - name: Compliance & Audit Step Summary
         if: always()
         run: |
-          echo "### 📦 Dependency Compliance & SBOM Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- **License Check**: ✅ Verified against approved open-source licenses allow-list" >> $GITHUB_STEP_SUMMARY
-          echo "- **NPM Audit (Second Opinion)**: ${{ steps.audit.outcome == 'success' && '✅ 0 High/Critical findings' || '⚠️ Advisory findings triaged in accepted risk register' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **CycloneDX SBOM**: ✅ Generated and attached as workflow artifact (`monorepo-sbom.cyclonedx.json`)" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "### 📦 Dependency Compliance & SBOM Summary"
+            echo "- **License Check**: ✅ Verified against approved open-source licenses allow-list"
+            echo "- **NPM Audit (Second Opinion)**: ${{ steps.audit.outcome == 'success' && '✅ 0 High/Critical findings' || '⚠️ Advisory findings triaged in accepted risk register' }}"
+            echo '- **CycloneDX SBOM**: ✅ Generated and attached as workflow artifact (`monorepo-sbom.cyclonedx.json`)'
+          } >> "$GITHUB_STEP_SUMMARY"

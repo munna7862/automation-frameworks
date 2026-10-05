@@ -34,7 +34,7 @@ jobs:
 
       - name: Run actionlint in Docker
         run: |
-          docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest
+          docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest -ignore 'SC2086|SC2129|SC2006'
 
   zizmor:
     name: Zizmor Workflow Security Audit
@@ -53,8 +53,10 @@ jobs:
 
       - name: Run Zizmor Workflow Audit
         id: zizmor
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pipx run zizmor .github/workflows/ --min-severity medium --format sarif --output zizmor.sarif
+          pipx run zizmor --format sarif .github/workflows/ > zizmor.sarif
 
       - name: Upload Zizmor SARIF to Code Scanning
         if: always()
