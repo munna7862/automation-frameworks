@@ -30,27 +30,33 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci || npm install
+        run: npm ci
 
       - name: Monorepo Workspace Linting
+        id: lint
         run: npm run lint:all
 
       - name: Monorepo Workspace Typechecking
+        id: typecheck
         run: npm run typecheck:all
 
       - name: Dual-Catalog Parity Validation
+        id: catalog
         run: npm run test:verify-catalog
 
       - name: Generate Static Quality Summary
         if: always()
         run: |
           echo "### 🔍 Static Quality Check" >> $GITHUB_STEP_SUMMARY
-          echo "- **ESLint**: Passed across all monorepo workspaces" >> $GITHUB_STEP_SUMMARY
-          echo "- **TypeScript**: Passed (tsc --noEmit) with 0 errors" >> $GITHUB_STEP_SUMMARY
-          echo "- **Dual-Catalog Parity**: 100% byte-for-byte verified (docs vs playwright-e2e)" >> $GITHUB_STEP_SUMMARY
+          echo "- **ESLint**: ${{ steps.lint.outcome == 'success' && '✅ Passed across all monorepo workspaces' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **TypeScript**: ${{ steps.typecheck.outcome == 'success' && '✅ Passed (tsc --noEmit) with 0 errors' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dual-Catalog Parity**: ${{ steps.catalog.outcome == 'success' && '✅ 100% byte-for-byte verified (docs vs playwright-e2e)' || '❌ Out of sync' }}" >> $GITHUB_STEP_SUMMARY
 
   smoke-e2e:
     name: Smoke Tests (Chrome UI + API)
+    concurrency:
+      group: buggybooks-staging-state
+      cancel-in-progress: false
     needs: static-quality
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -75,7 +81,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci || npm install
+        run: npm ci
 
       - name: Render Staging Warm-Up Pre-Flight Probe
         run: |
@@ -100,7 +106,9 @@ jobs:
         run: npx playwright install --with-deps chrome
 
       - name: Run Smoke Tests
+        id: tests
         run: npm run test:smoke:all
+        continue-on-error: true
 
       - name: Teardown Staging State Reset
         if: always()
@@ -128,6 +136,11 @@ jobs:
             playwright-e2e/test-results/
           retention-days: 7
 
+      - name: Summarize Test Results
+        if: always()
+        run: |
+          node scripts/summarize-test-results.js playwright-e2e/test-results/results.json
+
       - name: Generate PR Quality Gate Summary
         if: always()
         run: |
@@ -136,6 +149,12 @@ jobs:
           echo "| Stage | Result | Environment | Target / Browser |" >> $GITHUB_STEP_SUMMARY
           echo "| :--- | :--- | :--- | :--- |" >> $GITHUB_STEP_SUMMARY
           echo "| **Static Quality & Linting** | ${{ needs.static-quality.result == 'success' && '✅ PASSED' || '❌ FAILED' }} | Monorepo Workspaces | Node.js 22 (lint + typecheck) |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Smoke Tests (UI & API)** | ${{ job.status == 'success' && '✅ PASSED' || '❌ FAILED' }} | BuggyBooks Staging | Google Chrome (Channel: chrome) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Smoke Tests (UI & API)** | ${{ steps.tests.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }} | BuggyBooks Staging | Google Chrome (Channel: chrome) |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "> **Quality Gate SLA**: Fast-feedback verification (< 3 min) validating static quality, Render staging warm-up, single-browser Chrome smoke execution, and automated teardown state reset." >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail job if smoke tests failed
+        if: always() && steps.tests.outcome == 'failure'
+        run: |
+          echo "::error::Smoke test execution failed — check artifacts and summaries"
+          exit 1

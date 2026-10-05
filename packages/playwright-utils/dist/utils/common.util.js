@@ -38,6 +38,7 @@ const logger_1 = require("../logger/logger");
 const test_1 = require("@playwright/test");
 const allure = __importStar(require("allure-js-commons"));
 const crypto_1 = require("crypto");
+const redact_1 = require("../security/redact");
 class CommonFunctions {
     /**
      * Verifies scalar values with full Winston structured logging, Allure step tracking,
@@ -167,14 +168,15 @@ class CommonFunctions {
         const logLevel = levelMap[sLogLevel] || sLogLevel.toLowerCase();
         const reportLevel = sLogLevel.toUpperCase();
         const timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
+        const safeMessage = (0, redact_1.redactString)(sMessage);
         // Use errorLogger for failures to log to separate error file
         if (sLogLevel === 'FAIL') {
-            logger_1.errorLogger.log({ level: logLevel, message: sMessage });
+            logger_1.errorLogger.log({ level: logLevel, message: safeMessage });
         }
         // Always log to main framework log
-        logger_1.logger.log({ level: logLevel, message: sMessage });
+        logger_1.logger.log({ level: logLevel, message: safeMessage });
         const emoji = sLogLevel === 'PASS' ? '✅' : sLogLevel === 'FAIL' ? '❌' : '';
-        await allure.step(`${emoji} [${timestamp}] [${reportLevel}] ${sMessage}`, async () => { });
+        await allure.step(`${emoji} [${timestamp}] [${reportLevel}] ${safeMessage}`, async () => { });
     }
     generateRandomString(length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

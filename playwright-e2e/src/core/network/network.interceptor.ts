@@ -1,4 +1,5 @@
 import { BrowserContext, Request, Response } from '@playwright/test';
+import { redactHeaders, redactBody } from '@automationframeworks/playwright-utils';
 
 export type NetworkCaptureMode = 'all' | 'api-only';
 
@@ -63,6 +64,13 @@ export class NetworkInterceptor {
       return;
     }
 
+    const rawPostData = request.postData();
+    let safePostData: string | null = null;
+    if (rawPostData) {
+      const redacted = redactBody(rawPostData);
+      safePostData = typeof redacted === 'string' ? redacted : JSON.stringify(redacted);
+    }
+
     const entry: NetworkEntry = {
       id: `${Date.now()}-${this.entries.length + 1}`,
       startedAt: new Date().toISOString(),
@@ -70,8 +78,8 @@ export class NetworkInterceptor {
       method: request.method(),
       resourceType: request.resourceType(),
       navigationRequest: request.isNavigationRequest(),
-      headers: request.headers(),
-      postData: request.postData()
+      headers: redactHeaders(request.headers()),
+      postData: safePostData
     };
 
     this.entries.push(entry);
@@ -123,14 +131,24 @@ export class NetworkInterceptor {
       responseBody = '[Response body capture unavailable or timed out]';
     }
 
+    let safeResponseBody: string | null = null;
+    if (responseBody) {
+      if (responseBody.startsWith('[Response body')) {
+        safeResponseBody = responseBody;
+      } else {
+        const redacted = redactBody(responseBody);
+        safeResponseBody = typeof redacted === 'string' ? redacted : JSON.stringify(redacted);
+      }
+    }
+
     entry.endedAt = new Date().toISOString();
     entry.durationMs = this.getDuration(entry.startedAt, entry.endedAt);
     entry.response = {
       status: response.status(),
       statusText: response.statusText(),
       ok: response.ok(),
-      headers: await response.allHeaders(),
-      body: responseBody
+      headers: redactHeaders(await response.allHeaders()),
+      body: safeResponseBody
     };
   }
 

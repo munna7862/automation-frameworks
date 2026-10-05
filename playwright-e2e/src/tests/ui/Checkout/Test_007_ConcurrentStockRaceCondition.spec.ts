@@ -30,6 +30,7 @@ const testDataPath = path.join(__dirname, '../../../test-data/ui/Checkout/Test_0
 const TestData = require(testDataPath) as ConcurrentStockRaceTestData;
 
 test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', () => {
+  test.describe.configure({ mode: 'serial' });
 
   test('TC-CONC-001: Concurrent buyers competing for final stock unit (stock = 1) results in exactly one 200 OK and one 409 Conflict @smoke @regression @chaos', async ({
     commonFunctions,
@@ -136,6 +137,7 @@ test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', ()
         },
         headers: { Cookie: cookieA },
         responseType: 'full',
+        throwOnError: false,
         logMessage: 'Buyer A initiating concurrent checkout'
       });
 
@@ -149,6 +151,7 @@ test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', ()
         },
         headers: { Cookie: cookieB },
         responseType: 'full',
+        throwOnError: false,
         logMessage: 'Buyer B initiating concurrent checkout'
       });
 

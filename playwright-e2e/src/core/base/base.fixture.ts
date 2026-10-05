@@ -82,7 +82,7 @@ export const test = base.extend<TestFixtures>({
     }
   }, { auto: true }],
 
-  networkInterceptor: async ({ context }, use, testInfo) => {
+  networkInterceptor: [async ({ context }, use, testInfo) => {
     const interceptor = new NetworkInterceptor(context, 'api-only');
     interceptor.start();
     logger.info('Network interception enabled with mode: api-only');
@@ -97,7 +97,7 @@ export const test = base.extend<TestFixtures>({
       contentType: 'application/json'
     });
     logger.info(`Captured ${networkEntries.length} network calls. Artifact: ${outputPath}`);
-  },
+  }, { auto: true }],
 
   signUpPage: async ({ page }, use) => {
     await use(new SignUpPage(page));

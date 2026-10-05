@@ -1,12 +1,12 @@
 # Task Backlog: AutomationFrameworks Sprint Execution
 
-## Current Focus: Sprint 5.3 — Automated Monorepo Health Auditing & Closed-Loop Governance
+## Current Focus: Sprint 6.1 — Trustworthy Pipelines Hot-Fix
 
-**Sprint Identifier**: `SPRINT-5.3-HEALTH-AUDITING-AND-GOVERNANCE`  
-**Phase**: Phase 5 (Executive Observability & Unified Allure Dashboard)  
+**Sprint Identifier**: `SPRINT-6.1-TRUSTWORTHY-PIPELINES-HOTFIX`  
+**Phase**: Phase 6 (CI/CD Integrity & Supply-Chain Security)  
 **Story Points**: 4 SP  
-**Branch**: `feat/sprint-5.3-health-auditing-and-governance`  
-**Goal**: Implement automated health auditing tools including a byte-for-byte dual-catalog parity verifier (`scripts/verify-catalog-sync.ts`), closed-loop quarantine audit pipeline (`quarantine-audit.yml`), and formal quarantine lifecycle governance guidelines to ensure perpetual monorepo hygiene.
+**Branch**: `fix/sprint-6.1-trustworthy-pipelines`  
+**Goal**: Make every CI signal trustworthy: failing tests fail the build, summaries report real results, no credentials in YAML, no secrets in logs, and API helpers stop swallowing errors.
 
 ---
 
@@ -14,30 +14,46 @@
 
 | Persona | Role Assignment | Responsibilities for this Sprint | Status |
 | :--- | :--- | :--- | :--- |
-| **Scrum Master** | `role-scrum-master` | Sprint planning, DoR verification, `task.md` tracking, and 4-point DoD audit. | `ACTIVE` |
-| **SDET Architect** | `role-sdet-architect` | Designing `verify-catalog-sync.ts`, authoring quarantine lifecycle guidelines, and technical quality gate review. | `ACTIVE` |
-| **Playwright QA Lead** | `role-playwright-automation` | Calibrating quarantine audit runner (`quarantine-audit.js`), stability thresholds, and test isolation. | `ACTIVE` |
-| **DevOps Engineer** | `role-devops-engineer` | Integrating catalog verification into `pr-gate.yml`, calibrating `quarantine-audit.yml`, and managing PR release. | `ACTIVE` |
-| **Product Owner** | Human Tech Lead (`User`) | Final PR review, approval, and merging the final sprint into `main`. | `STANDBY` |
+| **Scrum Master** | `role-scrum-master` | Sprint kick-off, `task.md` tracking, DoR verification, and DoD audit. | `COMPLETED` |
+| **SDET Architect** | `role-sdet-architect` | Redaction rules design, code acceptance review, verifying test semantics, dual-catalog check. | `COMPLETED` |
+| **Playwright QA Lead** | `role-playwright-automation` | `redact()` integration, `ApiError` refactor, migrating `Test_007`, security unit tests. | `COMPLETED` |
+| **DevOps Engineer** | `role-devops-engineer` | Workflow outcome gating, honest step summaries (`summarize-test-results.js`), secret cleanup, concurrency groups, PR release. | `COMPLETED` |
+| **Product Owner** | Human Tech Lead (`User`) | Backlog prioritization, sprint kickoff, and final PR review & merge. | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
-### US-AF-531: Automated Dual-Catalog Parity Validator (2 SP)
-- [x] **US-AF-531.1** (`SDET Architect`): Author `scripts/verify-catalog-sync.ts` with cross-platform line ending normalization, visual color-coded diff output, character and line counts, and exit code contract (0 on match, 1 on divergence).
-- [x] **US-AF-531.2** (`SDET Architect`): Add root npm script `"test:verify-catalog": "tsx scripts/verify-catalog-sync.ts"` in `package.json` and ensure TypeScript execution toolchain (`tsx`) is configured.
-- [x] **US-AF-531.3** (`DevOps Engineer`): Embed `test:verify-catalog` into `.github/workflows/pr-gate.yml` under the `static-quality` job to gate pull requests against documentation drift.
-- [x] **US-AF-531.4** (`SDET Architect`): Verify dual-catalog parity verifier locally against both matching catalogs and simulated intentional divergence.
+### US-AF-611: Fail the Build When Tests Fail & Dynamic Test Summaries (1.5 SP)
+- [x] **US-AF-611.1** (`DevOps Engineer`): Assign `id: tests` and keep `continue-on-error: true` only to allow reporting in `playwright-ci.yml`, `selenium-ci.yml`, `wdio-ci.yml`, and `mobile-ci.yml`.
+- [x] **US-AF-611.2** (`DevOps Engineer`): Add a terminal job-gating step (`if: always() && steps.tests.outcome == 'failure' run: exit 1`) in all 4 test workflows to fail the run on test failures.
+- [x] **US-AF-611.3** (`DevOps Engineer`): Ensure downstream `deploy-report` jobs run with `if: always()` and `needs: [test]` so Allure reports publish even when tests fail.
+- [x] **US-AF-611.4** (`DevOps Engineer`): Author `scripts/summarize-test-results.js` to auto-detect Playwright `results.json` or Allure `widgets/summary.json`, format markdown summary tables with failure breakdown, and output to `$GITHUB_STEP_SUMMARY`.
+- [x] **US-AF-611.5** (`DevOps Engineer`): Wire `scripts/summarize-test-results.js` into the 4 test workflows and `pr-gate.yml`.
 
-### US-AF-532: Closed-Loop Quarantine Audit Pipeline & Governance (2 SP)
-- [x] **US-AF-532.1** (`Playwright QA Lead`): Upgrade `playwright-e2e/scripts/quarantine-audit.js` to support default 10x repetition (`--repeat-each=10`), enhanced stability index computation, and actionable de-quarantine markdown advisories.
-- [x] **US-AF-532.2** (`DevOps Engineer`): Refine `.github/workflows/quarantine-audit.yml` with scheduled cron (`0 2 * * 1`), manual dispatch (`repeat_each` input defaulting to 10), pre-flight staging probe, and step summary reporting.
-- [x] **US-AF-532.3** (`SDET Architect`): Author `docs/quarantine_lifecycle_guide.md` documenting formal quarantine admission criteria, tagging convention, maximum aging SLA, de-quarantine threshold (10/10 green runs), and step-by-step resolution workflow.
-- [x] **US-AF-532.4** (`Scrum Master`): Verify sprint documentation updates across `planning/README.md`, `planning/Master/master_plan.md`, `planning/Phases/phase_5_*.md`, and `planning/Sprints/sprint_5_3_*.md`.
-- [x] **US-AF-532.5** (`SDET Architect`): Conduct Code Acceptance Review and sign off technical quality gate.
-- [x] **US-AF-532.6** (`Scrum Master`): Conduct 4-point Definition of Done (DoD) audit.
-- [x] **US-AF-532.7** (`DevOps Engineer`): Commit changes, push branch, open pull request via `gh pr create` (PR #28), monitor CI checks, and await PO sign-off.
+### US-AF-612: Honest PR Gate, No Credential Fallbacks & Strict Installs (1 SP)
+- [x] **US-AF-612.1** (`DevOps Engineer`): Refactor `pr-gate.yml` static summary into a dynamic summary evaluating `${{ steps.<id>.outcome }}` for lint, typecheck, catalog, and calling `summarize-test-results.js` for smoke tests.
+- [x] **US-AF-612.2** (`DevOps Engineer`): Remove credential fallback literals (`|| 'admin'`, `|| 'password123'`) from `playwright-on-demand.yml` and add a fail-fast secret validation step.
+- [x] **US-AF-612.3** (`DevOps Engineer`): Replace all occurrences of `npm ci || npm install` with strict `npm ci` across all GitHub workflows.
+- [x] **US-AF-612.4** (`DevOps Engineer`): Configure staging state concurrency group (`concurrency: { group: buggybooks-staging-state, cancel-in-progress: false }`) on test jobs in workflows mutating chaos/reset state.
+
+### US-AF-613: Central Secret Redaction (1 SP)
+- [x] **US-AF-613.1** (`Playwright QA Lead` / `SDET Architect`): Implement `packages/playwright-utils/src/security/redact.ts` exporting sensitive keys, `redactHeaders`, `redactBody`, and `redactString`.
+- [x] **US-AF-613.2** (`SDET Architect`): Export security redaction utilities from `packages/playwright-utils/src/index.ts`.
+- [x] **US-AF-613.3** (`Playwright QA Lead`): Integrate redaction into `ApiUtil.makeRequest`, `getBearerToken`, `NetworkInterceptor` (Playwright & WDIO), and `CommonFunctions.logMessage`.
+- [x] **US-AF-613.4** (`Playwright QA Lead`): Create unit tests in `packages/playwright-utils/src/security/redact.test.ts` executed via `tsx --test`, and add `"test"` script in `packages/playwright-utils/package.json`.
+
+### US-AF-614: `ApiUtil` Error Semantics & Test_007 Migration (0.5 SP)
+- [x] **US-AF-614.1** (`SDET Architect` / `Playwright QA Lead`): Author `ApiError` class with HTTP status, data, headers, URL, and method.
+- [x] **US-AF-614.2** (`Playwright QA Lead`): Refactor `ApiUtil.makeRequest` to throw `ApiError` on non-2xx status and network errors by default, supporting `throwOnError: boolean = true`.
+- [x] **US-AF-614.3** (`Playwright QA Lead`): Migrate `src/tests/ui/Checkout/Test_007_ConcurrentStockRaceCondition.spec.ts` to `throwOnError: false` for expected stock collision requests and assert status directly.
+- [x] **US-AF-614.4** (`Playwright QA Lead`): Verify zero occurrences of `{ success: false }` swallowing in `playwright-e2e/src/utils/api.util.ts`.
+
+### Verification, DoD & Release Protocol
+- [x] **US-AF-610.1** (`Scrum Master`): Verify Pre-Flight Definition of Ready (DoR) with Render warm-up probe.
+- [x] **US-AF-610.2** (`SDET Architect`): Review code acceptance checklist against Sprint 6.1 specifications.
+- [x] **US-AF-610.3** (`Scrum Master`): Perform 4-point Definition of Done (DoD) audit.
+- [x] **US-AF-610.4** (`DevOps Engineer`): Commit, push branch, open PR with full verification evidence, monitor CI checks.
 
 ---
 
@@ -45,39 +61,44 @@
 
 | Gate / Reviewer | Target Role | Review Feedback & Comments | Gate Status |
 | :--- | :--- | :--- | :---: |
-| **Pre-Flight Architecture Gate** | SDET Architect | Staging pre-flight probe completed (200 OK); dual-catalog initial parity confirmed; DoR satisfied. | `[PASSED]` |
-| **Code Acceptance Review Gate** | SDET Architect | `scripts/verify-catalog-sync.ts` authored with CRLF/LF normalization, line-by-line diff, and `--fix` auto-repair; `pr-gate.yml` static quality check gated; `quarantine-audit.yml` and `quarantine-audit.js` calibrated to 10x repetition; `docs/quarantine_lifecycle_guide.md` authored. | `[PASSED]` |
-| **Scrum Master DoD Gate** | Scrum Master | `typecheck:all` exit 0, `lint:all` exit 0, `test:verify-catalog` exit 0 with 182 test cases in exact parity, documentation and roadmap synchronized. | `[PASSED]` |
-| **DevOps Release Gate** | DevOps Engineer | PR #28 opened; CI checks monitored and validated; ready for PO review and merge. | `[PASSED]` |
-| **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. Concludes the 15-Sprint, 63 SP Master Roadmap! | `[READY FOR MERGE]` |
+| **Pre-Flight Architecture Gate** | SDET Architect | Staging pre-flight probe and DoR audit. Verified online. | `[PASSED]` |
+| **Code Acceptance Review Gate** | SDET Architect | Verify outcome gating, redaction immutability, `ApiError` semantics, and `Test_007` migration. | `[PASSED]` |
+| **Scrum Master DoD Gate** | Scrum Master | Audit lint, typecheck, catalog sync, and zero test regression. | `[PASSED]` |
+| **DevOps Release Gate** | DevOps Engineer | PR created with complete evidence; CI checks passing. | `[PASSED]` |
+| **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[READY]` |
 
 ---
 
 ## 4. Definition of Done (DoD) Checklist
 
-- [x] `scripts/verify-catalog-sync.ts` authored, tested, and passing with exit code 0.
-- [x] `npm run test:verify-catalog` configured at root and verified.
-- [x] Catalog verification integrated into `.github/workflows/pr-gate.yml` static quality checks.
-- [x] `.github/workflows/quarantine-audit.yml` and `quarantine-audit.js` updated for 10x repetition and step summary reporting.
-- [x] `docs/quarantine_lifecycle_guide.md` authored detailing admission criteria, aging SLAs, and de-quarantine protocol.
-- [x] Dual-catalog parity confirmed: `npm run test:verify-catalog` exits 0.
-- [x] `npm run lint:all` and `npm run typecheck:all` exit 0 across all workspaces.
-- [x] Planning documentation and roadmap marked complete for Sprint 5.3 and Phase 5.
-- [x] Pull request opened with structured summary and verification evidence (`gh pr create` -> PR #28).
-- [x] All CI workflow checks green, approved, and ready for PO merge.
+- [x] All 4 user stories' acceptance criteria met.
+- [x] `npm run lint:all`, `npm run typecheck:all`, `npm run test:verify-catalog` exit 0.
+- [x] Security redaction unit tests pass (`npx tsx --test packages/playwright-utils/src/security/redact.test.ts`).
+- [x] `Test_007_ConcurrentStockRaceCondition.spec.ts` passes 5/5 with `--repeat-each=5`.
+- [x] `grep -rnE "password123|\|\| 'admin'|npm ci \|\|" .github/` returns 0 matches.
+- [x] `grep -rn "success: false" playwright-e2e/src/utils` returns 0 matches.
+- [x] `AGENTS.md` updated with guidance on test step outcome gating.
+- [x] `planning/Sprints/sprint_6_1_trustworthy_pipelines_hotfix.md` and planning hub updated.
+- [x] Pull request opened with structured summary and verification evidence (`gh pr create`).
+- [x] All CI workflow checks green.
 
 ---
 
 ## 5. Verification & Execution Evidence
 
 ```bash
-# Command 1: Dual-catalog parity verifier
+# 1. Strict Installs & Linters
+npm ci
+npm run lint:all && npm run typecheck:all
 npm run test:verify-catalog
 
-# Command 2: Static quality across all workspaces
-npm run lint:all
-npm run typecheck:all
+# 2. Redaction Unit Tests
+npx tsx --test packages/playwright-utils/src/security/redact.test.ts
 
-# Command 3: Quarantine audit runner dry run
-npm run test:quarantine:audit --prefix playwright-e2e
+# 3. Test_007 Deterministic Execution
+cd playwright-e2e && npx playwright test src/tests/ui/Checkout/Test_007_ConcurrentStockRaceCondition.spec.ts --config=src/config/playwright.config.ts --repeat-each=5
+
+# 4. Sanitation Verification
+grep -rnE "password123|\|\| 'admin'|npm ci \|\|" ../.github/
+grep -rn "success: false" src/utils
 ```
