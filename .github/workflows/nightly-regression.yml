@@ -22,10 +22,7 @@ on:
         required: false
         default: 'true'
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+permissions: {}
 
 jobs:
   # ============================================================================
@@ -33,6 +30,10 @@ jobs:
   # ============================================================================
   playwright-regression:
     name: Playwright Regression
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     uses: ./.github/workflows/_reusable-e2e.yml
     with:
       framework: playwright
@@ -40,13 +41,19 @@ jobs:
       publish-allure: true
       allure-namespace: Playwright
       headless: ${{ inputs.headless || 'true' }}
-    secrets: inherit
+    secrets:
+      E2E_USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 
   # ============================================================================
   # 2. Selenium WebDriver Regression (Chrome Headless)
   # ============================================================================
   selenium-regression:
     name: Selenium Regression
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     uses: ./.github/workflows/_reusable-e2e.yml
     with:
       framework: selenium
@@ -54,13 +61,19 @@ jobs:
       publish-allure: true
       allure-namespace: Selenium
       headless: ${{ inputs.headless || 'true' }}
-    secrets: inherit
+    secrets:
+      E2E_USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 
   # ============================================================================
   # 3. WebdriverIO Regression (Chrome Headless)
   # ============================================================================
   wdio-regression:
     name: WebdriverIO Regression
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     uses: ./.github/workflows/_reusable-e2e.yml
     with:
       framework: wdio
@@ -68,7 +81,9 @@ jobs:
       publish-allure: true
       allure-namespace: WDIO
       headless: ${{ inputs.headless || 'true' }}
-    secrets: inherit
+    secrets:
+      E2E_USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 
   # ============================================================================
   # 4. Consolidated Nightly Summary

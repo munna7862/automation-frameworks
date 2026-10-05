@@ -1,0 +1,75 @@
+# ==============================================================================
+# BuggyBooks — Dependabot Automated Dependency Updates
+# ==============================================================================
+# Configured with grouped update rules to keep open PR count <= 5 per week.
+# Covers npm root + monorepo workspaces and GitHub Actions.
+# ==============================================================================
+
+version: 2
+updates:
+  # Monorepo NPM Dependencies (Root & Workspaces)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "javascript"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      playwright:
+        patterns:
+          - "@playwright/*"
+          - "playwright*"
+          - "@automationframeworks/playwright-utils"
+      wdio:
+        patterns:
+          - "@wdio/*"
+          - "webdriverio*"
+          - "devtools*"
+          - "appium*"
+          - "@appium/*"
+      eslint:
+        patterns:
+          - "eslint*"
+          - "@typescript-eslint/*"
+      types:
+        patterns:
+          - "@types/*"
+          - "typescript"
+      allure:
+        patterns:
+          - "allure-*"
+          - "@allurereport/*"
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    cooldown:
+      default-days: 7
+
+  # GitHub Actions Workflow Dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    cooldown:
+      default-days: 7

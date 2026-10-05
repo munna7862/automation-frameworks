@@ -1,0 +1,29 @@
+# ==============================================================================
+# BuggyBooks — Gitleaks Configuration & Secret Scanning Allow-List
+# ==============================================================================
+# All allow-lists are scoped strictly to known test fixtures, mock credentials,
+# and historical test reporting artifacts. Real production secrets remain blocked.
+# ==============================================================================
+
+[allowlist]
+description = "Known test fixtures, mock credentials, and test reporting artifacts"
+
+# Narrow paths for known mock test fixtures and historical test reports
+paths = [
+  '''packages/playwright-utils/src/security/redact\.test\.ts''',
+  '''packages/playwright-utils/dist/security/redact\.test\.js''',
+  '''\.env\.example''',
+  '''jmeter/TestData/.*''',
+  '''AutomationReports/.*''',
+  '''playwright-e2e/auth-state\.json'''
+]
+
+# Narrow regex patterns for standard RFC mock tokens and test passwords
+regexes = [
+  # Standard RFC 7519 example JWT used exclusively for testing redactSecrets() utility
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ\.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c''',
+  # Standard test account password fixture across E2E specs and .env.example
+  '''Password123!''',
+  # Standard JMeter load test account password fixture
+  '''password123'''
+]

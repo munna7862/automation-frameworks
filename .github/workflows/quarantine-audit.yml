@@ -24,14 +24,16 @@ concurrency:
   group: buggybooks-staging-state
   cancel-in-progress: false
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   quarantine-audit:
     name: Quarantined Test Stability Audit (10x Repetition)
     runs-on: ubuntu-latest
     timeout-minutes: 30
+
+    permissions:
+      contents: read
 
     env:
       ENV: INTEROP
@@ -43,6 +45,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Setup Monorepo Environment
         uses: ./.github/actions/setup-monorepo

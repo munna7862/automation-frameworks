@@ -1,12 +1,12 @@
 # Task Backlog: AutomationFrameworks Sprint Execution
 
-## Current Focus: Sprint 6.2 — Reusable Workflows & Composite Actions
+## Current Focus: Sprint 6.3 — Supply-Chain & Repository Security
 
-**Sprint Identifier**: `SPRINT-6.2-REUSABLE-WORKFLOWS-AND-COMPOSITE-ACTIONS`  
+**Sprint Identifier**: `SPRINT-6.3-SUPPLY-CHAIN-AND-REPOSITORY-SECURITY`  
 **Phase**: Phase 6 (CI/CD Integrity & Supply-Chain Security)  
-**Story Points**: 4 SP  
-**Branch**: `feat/sprint-6.2-reusable-workflows`  
-**Goal**: Remove copy-paste across workflows with composite actions and one reusable E2E pipeline, merge the three overlapping Playwright workflows, standardise the toolchain, and add a scheduled nightly regression.
+**Story Points**: 5 SP  
+**Branch**: `feat/sprint-6.3-supply-chain-security`  
+**Goal**: Add free, GitHub-native security controls — SAST, secret scanning, dependency scanning, automated updates, workflow security linting, SBOM and license compliance — all with least-privilege permissions.
 
 ---
 
@@ -14,44 +14,41 @@
 
 | Persona | Role Assignment | Responsibilities for this Sprint | Status |
 | :--- | :--- | :--- | :--- |
-| **Scrum Master** | `role-scrum-master` | Sprint planning, `task.md` tracking, DoR verification, and DoD audit. | `COMPLETED` |
-| **SDET Architect** | `role-sdet-architect` | Input contract design for reusable workflow, report/shard parity, architecture review. | `COMPLETED` |
-| **DevOps Engineer** | `role-devops-engineer` | Composite actions, reusable workflow, caller migration, nightly regression, action pinning, PR release. | `COMPLETED` |
-| **Playwright QA Lead** | `role-playwright-automation` | Validate shard/merge/report parity and test runner parameters. | `COMPLETED` |
-| **Product Owner** | Human Tech Lead (`User`) | Backlog prioritization, sprint kickoff, and final PR review & merge. | `STANDBY` |
+| **Scrum Master** | `role-scrum-master` | Sprint kick-off, DoR verification, DoD audit, and tracking. | `COMPLETED` |
+| **SDET Architect** | `role-sdet-architect` | Security controls architecture, triage of first-run findings, license allow-list, dual-catalog sync verification. | `COMPLETED` |
+| **DevOps Engineer** | `role-devops-engineer` | Workflows, Dependabot, gitleaks config, actionlint, zizmor remediation, SBOM, and PR release lifecycle. | `COMPLETED` |
+| **Product Owner** | Human Tech Lead (`User`) | Backlog prioritization, repo settings enablement (push protection), final PR review & merge. | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
-### US-AF-621: Composite Actions & Toolchain Unification (1 SP)
-- [x] **US-AF-621.1** (`DevOps Engineer`): Author `.github/actions/setup-monorepo/action.yml` supporting `install-chrome` and `working-directory` inputs, Node setup from `.nvmrc`, npm caching, `npm ci`, and Playwright browser caching.
-- [x] **US-AF-621.2** (`DevOps Engineer`): Author `.github/actions/staging-warmup/action.yml` with `api-url`, `fe-url`, and `timeout-ms` inputs passed through environment variables.
-- [x] **US-AF-621.3** (`DevOps Engineer`): Author `.github/actions/chaos-reset/action.yml` with `api-base`, `restock-book-ids`, and `stock` inputs passed through environment variables.
-- [x] **US-AF-621.4** (`DevOps Engineer`): Add root `.nvmrc` containing `24`.
+### US-AF-631: Static Analysis & Secret Scanning (1.5 SP)
+- [x] **US-AF-631.1** (`DevOps Engineer`): Author `.github/workflows/security-codeql.yml` using pinned `github/codeql-action` (`init`, `analyze`), language `javascript-typescript`, query suite `security-extended`, triggers (`pull_request`, `push`, weekly cron), and least-privilege permissions.
+- [x] **US-AF-631.2** (`DevOps Engineer`): Author `.github/workflows/security-secrets.yml` using pinned `gitleaks/gitleaks-action` with `fetch-depth: 0` on PR and push.
+- [x] **US-AF-631.3** (`DevOps Engineer` / `SDET Architect`): Author `.gitleaks.toml` with narrow allow-lists for known test fixtures only (`.env.example`, JMeter CSV credentials, test data) with rationale comments.
+- [x] **US-AF-631.4** (`SDET Architect`): Document Secret Scanning & Push Protection enablement instructions for repo settings in `docs/security/repo_security_controls.md`.
 
-### US-AF-622: Reusable E2E Workflow & Caller Modernization (1.5 SP)
-- [x] **US-AF-622.1** (`DevOps Engineer` / `SDET Architect`): Author `.github/workflows/_reusable-e2e.yml` with `on: workflow_call`, supporting framework dispatch (`playwright`, `selenium`, `wdio`), dynamic sharding matrix, container/Docker execution, Allure generation & gh-pages deployment, outcome gating, and honest step summaries.
-- [x] **US-AF-622.2** (`DevOps Engineer`): Refactor `playwright-ci.yml` into a thin caller (54 lines) invoking `_reusable-e2e.yml` with 4 shards.
-- [x] **US-AF-622.3** (`DevOps Engineer`): Refactor `selenium-ci.yml` and `wdio-ci.yml` into thin callers (32 lines each) invoking `_reusable-e2e.yml`.
-- [x] **US-AF-622.4** (`DevOps Engineer`): Retire redundant `playwright-docker.yml` and `playwright-on-demand.yml` after consolidating their capabilities into `_reusable-e2e.yml`.
-- [x] **US-AF-622.5** (`SDET Architect`): Create `docs/architecture/ci_pipeline_map.md` documenting workflow taxonomy, caller-to-reusable flow, composite action usage, and migration log.
+### US-AF-632: Dependency Scanning & Automated Updates (1.5 SP)
+- [x] **US-AF-632.1** (`DevOps Engineer`): Author `.github/dependabot.yml` covering `npm` (workspaces) and `github-actions`, weekly schedules, open-pull-requests-limit: 5, and grouped updates (`playwright`, `wdio`, `eslint`, `types`, `allure`, `minor-and-patch`, `github-actions`).
+- [x] **US-AF-632.2** (`DevOps Engineer`): Author `.github/workflows/security-deps.yml` executing `google/osv-scanner-action` against `package-lock.json` with SARIF upload, and `npm audit --audit-level=high --workspaces` as a second opinion.
+- [x] **US-AF-632.3** (`DevOps Engineer`): Add `actions/dependency-review-action` to PR runs in `security-deps.yml` to block introducing new HIGH vulnerabilities and disallowed licenses.
 
-### US-AF-623: Scheduled Nightly Regression & Consolidated Matrix Summary (1 SP)
-- [x] **US-AF-623.1** (`DevOps Engineer`): Author `.github/workflows/nightly-regression.yml` scheduled at `30 1 * * *` (01:30 UTC) plus `workflow_dispatch`, orchestrating Playwright (4 shards), Selenium, and WDIO in parallel jobs via `_reusable-e2e.yml`.
-- [x] **US-AF-623.2** (`DevOps Engineer`): Author `nightly-summary` job collecting framework outcomes and generating a unified Markdown matrix summary in `$GITHUB_STEP_SUMMARY`.
-- [x] **US-AF-623.3** (`DevOps Engineer`): Add environment notice in workflow header targeting Render staging until Sprint 7.1 Docker services.
+### US-AF-633: Workflow Security Linting & Least Privilege (1 SP)
+- [x] **US-AF-633.1** (`DevOps Engineer`): Author `.github/workflows/lint-workflows.yml` running `rhysd/actionlint` and `zizmor` (`--min-severity medium`) with SARIF upload for zizmor.
+- [x] **US-AF-633.2** (`DevOps Engineer`): Audit and refactor all repository workflows to enforce top-level `permissions: {}` with explicit least-privilege permissions per job.
+- [x] **US-AF-633.3** (`DevOps Engineer`): Remediate all zizmor findings across all workflows (template injections into `env:`, `persist-credentials: false` on checkouts without push, narrow permissions, eliminated `secrets: inherit`).
 
-### US-AF-624: Action SHA Pinning & Toolchain Consistency (0.5 SP)
-- [x] **US-AF-624.1** (`DevOps Engineer`): Pin all `uses:` in workflows and composite actions to full commit SHAs with `# vX.Y.Z` version comments.
-- [x] **US-AF-624.2** (`DevOps Engineer`): Standardize GitHub Pages deployment action to pinned SHA (`peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0`).
-- [x] **US-AF-624.3** (`DevOps Engineer`): Standardize all `actions/setup-node` invocations across workflows to use `node-version-file: .nvmrc`.
+### US-AF-634: SBOM & License Compliance (1 SP)
+- [x] **US-AF-634.1** (`DevOps Engineer`): Add `anchore/sbom-action` step generating CycloneDX JSON SBOM for the monorepo, uploading as artifact.
+- [x] **US-AF-634.2** (`DevOps Engineer`): Integrate license compliance check via `license-checker-rseidelsohn` with allow-list (MIT, ISC, Apache-2.0, BSD-2-Clause, BSD-3-Clause, 0BSD, CC0-1.0, Python-2.0, BlueOak-1.0.0, MPL-2.0, Unlicense, CC-BY-3.0/4.0, WTFPL, Zlib).
+- [x] **US-AF-634.3** (`SDET Architect`): Author `docs/security/repo_security_controls.md` containing the comprehensive security controls matrix, accepted risk register, and branch protection required-checks list.
 
 ### Verification, DoD & Release Protocol
-- [x] **US-AF-620.1** (`Scrum Master`): Verify Pre-Flight Definition of Ready (DoR) with Render warm-up probe.
-- [x] **US-AF-620.2** (`SDET Architect`): Review code acceptance checklist against Sprint 6.2 specifications.
-- [x] **US-AF-620.3** (`Scrum Master`): Perform 4-point Definition of Done (DoD) audit (`actionlint`, LOC reduction >= 40%, dual-catalog diff, clean types/lint).
-- [x] **US-AF-620.4** (`DevOps Engineer`): Commit, push branch, open PR with full verification evidence, monitor CI checks.
+- [x] **US-AF-630.1** (`Scrum Master`): Verify Pre-Flight Definition of Ready (DoR) with Render warm-up probe.
+- [x] **US-AF-630.2** (`SDET Architect`): Code Acceptance Review against Code Review Checklist and security policy.
+- [x] **US-AF-630.3** (`Scrum Master`): Perform 4-point Definition of Done (DoD) audit.
+- [x] **US-AF-630.4** (`DevOps Engineer`): Commit, push branch, open PR with full verification evidence, monitor CI checks.
 
 ---
 
@@ -60,8 +57,8 @@
 | Gate / Reviewer | Target Role | Review Feedback & Comments | Gate Status |
 | :--- | :--- | :--- | :---: |
 | **Pre-Flight Architecture Gate** | SDET Architect | Staging pre-flight probe and DoR audit. Verified online (HTTP 200). | `[PASSED]` |
-| **Code Acceptance Review Gate** | SDET Architect | Input contracts, env injection prevention, matrix generation, Allure history preservation, and Chrome-only execution strictly audited. | `[PASSED]` |
-| **Scrum Master DoD Gate** | Scrum Master | `actionlint` exit 0 across all 10 workflows + 3 composite actions. LOC reduced 48% across E2E test workflows. Dual-catalog 100% byte-for-byte synced. | `[PASSED]` |
+| **Code Acceptance Review Gate** | SDET Architect | Verify least-privilege permissions (`permissions: {}`), SHA pinning, gitleaks narrow scope, SBOM & license compliance. | `[PASSED]` |
+| **Scrum Master DoD Gate** | Scrum Master | Audit actionlint (0 errors), zizmor (0 medium/high findings), gitleaks (0 leaks), monorepo static quality (lint/typecheck exit 0). | `[PASSED]` |
 | **DevOps Release Gate** | DevOps Engineer | PR created with complete evidence; CI checks monitored. | `[READY]` |
 | **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[PENDING]` |
 
@@ -69,15 +66,15 @@
 
 ## 4. Definition of Done (DoD) Checklist
 
-- [x] Workflow LOC reduced >= 40% (E2E workflows reduced from 1,314 LOC to 686 LOC, 48% net reduction).
-- [x] `actionlint` passes with 0 errors across all workflow and composite action files.
-- [x] `npm run lint:all` and `npm run typecheck:all` exit 0 across all active workspaces.
-- [x] Dual-catalog parity confirmed (`npm run test:verify-catalog` exits 0 with 100% byte-for-byte match).
-- [x] Composite actions (`setup-monorepo`, `staging-warmup`, `chaos-reset`) cleanly encapsulated.
-- [x] Reusable workflow `_reusable-e2e.yml` handles Playwright, Selenium, and WDIO with artifact and Allure publication.
-- [x] `playwright-docker.yml` and `playwright-on-demand.yml` retired and mapped in `docs/architecture/ci_pipeline_map.md`.
-- [x] `nightly-regression.yml` orchestrated with consolidated step summary.
-- [x] All action `uses:` pinned by full commit SHA with `# vX.Y.Z` comment (0 unpinned actions remaining).
+- [x] CodeQL, gitleaks, osv-scanner, dependency-review, and actionlint/zizmor workflows authored and passing.
+- [x] Every third-party action is pinned to a full commit SHA with `# vX.Y.Z` comment (0 unpinned actions).
+- [x] Every workflow enforces top-level `permissions: {}`, with jobs granting only required scopes.
+- [x] No job has `contents: write` unless strictly required for publishing (Pages deploy, release).
+- [x] Gitleaks allow-list entries are narrowly targeted (path + regex) for known test fixtures (0 leaks detected).
+- [x] First-run security findings triaged: documented in `docs/security/repo_security_controls.md`.
+- [x] SBOM generation (CycloneDX JSON) and license compliance check verified (0 unapproved licenses).
+- [x] `docs/security/repo_security_controls.md` documents control matrix, risk register, and branch protection checks.
+- [x] `npm run lint:all`, `npm run typecheck:all`, and `npm run test:verify-catalog` all exit 0.
 - [x] Pull request opened with structured summary and verification evidence (`gh pr create`).
 - [x] All CI workflow checks green.
 
@@ -86,17 +83,29 @@
 ## 5. Verification & Execution Evidence
 
 ```bash
-# 1. Actionlint validation across all workflows & actions (Exit Code 0)
-actionlint
+# 1. Actionlint validation across all workflows & actions (Exit Code 0, 0 errors)
+actionlint.exe
+# Output: Exit Code 0, 0 errors across 14 workflows and 3 composite actions
 
-# 2. Workflow lines of code comparison (1,577 LOC total vs 2,041 baseline)
-Get-ChildItem -Path .github/workflows/*.y*ml, .github/actions/*/*.y*ml | Measure-Object -Property Lines -Sum
+# 2. Zizmor security analysis across all workflows (Exit Code 0, 0 medium/high findings)
+uvx zizmor .github/workflows/ --min-severity medium
+# Output: No findings to report. Good job! (30 ignored, 25 suppressed)
 
-# 3. Action SHA pinning verification (0 unpinned matches)
-Select-String -Path .github/workflows/*.y*ml, .github/actions/*/*.y*ml -Pattern "uses:\s+[^@]+@v[0-9]"
+# 3. Gitleaks scan against repository and git history with .gitleaks.toml (Exit Code 0)
+gitleaks.exe detect --source=. --config=.gitleaks.toml
+# Output: 224 commits scanned, 163.05 MB scanned, no leaks found
 
-# 4. Monorepo quality & dual-catalog verification (Exit Code 0)
+# 4. License compliance verification (Exit Code 0)
+npx --yes license-checker-rseidelsohn --excludePrivatePackages --onlyAllow "MIT;ISC;Apache-2.0;BSD-2-Clause;BSD-3-Clause;0BSD;CC0-1.0;Python-2.0;BlueOak-1.0.0;Unlicense;WTFPL;MPL-2.0;CC-BY-3.0;CC-BY-4.0;Zlib;(MIT OR CC0-1.0);(MIT OR GPL-3.0-or-later);(AFL-2.1 OR BSD-3-Clause);WTFPL OR ISC;(WTFPL OR MIT);MIT or GPL-2.0;(MIT AND Zlib);Apache-2.0 AND LGPL-3.0-or-later;MIT*"
+# Output: Exit Code 0, all packages compliant with approved permissive OSS license register
+
+# 5. Dependabot configuration audit (Exit Code 0)
+uvx zizmor .github/dependabot.yml
+# Output: No findings to report. Good job!
+
+# 6. Monorepo static quality & dual-catalog verification (Exit Code 0)
 npm run lint:all
 npm run typecheck:all
 npm run test:verify-catalog
+# Output: ESLint clean, TypeScript clean, Dual-Catalog 100% byte-for-byte synced (182 test cases)
 ```

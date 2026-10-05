@@ -38,13 +38,14 @@ on:
         default: false
         type: boolean
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+permissions: {}
 
 jobs:
   playwright-e2e:
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     uses: ./.github/workflows/_reusable-e2e.yml
     with:
       framework: playwright
@@ -55,4 +56,6 @@ jobs:
       publish-allure: true
       allure-namespace: Playwright
       headless: ${{ inputs.headless || 'true' }}
-    secrets: inherit
+    secrets:
+      E2E_USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}

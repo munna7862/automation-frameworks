@@ -19,13 +19,14 @@ on:
         required: false
         default: 'true'
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+permissions: {}
 
 jobs:
   wdio-e2e:
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     uses: ./.github/workflows/_reusable-e2e.yml
     with:
       framework: wdio
@@ -33,4 +34,6 @@ jobs:
       publish-allure: true
       allure-namespace: WDIO
       headless: ${{ inputs.headless || 'true' }}
-    secrets: inherit
+    secrets:
+      E2E_USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
