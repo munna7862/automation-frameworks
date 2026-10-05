@@ -125,5 +125,5 @@ jobs:
             echo "### 📦 Dependency Compliance & SBOM Summary"
             echo "- **License Check**: ✅ Verified against approved open-source licenses allow-list"
             echo "- **NPM Audit (Second Opinion)**: ${{ steps.audit.outcome == 'success' && '✅ 0 High/Critical findings' || '⚠️ Advisory findings triaged in accepted risk register' }}"
-            echo '- **CycloneDX SBOM**: ✅ Generated and attached as workflow artifact (`monorepo-sbom.cyclonedx.json`)'
+            echo "- **CycloneDX SBOM**: ✅ Generated and attached as workflow artifact (monorepo-sbom.cyclonedx.json)"
           } >> "$GITHUB_STEP_SUMMARY"
