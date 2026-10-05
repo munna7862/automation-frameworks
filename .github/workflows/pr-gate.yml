@@ -76,7 +76,7 @@ jobs:
           persist-credentials: false
 
       - name: Validate PR Commits with Commitlint
-        uses: wagoid/commitlint-github-action@b9424163f3357ab7269d9e27e165578c9507730a # v6.2.1
+        uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6.2.1
         with:
           configFile: commitlint.config.cjs
 
