@@ -8,6 +8,7 @@
     "test": "wdio run src/config/wdio.conf.ts",
     "test:smoke": "wdio run src/config/wdio.conf.ts --mochaOpts.grep @smoke",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
     "generate-allure": "node ../scripts/generate-allure-environment.js --framework=wdio && allure generate --clean allure-results -o allure-report",
     "open-allure": "allure open allure-report",
     "report": "npm run generate-allure && npm run open-allure",
@@ -18,6 +19,7 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "^25.0.10",
     "@wdio/allure-reporter": "^9.0.0",
@@ -27,10 +29,15 @@
     "@wdio/mocha-framework": "^9.0.0",
     "@wdio/spec-reporter": "^9.0.0",
     "allure-commandline": "^2.34.1",
+    "eslint": "^10.10.0",
+    "eslint-plugin-mocha": "^11.0.0",
+    "eslint-plugin-wdio": "^9.0.0",
+    "globals": "^17.12.0",
     "rimraf": "^5.0.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.70.0"
   },
   "dependencies": {
     "@automationframeworks/playwright-utils": "*",

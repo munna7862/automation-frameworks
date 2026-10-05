@@ -41,7 +41,7 @@ describe('Orientation Layout Shift Chaos (TC-MOB-004, MOB_E2E_06 & MOB-B6)', () 
       firstName: 'Alice',
       lastName: 'Smith',
       address: '789 Landscape Ave',
-      cardNumber: '5555555555555555',
+      cardNumber: '5555555555555555'
     });
 
     // Scroll to reveal CTA in landscape layout

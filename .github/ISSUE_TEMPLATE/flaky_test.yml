@@ -1,0 +1,70 @@
+name: Flaky Test Report & Quarantine Request
+description: Report an intermittent test failure and initiate quarantine lifecycle review per docs/quarantine_lifecycle_guide.md.
+title: '[FLAKE]: '
+labels: ['flaky-test', 'quarantine', 'triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report an intermittently failing or flaky test. Test quarantine and resolution must comply with the 14-day aging limit defined in [docs/quarantine_lifecycle_guide.md](https://github.com/munna7862/automation-frameworks/blob/main/docs/quarantine_lifecycle_guide.md).
+  - type: input
+    id: spec_path
+    attributes:
+      label: Test Spec File Path
+      description: Relative repository path to the affected spec file.
+      placeholder: e.g. playwright-e2e/src/tests/ui/BookCatalog/Test_001_CatalogGrid.spec.ts
+    validations:
+      required: true
+  - type: input
+    id: test_id
+    attributes:
+      label: Catalog Test ID
+      description: The ID from docs/test_cases_catalog.md (e.g. TC-UI-CAT-001 or API-CHAOS-001).
+      placeholder: TC-...
+    validations:
+      required: true
+  - type: dropdown
+    id: framework
+    attributes:
+      label: Automation Framework
+      options:
+        - playwright-e2e
+        - selenium-e2e
+        - wdio-e2e
+        - mobile-automation
+        - k6-performance
+        - jmeter
+    validations:
+      required: true
+  - type: textarea
+    id: failure_signature
+    attributes:
+      label: Failure Signature & Root Cause Hypothesis
+      description: Describe the failure pattern, error message, and why the test intermittently fails (e.g., race condition, rendering timeout, unhandled chaos endpoint mutation).
+      placeholder: Locator timeout on `.cart-badge` during concurrent order processing...
+    validations:
+      required: true
+  - type: input
+    id: first_seen_date
+    attributes:
+      label: First Seen Date (YYYY-MM-DD)
+      description: Date when the flake was first observed in CI or local runs.
+      placeholder: 2026-10-05
+    validations:
+      required: true
+  - type: input
+    id: quarantine_date
+    attributes:
+      label: Quarantine Date (YYYY-MM-DD)
+      description: Date quarantined with `@quarantine` tag (initiates 14-day SLA clock).
+      placeholder: 2026-10-05
+    validations:
+      required: true
+  - type: textarea
+    id: error_log
+    attributes:
+      label: Error Stack Trace / CI Run URL
+      description: Link to failing CI run or snippet of the failure stack trace.
+      render: shell
+    validations:
+      required: true

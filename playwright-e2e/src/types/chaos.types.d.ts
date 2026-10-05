@@ -6,12 +6,12 @@
 
 /** Configuration for chaos engineering features (failure injection, delays, etc.). */
 export interface ChaosConfig {
-  checkoutFailureRate: number;   // 0.0 to 1.0 (default 0.15)
-  inventoryDelayMs: number;      // milliseconds (default 3000)
-  jwtExpirySeconds: number;      // seconds (default 900)
-  websocketDropRate: number;     // 0.0 to 1.0 (default 0.0)
-  uploadFailureRate: number;     // 0.0 to 1.0 (default 0.0)
+  checkoutFailureRate: number; // 0.0 to 1.0 (default 0.15)
+  inventoryDelayMs: number; // milliseconds (default 3000)
+  jwtExpirySeconds: number; // seconds (default 900)
+  websocketDropRate: number; // 0.0 to 1.0 (default 0.0)
+  uploadFailureRate: number; // 0.0 to 1.0 (default 0.0)
   injectA11yViolations: boolean; // default false
-  visualChaos: boolean;          // default false
-  inventoryLockingRate: number;  // 0.0 to 1.0 (default 0.0)
+  visualChaos: boolean; // default false
+  inventoryLockingRate: number; // 0.0 to 1.0 (default 0.0)
 }

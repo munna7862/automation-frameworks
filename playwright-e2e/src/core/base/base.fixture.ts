@@ -36,7 +36,6 @@ type TestFixtures = {
 };
 
 export const test = base.extend<TestFixtures>({
-
   testSessionId: async ({}, use, testInfo) => {
     const rawId = `pw-w${testInfo.workerIndex}-${testInfo.parallelIndex}-${Date.now()}-${randomBytes(4).toString('hex')}`;
     await use(rawId);
@@ -47,8 +46,8 @@ export const test = base.extend<TestFixtures>({
       baseURL: envConfig.apiBaseUrl,
       extraHTTPHeaders: {
         'x-test-session-id': testSessionId,
-        'x-bypass-rate-limit': 'true',
-      },
+        'x-bypass-rate-limit': 'true'
+      }
     });
     await use(apiContext);
     await apiContext.dispose();
@@ -60,44 +59,52 @@ export const test = base.extend<TestFixtures>({
     await use(apiInstance);
   },
 
-  sessionIsolation: [async ({ context, testSessionId }, use) => {
-    await context.setExtraHTTPHeaders({
-      'x-test-session-id': testSessionId
-    });
-    defaultApiUtil.setSessionId(testSessionId);
-    logger.info(`Session isolation fixture active for worker with x-test-session-id: ${testSessionId}`);
-    
-    await use();
-
-    // Session teardown: Clean up backend ephemeral session
-    try {
-      const apiBase = envConfig.apiBaseUrl || 'http://localhost:4000';
-      await axios.delete(`${apiBase}/api/test/session/${testSessionId}`, {
-        headers: { 'x-bypass-rate-limit': 'true', 'x-test-session-id': testSessionId },
-        timeout: 5000
+  sessionIsolation: [
+    async ({ context, testSessionId }, use) => {
+      await context.setExtraHTTPHeaders({
+        'x-test-session-id': testSessionId
       });
-      logger.info(`Cleaned up ephemeral test session: ${testSessionId}`);
-    } catch {
-      // Backend may be offline or mock mode; non-blocking
-    }
-  }, { auto: true }],
+      defaultApiUtil.setSessionId(testSessionId);
+      logger.info(
+        `Session isolation fixture active for worker with x-test-session-id: ${testSessionId}`
+      );
 
-  networkInterceptor: [async ({ context }, use, testInfo) => {
-    const interceptor = new NetworkInterceptor(context, 'api-only');
-    interceptor.start();
-    logger.info('Network interception enabled with mode: api-only');
-    await use(interceptor);
-    await interceptor.stop();
-    const networkEntries = interceptor.getEntries();
-    const outputPath = testInfo.outputPath('network-log.json');
-    const networkLog = JSON.stringify(networkEntries, null, 2);
-    await writeFile(outputPath, networkLog, 'utf-8');
-    await testInfo.attach('network-log', {
-      body: Buffer.from(networkLog),
-      contentType: 'application/json'
-    });
-    logger.info(`Captured ${networkEntries.length} network calls. Artifact: ${outputPath}`);
-  }, { auto: true }],
+      await use();
+
+      // Session teardown: Clean up backend ephemeral session
+      try {
+        const apiBase = envConfig.apiBaseUrl || 'http://localhost:4000';
+        await axios.delete(`${apiBase}/api/test/session/${testSessionId}`, {
+          headers: { 'x-bypass-rate-limit': 'true', 'x-test-session-id': testSessionId },
+          timeout: 5000
+        });
+        logger.info(`Cleaned up ephemeral test session: ${testSessionId}`);
+      } catch {
+        // Backend may be offline or mock mode; non-blocking
+      }
+    },
+    { auto: true }
+  ],
+
+  networkInterceptor: [
+    async ({ context }, use, testInfo) => {
+      const interceptor = new NetworkInterceptor(context, 'api-only');
+      interceptor.start();
+      logger.info('Network interception enabled with mode: api-only');
+      await use(interceptor);
+      await interceptor.stop();
+      const networkEntries = interceptor.getEntries();
+      const outputPath = testInfo.outputPath('network-log.json');
+      const networkLog = JSON.stringify(networkEntries, null, 2);
+      await writeFile(outputPath, networkLog, 'utf-8');
+      await testInfo.attach('network-log', {
+        body: Buffer.from(networkLog),
+        contentType: 'application/json'
+      });
+      logger.info(`Captured ${networkEntries.length} network calls. Artifact: ${outputPath}`);
+    },
+    { auto: true }
+  ],
 
   signUpPage: async ({ page }, use) => {
     await use(new SignUpPage(page));
@@ -131,10 +138,9 @@ export const test = base.extend<TestFixtures>({
     await use(new NotificationCenterComponent(page));
   },
 
-  commonFunctions: async ({ }, use) => {
+  commonFunctions: async ({}, use) => {
     await use(new CommonFunctions());
   }
-
 });
 
 test.afterEach(async ({ page }, testInfo) => {

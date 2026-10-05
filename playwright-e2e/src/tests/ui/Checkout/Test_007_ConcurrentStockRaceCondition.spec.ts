@@ -26,7 +26,10 @@ type ConcurrentStockRaceTestData = {
   };
 };
 
-const testDataPath = path.join(__dirname, '../../../test-data/ui/Checkout/Test_007_ConcurrentStockRaceCondition.json');
+const testDataPath = path.join(
+  __dirname,
+  '../../../test-data/ui/Checkout/Test_007_ConcurrentStockRaceCondition.json'
+);
 const TestData = require(testDataPath) as ConcurrentStockRaceTestData;
 
 test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', () => {
@@ -37,7 +40,6 @@ test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', ()
     apiUtil,
     chaosDashboardPage
   }) => {
-
     const timestamp = Date.now();
     const userA = `racer_a_${timestamp}`;
     const userB = `racer_b_${timestamp}`;
@@ -54,7 +56,11 @@ test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', ()
       });
 
       // 2. Set target book stock count to exactly 1
-      const stockRes = await apiUtil.makeRequest<{ success: boolean; bookId: string; stock: number }>({
+      const stockRes = await apiUtil.makeRequest<{
+        success: boolean;
+        bookId: string;
+        stock: number;
+      }>({
         method: 'POST',
         url: `${envConfig.apiBaseUrl}/api/test/books/${TestData.book.id}/stock`,
         data: { stock: TestData.book.stock },
@@ -69,7 +75,11 @@ test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', ()
       await apiUtil.makeRequest({
         method: 'POST',
         url: `${envConfig.apiBaseUrl}/api/register`,
-        data: { username: userA, password, fullName: `${TestData.buyerOne.firstName} ${TestData.buyerOne.lastName}` },
+        data: {
+          username: userA,
+          password,
+          fullName: `${TestData.buyerOne.firstName} ${TestData.buyerOne.lastName}`
+        },
         logMessage: 'Registering Buyer A'
       });
 
@@ -88,7 +98,11 @@ test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', ()
       await apiUtil.makeRequest({
         method: 'POST',
         url: `${envConfig.apiBaseUrl}/api/register`,
-        data: { username: userB, password, fullName: `${TestData.buyerTwo.firstName} ${TestData.buyerTwo.lastName}` },
+        data: {
+          username: userB,
+          password,
+          fullName: `${TestData.buyerTwo.firstName} ${TestData.buyerTwo.lastName}`
+        },
         logMessage: 'Registering Buyer B'
       });
 
@@ -102,8 +116,14 @@ test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', ()
       });
       const rawCookieB = loginResB.headers?.['set-cookie']?.[0] || '';
       cookieB = rawCookieB.split(';')[0];
-      await commonFunctions.verifyCondition(Boolean(cookieA), 'Verifying Buyer A session cookie exists');
-      await commonFunctions.verifyCondition(Boolean(cookieB), 'Verifying Buyer B session cookie exists');
+      await commonFunctions.verifyCondition(
+        Boolean(cookieA),
+        'Verifying Buyer A session cookie exists'
+      );
+      await commonFunctions.verifyCondition(
+        Boolean(cookieB),
+        'Verifying Buyer B session cookie exists'
+      );
     });
 
     await test.step('Stage Final Stock Unit in Both Buyers Carts', async () => {
@@ -161,8 +181,14 @@ test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', ()
       const has200 = statuses.includes(200);
       const has409 = statuses.includes(409);
 
-      await commonFunctions.verifyCondition(has200, 'Verifying exactly one request succeeded with 200');
-      await commonFunctions.verifyCondition(has409, 'Verifying competing request rejected with 409 Conflict');
+      await commonFunctions.verifyCondition(
+        has200,
+        'Verifying exactly one request succeeded with 200'
+      );
+      await commonFunctions.verifyCondition(
+        has409,
+        'Verifying competing request rejected with 409 Conflict'
+      );
     });
 
     await test.step('Verify Final Inventory Stock Depleted Without Negative Overselling', async () => {
@@ -180,11 +206,13 @@ test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', ()
       const isVisible = await chaosDashboardPage.isDashboardVisible();
       await commonFunctions.verifyValue(isVisible, true, 'Asserting chaos dashboard is visible');
 
-      await expect.poll(async () => await chaosDashboardPage.getStatusBadgeText(), {
-        message: 'Expected Chaos Dashboard status badge to show Live Engine Active',
-        timeout: 10000,
-        intervals: [500, 1000]
-      }).toContain('Live Engine Active');
+      await expect
+        .poll(async () => await chaosDashboardPage.getStatusBadgeText(), {
+          message: 'Expected Chaos Dashboard status badge to show Live Engine Active',
+          timeout: 10000,
+          intervals: [500, 1000]
+        })
+        .toContain('Live Engine Active');
 
       // Select High Contention preset and apply
       await chaosDashboardPage.selectPreset('high-contention');
@@ -194,5 +222,4 @@ test.describe('Concurrent Stock Race Condition & Chaos Dashboard Resilience', ()
       await chaosDashboardPage.resetToDefaults();
     });
   });
-
 });

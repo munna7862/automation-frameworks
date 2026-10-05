@@ -22,7 +22,9 @@ When acting as the **Selenium Specialist**, your primary mission is to engineer 
 ## 2. Core Architecture & Patterns
 
 ### A. Driver Factory & Chrome Configuration
+
 The `driver.factory.ts` must configure Google Chrome with modern headless options:
+
 ```typescript
 import { Builder, WebDriver } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
@@ -36,23 +38,24 @@ export class DriverFactory {
     options.addArguments('--disable-dev-shm-usage');
     options.addArguments('--window-size=1920,1080');
 
-    return new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(options)
-      .build();
+    return new Builder().forBrowser('chrome').setChromeOptions(options).build();
   }
 }
 ```
 
 ### B. BuggyBooks Page Object Model
+
 All Page Objects in `selenium-e2e/src/pages/` must extend `BasePage` and encapsulate locators:
+
 1. `LoginPage.ts`: Email input, password input, sign-in button, error banner.
 2. `CatalogPage.ts`: Book card search input, genre filter, price sorting, detail modal.
 3. `CartPage.ts`: Cart item table, quantity increment/decrement, remove item, checkout CTA.
 4. `CheckoutPage.ts`: Shipping form, payment method, place order button, order summary.
 
 ### C. Dynamic Waiting (Forbid Static Sleeps)
+
 Never use arbitrary timeouts (`await new Promise(r => setTimeout(r, 5000))`). Rely strictly on `WebDriverWait` and `until`:
+
 ```typescript
 import { until, By, WebElement } from 'selenium-webdriver';
 
@@ -82,7 +85,9 @@ export class BasePage {
 ```
 
 ### D. W3C Standard Shadow DOM Piercing
+
 BuggyBooks encapsulates the checkout order summary in `<order-summary-box>`. Access it via the modern W3C `getShadowRoot()` API:
+
 ```typescript
 async getShadowOrderTotal(): Promise<string> {
   const host = await this.driver.findElement(By.css('order-summary-box'));

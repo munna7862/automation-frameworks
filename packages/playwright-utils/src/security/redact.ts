@@ -23,7 +23,9 @@ export const SENSITIVE_BODY_KEYS: string[] = [
 ];
 
 const SENSITIVE_HEADER_SET = new Set(SENSITIVE_HEADER_KEYS.map((k) => k.toLowerCase()));
-const SENSITIVE_BODY_SET = new Set(SENSITIVE_BODY_KEYS.map((k) => k.toLowerCase().replace(/[-_]/g, '')));
+const SENSITIVE_BODY_SET = new Set(
+  SENSITIVE_BODY_KEYS.map((k) => k.toLowerCase().replace(/[-_]/g, ''))
+);
 
 function isSensitiveBodyKey(key: string): boolean {
   if (typeof key !== 'string') return false;
@@ -45,7 +47,10 @@ export function redactString(s: string): string {
   result = result.replace(/(Bearer\s+)[A-Za-z0-9\-._~+/]+=*/gi, '$1[REDACTED]');
 
   // Mask standard 3-part JWT tokens: eyJ... . eyJ... . signature
-  result = result.replace(/eyJ[A-Za-z0-9-_]+\.eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_+/=]*/g, '[REDACTED_JWT]');
+  result = result.replace(
+    /eyJ[A-Za-z0-9-_]+\.eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_+/=]*/g,
+    '[REDACTED_JWT]'
+  );
 
   // Mask key=value pairs matching sensitive body keys (URLSearchParams or query strings)
   result = result.replace(
@@ -93,7 +98,10 @@ export function redactBody(body: unknown, seen = new WeakSet<object>()): unknown
     const trimmed = body.trim();
 
     // Check if JSON
-    if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
+    if (
+      (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+      (trimmed.startsWith('[') && trimmed.endsWith(']'))
+    ) {
       try {
         const parsed = JSON.parse(body);
         const redacted = redactBody(parsed, seen);

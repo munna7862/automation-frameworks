@@ -72,20 +72,21 @@ function generateProperties(frameworkKey) {
     ? `GitHub Actions (Run #${process.env.GITHUB_RUN_NUMBER || 'CI'}, Ref: ${process.env.GITHUB_REF || 'unknown'})`
     : 'Local Workstation';
 
-  const properties = [
-    `# Allure Environment Metadata - Generated ${new Date().toISOString()}`,
-    `Framework=${config.name}`,
-    `Framework.Version=${config.driverVersion}`,
-    `Test.Environment=${env}`,
-    `Base.URL=${baseUrl}`,
-    `API.Base.URL=${apiBaseUrl}`,
-    `Browser.Target=${config.browser}`,
-    `Headless.Mode=${headless}`,
-    `Operating.System=${process.platform} (${process.arch})`,
-    `Node.Version=${process.version}`,
-    `CI.Runner=${ciRunner}`,
-    `Timestamp=${new Date().toISOString()}`
-  ].join('\n') + '\n';
+  const properties =
+    [
+      `# Allure Environment Metadata - Generated ${new Date().toISOString()}`,
+      `Framework=${config.name}`,
+      `Framework.Version=${config.driverVersion}`,
+      `Test.Environment=${env}`,
+      `Base.URL=${baseUrl}`,
+      `API.Base.URL=${apiBaseUrl}`,
+      `Browser.Target=${config.browser}`,
+      `Headless.Mode=${headless}`,
+      `Operating.System=${process.platform} (${process.arch})`,
+      `Node.Version=${process.version}`,
+      `CI.Runner=${ciRunner}`,
+      `Timestamp=${new Date().toISOString()}`
+    ].join('\n') + '\n';
 
   return properties;
 }
@@ -106,7 +107,9 @@ function main() {
   if (options.output) {
     const frameworkKey = options.framework || 'playwright';
     const props = generateProperties(frameworkKey);
-    const targetDir = path.isAbsolute(options.output) ? options.output : path.resolve(process.cwd(), options.output);
+    const targetDir = path.isAbsolute(options.output)
+      ? options.output
+      : path.resolve(process.cwd(), options.output);
     writeEnvironmentFile(targetDir, props);
     return;
   }
@@ -137,7 +140,9 @@ function main() {
     writeEnvironmentFile(frameworkConfigs.playwright.targetDir, generateProperties('playwright'));
   } else {
     // Monorepo root default: generate for all
-    console.log('[Allure Environment] No specific framework specified, generating for all frameworks...');
+    console.log(
+      '[Allure Environment] No specific framework specified, generating for all frameworks...'
+    );
     for (const key of Object.keys(frameworkConfigs)) {
       writeEnvironmentFile(frameworkConfigs[key].targetDir, generateProperties(key));
     }

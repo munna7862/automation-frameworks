@@ -31,7 +31,7 @@ export const options = {
     { duration: '5s', target: Math.min(20, TARGET_VUS) },
     { duration: STAGE_DURATION, target: TARGET_VUS },
     { duration: STAGE_DURATION, target: TARGET_VUS },
-    { duration: '5s', target: 0 },
+    { duration: '5s', target: 0 }
   ],
   thresholds: {
     // TC-PERF-003: Cart Addition k6 Stress (< 1200ms p95)
@@ -42,26 +42,30 @@ export const options = {
     journey_cart_duration: ['p(95)<1200'],
     journey_checkout_duration: ['p(95)<1800'],
     http_req_failed: ['rate<0.02'],
-    api_error_rate: ['rate<0.02'],
-  },
+    api_error_rate: ['rate<0.02']
+  }
 };
 
 export function setup() {
   const params = {
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'x-bypass-rate-limit': 'true',
-      'x-bypass-csrf': 'true',
-    },
+      'x-bypass-csrf': 'true'
+    }
   };
 
   // Prime backend endpoints and ensure chaos config is clean
-  http.post(`${BASE_URL}/api/test/config`, JSON.stringify({
-    checkoutFailureRate: 0,
-    inventoryLockingRate: 0,
-    inventoryDelayMs: 0,
-  }), params);
+  http.post(
+    `${BASE_URL}/api/test/config`,
+    JSON.stringify({
+      checkoutFailureRate: 0,
+      inventoryLockingRate: 0,
+      inventoryDelayMs: 0
+    }),
+    params
+  );
 
   const res = http.get(`${BASE_URL}/api/books`, params);
   check(res, { 'setup: catalog accessible': (r) => r.status === 200 });
@@ -74,10 +78,10 @@ export default function () {
   const sessionId = `k6-journey-vu-${__VU}`;
   const baseHeaders = {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'x-test-session-id': sessionId,
     'x-bypass-rate-limit': 'true',
-    'x-bypass-csrf': 'true',
+    'x-bypass-csrf': 'true'
   };
 
   // Probabilistic User Persona Action Branching
@@ -101,7 +105,7 @@ export default function () {
         } catch {
           return false;
         }
-      },
+      }
     });
     browseDuration.add(browseRes.timings.duration);
     errorRate.add(!browseOk);
@@ -111,14 +115,15 @@ export default function () {
 
     // 2. Search catalog with keyword query
     const query = SEARCH_QUERIES[Math.floor(Math.random() * SEARCH_QUERIES.length)];
-    const searchRes = http.get(`${BASE_URL}/api/books?q=${encodeURIComponent(query)}`, { headers: baseHeaders });
+    const searchRes = http.get(`${BASE_URL}/api/books?q=${encodeURIComponent(query)}`, {
+      headers: baseHeaders
+    });
     const searchOk = check(searchRes, {
       'search: status is 200': (r) => r.status === 200,
-      'search: valid response': (r) => r.body && r.body.length > 0,
+      'search: valid response': (r) => r.body && r.body.length > 0
     });
     searchDuration.add(searchRes.timings.duration);
     errorRate.add(!searchOk);
-
   } else if (rand < 80) {
     // -------------------------------------------------------------
     // Persona 2: Product Inspectors (20%) - Book detail views
@@ -136,11 +141,10 @@ export default function () {
         } catch {
           return false;
         }
-      },
+      }
     });
     detailDuration.add(detailRes.timings.duration);
     errorRate.add(!detailOk);
-
   } else if (rand < 90) {
     // -------------------------------------------------------------
     // Persona 3: Shoppers (10%) - Auth, view cart, add item to cart
@@ -148,20 +152,24 @@ export default function () {
     shopperCount.add(1);
 
     // 1. Authenticate user
-    const loginRes = http.post(`${BASE_URL}/api/login`, JSON.stringify({
-      username: 'testuser',
-      password: 'buggybooks',
-    }), { headers: baseHeaders });
+    const loginRes = http.post(
+      `${BASE_URL}/api/login`,
+      JSON.stringify({
+        username: 'testuser',
+        password: 'buggybooks'
+      }),
+      { headers: baseHeaders }
+    );
 
     const loginOk = check(loginRes, {
-      'shopper login: status is 200': (r) => r.status === 200,
+      'shopper login: status is 200': (r) => r.status === 200
     });
     errorRate.add(!loginOk);
 
     // 2. Fetch current cart
     const cartGetRes = http.get(`${BASE_URL}/api/cart`, { headers: baseHeaders });
     const cartGetOk = check(cartGetRes, {
-      'shopper get cart: status is 200': (r) => r.status === 200,
+      'shopper get cart: status is 200': (r) => r.status === 200
     });
     cartDuration.add(cartGetRes.timings.duration);
     errorRate.add(!cartGetOk);
@@ -171,16 +179,19 @@ export default function () {
 
     // 3. Add book to cart
     const bookToAdd = String(Math.floor(Math.random() * 15) + 1);
-    const cartPostRes = http.post(`${BASE_URL}/api/cart`, JSON.stringify({
-      bookId: bookToAdd,
-    }), { headers: baseHeaders });
+    const cartPostRes = http.post(
+      `${BASE_URL}/api/cart`,
+      JSON.stringify({
+        bookId: bookToAdd
+      }),
+      { headers: baseHeaders }
+    );
 
     const cartPostOk = check(cartPostRes, {
-      'shopper add to cart: status is 200': (r) => r.status === 200,
+      'shopper add to cart: status is 200': (r) => r.status === 200
     });
     cartDuration.add(cartPostRes.timings.duration);
     errorRate.add(!cartPostOk);
-
   } else if (rand < 95) {
     // -------------------------------------------------------------
     // Persona 4: Buyers (5%) - Complete purchase cycle: login -> cart -> checkout -> orders
@@ -188,17 +199,25 @@ export default function () {
     buyerCount.add(1);
 
     // 1. Authenticate user
-    const loginRes = http.post(`${BASE_URL}/api/login`, JSON.stringify({
-      username: 'testuser',
-      password: 'buggybooks',
-    }), { headers: baseHeaders });
+    const loginRes = http.post(
+      `${BASE_URL}/api/login`,
+      JSON.stringify({
+        username: 'testuser',
+        password: 'buggybooks'
+      }),
+      { headers: baseHeaders }
+    );
     check(loginRes, { 'buyer login: status is 200': (r) => r.status === 200 });
 
     // 2. Add book to cart
     const bookToAdd = String(Math.floor(Math.random() * 15) + 1);
-    const cartRes = http.post(`${BASE_URL}/api/cart`, JSON.stringify({
-      bookId: bookToAdd,
-    }), { headers: baseHeaders });
+    const cartRes = http.post(
+      `${BASE_URL}/api/cart`,
+      JSON.stringify({
+        bookId: bookToAdd
+      }),
+      { headers: baseHeaders }
+    );
     cartDuration.add(cartRes.timings.duration);
 
     // Think time before checkout
@@ -208,10 +227,12 @@ export default function () {
     const checkoutPayload = JSON.stringify({
       firstName: 'Speedy',
       lastName: `BuyerVU${__VU}`,
-      creditCard: '1234567812345678',
+      creditCard: '1234567812345678'
     });
 
-    const checkoutRes = http.post(`${BASE_URL}/api/checkout/process`, checkoutPayload, { headers: baseHeaders });
+    const checkoutRes = http.post(`${BASE_URL}/api/checkout/process`, checkoutPayload, {
+      headers: baseHeaders
+    });
     const checkoutOk = check(checkoutRes, {
       'buyer checkout: status is 200': (r) => r.status === 200,
       'buyer checkout: orderId generated': (r) => {
@@ -221,7 +242,7 @@ export default function () {
         } catch {
           return false;
         }
-      },
+      }
     });
     checkoutDuration.add(checkoutRes.timings.duration);
     errorRate.add(!checkoutOk);
@@ -229,20 +250,23 @@ export default function () {
     // 4. Verify orders history
     const ordersRes = http.get(`${BASE_URL}/api/orders`, { headers: baseHeaders });
     const ordersOk = check(ordersRes, {
-      'buyer orders: status is 200': (r) => r.status === 200,
+      'buyer orders: status is 200': (r) => r.status === 200
     });
     errorRate.add(!ordersOk);
-
   } else {
     // -------------------------------------------------------------
     // Persona 5: Profile/Account Managers (5%) - Auth & view profile
     // -------------------------------------------------------------
     profileCount.add(1);
 
-    const loginRes = http.post(`${BASE_URL}/api/login`, JSON.stringify({
-      username: 'testuser',
-      password: 'buggybooks',
-    }), { headers: baseHeaders });
+    const loginRes = http.post(
+      `${BASE_URL}/api/login`,
+      JSON.stringify({
+        username: 'testuser',
+        password: 'buggybooks'
+      }),
+      { headers: baseHeaders }
+    );
     check(loginRes, { 'profile login: status is 200': (r) => r.status === 200 });
 
     const profileRes = http.get(`${BASE_URL}/api/profile`, { headers: baseHeaders });
@@ -255,7 +279,7 @@ export default function () {
         } catch {
           return false;
         }
-      },
+      }
     });
     profileDuration.add(profileRes.timings.duration);
     errorRate.add(!profileOk);
@@ -269,8 +293,8 @@ export function teardown() {
   const params = {
     headers: {
       'Content-Type': 'application/json',
-      'x-bypass-rate-limit': 'true',
-    },
+      'x-bypass-rate-limit': 'true'
+    }
   };
   http.post(`${BASE_URL}/api/test/reset`, null, params);
 }
@@ -278,5 +302,5 @@ export function teardown() {
 export const handleSummary = createSummaryHandler({
   jsonFilename: 'perf-summary-journey.json',
   htmlFilename: 'performance/report-journey.html',
-  title: 'End-to-End E-Commerce User Journey Benchmark (50 VUs)',
+  title: 'End-to-End E-Commerce User Journey Benchmark (50 VUs)'
 });

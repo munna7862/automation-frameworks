@@ -25,12 +25,19 @@ type CartPersistenceCheckoutTestData = {
   };
 };
 
-const testDataPath = path.join(__dirname, '../../../test-data/ui/Checkout/Test_002_CartPersistenceCheckout.json');
+const testDataPath = path.join(
+  __dirname,
+  '../../../test-data/ui/Checkout/Test_002_CartPersistenceCheckout.json'
+);
 const TestData = require(testDataPath) as CartPersistenceCheckoutTestData;
 
 test.describe('Cart Persistence Checkout', () => {
-
-  test('Testcase 1: Complete checkout after cart persists across logout and login @smoke @regression', async ({ signUpPage, catalogPage, commonFunctions, page }) => {
+  test('Testcase 1: Complete checkout after cart persists across logout and login @smoke @regression', async ({
+    signUpPage,
+    catalogPage,
+    commonFunctions,
+    page
+  }) => {
     test.setTimeout(60000);
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
@@ -41,13 +48,17 @@ test.describe('Cart Persistence Checkout', () => {
     });
 
     await test.step('Verify Pre-Authenticated Session', async () => {
-      await commonFunctions.verifyValue(await catalogPage.isLogoutVisible(), true, "Verifying user is pre-authenticated via storageState");
+      await commonFunctions.verifyValue(
+        await catalogPage.isLogoutVisible(),
+        true,
+        'Verifying user is pre-authenticated via storageState'
+      );
     });
 
     await test.step('Prepare Empty Cart', async () => {
       await cartPage.openCart();
       await cartPage.clearAllItemsIfPresent();
-      await catalogPage.clickNavigateLink("Catalog");
+      await catalogPage.clickNavigateLink('Catalog');
     });
 
     await test.step('Add Book to Cart', async () => {
@@ -63,12 +74,20 @@ test.describe('Cart Persistence Checkout', () => {
 
     await test.step('Logout', async () => {
       await catalogPage.clickLogout();
-      await commonFunctions.verifyValue(await catalogPage.isLoginVisible(), true, "Verifying if user logged out successfully");
+      await commonFunctions.verifyValue(
+        await catalogPage.isLoginVisible(),
+        true,
+        'Verifying if user logged out successfully'
+      );
     });
 
     await test.step('Login Again with Existing User', async () => {
       const isLogin = await signUpPage.login(userName, password);
-      await commonFunctions.verifyValue(isLogin, true, "Verifying if user logged in successfully again");
+      await commonFunctions.verifyValue(
+        isLogin,
+        true,
+        'Verifying if user logged in successfully again'
+      );
     });
 
     await test.step('Verify Cart Persists After Login', async () => {
@@ -95,8 +114,11 @@ test.describe('Cart Persistence Checkout', () => {
 
     await test.step('Logout', async () => {
       await catalogPage.clickLogout();
-      await commonFunctions.verifyValue(await catalogPage.isLoginVisible(), true, "Verifying if user logged out successfully");
+      await commonFunctions.verifyValue(
+        await catalogPage.isLoginVisible(),
+        true,
+        'Verifying if user logged out successfully'
+      );
     });
   });
-
 });

@@ -94,13 +94,14 @@ function main() {
     process.exit(1);
   }
 
-  const isDirectCmd = args.length > 0 && ['version', '--version', '-v', '--help', '-h'].includes(args[0]);
+  const isDirectCmd =
+    args.length > 0 && ['version', '--version', '-v', '--help', '-h'].includes(args[0]);
   const k6Args = isDirectCmd || (args.length > 0 && args[0] === 'run') ? args : ['run', ...args];
 
   console.log(`🚀 Executing: ${k6Executable} ${k6Args.join(' ')}`);
   const child = spawn(k6Executable, k6Args, {
     stdio: 'inherit',
-    shell: false,
+    shell: false
   });
 
   child.on('exit', (code) => {

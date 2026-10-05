@@ -12,6 +12,7 @@ This skill is the **comprehensive reference manual** for the `AutomationFramewor
 ## 1. Playwright Test Architecture & Browser Policy
 
 ### A. The Single-Browser Rule (Google Chrome UI & API Only)
+
 - **Problem**: Previously, `playwright.config.ts` configured 8 browser/device targets (`chromium`, `Google Chrome`, `firefox`, `webkit`, `mobile-chrome`, `mobile-safari`). This caused:
   - 380 tests to execute on every `npm test` run (each UI test was executed 6 times).
   - High CI runtime, excessive memory pressure, and browser launch crashes on environments missing Firefox/WebKit dependencies.
@@ -23,8 +24,8 @@ This skill is the **comprehensive reference manual** for the `AutomationFramewor
       name: 'setup',
       testMatch: /.*auth\.setup\.ts/,
       use: {
-        channel: 'chrome',
-      },
+        channel: 'chrome'
+      }
     },
     {
       name: 'api',
@@ -33,11 +34,11 @@ This skill is the **comprehensive reference manual** for the `AutomationFramewor
       use: {
         baseURL: envConfig.apiBaseUrl,
         extraHTTPHeaders: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
-          'x-bypass-rate-limit': 'true',
-        },
-      },
+          'x-bypass-rate-limit': 'true'
+        }
+      }
     },
     {
       name: 'chrome',
@@ -49,21 +50,28 @@ This skill is the **comprehensive reference manual** for the `AutomationFramewor
         channel: 'chrome',
         viewport: { width: 1280, height: 720 },
         launchOptions: {
-          args: ['--disable-notifications', '--disable-infobars', '--disable-extensions', '--start-maximized'],
+          args: [
+            '--disable-notifications',
+            '--disable-infobars',
+            '--disable-extensions',
+            '--start-maximized'
+          ]
         },
-        storageState: authFile,
-      },
-    },
-  ]
+        storageState: authFile
+      }
+    }
+  ];
   ```
 
 ### B. Auth Setup Project Trap
+
 - **Issue**: `setup` project executes `src/tests/auth.setup.ts` using `{ page }` to authenticate the user and save `.auth/user.json`.
 - **Trap**: If `use: { channel: 'chrome' }` is omitted from `setup`, Playwright defaults to looking for bundled `chromium_headless_shell`. In CI (Ubuntu), running `npx playwright install --with-deps chrome` installs the Google Chrome deb package, **not** `chromium_headless_shell`.
 - **Result of Trap**: `setup` crashes immediately with `Executable doesn't exist`, and Playwright skips **all 54 UI tests** because they depend on `setup`.
 - **Fix**: Always ensure `setup` project specifies `channel: 'chrome'`.
 
 ### C. Standard NPM Test Runners (`playwright-e2e/package.json`)
+
 ```bash
 # Run all tests (setup -> api + chrome UI)
 npm test
@@ -87,6 +95,7 @@ npm run test:e2e:visual
 ## 2. Render Staging Infrastructure & Cold Starts
 
 ### A. Free-Tier Idling Behavior
+
 - **Staging Base URLs**:
   - Web UI: `https://buggy-books-fe.onrender.com`
   - REST API: `https://buggy-books.onrender.com`
@@ -94,7 +103,9 @@ npm run test:e2e:visual
 - **Symptom if Unhandled**: Tests running immediately in CI will fail with `TimeoutError: page.goto: Navigation timeout of 30000ms exceeded` or API ECONNRESET/socket hang-ups.
 
 ### B. Mandatory Pre-Flight Wake-Up Probe
+
 Before running any tests against Render in CI or local environments, always wake both instances:
+
 ```bash
 echo "Pinging Render backend and frontend to wake from sleep..."
 curl -s -o /dev/null -w "Backend wake ping status: %{http_code}\n" https://buggy-books.onrender.com/api/books || true
@@ -108,7 +119,9 @@ npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
 ## 3. Chaos Engineering & State Mutation Containment
 
 ### A. Intentional Chaos Endpoints
+
 The BuggyBooks backend provides endpoints to configure intentional failure modes for testing resilience:
+
 - `POST /api/test/config`: Accepts configuration parameters:
   - `checkoutFailureRate`: Number between 0.0 and 1.0 (e.g. 1.0 forces all checkouts to return 500).
   - `inventoryDelayMs`: Number in milliseconds (e.g. 3000 injects a 3-second delay into `/api/inventory/report`).
@@ -116,6 +129,7 @@ The BuggyBooks backend provides endpoints to configure intentional failure modes
 - `POST /api/test/reset`: Restores database and resets chaos flags to default zero.
 
 ### B. State Leak Trap & Mandatory Reset Hook
+
 - **Trap**: `POST /api/test/config` mutates global state on the **shared Render staging backend**.
 - **Case Study (CI Run 24)**: Test `API_CHAOS_01` set `checkoutFailureRate: 1.0` to verify that checkout returns 500. Because it lacked a teardown hook, `checkoutFailureRate` stayed at 1.0. A parallel test (`API_LOG_04` in `Test_001_LoggingAndCorrelationApi.spec.ts`) called `/api/checkout/process` and failed unexpectedly with 500.
 - **Strict Pattern**: Any test modifying chaos settings **must** declare `test.afterEach`:
@@ -129,18 +143,20 @@ The BuggyBooks backend provides endpoints to configure intentional failure modes
   ```
 
 ### C. Testing Intentional Anti-Patterns
-| Anti-Pattern | Endpoint / UI Area | Strategy |
-| :--- | :--- | :--- |
-| **Flaky Checkout** | `POST /api/checkout/process` returns 500 ~15% of the time | Implement retry with backoff in test utility; do not remove assertions. |
-| **Dynamic UI Delays** | "Add to Cart" button (500–3500ms delay) | Use auto-waiting Playwright assertions (`expect(locator).toHaveText(...)`), never hardcoded `waitForTimeout()`. |
-| **Obfuscated Locators** | Missing IDs on book catalog items | Use semantic ARIA queries (`getByRole`, `getByLabel`) or relative XPath with axes. |
-| **Shadow DOM** | `<order-summary-box>` encapsulates price | Rely on Playwright's automatic shadow DOM piercing locators. |
+
+| Anti-Pattern            | Endpoint / UI Area                                        | Strategy                                                                                                        |
+| :---------------------- | :-------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
+| **Flaky Checkout**      | `POST /api/checkout/process` returns 500 ~15% of the time | Implement retry with backoff in test utility; do not remove assertions.                                         |
+| **Dynamic UI Delays**   | "Add to Cart" button (500–3500ms delay)                   | Use auto-waiting Playwright assertions (`expect(locator).toHaveText(...)`), never hardcoded `waitForTimeout()`. |
+| **Obfuscated Locators** | Missing IDs on book catalog items                         | Use semantic ARIA queries (`getByRole`, `getByLabel`) or relative XPath with axes.                              |
+| **Shadow DOM**          | `<order-summary-box>` encapsulates price                  | Rely on Playwright's automatic shadow DOM piercing locators.                                                    |
 
 ---
 
 ## 4. Apache JMeter Performance Testing
 
 ### A. Directory Structure (`jmeter/`)
+
 ```text
 jmeter/
 ├── README.md                              # Comprehensive CLI & GUI execution manual
@@ -158,6 +174,7 @@ jmeter/
 ```
 
 ### B. Headless CLI Execution Commands
+
 ```bash
 # BuggyBooks Catalog Load Test with HTML Dashboard
 jmeter -n -t jmeter/Tests/BuggyBooks_Catalog_Load.jmx -l jmeter/Results/catalog.jtl -e -o jmeter/Results/catalog-dashboard
@@ -173,6 +190,7 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 ```
 
 ### C. CI/CD Workflow (`.github/workflows/jmeter-performance.yaml`)
+
 - Provides `workflow_dispatch` with parameters:
   - `test_plan`: Select from all 5 `.jmx` test plans.
   - `threads`: Number of virtual users (default: 10).
@@ -186,6 +204,7 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 ## 5. Documentation Synchronization Standards
 
 ### A. The Dual-Catalog Parity Rule
+
 - Every test added, updated, or retired must be updated in **two files** in exact parity:
   1. [`docs/test_cases_catalog.md`](../../docs/test_cases_catalog.md)
   2. [`playwright-e2e/test_cases_catalog.md`](../../playwright-e2e/test_cases_catalog.md)
@@ -195,9 +214,10 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
   ```
 
 ### B. Catalog Entry Schema
+
 ```markdown
-| ID | Title | Description | Priority | Target Coverage | Tags | Covered |
-|:---|:---|:---|:---|:---|:---|:---|
+| ID             | Title      | Description                                   | Priority | Target Coverage | Tags                   | Covered                                                                                                                  |
+| :------------- | :--------- | :-------------------------------------------- | :------- | :-------------- | :--------------------- | :----------------------------------------------------------------------------------------------------------------------- |
 | **TC-XXX-001** | Test Title | Detailed description of steps and assertions. | Critical | Feature / Layer | `@smoke` `@regression` | **Yes**<br>- Plan/Spec: `path/to/spec.ts`<br>- Command: `npm run ...`<br>- Assertions: Specific SLA or assertion details |
 ```
 
@@ -216,9 +236,11 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 3. **PR Description Structure**:
    ```markdown
    ## 📌 Summary of Changes
+
    - Clear bullet points of what was added or fixed.
 
    ## 🧪 Verification
+
    - Exact CLI commands executed.
    - Test results (e.g. "110 passed, 0 failed in 12s").
    ```
@@ -228,21 +250,25 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 ## 7. Multi-Framework Testing Standards (BuggyBooks Alignment)
 
 ### A. Selenium WebDriver (`selenium-e2e/`)
+
 - **Browser Target**: Headless Google Chrome (`options.addArguments('--headless=new')`).
 - **Dynamic Waiting**: Rely on `driver.wait(until.elementLocated(locator))` and `until.elementIsEnabled()`. Never use `Thread.sleep` or static timeouts.
 - **Shadow DOM Traversal**: Pierce custom Web Components like `<order-summary-box>` using standard W3C `host.getShadowRoot()`.
 
 ### B. WebdriverIO (`wdio-e2e/`)
+
 - **Capabilities**: Chrome headless (`goog:chromeOptions: { args: ['--headless', '--disable-gpu'] }`).
 - **Shadow DOM**: Use native WebdriverIO `$('order-summary-box').shadow$('.order-total')`.
 - **E2E Journeys**: Aligned with BuggyBooks user flows (auth, catalog search, cart mutations, checkout).
 
 ### C. Appium Mobile Automation (`mobile-automation/`)
+
 - **Architecture**: Appium 2.x with `UiAutomator2` (Android) and `XCUITest` (iOS).
 - **Screen Objects**: All screens extend `BaseMobileScreen.ts` with touch gesture helpers (`swipeUp`, `scrollToText`).
 - **Chaos Resilience**: Automated specs for orientation shifts (`driver.setOrientation('LANDSCAPE')`), network latency, and app backgrounding.
 
 ### D. k6 Fast-Feedback Performance (`k6-performance/`)
+
 - **Synergy with JMeter**: k6 handles developer-centric PR baseline drift gates (< 60s runtime), while Apache JMeter generates enterprise stress load and HTML reports.
 - **Regression Formula**:
   $$\text{Drift \%} = \frac{\text{Current p95} - \text{Baseline p95}}{\text{Baseline p95}} \times 100$$
@@ -252,17 +278,17 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 
 ## 8. The 10 Strategic Monorepo Transformation Pillars
 
-| Pillar | Focus Area | Core Objective |
-| :--- | :--- | :--- |
-| **Pillar 1** | Multi-Framework Parity | Migrate Selenium and WDIO away from dummy sites to BuggyBooks. |
-| **Pillar 2** | Workspaces & Utilities | Unify `@automationframeworks/playwright-utils` under `packages/` via npm workspaces. |
-| **Pillar 3** | Mobile Automation | Import Appium 2.x suite from `buggy-books` with Screen Objects and chaos specs. |
-| **Pillar 4** | Chaos Testing Guide | Author `docs/intentional_bugs.md` detailing all 8 anti-patterns and safe reset recipes. |
-| **Pillar 5** | CI/CD Hygiene | Purge 4 dead extensionless workflow files and standardize on valid YAML syntax. |
-| **Pillar 6** | Environment Templates | Standardize `.env.example` templates in root and all sub-projects. |
-| **Pillar 7** | Chrome Visual Baseline | Calibrate golden snapshots for `Test_010_VisualRegressionChaos.spec.ts` under Chrome. |
-| **Pillar 8** | Dual Performance Engine | Integrate k6 baseline drift checking alongside Apache JMeter 5.6+ stress plans. |
-| **Pillar 9** | PR Quality Gate | Implement fast `.github/workflows/pr-gate.yml` (< 3 mins) on PRs to `main`. |
+| Pillar        | Focus Area                | Core Objective                                                                              |
+| :------------ | :------------------------ | :------------------------------------------------------------------------------------------ |
+| **Pillar 1**  | Multi-Framework Parity    | Migrate Selenium and WDIO away from dummy sites to BuggyBooks.                              |
+| **Pillar 2**  | Workspaces & Utilities    | Unify `@automationframeworks/playwright-utils` under `packages/` via npm workspaces.        |
+| **Pillar 3**  | Mobile Automation         | Import Appium 2.x suite from `buggy-books` with Screen Objects and chaos specs.             |
+| **Pillar 4**  | Chaos Testing Guide       | Author `docs/intentional_bugs.md` detailing all 8 anti-patterns and safe reset recipes.     |
+| **Pillar 5**  | CI/CD Hygiene             | Purge 4 dead extensionless workflow files and standardize on valid YAML syntax.             |
+| **Pillar 6**  | Environment Templates     | Standardize `.env.example` templates in root and all sub-projects.                          |
+| **Pillar 7**  | Chrome Visual Baseline    | Calibrate golden snapshots for `Test_010_VisualRegressionChaos.spec.ts` under Chrome.       |
+| **Pillar 8**  | Dual Performance Engine   | Integrate k6 baseline drift checking alongside Apache JMeter 5.6+ stress plans.             |
+| **Pillar 9**  | PR Quality Gate           | Implement fast `.github/workflows/pr-gate.yml` (< 3 mins) on PRs to `main`.                 |
 | **Pillar 10** | Centralized Allure Portal | Host interactive executive reporting dashboard on GitHub Pages with subpaths per framework. |
 
 ---
@@ -270,6 +296,7 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 ## 9. Virtual Sprint Team Operating Model (7 Personas)
 
 The monorepo operates with 7 specialized virtual agent personas in `.agents/skills/`:
+
 1. [**`role-scrum-master`**](../role-scrum-master/SKILL.md): Sprint ceremony facilitation, 63 SP velocity tracking, DoR/DoD enforcement, blocker removal.
 2. [**`role-sdet-architect`**](../role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, review gates.
 3. [**`role-playwright-automation`**](../role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
@@ -283,6 +310,7 @@ The monorepo operates with 7 specialized virtual agent personas in `.agents/skil
 ## 10. Sprint Roadmap Navigation & Planning Structure
 
 The entire roadmap is organized under [`planning/`](../../planning/):
+
 - **Master Plan**: [`planning/Master/master_plan.md`](../../planning/Master/master_plan.md)
 - **5 Delivery Phases**: [`planning/Phases/`](../../planning/Phases/)
 - **15 Granular Sprints**: [`planning/Sprints/`](../../planning/Sprints/)
@@ -373,7 +401,7 @@ The entire roadmap is organized under [`planning/`](../../planning/):
   # Ignore real env files in all directories
   .env
   .env.*
-  
+
   # Allow example templates at root and across all subpackages
   !.env.example
   !**/.env.example
@@ -399,7 +427,7 @@ The entire roadmap is organized under [`planning/`](../../planning/):
     await expect(page).toHaveScreenshot('catalog-baseline.png', {
       maxDiffPixelRatio: 0.05,
       threshold: 0.2,
-      animations: 'disabled',
+      animations: 'disabled'
     });
     ```
 
@@ -436,6 +464,3 @@ The entire roadmap is organized under [`planning/`](../../planning/):
   - Generates the **Stability Index** table directly in GitHub Step Summary:
     $$\text{Stability Index} = \left(\frac{\text{Passed Runs}}{\text{Total Runs} - \text{Skipped Runs}}\right) \times 100\%$$
   - De-quarantine graduation requires a **100.0% Stability Index** (10/10 green passes), triggering an automated de-quarantine advisory.
-
-
-

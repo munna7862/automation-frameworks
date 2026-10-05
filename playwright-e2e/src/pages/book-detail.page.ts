@@ -35,27 +35,26 @@ export class BookDetailPage extends BasePage {
   }
 
   public async getBookTitle(): Promise<string> {
-    return await this.doGetText(this.eleTitle, "Getting book detail title");
+    return await this.doGetText(this.eleTitle, 'Getting book detail title');
   }
 
   public async getBookAuthor(): Promise<string> {
-    return await this.doGetText(this.eleAuthor, "Getting book detail author");
+    return await this.doGetText(this.eleAuthor, 'Getting book detail author');
   }
 
   public async getBookDescription(): Promise<string> {
-    return await this.doGetText(this.eleDescription, "Getting book detail description");
+    return await this.doGetText(this.eleDescription, 'Getting book detail description');
   }
 
   public async getBookPrice(): Promise<string> {
-    return await this.doGetText(this.elePrice, "Getting book detail price");
+    return await this.doGetText(this.elePrice, 'Getting book detail price');
   }
 
-
   public async clickBackToCatalog(): Promise<void> {
-    await this.doClick(this.linkBack, "Clicking Back to Catalog link");
+    await this.doClick(this.linkBack, 'Clicking Back to Catalog link');
   }
 
   public async clickAddToCart(): Promise<void> {
-    await this.doClick(this.btnAddToCart, "Clicking Add to Cart button on Book Detail page");
+    await this.doClick(this.btnAddToCart, 'Clicking Add to Cart button on Book Detail page');
   }
 }

@@ -3,13 +3,23 @@ import { expect } from 'chai';
 import { step } from 'allure-js-commons';
 
 export class CommonFunctions {
-  public async compareTwoValues(sActualValue: any, sExpectedValue: any, sLogMessage: string): Promise<boolean> {
+  public async compareTwoValues(
+    sActualValue: any,
+    sExpectedValue: any,
+    sLogMessage: string
+  ): Promise<boolean> {
     let bValidation = false;
     if (sActualValue === sExpectedValue) {
-      await this.logMessage('PASS', ` ${sLogMessage} Success !! Actual and Expected Values are:: ${sActualValue}`);
+      await this.logMessage(
+        'PASS',
+        ` ${sLogMessage} Success !! Actual and Expected Values are:: ${sActualValue}`
+      );
       bValidation = true;
     } else {
-      await this.logMessage('FAIL', ` ${sLogMessage} Failed!! Expected Value:: ${sExpectedValue} || Actual Value:: ${sActualValue}`);
+      await this.logMessage(
+        'FAIL',
+        ` ${sLogMessage} Failed!! Expected Value:: ${sExpectedValue} || Actual Value:: ${sActualValue}`
+      );
     }
     expect(sActualValue, sLogMessage).to.equal(sExpectedValue);
     return bValidation;
@@ -17,26 +27,25 @@ export class CommonFunctions {
 
   public async logMessage(sLogLevel: string, sMessage: string): Promise<void> {
     const levelMap: Record<string, string> = {
-      'PASS': 'info',
-      'FAIL': 'error',
-      'INFO': 'info',
-      'WARN': 'warn'
+      PASS: 'info',
+      FAIL: 'error',
+      INFO: 'info',
+      WARN: 'warn'
     };
 
     const logLevel = levelMap[sLogLevel] || sLogLevel.toLowerCase();
     const reportLevel = sLogLevel.toUpperCase();
     const timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
-    
+
     // Use errorLogger for failures to log to separate error file
     if (sLogLevel === 'FAIL') {
       errorLogger.log({ level: logLevel, message: sMessage });
     }
-    
+
     // Always log to main framework log
     logger.log({ level: logLevel, message: sMessage });
 
     const emoji = sLogLevel === 'PASS' ? '✅' : sLogLevel === 'FAIL' ? '❌' : '';
-    await step(`${emoji} [${timestamp}] [${reportLevel}] ${sMessage}`, async () => { });
+    await step(`${emoji} [${timestamp}] [${reportLevel}] ${sMessage}`, async () => {});
   }
-
 }

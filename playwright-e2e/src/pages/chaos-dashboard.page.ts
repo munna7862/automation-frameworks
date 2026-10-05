@@ -84,7 +84,7 @@ export class ChaosDashboardPage extends BasePage {
     if (!response || response.status() === 404 || !this.page.url().includes('/admin/chaos')) {
       await this.page.goto(cleanBase);
       const chaosLink = this.page.locator('#nav-chaos-link');
-      if (await chaosLink.count() > 0 && await chaosLink.first().isVisible()) {
+      if ((await chaosLink.count()) > 0 && (await chaosLink.first().isVisible())) {
         await chaosLink.first().click();
       } else {
         await this.page.evaluate(() => {
@@ -97,7 +97,10 @@ export class ChaosDashboardPage extends BasePage {
   }
 
   public async isDashboardVisible(): Promise<boolean> {
-    return await this.doesElementExist(this.dashboardContainer, 'Verifying Chaos Dashboard container is visible');
+    return await this.doesElementExist(
+      this.dashboardContainer,
+      'Verifying Chaos Dashboard container is visible'
+    );
   }
 
   public async getStatusBadgeText(): Promise<string> {
@@ -133,7 +136,9 @@ export class ChaosDashboardPage extends BasePage {
     }
   }
 
-  public async selectPreset(preset: 'baseline' | 'flaky-gateway' | 'high-contention' | 'ui-stress'): Promise<void> {
+  public async selectPreset(
+    preset: 'baseline' | 'flaky-gateway' | 'high-contention' | 'ui-stress'
+  ): Promise<void> {
     switch (preset) {
       case 'baseline':
         await this.doClick(this.baselinePresetBtn, 'Selecting Clean Baseline preset');

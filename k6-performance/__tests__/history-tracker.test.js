@@ -7,7 +7,7 @@ const {
   appendHistoryRecord,
   analyzeCreepingRegression,
   generateAsciiSparkline,
-  loadHistory,
+  loadHistory
 } = require('../utils/history-tracker.js');
 
 describe('Performance History Tracker & Creeping Regression Tests', () => {
@@ -20,14 +20,32 @@ describe('Performance History Tracker & Creeping Regression Tests', () => {
   });
 
   it('inferTestType should correctly identify test tiers from titles/paths', () => {
-    assert.strictEqual(inferTestType('PR API Smoke Benchmark (5 VUs)', 'perf-summary-smoke.json'), 'smoke');
-    assert.strictEqual(inferTestType('Catalog Load Benchmark (50 VUs)', 'perf-summary-catalog.json'), 'catalog');
-    assert.strictEqual(inferTestType('Inventory Stress Benchmark', 'inventory-stress.js'), 'inventory');
-    assert.strictEqual(inferTestType('E-Commerce User Journey Benchmark', 'ecommerce-journey.js'), 'journey');
+    assert.strictEqual(
+      inferTestType('PR API Smoke Benchmark (5 VUs)', 'perf-summary-smoke.json'),
+      'smoke'
+    );
+    assert.strictEqual(
+      inferTestType('Catalog Load Benchmark (50 VUs)', 'perf-summary-catalog.json'),
+      'catalog'
+    );
+    assert.strictEqual(
+      inferTestType('Inventory Stress Benchmark', 'inventory-stress.js'),
+      'inventory'
+    );
+    assert.strictEqual(
+      inferTestType('E-Commerce User Journey Benchmark', 'ecommerce-journey.js'),
+      'journey'
+    );
     assert.strictEqual(inferTestType('Authentication Burst Benchmark', 'auth-stress.js'), 'auth');
-    assert.strictEqual(inferTestType('Checkout Contention Benchmark', 'checkout-stress.js'), 'checkout');
+    assert.strictEqual(
+      inferTestType('Checkout Contention Benchmark', 'checkout-stress.js'),
+      'checkout'
+    );
     assert.strictEqual(inferTestType('Endurance Soak Benchmark', 'soak-load.js'), 'soak');
-    assert.strictEqual(inferTestType('Breakpoint Capacity Saturation', 'breakpoint-test.js'), 'breakpoint');
+    assert.strictEqual(
+      inferTestType('Breakpoint Capacity Saturation', 'breakpoint-test.js'),
+      'breakpoint'
+    );
   });
 
   it('generateAsciiSparkline should return representative sparkline ticks', () => {
@@ -40,15 +58,19 @@ describe('Performance History Tracker & Creeping Regression Tests', () => {
 
   it('appendHistoryRecord should enforce circular buffer of max 30 records', () => {
     for (let i = 1; i <= 35; i++) {
-      appendHistoryRecord(testHistoryPath, {
-        timestamp: new Date().toISOString(),
-        commit_sha: `sha${i}`,
-        workflow_run_id: `run${i}`,
-        test_type: 'smoke',
-        rps: 35.0,
-        p95_latency: 5.0 + i * 0.1,
-        error_rate: 0.0,
-      }, 30);
+      appendHistoryRecord(
+        testHistoryPath,
+        {
+          timestamp: new Date().toISOString(),
+          commit_sha: `sha${i}`,
+          workflow_run_id: `run${i}`,
+          test_type: 'smoke',
+          rps: 35.0,
+          p95_latency: 5.0 + i * 0.1,
+          error_rate: 0.0
+        },
+        30
+      );
     }
 
     const loaded = loadHistory(testHistoryPath);
@@ -70,7 +92,7 @@ describe('Performance History Tracker & Creeping Regression Tests', () => {
       { test_type: 'smoke', p95_latency: 11.2 },
       { test_type: 'smoke', p95_latency: 11.5 },
       { test_type: 'smoke', p95_latency: 11.8 },
-      { test_type: 'smoke', p95_latency: 12.0 },
+      { test_type: 'smoke', p95_latency: 12.0 }
     ];
 
     const analysis = analyzeCreepingRegression(history, 'smoke', 10.0, 5);
@@ -86,7 +108,7 @@ describe('Performance History Tracker & Creeping Regression Tests', () => {
       { test_type: 'smoke', p95_latency: 10.2 },
       { test_type: 'smoke', p95_latency: 9.8 },
       { test_type: 'smoke', p95_latency: 10.1 },
-      { test_type: 'smoke', p95_latency: 10.3 },
+      { test_type: 'smoke', p95_latency: 10.3 }
     ];
 
     const analysis = analyzeCreepingRegression(history, 'smoke', 10.0, 5);

@@ -17,7 +17,7 @@ async function enableA11yChaos(request: any) {
         break;
       }
     }
-    await new Promise(r => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 400));
   }
 }
 
@@ -32,13 +32,16 @@ async function disableA11yChaos(request: any) {
         break;
       }
     }
-    await new Promise(r => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 400));
   }
 }
 
 test.describe('Accessibility (a11y) Scans Suite', () => {
-
-  test('A11Y_01: Standard Accessibility Compliance @smoke @regression @a11y', async ({ commonFunctions, page, request }) => {
+  test('A11Y_01: Standard Accessibility Compliance @smoke @regression @a11y', async ({
+    commonFunctions,
+    page,
+    request
+  }) => {
     await test.step('Ensure injectA11yViolations is disabled', async () => {
       await disableA11yChaos(request);
     });
@@ -53,14 +56,24 @@ test.describe('Accessibility (a11y) Scans Suite', () => {
         .withRules([TestData.RULES.IMAGE_ALT, TestData.RULES.LABEL])
         .analyze();
 
-      const imageAltViolations = scanResults.violations.filter(v => v.id === TestData.RULES.IMAGE_ALT);
-      const labelViolations = scanResults.violations.filter(v => v.id === TestData.RULES.LABEL);
+      const imageAltViolations = scanResults.violations.filter(
+        (v) => v.id === TestData.RULES.IMAGE_ALT
+      );
+      const labelViolations = scanResults.violations.filter((v) => v.id === TestData.RULES.LABEL);
 
-      await commonFunctions.verifyValue(imageAltViolations.length + labelViolations.length, 0, "Verifying zero image-alt and label violations in standard compliance mode");
+      await commonFunctions.verifyValue(
+        imageAltViolations.length + labelViolations.length,
+        0,
+        'Verifying zero image-alt and label violations in standard compliance mode'
+      );
     });
   });
 
-  test('A11Y_02: Image Alternative Text Scan Failure @regression @chaos @a11y', async ({ commonFunctions, page, request }) => {
+  test('A11Y_02: Image Alternative Text Scan Failure @regression @chaos @a11y', async ({
+    commonFunctions,
+    page,
+    request
+  }) => {
     try {
       await test.step('Enable injectA11yViolations via chaos API', async () => {
         await enableA11yChaos(request);
@@ -77,8 +90,13 @@ test.describe('Accessibility (a11y) Scans Suite', () => {
           .withRules([TestData.RULES.IMAGE_ALT])
           .analyze();
 
-        const imageAltViolation = scanResults.violations.find(v => v.id === TestData.RULES.IMAGE_ALT);
-        await commonFunctions.verifyCondition(Boolean(imageAltViolation), "Verifying Axe detects missing image alt text under chaos mode");
+        const imageAltViolation = scanResults.violations.find(
+          (v) => v.id === TestData.RULES.IMAGE_ALT
+        );
+        await commonFunctions.verifyCondition(
+          Boolean(imageAltViolation),
+          'Verifying Axe detects missing image alt text under chaos mode'
+        );
       });
     } finally {
       await test.step('Reset injectA11yViolations to false', async () => {
@@ -87,7 +105,12 @@ test.describe('Accessibility (a11y) Scans Suite', () => {
     }
   });
 
-  test('A11Y_03: Orphaned Form Label Scan Failure @regression @chaos @a11y', async ({ commonFunctions, page, request, signUpPage }) => {
+  test('A11Y_03: Orphaned Form Label Scan Failure @regression @chaos @a11y', async ({
+    commonFunctions,
+    page,
+    request,
+    signUpPage
+  }) => {
     try {
       await test.step('Enable injectA11yViolations via chaos API', async () => {
         await enableA11yChaos(request);
@@ -117,7 +140,10 @@ test.describe('Accessibility (a11y) Scans Suite', () => {
         const labelHasNoFor = labelFor === null || labelFor === undefined;
 
         const isLabelLinkBroken = usernameHasNoId && passwordHasNoId && labelHasNoFor;
-        await commonFunctions.verifyCondition(isLabelLinkBroken, "Verifying orphaned form label and unlinked input ID under chaos mode");
+        await commonFunctions.verifyCondition(
+          isLabelLinkBroken,
+          'Verifying orphaned form label and unlinked input ID under chaos mode'
+        );
       });
     } finally {
       await test.step('Reset injectA11yViolations to false', async () => {
@@ -126,7 +152,11 @@ test.describe('Accessibility (a11y) Scans Suite', () => {
     }
   });
 
-  test('A11Y_04: Text Color Contrast Scan Failure @regression @chaos @a11y', async ({ commonFunctions, page, request }) => {
+  test('A11Y_04: Text Color Contrast Scan Failure @regression @chaos @a11y', async ({
+    commonFunctions,
+    page,
+    request
+  }) => {
     try {
       await test.step('Enable injectA11yViolations via chaos API', async () => {
         await enableA11yChaos(request);
@@ -144,8 +174,13 @@ test.describe('Accessibility (a11y) Scans Suite', () => {
           .withRules([TestData.RULES.COLOR_CONTRAST])
           .analyze();
 
-        const contrastViolation = scanResults.violations.find(v => v.id === TestData.RULES.COLOR_CONTRAST);
-        await commonFunctions.verifyCondition(Boolean(contrastViolation), "Verifying Axe detects color contrast ratio violation on result count tag under chaos mode");
+        const contrastViolation = scanResults.violations.find(
+          (v) => v.id === TestData.RULES.COLOR_CONTRAST
+        );
+        await commonFunctions.verifyCondition(
+          Boolean(contrastViolation),
+          'Verifying Axe detects color contrast ratio violation on result count tag under chaos mode'
+        );
       });
     } finally {
       await test.step('Reset injectA11yViolations to false', async () => {
@@ -153,5 +188,4 @@ test.describe('Accessibility (a11y) Scans Suite', () => {
       });
     }
   });
-
 });

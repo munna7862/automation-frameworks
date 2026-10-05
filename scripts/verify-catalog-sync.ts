@@ -4,19 +4,19 @@
  * ============================================================================
  * BuggyBooks — Dual-Catalog Strict Parity Verifier
  * ============================================================================
- * 
+ *
  * Verifies byte-for-byte, line-for-line parity between:
  *   1. docs/test_cases_catalog.md (Primary Central Catalog)
  *   2. playwright-e2e/test_cases_catalog.md (Playwright Duplicate Catalog)
- * 
+ *
  * In accordance with AGENTS.md Core Rule #5 (Dual-Catalog Strict Parity) and
  * Sprint 5.3 User Story US-AF-531, this automated check guarantees that any
  * documentation drift is detected immediately in local development and CI gates.
- * 
+ *
  * Usage:
  *   npm run test:verify-catalog
  *   npx tsx scripts/verify-catalog-sync.ts [--fix] [--verbose]
- * 
+ *
  * Options:
  *   --fix       Synchronize playwright-e2e/test_cases_catalog.md from docs/test_cases_catalog.md
  *   --verbose   Display detailed section and test identifier breakdown
@@ -91,7 +91,7 @@ function verifyCatalogs(docContent: string, pwContent: string): VerificationResu
       diffs.push({
         lineNum: i + 1,
         docLine: dLine,
-        playwrightLine: pLine,
+        playwrightLine: pLine
       });
     }
   }
@@ -116,7 +116,7 @@ function verifyCatalogs(docContent: string, pwContent: string): VerificationResu
     totalPlaywrightChars: normPw.length,
     testCaseCount: testCount,
     diffs,
-    firstDiffLine,
+    firstDiffLine
   };
 }
 
@@ -145,7 +145,9 @@ function main(): void {
   // If --fix was passed and they differ, synchronize immediately
   if (IS_FIX) {
     if (rawDoc !== rawPw) {
-      console.log('🔧 Synchronizing playwright-e2e/test_cases_catalog.md from docs/test_cases_catalog.md...');
+      console.log(
+        '🔧 Synchronizing playwright-e2e/test_cases_catalog.md from docs/test_cases_catalog.md...'
+      );
       fs.writeFileSync(PLAYWRIGHT_CATALOG_PATH, rawDoc, 'utf8');
       console.log('✅ Catalogs synchronized successfully!');
     } else {
@@ -167,7 +169,9 @@ function main(): void {
     console.log('='.repeat(78));
     process.exit(0);
   } else {
-    console.error('❌ PARITY FAILURE: Catalog drift detected between central docs and Playwright copy!');
+    console.error(
+      '❌ PARITY FAILURE: Catalog drift detected between central docs and Playwright copy!'
+    );
     console.error(`   • Primary Catalog Lines   : ${result.totalDocLines.toLocaleString()}`);
     console.error(`   • Playwright Copy Lines  : ${result.totalPlaywrightLines.toLocaleString()}`);
     console.error(`   • Diverging Lines Count  : ${result.diffs.length.toLocaleString()}`);

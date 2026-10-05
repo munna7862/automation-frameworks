@@ -18,7 +18,10 @@ function getGitCommitSha() {
     return process.env.GITHUB_SHA.substring(0, 7);
   }
   try {
-    return execSync('git rev-parse --short HEAD', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    return execSync('git rev-parse --short HEAD', {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore']
+    }).trim();
   } catch {
     return 'local';
   }
@@ -47,7 +50,7 @@ function loadHistory(historyPath) {
     return {
       version: '1.0.0',
       updated_at: new Date().toISOString(),
-      history: [],
+      history: []
     };
   }
 
@@ -58,7 +61,7 @@ function loadHistory(historyPath) {
       return {
         version: '1.0.0',
         updated_at: new Date().toISOString(),
-        history: parsed,
+        history: parsed
       };
     }
     if (parsed && Array.isArray(parsed.history)) {
@@ -67,14 +70,14 @@ function loadHistory(historyPath) {
     return {
       version: '1.0.0',
       updated_at: new Date().toISOString(),
-      history: [],
+      history: []
     };
   } catch (err) {
     console.warn(`⚠️ Warning: Failed to parse history file at ${targetPath}:`, err.message);
     return {
       version: '1.0.0',
       updated_at: new Date().toISOString(),
-      history: [],
+      history: []
     };
   }
 }
@@ -117,7 +120,7 @@ function appendHistoryRecord(historyPath, record, maxRecords = MAX_HISTORY_RECOR
  * @param {number} [windowSize=5] Rolling window size
  */
 function analyzeCreepingRegression(history, testType, baselineP95 = null, windowSize = 5) {
-  const typeHistory = history.filter(r => r.test_type === testType);
+  const typeHistory = history.filter((r) => r.test_type === testType);
   if (typeHistory.length === 0) {
     return {
       isCreepingRegression: false,
@@ -126,23 +129,25 @@ function analyzeCreepingRegression(history, testType, baselineP95 = null, window
       referenceAvg: null,
       delta: null,
       sparkline: '',
-      historySlice: [],
+      historySlice: []
     };
   }
 
-  const p95Values = typeHistory.map(r => Number(r.p95_latency) || 0);
+  const p95Values = typeHistory.map((r) => Number(r.p95_latency) || 0);
   const sparkline = generateAsciiSparkline(p95Values);
 
   // If fewer than windowSize runs, we can only compare current rolling avg to baseline if available
   const recentSlice = typeHistory.slice(-windowSize);
-  const rollingAvg = recentSlice.reduce((sum, r) => sum + (Number(r.p95_latency) || 0), 0) / recentSlice.length;
+  const rollingAvg =
+    recentSlice.reduce((sum, r) => sum + (Number(r.p95_latency) || 0), 0) / recentSlice.length;
 
   let referenceAvg = null;
   let referenceType = 'previous-window';
 
   if (typeHistory.length >= windowSize * 2) {
     const prevSlice = typeHistory.slice(-windowSize * 2, -windowSize);
-    referenceAvg = prevSlice.reduce((sum, r) => sum + (Number(r.p95_latency) || 0), 0) / prevSlice.length;
+    referenceAvg =
+      prevSlice.reduce((sum, r) => sum + (Number(r.p95_latency) || 0), 0) / prevSlice.length;
     referenceType = `previous ${windowSize}-run window`;
   } else if (baselineP95 !== null && baselineP95 !== undefined && baselineP95 > 0) {
     referenceAvg = Number(baselineP95);
@@ -150,7 +155,8 @@ function analyzeCreepingRegression(history, testType, baselineP95 = null, window
   } else if (typeHistory.length > 1) {
     // Earlier runs before the recent slice
     const olderSlice = typeHistory.slice(0, Math.max(1, typeHistory.length - 1));
-    referenceAvg = olderSlice.reduce((sum, r) => sum + (Number(r.p95_latency) || 0), 0) / olderSlice.length;
+    referenceAvg =
+      olderSlice.reduce((sum, r) => sum + (Number(r.p95_latency) || 0), 0) / olderSlice.length;
     referenceType = 'historical average';
   }
 
@@ -174,7 +180,7 @@ function analyzeCreepingRegression(history, testType, baselineP95 = null, window
     delta,
     sparkline,
     p95Values,
-    historySlice: typeHistory.slice(-15),
+    historySlice: typeHistory.slice(-15)
   };
 }
 
@@ -189,11 +195,13 @@ function generateAsciiSparkline(numbers) {
   const max = Math.max(...numbers);
   if (min === max) return ticks[3].repeat(numbers.length);
 
-  return numbers.map(n => {
-    const ratio = (n - min) / (max - min);
-    const idx = Math.min(ticks.length - 1, Math.max(0, Math.floor(ratio * (ticks.length - 1))));
-    return ticks[idx];
-  }).join('');
+  return numbers
+    .map((n) => {
+      const ratio = (n - min) / (max - min);
+      const idx = Math.min(ticks.length - 1, Math.max(0, Math.floor(ratio * (ticks.length - 1))));
+      return ticks[idx];
+    })
+    .join('');
 }
 
 module.exports = {
@@ -206,5 +214,5 @@ module.exports = {
   saveHistory,
   appendHistoryRecord,
   analyzeCreepingRegression,
-  generateAsciiSparkline,
+  generateAsciiSparkline
 };

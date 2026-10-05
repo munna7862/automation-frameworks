@@ -30,7 +30,7 @@ export class LoginScreen extends BaseMobileScreen {
     return this.isDisplayed(this.usernameInput);
   }
 
-  async login(username: string, password: string):Promise<void> {
+  async login(username: string, password: string): Promise<void> {
     await this.step(`Log in as "${username}"`, async () => {
       await this.typeText(this.usernameInput, username, false);
       await this.typeText(this.passwordInput, password, true);

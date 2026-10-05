@@ -3,8 +3,11 @@ import { envConfig } from '../../../config/env.config';
 import TestData from '../../../test-data/ui/Styling/Test_009_UIStyleAndLayoutValidation.json';
 
 test.describe('Modern UI Styling & Layout Suite', () => {
-
-  test('UI_STYLE_01: Retained Automation Selectors @smoke @regression', async ({ commonFunctions, page, catalogPage }) => {
+  test('UI_STYLE_01: Retained Automation Selectors @smoke @regression', async ({
+    commonFunctions,
+    page,
+    catalogPage
+  }) => {
     await test.step('Navigate to catalog and perform a search', async () => {
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardsVisible();
@@ -13,48 +16,79 @@ test.describe('Modern UI Styling & Layout Suite', () => {
 
     await test.step('Assert grid wrapper selector exists in DOM', async () => {
       const count = await catalogPage.getGridWrapperCount();
-      await commonFunctions.verifyCondition(count > 0, "Verifying .layout-wrapper-xyz987 grid wrapper selector exists in DOM");
+      await commonFunctions.verifyCondition(
+        count > 0,
+        'Verifying .layout-wrapper-xyz987 grid wrapper selector exists in DOM'
+      );
     });
 
     await test.step('Assert book card selector exists in DOM', async () => {
       const count = await catalogPage.getBookCardCount();
-      await commonFunctions.verifyCondition(count > 0, "Verifying .complex-item-box-alpha book card selector exists in DOM");
+      await commonFunctions.verifyCondition(
+        count > 0,
+        'Verifying .complex-item-box-alpha book card selector exists in DOM'
+      );
     });
 
     await test.step('Assert book cover image selector exists in DOM', async () => {
       const count = await catalogPage.getBookCoverCount();
-      await commonFunctions.verifyCondition(count > 0, "Verifying .catalog-book-cover image selector exists in DOM");
+      await commonFunctions.verifyCondition(
+        count > 0,
+        'Verifying .catalog-book-cover image selector exists in DOM'
+      );
     });
 
     await test.step('Assert info cell selector exists in DOM', async () => {
       const count = await catalogPage.getInfoCellCount();
-      await commonFunctions.verifyCondition(count > 0, "Verifying .info-cell-beta info cell selector exists in DOM");
+      await commonFunctions.verifyCondition(
+        count > 0,
+        'Verifying .info-cell-beta info cell selector exists in DOM'
+      );
     });
 
     await test.step('Assert price tag selector exists in DOM', async () => {
       const count = await catalogPage.getPriceTagCount();
-      await commonFunctions.verifyCondition(count > 0, "Verifying .price-tag-value price tag selector exists in DOM");
+      await commonFunctions.verifyCondition(
+        count > 0,
+        'Verifying .price-tag-value price tag selector exists in DOM'
+      );
     });
 
     await test.step('Assert search input ID selector exists in DOM', async () => {
       const count = await catalogPage.getSearchInputCount();
-      await commonFunctions.verifyCondition(count > 0, "Verifying #book-search-input selector exists in DOM");
+      await commonFunctions.verifyCondition(
+        count > 0,
+        'Verifying #book-search-input selector exists in DOM'
+      );
     });
 
     await test.step('Assert search button ID selector exists in DOM', async () => {
       const count = await catalogPage.getSearchBtnCount();
-      await commonFunctions.verifyCondition(count > 0, "Verifying #book-search-btn selector exists in DOM");
+      await commonFunctions.verifyCondition(
+        count > 0,
+        'Verifying #book-search-btn selector exists in DOM'
+      );
     });
 
     await test.step('Assert clear search button ID selector exists in DOM after search', async () => {
       const count = await catalogPage.getSearchClearBtnCount();
-      await commonFunctions.verifyCondition(count > 0, "Verifying #book-search-clear-btn selector exists in DOM after search");
+      await commonFunctions.verifyCondition(
+        count > 0,
+        'Verifying #book-search-clear-btn selector exists in DOM after search'
+      );
     });
   });
 
-  test('UI_STYLE_02: Catalog Grid Layout Responsiveness @regression', async ({ commonFunctions, page, catalogPage }) => {
+  test('UI_STYLE_02: Catalog Grid Layout Responsiveness @regression', async ({
+    commonFunctions,
+    page,
+    catalogPage
+  }) => {
     await test.step('Load catalog page at desktop viewport and verify multi-column grid', async () => {
-      await page.setViewportSize({ width: TestData.VIEWPORTS.DESKTOP.width, height: TestData.VIEWPORTS.DESKTOP.height });
+      await page.setViewportSize({
+        width: TestData.VIEWPORTS.DESKTOP.width,
+        height: TestData.VIEWPORTS.DESKTOP.height
+      });
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardsVisible();
       const { display, columnCount } = await catalogPage.getGridComputedLayout();
@@ -65,7 +99,10 @@ test.describe('Modern UI Styling & Layout Suite', () => {
     });
 
     await test.step('Resize to tablet viewport and verify grid has at least 1 column', async () => {
-      await page.setViewportSize({ width: TestData.VIEWPORTS.TABLET.width, height: TestData.VIEWPORTS.TABLET.height });
+      await page.setViewportSize({
+        width: TestData.VIEWPORTS.TABLET.width,
+        height: TestData.VIEWPORTS.TABLET.height
+      });
       await page.waitForLoadState('domcontentloaded');
       const { display, columnCount } = await catalogPage.getGridComputedLayout();
       await commonFunctions.verifyCondition(
@@ -75,7 +112,10 @@ test.describe('Modern UI Styling & Layout Suite', () => {
     });
 
     await test.step('Resize to mobile viewport and verify grid collapses to single column', async () => {
-      await page.setViewportSize({ width: TestData.VIEWPORTS.MOBILE.width, height: TestData.VIEWPORTS.MOBILE.height });
+      await page.setViewportSize({
+        width: TestData.VIEWPORTS.MOBILE.width,
+        height: TestData.VIEWPORTS.MOBILE.height
+      });
       await page.waitForLoadState('domcontentloaded');
       const { display, columnCount } = await catalogPage.getGridComputedLayout();
       await commonFunctions.verifyCondition(
@@ -85,7 +125,11 @@ test.describe('Modern UI Styling & Layout Suite', () => {
     });
   });
 
-  test('UI_STYLE_03: Hover Animation CSS Verification @regression', async ({ commonFunctions, page, catalogPage }) => {
+  test('UI_STYLE_03: Hover Animation CSS Verification @regression', async ({
+    commonFunctions,
+    page,
+    catalogPage
+  }) => {
     await test.step('Navigate to catalog page and wait for book cards', async () => {
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardsVisible();
@@ -111,13 +155,17 @@ test.describe('Modern UI Styling & Layout Suite', () => {
     });
   });
 
-  test('UI_STYLE_04: HSL CSS Variable Theme Verification @regression', async ({ commonFunctions, page, catalogPage }) => {
+  test('UI_STYLE_04: HSL CSS Variable Theme Verification @regression', async ({
+    commonFunctions,
+    page,
+    catalogPage
+  }) => {
     await test.step('Load catalog in default (light) mode and assert --bg CSS variable resolves to light theme color', async () => {
       await page.emulateMedia({ colorScheme: 'light' });
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardsVisible();
-      const bgValue = await page.evaluate(
-        () => getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
+      const bgValue = await page.evaluate(() =>
+        getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
       );
       const isLightBg = bgValue === TestData.LIGHT_MODE.BG || bgValue === 'hsl(210, 40%, 98%)';
       await commonFunctions.verifyCondition(
@@ -130,8 +178,8 @@ test.describe('Modern UI Styling & Layout Suite', () => {
       await page.emulateMedia({ colorScheme: 'dark' });
       await page.reload();
       await catalogPage.waitForBookCardsVisible();
-      const bgValue = await page.evaluate(
-        () => getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
+      const bgValue = await page.evaluate(() =>
+        getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
       );
       const isDarkBg = bgValue === TestData.DARK_MODE.BG || bgValue === 'hsl(220, 40%, 6%)';
       await commonFunctions.verifyCondition(
@@ -140,5 +188,4 @@ test.describe('Modern UI Styling & Layout Suite', () => {
       );
     });
   });
-
 });

@@ -14,10 +14,10 @@ const P95_THRESHOLD = __ENV.P95_LIMIT || (__ENV.CI ? '800' : '1200');
 
 export const options = {
   stages: [
-    { duration: '5s', target: 20 },  // Quick ramp up to 20 VUs
+    { duration: '5s', target: 20 }, // Quick ramp up to 20 VUs
     { duration: '10s', target: 50 }, // Ramp to 50 concurrent VUs
     { duration: '10s', target: 50 }, // Sustained load at 50 VUs
-    { duration: '5s', target: 0 },   // Clean ramp-down
+    { duration: '5s', target: 0 } // Clean ramp-down
   ],
   thresholds: {
     // TC-PERF-002: Search Endpoint k6 Average Load (< 800ms p95)
@@ -25,14 +25,14 @@ export const options = {
     catalog_duration: [`p(95)<${P95_THRESHOLD}`],
     search_duration: [`p(95)<${P95_THRESHOLD}`],
     http_req_failed: ['rate<0.02'],
-    api_error_rate: ['rate<0.02'],
-  },
+    api_error_rate: ['rate<0.02']
+  }
 };
 
 export default function () {
   const sessionId = `k6-catalog-vu-${__VU}`;
   const params = {
-    headers: getStandardHeaders(sessionId),
+    headers: getStandardHeaders(sessionId)
   };
 
   // 1. Benchmark: Catalog Browsing (GET /api/books)
@@ -42,11 +42,11 @@ export default function () {
     'catalog returns items': (r) => {
       try {
         const body = JSON.parse(r.body);
-        return Array.isArray(body) ? body.length > 0 : (body.books && body.books.length > 0);
+        return Array.isArray(body) ? body.length > 0 : body.books && body.books.length > 0;
       } catch {
         return false;
       }
-    },
+    }
   });
   catalogDuration.add(catalogRes.timings.duration);
   errorRate.add(!catalogOk);
@@ -64,7 +64,7 @@ export default function () {
       } catch {
         return false;
       }
-    },
+    }
   });
   searchDuration.add(searchRes.timings.duration);
   errorRate.add(!searchOk);
@@ -82,7 +82,7 @@ export default function () {
       } catch {
         return false;
       }
-    },
+    }
   });
   detailDuration.add(detailRes.timings.duration);
   errorRate.add(!detailOk);
@@ -93,5 +93,5 @@ export default function () {
 export const handleSummary = createSummaryHandler({
   jsonFilename: 'perf-summary-catalog.json',
   htmlFilename: 'performance/report-catalog.html',
-  title: 'Main Catalog Load Benchmark (50 VUs)',
+  title: 'Main Catalog Load Benchmark (50 VUs)'
 });

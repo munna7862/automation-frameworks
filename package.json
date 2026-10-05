@@ -28,10 +28,28 @@
     "test:portal": "node scripts/test-portal.js",
     "test:verify-catalog": "tsx scripts/verify-catalog-sync.ts",
     "test:quarantine:audit": "npm run test:quarantine:audit --workspace=playwright-e2e",
-    "clean": "npm run clean --workspaces --if-present"
+    "clean": "npm run clean --workspaces --if-present",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,js,mjs,cjs}": [
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
-    "typescript": "^5.4.0",
-    "tsx": "^4.19.0"
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "eslint-plugin-mocha": "^12.0.2",
+    "eslint-plugin-wdio": "^10.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
+    "tsx": "^4.19.0",
+    "typescript": "^5.4.0"
   }
 }

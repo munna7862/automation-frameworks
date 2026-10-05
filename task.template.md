@@ -12,25 +12,27 @@
 
 ## 1. Persona Roles & Ownership Matrix
 
-| Persona | Role Assignment | Responsibilities for this Sprint | Status |
-| :--- | :--- | :--- | :--- |
-| **Scrum Master** | `role-scrum-master` | Sprint planning, `task.md` tracking, DoR verification, and DoD audit. | `ACTIVE` |
-| **SDET Architect** | `role-sdet-architect` | Test strategy, dual-catalog sync, POM contracts, and code acceptance review. | `ACTIVE` |
-| **Automation Specialist** | `<assigned-specialist>` | Implementation of Page Objects, test specs, and execution scripts. | `ACTIVE` |
-| **DevOps Engineer** | `role-devops-engineer` | CI/CD workflow updates, Render pre-flight probe, and PR release lifecycle. | `ACTIVE` |
-| **Product Owner** | Human Tech Lead (`User`) | Backlog prioritization, sprint kickoff, and final PR review & merge. | `STANDBY` |
+| Persona                   | Role Assignment          | Responsibilities for this Sprint                                             | Status    |
+| :------------------------ | :----------------------- | :--------------------------------------------------------------------------- | :-------- |
+| **Scrum Master**          | `role-scrum-master`      | Sprint planning, `task.md` tracking, DoR verification, and DoD audit.        | `ACTIVE`  |
+| **SDET Architect**        | `role-sdet-architect`    | Test strategy, dual-catalog sync, POM contracts, and code acceptance review. | `ACTIVE`  |
+| **Automation Specialist** | `<assigned-specialist>`  | Implementation of Page Objects, test specs, and execution scripts.           | `ACTIVE`  |
+| **DevOps Engineer**       | `role-devops-engineer`   | CI/CD workflow updates, Render pre-flight probe, and PR release lifecycle.   | `ACTIVE`  |
+| **Product Owner**         | Human Tech Lead (`User`) | Backlog prioritization, sprint kickoff, and final PR review & merge.         | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
 ### US-<SCOPE>-<ID>: <Story Title 1> (<N> SP)
+
 - [ ] **US-<SCOPE>-<ID>.1** (`SDET Architect`): Define test scenario specifications and update dual catalogs in exact sync.
 - [ ] **US-<SCOPE>-<ID>.2** (`Automation Specialist`): Implement Page Objects / Screen Objects with dynamic locators.
 - [ ] **US-<SCOPE>-<ID>.3** (`Automation Specialist`): Implement test specs adhering to single-browser policy (Google Chrome) and teardown state reset.
 - [ ] **US-<SCOPE>-<ID>.4** (`SDET Architect`): Conduct Code Acceptance Review and sign off technical quality gate.
 
 ### US-<SCOPE>-<ID2>: <Story Title 2> (<N> SP)
+
 - [ ] **US-<SCOPE>-<ID2>.1** (`DevOps Engineer`): Validate workflow syntax, Render warm-up probes, and Pages deployment.
 - [ ] **US-<SCOPE>-<ID2>.2** (`Scrum Master`): Verify 4-point DoD checklist and audit dual-catalog parity.
 - [ ] **US-<SCOPE>-<ID2>.3** (`DevOps Engineer`): Push branch, open PR via `gh pr create`, and monitor CI checks.
@@ -39,13 +41,13 @@
 
 ## 3. Sprint Review Comments & Refinement Loop
 
-| Gate / Reviewer | Target Role | Review Feedback & Comments | Gate Status |
-| :--- | :--- | :--- | :---: |
-| **Pre-Flight Architecture Gate** | SDET Architect | Verify test design, POM contracts, and dual-catalog parity. | `[PENDING]` |
-| **Code Acceptance Review Gate** | SDET Architect | Verify single-browser rule (Chrome only), 0 blind timeouts, teardown state reset. | `[PENDING]` |
-| **Scrum Master DoD Gate** | Scrum Master | Audit lint, typecheck, 100% green pass rate, and catalog diff. | `[PENDING]` |
-| **DevOps Release Gate** | DevOps Engineer | Validate CI workflows, PR creation, and green CI status. | `[PENDING]` |
-| **Final Human Sign-Off** | Human Tech Lead | Final PR review and merge to `main`. | `[PENDING]` |
+| Gate / Reviewer                  | Target Role     | Review Feedback & Comments                                                        | Gate Status |
+| :------------------------------- | :-------------- | :-------------------------------------------------------------------------------- | :---------: |
+| **Pre-Flight Architecture Gate** | SDET Architect  | Verify test design, POM contracts, and dual-catalog parity.                       | `[PENDING]` |
+| **Code Acceptance Review Gate**  | SDET Architect  | Verify single-browser rule (Chrome only), 0 blind timeouts, teardown state reset. | `[PENDING]` |
+| **Scrum Master DoD Gate**        | Scrum Master    | Audit lint, typecheck, 100% green pass rate, and catalog diff.                    | `[PENDING]` |
+| **DevOps Release Gate**          | DevOps Engineer | Validate CI workflows, PR creation, and green CI status.                          | `[PENDING]` |
+| **Final Human Sign-Off**         | Human Tech Lead | Final PR review and merge to `main`.                                              | `[PENDING]` |
 
 ---
 

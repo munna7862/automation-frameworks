@@ -11,7 +11,10 @@ type ProfileSummaryTestData = {
   };
 };
 
-const testDataPath = path.join(__dirname, '../../../test-data/ui/Profile/Test_006_ProfileSummaryAndOrderHistory.json');
+const testDataPath = path.join(
+  __dirname,
+  '../../../test-data/ui/Profile/Test_006_ProfileSummaryAndOrderHistory.json'
+);
 const TestData = require(testDataPath) as ProfileSummaryTestData;
 
 function uniqueUsername(prefix: string = 'profile_user'): string {
@@ -23,15 +26,24 @@ function uniqueUsername(prefix: string = 'profile_user'): string {
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe('Profile Summary and Order History', () => {
-
-  test('UI_PROF_01: Verify user account profile summary and avatar preview render correctly @smoke @regression', async ({ signUpPage, catalogPage, commonFunctions, page }) => {
+  test('UI_PROF_01: Verify user account profile summary and avatar preview render correctly @smoke @regression', async ({
+    signUpPage,
+    catalogPage,
+    commonFunctions,
+    page
+  }) => {
     const profilePage = new ProfilePage(page);
     const username = uniqueUsername();
 
     await test.step('Register new account and navigate to Profile', async () => {
       await catalogPage.navigateToCatalog(envConfig.baseUrl);
       await catalogPage.clickNavigateLink('Sign Up');
-      await signUpPage.registerNewUser(TestData.user.fullName, username, TestData.user.password, TestData.user.password);
+      await signUpPage.registerNewUser(
+        TestData.user.fullName,
+        username,
+        TestData.user.password,
+        TestData.user.password
+      );
       await profilePage.openProfile();
     });
 
@@ -49,5 +61,4 @@ test.describe('Profile Summary and Order History', () => {
       );
     });
   });
-
 });

@@ -14,8 +14,8 @@ export const createLogger = (filename: string, level: string = 'info') => {
     level,
     format: winston.format.combine(
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-      winston.format.printf(({ level, message, timestamp }) =>
-        `[${timestamp}] ${level.toUpperCase()}: ${message}`
+      winston.format.printf(
+        ({ level, message, timestamp }) => `[${timestamp}] ${level.toUpperCase()}: ${message}`
       )
     ),
     transports: [

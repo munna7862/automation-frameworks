@@ -15,7 +15,10 @@ type OrdersApiTestData = {
   bookId: string;
 };
 
-const testDataPath = path.join(__dirname, '../../../test-data/api/CartAndInventory/Test_002_OrdersApi.json');
+const testDataPath = path.join(
+  __dirname,
+  '../../../test-data/api/CartAndInventory/Test_002_OrdersApi.json'
+);
 const TestData = require(testDataPath) as OrdersApiTestData;
 
 function uniqueUsername(prefix: string = 'api_orders_user'): string {
@@ -25,9 +28,9 @@ function uniqueUsername(prefix: string = 'api_orders_user'): string {
 }
 
 test.describe('Orders API Endpoint', () => {
-
-  test('API_ORD_01: Authenticate user, complete checkout via API, and verify GET /api/orders history response @smoke @regression', async ({ request }) => {
-
+  test('API_ORD_01: Authenticate user, complete checkout via API, and verify GET /api/orders history response @smoke @regression', async ({
+    request
+  }) => {
     const username = uniqueUsername();
     const password = 'Password123!';
     const apiBase = envConfig.apiBaseUrl;
@@ -65,5 +68,4 @@ test.describe('Orders API Endpoint', () => {
       );
     });
   });
-
 });

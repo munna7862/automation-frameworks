@@ -11,7 +11,7 @@ export class BasePage extends CommonFunctions {
   public async ensureNavElementVisible(): Promise<void> {
     try {
       const toggleElements = await this.driver.findElements(By.id('mobile-menu-toggle'));
-      if (toggleElements.length > 0 && await toggleElements[0].isDisplayed()) {
+      if (toggleElements.length > 0 && (await toggleElements[0].isDisplayed())) {
         const isExpanded = (await toggleElements[0].getAttribute('aria-expanded')) === 'true';
         if (!isExpanded) {
           await toggleElements[0].click();
@@ -22,7 +22,10 @@ export class BasePage extends CommonFunctions {
     }
   }
 
-  public async waitForElement(locator: By, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<WebElement> {
+  public async waitForElement(
+    locator: By,
+    timeoutMs = BasePage.DEFAULT_TIMEOUT
+  ): Promise<WebElement> {
     const el = await this.driver.wait(
       until.elementLocated(locator),
       timeoutMs,
@@ -36,15 +39,24 @@ export class BasePage extends CommonFunctions {
     return el;
   }
 
-  public async waitForVisible(locator: By, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<WebElement> {
+  public async waitForVisible(
+    locator: By,
+    timeoutMs = BasePage.DEFAULT_TIMEOUT
+  ): Promise<WebElement> {
     return this.waitForElement(locator, timeoutMs);
   }
 
-  public async waitForElementVisible(locator: By, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<WebElement> {
+  public async waitForElementVisible(
+    locator: By,
+    timeoutMs = BasePage.DEFAULT_TIMEOUT
+  ): Promise<WebElement> {
     return this.waitForElement(locator, timeoutMs);
   }
 
-  public async waitForClickable(locator: By, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<WebElement> {
+  public async waitForClickable(
+    locator: By,
+    timeoutMs = BasePage.DEFAULT_TIMEOUT
+  ): Promise<WebElement> {
     const el = await this.waitForVisible(locator, timeoutMs);
     await this.driver.wait(
       until.elementIsEnabled(el),
@@ -54,11 +66,17 @@ export class BasePage extends CommonFunctions {
     return el;
   }
 
-  public async waitForElementClickable(locator: By, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<WebElement> {
+  public async waitForElementClickable(
+    locator: By,
+    timeoutMs = BasePage.DEFAULT_TIMEOUT
+  ): Promise<WebElement> {
     return this.waitForClickable(locator, timeoutMs);
   }
 
-  public async waitForElementLocated(locator: By, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<WebElement> {
+  public async waitForElementLocated(
+    locator: By,
+    timeoutMs = BasePage.DEFAULT_TIMEOUT
+  ): Promise<WebElement> {
     return await this.driver.wait(
       until.elementLocated(locator),
       timeoutMs,
@@ -66,7 +84,10 @@ export class BasePage extends CommonFunctions {
     );
   }
 
-  public async waitForUrlContains(substring: string, timeoutMs = BasePage.DEFAULT_TIMEOUT): Promise<boolean> {
+  public async waitForUrlContains(
+    substring: string,
+    timeoutMs = BasePage.DEFAULT_TIMEOUT
+  ): Promise<boolean> {
     return await this.driver.wait(
       until.urlContains(substring),
       timeoutMs,
@@ -98,7 +119,11 @@ export class BasePage extends CommonFunctions {
     return await el.getText();
   }
 
-  public async doGetAttribute(locator: By, sAttribute: string, sLogMessage?: string): Promise<string | null> {
+  public async doGetAttribute(
+    locator: By,
+    sAttribute: string,
+    sLogMessage?: string
+  ): Promise<string | null> {
     if (sLogMessage) {
       await this.logMessage('INFO', sLogMessage);
     }
@@ -144,10 +169,13 @@ export class BasePage extends CommonFunctions {
       }
       const isVisible = await elements[0].isDisplayed();
       if (sLogMessage) {
-        await this.logMessage('INFO', `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`);
+        await this.logMessage(
+          'INFO',
+          `${sLogMessage} - Element ${isVisible ? 'is' : 'is not'} visible`
+        );
       }
       return isVisible;
-    } catch (e) {
+    } catch {
       if (sLogMessage) {
         await this.logMessage('INFO', `${sLogMessage} - Element is not visible`);
       }

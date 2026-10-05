@@ -5,15 +5,21 @@ import { envConfig, getLoginCredentials } from '@config/env.config';
 export class LoginPage extends BasePage {
   // Locators
   private get inputUsername(): ChainablePromiseElement {
-    return $('//label[contains(text(), "Username")]/following-sibling::input | //input[@name="txt_usr_77"] | //input[@name="username"]');
+    return $(
+      '//label[contains(text(), "Username")]/following-sibling::input | //input[@name="txt_usr_77"] | //input[@name="username"]'
+    );
   }
 
   private get inputPassword(): ChainablePromiseElement {
-    return $('//label[contains(text(), "Password")]/following-sibling::input | //input[@name="txt_pwd_99"] | //input[@name="password"]');
+    return $(
+      '//label[contains(text(), "Password")]/following-sibling::input | //input[@name="txt_pwd_99"] | //input[@name="password"]'
+    );
   }
 
   private get btnSubmit(): ChainablePromiseElement {
-    return $('//button[@name="btn_submit_login_rnd"] | //button[contains(text(), "Sign In")] | //button[@type="submit"]');
+    return $(
+      '//button[@name="btn_submit_login_rnd"] | //button[contains(text(), "Sign In")] | //button[@type="submit"]'
+    );
   }
 
   private get eleErrorBanner(): ChainablePromiseElement {
@@ -90,8 +96,14 @@ export class LoginPage extends BasePage {
 
   public async isLoginPageLoaded(): Promise<boolean> {
     const isTitleVisible = await this.doesElementExist(this.eleLoginTitle, 'Checking login title');
-    const isUsernameVisible = await this.doesElementExist(this.inputUsername, 'Checking username field');
-    const isPasswordVisible = await this.doesElementExist(this.inputPassword, 'Checking password field');
+    const isUsernameVisible = await this.doesElementExist(
+      this.inputUsername,
+      'Checking username field'
+    );
+    const isPasswordVisible = await this.doesElementExist(
+      this.inputPassword,
+      'Checking password field'
+    );
     return isTitleVisible && isUsernameVisible && isPasswordVisible;
   }
 

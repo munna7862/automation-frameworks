@@ -26,7 +26,7 @@ function buildValidPayload(overrides: RegisterPayload = {}): RegisterPayload {
     username: uniqueUsername(),
     password: testData.defaultPassword,
     fullName: testData.defaultFullName,
-    ...overrides,
+    ...overrides
   };
 }
 
@@ -54,14 +54,14 @@ function buildRegisterSecurityPayload(template: any): RegisterPayload {
           ? `${'a'.repeat(240)}${Date.now()}${randomBytes(4).toString('hex')}@`
           : `${template.payload.usernamePattern}${Date.now()}${randomBytes(4).toString('hex')}@`,
       password: testData.defaultPassword,
-      fullName: testData.defaultFullName,
+      fullName: testData.defaultFullName
     };
   }
 
   return {
     username: uniqueUsername('security'),
     password: testData.defaultPassword,
-    fullName: template.payload.fullName,
+    fullName: template.payload.fullName
   };
 }
 
@@ -71,14 +71,18 @@ function buildLoginSecurityPayload(template: any): LoginPayload {
       template.payload.usernamePattern === 'oversized_username'
         ? `${'b'.repeat(240)}${Date.now()}${randomBytes(4).toString('hex')}@`
         : `${template.payload.usernamePattern}${Date.now()}${randomBytes(4).toString('hex')}@`,
-    password: template.payload.password,
+    password: template.payload.password
   };
 }
 
-async function registerUser(request: APIRequestContext, payload: RegisterPayload, _logMessage: string) {
+async function registerUser(
+  request: APIRequestContext,
+  payload: RegisterPayload,
+  _logMessage: string
+) {
   const response = await request.post('/api/register', {
     data: payload,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' }
   });
   const data = await response.json().catch(() => null);
   return { status: response.status(), data };
@@ -87,13 +91,16 @@ async function registerUser(request: APIRequestContext, payload: RegisterPayload
 async function loginUser(request: APIRequestContext, payload: LoginPayload, _logMessage: string) {
   const response = await request.post('/api/login', {
     data: payload,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' }
   });
   const data = await response.json().catch(() => null);
   return { status: response.status(), data };
 }
 
-async function createRegisteredUser(request: APIRequestContext, overrides: RegisterPayload = {}): Promise<RegisterPayload> {
+async function createRegisteredUser(
+  request: APIRequestContext,
+  overrides: RegisterPayload = {}
+): Promise<RegisterPayload> {
   const payload = buildValidPayload(overrides);
   const response = await registerUser(request, payload, 'Register test user setup');
 
@@ -103,7 +110,11 @@ async function createRegisteredUser(request: APIRequestContext, overrides: Regis
   return payload;
 }
 
-async function validateStatusIn(actualStatus: number, expectedStatuses: number[], logMessage: string) {
+async function validateStatusIn(
+  actualStatus: number,
+  expectedStatuses: number[],
+  logMessage: string
+) {
   await commonUtil.compareTwoValues(expectedStatuses.includes(actualStatus), true, logMessage);
   expect(expectedStatuses).toContain(actualStatus);
 }
@@ -114,14 +125,38 @@ function validateNoSensitiveLeakage(responseData: any) {
 }
 
 async function validateSuccessfulRegisterContract(responseData: any, expectedUsername: string) {
-  await commonUtil.compareTwoValues(typeof responseData, 'object', 'Registration response is an object');
-  await commonUtil.compareTwoValues(responseData !== null, true, 'Registration response is not null');
+  await commonUtil.compareTwoValues(
+    typeof responseData,
+    'object',
+    'Registration response is an object'
+  );
+  await commonUtil.compareTwoValues(
+    responseData !== null,
+    true,
+    'Registration response is not null'
+  );
   await commonUtil.compareTwoValues(typeof responseData?.message, 'string', 'Message is a string');
-  await commonUtil.compareTwoValues(typeof responseData?.username, 'string', 'Username is a string');
-  await commonUtil.compareTwoValues(responseData?.message, testData.messages.registrationSuccess, 'Registration message');
-  await commonUtil.compareTwoValues(responseData?.username, expectedUsername, 'Registered username matches request');
+  await commonUtil.compareTwoValues(
+    typeof responseData?.username,
+    'string',
+    'Username is a string'
+  );
+  await commonUtil.compareTwoValues(
+    responseData?.message,
+    testData.messages.registrationSuccess,
+    'Registration message'
+  );
+  await commonUtil.compareTwoValues(
+    responseData?.username,
+    expectedUsername,
+    'Registered username matches request'
+  );
   await commonUtil.compareTwoValues(typeof responseData?.token, 'string', 'Token is a string');
-  await commonUtil.compareTwoValues(typeof responseData?.refreshToken, 'string', 'RefreshToken is a string');
+  await commonUtil.compareTwoValues(
+    typeof responseData?.refreshToken,
+    'string',
+    'RefreshToken is a string'
+  );
   await commonUtil.compareTwoValues(
     JSON.stringify(Object.keys(responseData ?? {}).sort()),
     JSON.stringify(['message', 'refreshToken', 'token', 'username']),
@@ -132,19 +167,39 @@ async function validateSuccessfulRegisterContract(responseData: any, expectedUse
     message: testData.messages.registrationSuccess,
     username: expectedUsername,
     token: expect.any(String),
-    refreshToken: expect.any(String),
+    refreshToken: expect.any(String)
   });
 }
 
 async function validateSuccessfulLoginContract(responseData: any, expectedUsername: string) {
   await commonUtil.compareTwoValues(typeof responseData, 'object', 'Login response is an object');
   await commonUtil.compareTwoValues(responseData !== null, true, 'Login response is not null');
-  await commonUtil.compareTwoValues(typeof responseData?.message, 'string', 'Login message is a string');
-  await commonUtil.compareTwoValues(typeof responseData?.username, 'string', 'Login username is a string');
-  await commonUtil.compareTwoValues(responseData?.message, testData.messages.loginSuccess, 'Login message');
-  await commonUtil.compareTwoValues(responseData?.username, expectedUsername, 'Logged in username matches request');
+  await commonUtil.compareTwoValues(
+    typeof responseData?.message,
+    'string',
+    'Login message is a string'
+  );
+  await commonUtil.compareTwoValues(
+    typeof responseData?.username,
+    'string',
+    'Login username is a string'
+  );
+  await commonUtil.compareTwoValues(
+    responseData?.message,
+    testData.messages.loginSuccess,
+    'Login message'
+  );
+  await commonUtil.compareTwoValues(
+    responseData?.username,
+    expectedUsername,
+    'Logged in username matches request'
+  );
   await commonUtil.compareTwoValues(typeof responseData?.token, 'string', 'Token is a string');
-  await commonUtil.compareTwoValues(typeof responseData?.refreshToken, 'string', 'RefreshToken is a string');
+  await commonUtil.compareTwoValues(
+    typeof responseData?.refreshToken,
+    'string',
+    'RefreshToken is a string'
+  );
   await commonUtil.compareTwoValues(
     JSON.stringify(Object.keys(responseData ?? {}).sort()),
     JSON.stringify(['message', 'refreshToken', 'token', 'username']),
@@ -155,12 +210,14 @@ async function validateSuccessfulLoginContract(responseData: any, expectedUserna
     message: testData.messages.loginSuccess,
     username: expectedUsername,
     token: expect.any(String),
-    refreshToken: expect.any(String),
+    refreshToken: expect.any(String)
   });
 }
 
 test.describe('Register User API - Positive, Negative, Contract and Security', () => {
-  test('Testcase 1: Positive and Contract: POST /api/register should register a user and allow login @smoke @regression', async ({ request }) => {
+  test('Testcase 1: Positive and Contract: POST /api/register should register a user and allow login @smoke @regression', async ({
+    request
+  }) => {
     const payload = buildValidPayload();
     const response = await registerUser(request, payload, 'Register a new valid user');
 
@@ -175,7 +232,11 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
       'Login with newly registered user'
     );
 
-    await commonUtil.compareTwoValues(loginResponse.status, 200, 'Login response status after registration');
+    await commonUtil.compareTwoValues(
+      loginResponse.status,
+      200,
+      'Login response status after registration'
+    );
     expect(loginResponse.status).toBe(200);
     await validateSuccessfulLoginContract(loginResponse.data, payload.username as string);
   });
@@ -184,58 +245,104 @@ test.describe('Register User API - Positive, Negative, Contract and Security', (
     description: scenario.description,
     payload: normalizePayload({
       ...scenario.payload,
-      username: normalizeDynamicUsername(scenario.payload.username),
-    }),
+      username: normalizeDynamicUsername(scenario.payload.username)
+    })
   }));
 
   for (const scenario of missingFieldScenarios) {
-    test(`Testcase 2: Negative: POST /api/register should reject ${scenario.description} @regression`, async ({ request }) => {
-      const response = await registerUser(request, scenario.payload, `Register user with ${scenario.description}`);
+    test(`Testcase 2: Negative: POST /api/register should reject ${scenario.description} @regression`, async ({
+      request
+    }) => {
+      const response = await registerUser(
+        request,
+        scenario.payload,
+        `Register user with ${scenario.description}`
+      );
 
-      await validateStatusIn(response.status, testData.negativeRegisterStatus, `Status code for ${scenario.description}`);
+      await validateStatusIn(
+        response.status,
+        testData.negativeRegisterStatus,
+        `Status code for ${scenario.description}`
+      );
       expect(response.data).toBeTruthy();
       validateNoSensitiveLeakage(response.data);
     });
   }
 
-  test('Testcase 3: Negative: POST /api/register should reject duplicate usernames @smoke @regression', async ({ request }) => {
+  test('Testcase 3: Negative: POST /api/register should reject duplicate usernames @smoke @regression', async ({
+    request
+  }) => {
     const payload = buildValidPayload();
-    const firstResponse = await registerUser(request, payload, 'Register original user for duplicate validation');
+    const firstResponse = await registerUser(
+      request,
+      payload,
+      'Register original user for duplicate validation'
+    );
     const duplicateResponse = await registerUser(request, payload, 'Register duplicate username');
 
-    await commonUtil.compareTwoValues(firstResponse.status, 201, 'Initial registration response status');
-    await validateStatusIn(duplicateResponse.status, testData.duplicateRegisterStatus, 'Duplicate registration status');
+    await commonUtil.compareTwoValues(
+      firstResponse.status,
+      201,
+      'Initial registration response status'
+    );
+    await validateStatusIn(
+      duplicateResponse.status,
+      testData.duplicateRegisterStatus,
+      'Duplicate registration status'
+    );
     expect(firstResponse.status).toBe(201);
     validateNoSensitiveLeakage(duplicateResponse.data);
   });
 
-  test('Testcase 4: Negative: GET /api/register should not be allowed for user registration @regression', async ({ request }) => {
+  test('Testcase 4: Negative: GET /api/register should not be allowed for user registration @regression', async ({
+    request
+  }) => {
     const response = await request.get('/api/register');
-    await validateStatusIn(response.status(), testData.unsupportedMethodStatus, 'Unsupported method status');
+    await validateStatusIn(
+      response.status(),
+      testData.unsupportedMethodStatus,
+      'Unsupported method status'
+    );
   });
 
   const securityPayloads = testData.registerSecurityScenarios.map((scenario) => ({
     description: scenario.description,
-    payload: buildRegisterSecurityPayload(scenario),
+    payload: buildRegisterSecurityPayload(scenario)
   }));
 
   for (const scenario of securityPayloads) {
-    test(`Testcase 5: Security: POST /api/register should handle ${scenario.description} without server error or sensitive leakage @regression`, async ({ request }) => {
-      const response = await registerUser(request, scenario.payload, `Security validation for ${scenario.description}`);
+    test(`Testcase 5: Security: POST /api/register should handle ${scenario.description} without server error or sensitive leakage @regression`, async ({
+      request
+    }) => {
+      const response = await registerUser(
+        request,
+        scenario.payload,
+        `Security validation for ${scenario.description}`
+      );
 
-      await commonUtil.compareTwoValues(response.status < 500, true, `Security status for ${scenario.description}`);
+      await commonUtil.compareTwoValues(
+        response.status < 500,
+        true,
+        `Security status for ${scenario.description}`
+      );
       expect(response.status).toBeLessThan(500);
       validateNoSensitiveLeakage(response.data);
     });
   }
 
-  test('Testcase 6: Security: POST /api/register should reject unsupported content type @regression', async ({ request }) => {
+  test('Testcase 6: Security: POST /api/register should reject unsupported content type @regression', async ({
+    request
+  }) => {
     const response = await request.post('/api/register', {
       data: JSON.stringify(buildValidPayload()),
-      headers: { 'Content-Type': 'text/plain' },
+      headers: { 'Content-Type': 'text/plain' }
     });
 
-    await validateStatusIn(response.status(), testData.unsupportedContentTypeStatus, 'Unsupported content type status');
+    await validateStatusIn(
+      response.status(),
+      testData.unsupportedContentTypeStatus,
+      'Unsupported content type status'
+    );
   });
 });
 
@@ -246,7 +353,9 @@ test.describe('Login API - Positive, Negative and Security', () => {
     registeredUser = await createRegisteredUser(request);
   });
 
-  test('Testcase 7: Positive and Contract: POST /api/login should login a registered user successfully @smoke @regression', async ({ request }) => {
+  test('Testcase 7: Positive and Contract: POST /api/login should login a registered user successfully @smoke @regression', async ({
+    request
+  }) => {
     const loginResponse = await loginUser(
       request,
       { username: registeredUser.username, password: registeredUser.password },
@@ -258,7 +367,9 @@ test.describe('Login API - Positive, Negative and Security', () => {
     await validateSuccessfulLoginContract(loginResponse.data, registeredUser.username as string);
   });
 
-  test('Testcase 8: Negative: POST /api/login should reject incorrect password @regression', async ({ request }) => {
+  test('Testcase 8: Negative: POST /api/login should reject incorrect password @regression', async ({
+    request
+  }) => {
     const loginResponse = await loginUser(
       request,
       { username: registeredUser.username, password: 'wrongPassword123@' },
@@ -273,52 +384,89 @@ test.describe('Login API - Positive, Negative and Security', () => {
     description: scenario.description,
     payload: normalizePayload({
       ...scenario.payload,
-      username: normalizeDynamicUsername((scenario.payload as any).username),
-    }),
+      username: normalizeDynamicUsername((scenario.payload as any).username)
+    })
   }));
 
   for (const scenario of invalidLoginScenarios) {
-    test(`Testcase 9: Negative: POST /api/login should reject ${scenario.description} @regression`, async ({ request }) => {
-      const response = await loginUser(request, scenario.payload, `Login with ${scenario.description}`);
+    test(`Testcase 9: Negative: POST /api/login should reject ${scenario.description} @regression`, async ({
+      request
+    }) => {
+      const response = await loginUser(
+        request,
+        scenario.payload,
+        `Login with ${scenario.description}`
+      );
 
-      await validateStatusIn(response.status, testData.invalidLoginStatus, `Status code for ${scenario.description}`);
+      await validateStatusIn(
+        response.status,
+        testData.invalidLoginStatus,
+        `Status code for ${scenario.description}`
+      );
       validateNoSensitiveLeakage(response.data);
     });
   }
 
-  test('Testcase 10: Negative: GET /api/login should not be allowed for login @regression', async ({ request }) => {
+  test('Testcase 10: Negative: GET /api/login should not be allowed for login @regression', async ({
+    request
+  }) => {
     const response = await request.get('/api/login');
-    await validateStatusIn(response.status(), testData.unsupportedMethodStatus, 'Unsupported login method status');
+    await validateStatusIn(
+      response.status(),
+      testData.unsupportedMethodStatus,
+      'Unsupported login method status'
+    );
   });
 
   const loginSecurityScenarios = testData.loginSecurityScenarios.map((scenario) => ({
     description: scenario.description,
-    payload: buildLoginSecurityPayload(scenario),
+    payload: buildLoginSecurityPayload(scenario)
   }));
 
   for (const scenario of loginSecurityScenarios) {
-    test(`Testcase 11: Security: POST /api/login should handle ${scenario.description} without server error or sensitive leakage @regression`, async ({ request }) => {
-      const response = await loginUser(request, scenario.payload, `Login security validation for ${scenario.description}`);
+    test(`Testcase 11: Security: POST /api/login should handle ${scenario.description} without server error or sensitive leakage @regression`, async ({
+      request
+    }) => {
+      const response = await loginUser(
+        request,
+        scenario.payload,
+        `Login security validation for ${scenario.description}`
+      );
 
-      await commonUtil.compareTwoValues(response.status < 500, true, `Security status for ${scenario.description}`);
+      await commonUtil.compareTwoValues(
+        response.status < 500,
+        true,
+        `Security status for ${scenario.description}`
+      );
       expect(response.status).toBeLessThan(500);
       validateNoSensitiveLeakage(response.data);
     });
   }
 
-  test('Testcase 12: Security: POST /api/login should reject unsupported content type @regression', async ({ request }) => {
+  test('Testcase 12: Security: POST /api/login should reject unsupported content type @regression', async ({
+    request
+  }) => {
     const response = await request.post('/api/login', {
-      data: JSON.stringify({ username: uniqueUsername('logincontent'), password: testData.defaultPassword }),
-      headers: { 'Content-Type': 'text/plain' },
+      data: JSON.stringify({
+        username: uniqueUsername('logincontent'),
+        password: testData.defaultPassword
+      }),
+      headers: { 'Content-Type': 'text/plain' }
     });
 
-    await validateStatusIn(response.status(), testData.unsupportedContentTypeStatus, 'Unsupported login content type status');
+    await validateStatusIn(
+      response.status(),
+      testData.unsupportedContentTypeStatus,
+      'Unsupported login content type status'
+    );
   });
 
-  test('Testcase 13: Security: GET /api/cart without auth cookies should return 401 Unauthorized @smoke @regression', async ({ playwright }) => {
+  test('Testcase 13: Security: GET /api/cart without auth cookies should return 401 Unauthorized @smoke @regression', async ({
+    playwright
+  }) => {
     const unauthContext = await playwright.request.newContext({
       baseURL: envConfig.apiBaseUrl,
-      storageState: { cookies: [], origins: [] },
+      storageState: { cookies: [], origins: [] }
     });
     const response = await unauthContext.get('/api/cart');
     const status = response.status();
@@ -327,7 +475,11 @@ test.describe('Login API - Positive, Negative and Security', () => {
 
     await commonUtil.compareTwoValues(status, 401, 'Response status code should be 401');
     expect(status).toBe(401);
-    await commonUtil.compareTwoValues(data?.error, 'Unauthorized: Token required', 'Error message for missing token');
+    await commonUtil.compareTwoValues(
+      data?.error,
+      'Unauthorized: Token required',
+      'Error message for missing token'
+    );
     expect(data?.error).toBe('Unauthorized: Token required');
   });
 });

@@ -7,11 +7,13 @@ description: >-
 # Playwright E2E AI Assistant Skill
 
 ## Overview
+
 This skill provides core capabilities for generating Page Objects, writing E2E test specs, and self-healing locator failures in the BuggyBooks Playwright test suite.
 
 > **Note on Conventions & Instructions:**
 > Shared repository conventions live in [.github/copilot-instructions.md](../../../.github/copilot-instructions.md).
 > Detailed domain rules auto-apply via path-scoped instruction files:
+>
 > - Page Objects: [.github/instructions/playwright-pom.instructions.md](../../../.github/instructions/playwright-pom.instructions.md)
 > - UI Specs: [.github/instructions/playwright-specs.instructions.md](../../../.github/instructions/playwright-specs.instructions.md)
 > - API Specs: [.github/instructions/playwright-api.instructions.md](../../../.github/instructions/playwright-api.instructions.md)
@@ -24,6 +26,7 @@ This skill provides core capabilities for generating Page Objects, writing E2E t
 ## Capabilities
 
 ### 1. Generating Page Object Models (POMs)
+
 1. Capture clean DOM/ARIA snapshots using `scripts/save-snapshot.ts`:
    - Standard: `npm run save-snapshot -- <url> <page-name>`
    - Interactive (SSO/MFA): `npm run save-snapshot -- <url> <page-name> --interactive`
@@ -32,6 +35,7 @@ This skill provides core capabilities for generating Page Objects, writing E2E t
 4. Save file to `playwright-e2e/src/pages/<page-name>.page.ts`.
 
 ### 2. Generating E2E Test Specs (UI & API)
+
 1. Inspect existing page objects and fixtures in `src/pages/` and `src/core/base/base.fixture.ts`.
 2. UI specs import `test` from `../../../core/base/base.fixture`; API specs import native `test`/`expect` from `@playwright/test`.
 3. Wrap flows in `await test.step(...)`. Use `commonFunctions.compareTwoValues(...)` for soft assertions, concluding with a consolidated hard assertion.
@@ -39,6 +43,7 @@ This skill provides core capabilities for generating Page Objects, writing E2E t
 5. Save spec to `src/tests/ui/<Area>/<SpecName>.spec.ts` or `src/tests/api/<Area>/<SpecName>.spec.ts`.
 
 ### 3. Self-Healing Broken Tests
+
 1. Read failure artifacts written by `failure-hook.ts`:
    - `reports/snapshots/failure-context.json` (failing locator and traceback)
    - `reports/snapshots/failure-dom.html` (cleaned DOM at failure point)
@@ -49,6 +54,7 @@ This skill provides core capabilities for generating Page Objects, writing E2E t
    `npx cross-env HEADLESS=true npx playwright test <target-spec-path> --config=src/config/playwright.config.ts`
 
 ### 4. Git & Pull Request Delivery (MANDATORY)
+
 1. Always create a dedicated branch from latest `main`: `git checkout main && git pull origin main && git checkout -b <type>/<name>`.
 2. Commit changes with conventional commits (`feat:`, `fix:`, `refactor:`) and push to remote (`git push -u origin <branch-name>`).
 3. Open a Pull Request using GitHub CLI:
@@ -56,5 +62,3 @@ This skill provides core capabilities for generating Page Objects, writing E2E t
 4. PR body MUST include **📌 Summary of Changes** and **🧪 Verification** results.
 5. If follow-up changes or fixes are pushed, update the existing PR description using `gh pr edit <pr-number> --body-file <path>`.
 6. **Verify CI Checks Before Merge**: Monitor PR checks (`gh pr checks <pr-number> --watch`). If any CI workflow fails, diagnose via `gh run view --log-failed`, resolve on the branch, and push. Never merge until CI workflows are completely green.
-
-

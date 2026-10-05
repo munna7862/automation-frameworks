@@ -24,7 +24,13 @@ function getMetricValue(metric, key) {
 }
 
 function calculateDelta(current, baseline) {
-  if (current === undefined || baseline === undefined || isNaN(current) || isNaN(baseline) || baseline === 0) {
+  if (
+    current === undefined ||
+    baseline === undefined ||
+    isNaN(current) ||
+    isNaN(baseline) ||
+    baseline === 0
+  ) {
     return null;
   }
   return ((current - baseline) / baseline) * 100;
@@ -81,7 +87,8 @@ function generateHtmlReport(summaryData, options = {}) {
   const rootGroup = summaryData.root_group || {};
 
   // Extract core metrics
-  const httpDuration = metrics['http_req_duration'] || metrics['http_req_duration{expected_response:true}'] || {};
+  const httpDuration =
+    metrics['http_req_duration'] || metrics['http_req_duration{expected_response:true}'] || {};
   const httpReqs = metrics['http_reqs'] || {};
   const httpFailed = metrics['http_req_failed'] || {};
   const vusMax = metrics['vus_max'] || metrics['vus'] || {};
@@ -101,9 +108,12 @@ function generateHtmlReport(summaryData, options = {}) {
   const totalReqs = getMetricValue(httpReqs, 'count');
   const rps = getMetricValue(httpReqs, 'rate');
   const totalIterations = getMetricValue(iterations, 'count');
-  const failRate = getMetricValue(httpFailed, 'rate') !== undefined
-    ? getMetricValue(httpFailed, 'rate') * 100
-    : (getMetricValue(httpFailed, 'value') !== undefined ? getMetricValue(httpFailed, 'value') * 100 : 0);
+  const failRate =
+    getMetricValue(httpFailed, 'rate') !== undefined
+      ? getMetricValue(httpFailed, 'rate') * 100
+      : getMetricValue(httpFailed, 'value') !== undefined
+        ? getMetricValue(httpFailed, 'value') * 100
+        : 0;
   const maxVus = getMetricValue(vusMax, 'max') || getMetricValue(vusMax, 'value');
 
   // Discover all duration trends
@@ -116,7 +126,7 @@ function generateHtmlReport(summaryData, options = {}) {
         p90: getMetricValue(metric, 'p(90)'),
         p95: getMetricValue(metric, 'p(95)'),
         p99: getMetricValue(metric, 'p(99)'),
-        max: getMetricValue(metric, 'max'),
+        max: getMetricValue(metric, 'max')
       });
     }
   }
@@ -137,7 +147,7 @@ function generateHtmlReport(summaryData, options = {}) {
         thresholdRows.push({
           metric: metricName,
           threshold: threshName,
-          passed: !isBreached,
+          passed: !isBreached
         });
       }
     }
@@ -151,9 +161,24 @@ function generateHtmlReport(summaryData, options = {}) {
 
     // Collect all comparable metrics dynamically
     const metricsToCompare = [
-      { key: 'http_req_duration', subKey: 'avg', label: 'http_req_duration (avg)', currentVal: avgDuration },
-      { key: 'http_req_duration', subKey: 'p(90)', label: 'http_req_duration (p90)', currentVal: p90Duration },
-      { key: 'http_req_duration', subKey: 'p(95)', label: 'http_req_duration (p95)', currentVal: p95Duration },
+      {
+        key: 'http_req_duration',
+        subKey: 'avg',
+        label: 'http_req_duration (avg)',
+        currentVal: avgDuration
+      },
+      {
+        key: 'http_req_duration',
+        subKey: 'p(90)',
+        label: 'http_req_duration (p90)',
+        currentVal: p90Duration
+      },
+      {
+        key: 'http_req_duration',
+        subKey: 'p(95)',
+        label: 'http_req_duration (p95)',
+        currentVal: p95Duration
+      }
     ];
 
     for (const [key, metric] of Object.entries(metrics)) {
@@ -162,7 +187,7 @@ function generateHtmlReport(summaryData, options = {}) {
           key,
           subKey: 'p(95)',
           label: `${key} (p95)`,
-          currentVal: getMetricValue(metric, 'p(95)'),
+          currentVal: getMetricValue(metric, 'p(95)')
         });
       }
     }
@@ -188,7 +213,7 @@ function generateHtmlReport(summaryData, options = {}) {
           current: formatNumber(currentVal, 2) + ' ms',
           delta: formatDelta(delta),
           status: status.text,
-          cls: status.cls,
+          cls: status.cls
         });
       }
     }
@@ -214,12 +239,15 @@ function generateHtmlReport(summaryData, options = {}) {
 
   const elAvg = getMetricValue(eventLoopMetric, 'avg');
   const elP95 = getMetricValue(eventLoopMetric, 'p(95)');
-  const elMax = getMetricValue(eventLoopMetric, 'max');
+  const _elMax = getMetricValue(eventLoopMetric, 'max');
   const cpuAvg = getMetricValue(cpuMetric, 'avg');
   const cpuMax = getMetricValue(cpuMetric, 'max');
-  const handlesVal = getMetricValue(handlesMetric, 'value') !== undefined
-    ? getMetricValue(handlesMetric, 'value')
-    : (getMetricValue(handlesMetric, 'max') !== undefined ? getMetricValue(handlesMetric, 'max') : getMetricValue(handlesMetric, 'avg'));
+  const handlesVal =
+    getMetricValue(handlesMetric, 'value') !== undefined
+      ? getMetricValue(handlesMetric, 'value')
+      : getMetricValue(handlesMetric, 'max') !== undefined
+        ? getMetricValue(handlesMetric, 'max')
+        : getMetricValue(handlesMetric, 'avg');
 
   // Historical data & creeping regression
   const historyData = options.historyData || null;
@@ -238,35 +266,41 @@ function generateHtmlReport(summaryData, options = {}) {
     const plotW = histW - padL - padR;
     const plotH = histH - padT - padB;
 
-    const latencies = relevantHistory.map(h => Number(h.p95_latency) || 0);
+    const latencies = relevantHistory.map((h) => Number(h.p95_latency) || 0);
     const maxLat = Math.max(...latencies, 15);
 
     const points = relevantHistory.map((h, i) => {
-      const x = relevantHistory.length > 1
-        ? padL + (i / (relevantHistory.length - 1)) * plotW
-        : padL + plotW / 2;
+      const x =
+        relevantHistory.length > 1
+          ? padL + (i / (relevantHistory.length - 1)) * plotW
+          : padL + plotW / 2;
       const y = padT + plotH - ((Number(h.p95_latency) || 0) / maxLat) * plotH;
       return { x, y, h };
     });
 
-    const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-    const areaD = points.length > 1
-      ? `${pathD} L ${points[points.length - 1].x.toFixed(1)},${(padT + plotH).toFixed(1)} L ${points[0].x.toFixed(1)},${(padT + plotH).toFixed(1)} Z`
-      : '';
+    const pathD = points
+      .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)},${p.y.toFixed(1)}`)
+      .join(' ');
+    const areaD =
+      points.length > 1
+        ? `${pathD} L ${points[points.length - 1].x.toFixed(1)},${(padT + plotH).toFixed(1)} L ${points[0].x.toFixed(1)},${(padT + plotH).toFixed(1)} Z`
+        : '';
 
-    const dots = points.map((p, i) => {
-      const isLatest = i === points.length - 1;
-      const circleFill = isLatest ? '#10b981' : '#38bdf8';
-      const labelY = p.y - 8 < padT ? p.y + 16 : p.y - 8;
-      const shaShort = escapeHtml((p.h.commit_sha || `B${i + 1}`).substring(0, 7));
-      return `
+    const dots = points
+      .map((p, i) => {
+        const isLatest = i === points.length - 1;
+        const circleFill = isLatest ? '#10b981' : '#38bdf8';
+        const labelY = p.y - 8 < padT ? p.y + 16 : p.y - 8;
+        const shaShort = escapeHtml((p.h.commit_sha || `B${i + 1}`).substring(0, 7));
+        return `
         <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${isLatest ? 6 : 4}" fill="${circleFill}" stroke="#1e293b" stroke-width="2">
           <title>Build: ${shaShort} | p95: ${formatNumber(p.h.p95_latency, 2)}ms | RPS: ${formatNumber(p.h.rps, 1)} | Err: ${formatNumber(p.h.error_rate, 2)}% | Date: ${escapeHtml(p.h.timestamp)}</title>
         </circle>
         <text x="${p.x.toFixed(1)}" y="${labelY.toFixed(1)}" text-anchor="middle" fill="#cbd5e1" font-size="10" font-weight="600">${formatNumber(p.h.p95_latency, 1)}ms</text>
         <text x="${p.x.toFixed(1)}" y="${(padT + plotH + 18).toFixed(1)}" text-anchor="middle" fill="#64748b" font-size="9">${shaShort}</text>
       `;
-    }).join('');
+      })
+      .join('');
 
     historySvg = `
       <svg width="${histW}" height="${histH}" viewBox="0 0 ${histW} ${histH}" style="max-width:100%;height:auto;overflow:visible">
@@ -290,7 +324,7 @@ function generateHtmlReport(summaryData, options = {}) {
   }
 
   const overallPassed = !hasThresholdFailures && !hasRegression;
-  const overallBadgeText = overallPassed ? 'PASSED' : (hasRegression ? 'REGRESSION' : 'FAILED');
+  const overallBadgeText = overallPassed ? 'PASSED' : hasRegression ? 'REGRESSION' : 'FAILED';
   const overallBadgeClass = overallPassed ? 'badge-pass' : 'badge-fail';
   const generatedAt = new Date().toUTCString();
 
@@ -298,23 +332,32 @@ function generateHtmlReport(summaryData, options = {}) {
   const chartItems = [
     { label: 'p50', val: medDuration || 0, color: '#38bdf8' },
     { label: 'p90', val: p90Duration || 0, color: '#818cf8' },
-    { label: 'p95', val: p95Duration || 0, color: (p95Duration && p95Duration > 300) ? '#ef4444' : '#10b981' },
-    { label: 'p99', val: p99Duration || 0, color: (p99Duration && p99Duration > 600) ? '#ef4444' : '#f59e0b' },
-    { label: 'max', val: maxDuration || 0, color: '#ec4899' },
+    {
+      label: 'p95',
+      val: p95Duration || 0,
+      color: p95Duration && p95Duration > 300 ? '#ef4444' : '#10b981'
+    },
+    {
+      label: 'p99',
+      val: p99Duration || 0,
+      color: p99Duration && p99Duration > 600 ? '#ef4444' : '#f59e0b'
+    },
+    { label: 'max', val: maxDuration || 0, color: '#ec4899' }
   ];
 
-  const chartMaxVal = Math.max(...chartItems.map(i => i.val), 10);
+  const chartMaxVal = Math.max(...chartItems.map((i) => i.val), 10);
   const chartHeight = 180;
   const chartWidth = 500;
   const barWidth = 60;
   const barGap = 35;
   const startX = 30;
 
-  const svgBars = chartItems.map((item, idx) => {
-    const barH = Math.max(4, Math.round((item.val / chartMaxVal) * (chartHeight - 40)));
-    const x = startX + idx * (barWidth + barGap);
-    const y = chartHeight - 25 - barH;
-    return `
+  const svgBars = chartItems
+    .map((item, idx) => {
+      const barH = Math.max(4, Math.round((item.val / chartMaxVal) * (chartHeight - 40)));
+      const x = startX + idx * (barWidth + barGap);
+      const y = chartHeight - 25 - barH;
+      return `
       <g class="bar-group">
         <rect x="${x}" y="${y}" width="${barWidth}" height="${barH}" rx="6" fill="${item.color}" opacity="0.9">
           <title>${item.label}: ${formatNumber(item.val, 2)} ms</title>
@@ -323,7 +366,8 @@ function generateHtmlReport(summaryData, options = {}) {
         <text x="${x + barWidth / 2}" y="${chartHeight - 8}" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="500">${item.label}</text>
       </g>
     `;
-  }).join('');
+    })
+    .join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -569,7 +613,7 @@ function generateHtmlReport(summaryData, options = {}) {
       </div>
       <div class="kpi-card">
         <div class="kpi-label">p95 Latency</div>
-        <div class="kpi-value" style="color:${(p95Duration && p95Duration > 300) ? 'var(--color-fail)' : 'var(--color-pass)'}">
+        <div class="kpi-value" style="color:${p95Duration && p95Duration > 300 ? 'var(--color-fail)' : 'var(--color-pass)'}">
           ${formatNumber(p95Duration, 1)} <span style="font-size:14px;color:var(--text-secondary)">ms</span>
         </div>
         <div class="kpi-sub">Target: &lt; 300ms</div>
@@ -595,7 +639,9 @@ function generateHtmlReport(summaryData, options = {}) {
       </div>
     </div>
 
-    ${baselineRows.length > 0 ? `
+    ${
+      baselineRows.length > 0
+        ? `
     <!-- Baseline Regression Analysis -->
     <div class="section">
       <div class="section-title">📈 Relative Baseline Regression Analysis (Gate Threshold: +${REGRESSION_THRESHOLD_PERCENT.toFixed(1)}%)</div>
@@ -611,19 +657,27 @@ function generateHtmlReport(summaryData, options = {}) {
           </tr>
         </thead>
         <tbody>
-          ${baselineRows.map(r => `
+          ${baselineRows
+            .map(
+              (r) => `
           <tr>
             <td><code>${escapeHtml(r.label)}</code></td>
             <td><code>${escapeHtml(r.baseline)}</code></td>
             <td><strong>${escapeHtml(r.current)}</strong></td>
             <td><code>${escapeHtml(r.delta)}</code></td>
             <td><span class="tag ${r.cls}">${escapeHtml(r.status)}</span></td>
-          </tr>`).join('')}
+          </tr>`
+            )
+            .join('')}
         </tbody>
       </table>
-    </div>` : ''}
+    </div>`
+        : ''
+    }
 
-    ${checks.length > 0 ? `
+    ${
+      checks.length > 0
+        ? `
     <!-- Endpoint Health Checks -->
     <div class="section">
       <div class="section-title">🩺 Endpoint Assertion Health Checks</div>
@@ -638,13 +692,14 @@ function generateHtmlReport(summaryData, options = {}) {
           </tr>
         </thead>
         <tbody>
-          ${checks.map(c => {
-            const passes = c.passes || 0;
-            const fails = c.fails || 0;
-            const total = passes + fails;
-            const rate = total > 0 ? ((passes / total) * 100).toFixed(1) : '100.0';
-            const ok = fails === 0;
-            return `
+          ${checks
+            .map((c) => {
+              const passes = c.passes || 0;
+              const fails = c.fails || 0;
+              const total = passes + fails;
+              const rate = total > 0 ? ((passes / total) * 100).toFixed(1) : '100.0';
+              const ok = fails === 0;
+              return `
             <tr>
               <td>${escapeHtml(c.name)}</td>
               <td style="color:var(--color-pass)">${passes}</td>
@@ -657,64 +712,103 @@ function generateHtmlReport(summaryData, options = {}) {
               </td>
               <td><span class="tag ${ok ? 'badge-pass' : 'badge-fail'}">${ok ? 'PASSED' : 'FAILED'}</span></td>
             </tr>`;
-          }).join('')}
+            })
+            .join('')}
         </tbody>
       </table>
-    </div>` : ''}
+    </div>`
+        : ''
+    }
 
-    ${(heapUsedMetric || rssMetric || driftMetric || leakMetric || eventLoopMetric || cpuMetric || handlesMetric) ? `
+    ${
+      heapUsedMetric ||
+      rssMetric ||
+      driftMetric ||
+      leakMetric ||
+      eventLoopMetric ||
+      cpuMetric ||
+      handlesMetric
+        ? `
     <!-- Node.js Runtime Telemetry & Event Loop Observability -->
     <div class="section">
       <div class="section-title">🧠 Node.js Runtime Telemetry & Event Loop Observability</div>
       <div class="kpi-grid" style="margin-bottom:16px">
-        ${eventLoopMetric ? `
+        ${
+          eventLoopMetric
+            ? `
         <div class="kpi-card">
           <div class="kpi-label">Event Loop Lag (Avg / p95)</div>
           <div class="kpi-value" style="font-size:20px; color:${(elP95 || 0) < 50 ? 'var(--color-pass)' : 'var(--color-fail)'}">
             ${formatNumber(elAvg, 2)} / ${formatNumber(elP95, 2)} ms
           </div>
-          <div class="kpi-sub">SLA: p(95) &lt; 50.00 ms ${((elP95 || 0) < 50) ? '🟢' : '🔴'}</div>
-        </div>` : ''}
-        ${cpuMetric ? `
+          <div class="kpi-sub">SLA: p(95) &lt; 50.00 ms ${(elP95 || 0) < 50 ? '🟢' : '🔴'}</div>
+        </div>`
+            : ''
+        }
+        ${
+          cpuMetric
+            ? `
         <div class="kpi-card">
           <div class="kpi-label">Process CPU % (Avg / Max)</div>
           <div class="kpi-value" style="font-size:20px">${formatNumber(cpuAvg, 1)}% / ${formatNumber(cpuMax, 1)}%</div>
           <div class="kpi-sub">Differential CPU Sampling</div>
-        </div>` : ''}
-        ${handlesMetric ? `
+        </div>`
+            : ''
+        }
+        ${
+          handlesMetric
+            ? `
         <div class="kpi-card">
           <div class="kpi-label">Active libuv Handles</div>
           <div class="kpi-value" style="font-size:20px">${Math.round(handlesVal || 0)}</div>
           <div class="kpi-sub">I/O & Timer Descriptors</div>
-        </div>` : ''}
-        ${heapUsedMetric ? `
+        </div>`
+            : ''
+        }
+        ${
+          heapUsedMetric
+            ? `
         <div class="kpi-card">
           <div class="kpi-label">Heap Used (Avg / Max)</div>
           <div class="kpi-value" style="font-size:20px">${formatNumber(getMetricValue(heapUsedMetric, 'avg'), 1)} / ${formatNumber(getMetricValue(heapUsedMetric, 'max'), 1)} MB</div>
           <div class="kpi-sub">V8 Memory Space</div>
-        </div>` : ''}
-        ${rssMetric ? `
+        </div>`
+            : ''
+        }
+        ${
+          rssMetric
+            ? `
         <div class="kpi-card">
           <div class="kpi-label">Process RSS (Max)</div>
           <div class="kpi-value" style="font-size:20px">${formatNumber(getMetricValue(rssMetric, 'max'), 1)} MB</div>
           <div class="kpi-sub">Resident Set Size</div>
-        </div>` : ''}
-        ${driftMetric ? `
+        </div>`
+            : ''
+        }
+        ${
+          driftMetric
+            ? `
         <div class="kpi-card">
           <div class="kpi-label">Heap Drift %</div>
           <div class="kpi-value" style="font-size:20px; color:${(getMetricValue(driftMetric, 'value') || 0) <= 30 ? 'var(--color-pass)' : 'var(--color-fail)'}">
             ${formatNumber(getMetricValue(driftMetric, 'value') || getMetricValue(driftMetric, 'max'), 1)}%
           </div>
           <div class="kpi-sub">SLA: &le; +30.00%</div>
-        </div>` : ''}
-        ${leakMetric ? `
+        </div>`
+            : ''
+        }
+        ${
+          leakMetric
+            ? `
         <div class="kpi-card">
           <div class="kpi-label">Memory Leak Tripwire</div>
           <div class="kpi-value" style="font-size:20px; color:${(getMetricValue(leakMetric, 'value') || 0) === 0 ? 'var(--color-pass)' : 'var(--color-fail)'}">
             ${(getMetricValue(leakMetric, 'value') || 0) === 0 ? 'NONE 🟢' : 'BREACH 🔴'}
           </div>
           <div class="kpi-sub">Sustained Soak Guard</div>
-        </div>` : ''}
+        </div>`
+            : ''
+        }
       </div>
 
       <!-- Server Vitals vs Client Response Latency Comparison -->
@@ -732,7 +826,9 @@ function generateHtmlReport(summaryData, options = {}) {
               <div class="progress-fill" style="width:100%;background:var(--color-accent)"></div>
             </div>
           </div>
-          ${eventLoopMetric ? `
+          ${
+            eventLoopMetric
+              ? `
           <div style="flex:1;min-width:240px">
             <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
               <span>Server Event Loop Lag (p95)</span>
@@ -741,31 +837,47 @@ function generateHtmlReport(summaryData, options = {}) {
             <div class="progress-bar" style="height:8px">
               <div class="progress-fill" style="width:${p95Duration > 0 ? Math.min(100, ((elP95 || 0) / p95Duration) * 100) : 0}%;background:${(elP95 || 0) < 50 ? 'var(--color-pass)' : 'var(--color-fail)'}"></div>
             </div>
-          </div>` : ''}
+          </div>`
+              : ''
+          }
         </div>
         <div style="font-size:11px;color:var(--text-muted);margin-top:8px">
-          ${eventLoopMetric && (elP95 || 0) < 50
-            ? `🟢 Event loop lag is minimal (${formatNumber(elP95, 2)}ms), confirming application latency is I/O-bound rather than blocked by synchronous CPU computations or GC pauses.`
-            : 'ℹ️ Telemetry captured via Node.js perf_hooks and process diagnostics during load execution.'}
+          ${
+            eventLoopMetric && (elP95 || 0) < 50
+              ? `🟢 Event loop lag is minimal (${formatNumber(elP95, 2)}ms), confirming application latency is I/O-bound rather than blocked by synchronous CPU computations or GC pauses.`
+              : 'ℹ️ Telemetry captured via Node.js perf_hooks and process diagnostics during load execution.'
+          }
         </div>
       </div>
-    </div>` : ''}
+    </div>`
+        : ''
+    }
 
-    ${historySvg ? `
+    ${
+      historySvg
+        ? `
     <!-- Continuous Historical Performance Trajectory -->
     <div class="section">
       <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
         <span>📈 Continuous Historical Performance Trajectory (Last ${relevantHistory.length} Builds)</span>
-        ${creepingAnalysis ? `
+        ${
+          creepingAnalysis
+            ? `
           <span class="tag ${creepingAnalysis.isCreepingRegression ? 'badge-warn' : 'badge-pass'}">
             ${creepingAnalysis.isCreepingRegression ? '⚠️ CREEPING DRIFT' : 'STABLE TREND 🟢'}
-          </span>` : ''}
+          </span>`
+            : ''
+        }
       </div>
 
-      ${creepingAnalysis && creepingAnalysis.isCreepingRegression ? `
+      ${
+        creepingAnalysis && creepingAnalysis.isCreepingRegression
+          ? `
       <div style="background:rgba(245,158,11,0.1);border:1px solid var(--color-warn);border-radius:6px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--color-warn)">
         ⚠️ <strong>Creeping Performance Regression Warning</strong>: 5-run rolling average latency has degraded by <strong>+${formatNumber(creepingAnalysis.delta, 2)}%</strong> against ${escapeHtml(creepingAnalysis.referenceType)} (SLA Threshold: +10.00%). Single-run threshold has not tripped, but multi-build trend reveals gradual degradation.
-      </div>` : ''}
+      </div>`
+          : ''
+      }
 
       <div class="chart-container" style="padding:16px 8px;margin-bottom:16px">
         ${historySvg}
@@ -784,7 +896,9 @@ function generateHtmlReport(summaryData, options = {}) {
           </tr>
         </thead>
         <tbody>
-          ${relevantHistory.map(h => `
+          ${relevantHistory
+            .map(
+              (h) => `
           <tr>
             <td><code>${escapeHtml((h.commit_sha || 'local').substring(0, 7))}</code></td>
             <td>${escapeHtml((h.timestamp || '').replace('T', ' ').substring(0, 19))}</td>
@@ -793,12 +907,18 @@ function generateHtmlReport(summaryData, options = {}) {
             <td><strong>${formatNumber(h.p95_latency, 2)} ms</strong></td>
             <td style="color:${(Number(h.error_rate) || 0) > 0 ? 'var(--color-fail)' : 'var(--color-pass)'}">${formatNumber(h.error_rate, 2)}%</td>
             <td>${h.event_loop_lag_p95 !== undefined ? `${formatNumber(h.event_loop_lag_p95, 2)} ms` : '—'}</td>
-          </tr>`).join('')}
+          </tr>`
+            )
+            .join('')}
         </tbody>
       </table>
-    </div>` : ''}
+    </div>`
+        : ''
+    }
 
-    ${thresholdRows.length > 0 ? `
+    ${
+      thresholdRows.length > 0
+        ? `
     <!-- Threshold Evaluations -->
     <div class="section">
       <div class="section-title">🎯 Threshold Rule Evaluations</div>
@@ -811,15 +931,21 @@ function generateHtmlReport(summaryData, options = {}) {
           </tr>
         </thead>
         <tbody>
-          ${thresholdRows.map(t => `
+          ${thresholdRows
+            .map(
+              (t) => `
           <tr>
             <td><code>${escapeHtml(t.metric)}</code></td>
             <td><code>${escapeHtml(t.threshold)}</code></td>
             <td><span class="tag ${t.passed ? 'badge-pass' : 'badge-fail'}">${t.passed ? 'PASS' : 'FAIL'}</span></td>
-          </tr>`).join('')}
+          </tr>`
+            )
+            .join('')}
         </tbody>
       </table>
-    </div>` : ''}
+    </div>`
+        : ''
+    }
 
     <footer>
       BuggyBooks Quality Engineering &bull; Performance Architecture v1.0 &bull; Generated automatically by k6 Performance Suite
@@ -835,5 +961,5 @@ module.exports = {
   getMetricValue,
   calculateDelta,
   formatDelta,
-  getDeltaStatus,
+  getDeltaStatus
 };

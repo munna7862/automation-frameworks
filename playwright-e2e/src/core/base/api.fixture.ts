@@ -21,11 +21,11 @@ export const test = base.extend<ApiTestFixtures>({
     const apiContext = await playwright.request.newContext({
       baseURL: envConfig.apiBaseUrl,
       extraHTTPHeaders: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
         'x-bypass-rate-limit': 'true',
-        'x-test-session-id': testSessionId,
-      },
+        'x-test-session-id': testSessionId
+      }
     });
 
     await use(apiContext);
@@ -36,11 +36,11 @@ export const test = base.extend<ApiTestFixtures>({
       const apiBase = envConfig.apiBaseUrl || 'https://buggy-books.onrender.com';
       await axios.delete(`${apiBase}/api/test/session/${testSessionId}`, {
         headers: { 'x-bypass-rate-limit': 'true', 'x-test-session-id': testSessionId },
-        timeout: 5000,
+        timeout: 5000
       });
       logger.info(`Cleaned up ephemeral API test session: ${testSessionId}`);
     } catch {
       // Backend may be offline or mock mode; non-blocking
     }
-  },
+  }
 });

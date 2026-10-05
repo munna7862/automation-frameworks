@@ -18,7 +18,7 @@ export const test = baseTest.extend<AuthFixtures>({
     await catalogPage.clickNavigateLink('Login');
     await signUpPage.login(seedCredentials.userName, seedCredentials.password);
     await use(page);
-  },
+  }
 });
 
 export { expect };

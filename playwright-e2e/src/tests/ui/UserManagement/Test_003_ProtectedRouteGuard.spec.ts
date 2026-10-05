@@ -12,15 +12,20 @@ type ProtectedRouteGuardTestData = {
   protectedRoutes: ProtectedRouteItem[];
 };
 
-const testDataPath = path.join(__dirname, '../../../test-data/ui/UserManagement/Test_003_ProtectedRouteGuard.json');
+const testDataPath = path.join(
+  __dirname,
+  '../../../test-data/ui/UserManagement/Test_003_ProtectedRouteGuard.json'
+);
 const TestData = require(testDataPath) as ProtectedRouteGuardTestData;
 
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe('Protected Route Access Guard', () => {
-
-  test('UI_AUTH_06: Direct unauthenticated navigation to protected routes redirects to Login @smoke @regression', async ({ signUpPage, commonFunctions, page }) => {
-
+  test('UI_AUTH_06: Direct unauthenticated navigation to protected routes redirects to Login @smoke @regression', async ({
+    signUpPage,
+    commonFunctions,
+    page
+  }) => {
     // Ensure session storage and auth cookies are completely clear
     await page.goto(envConfig.baseUrl);
     await page.evaluate(() => localStorage.clear());
@@ -32,7 +37,11 @@ test.describe('Protected Route Access Guard', () => {
         const response = await page.goto(targetUrl).catch(() => null);
 
         // Fallback for static hosts prior to _redirects deployment
-        if (!response || response.status() === 404 || !page.url().includes(route.expectedRedirect)) {
+        if (
+          !response ||
+          response.status() === 404 ||
+          !page.url().includes(route.expectedRedirect)
+        ) {
           await page.goto(envConfig.baseUrl);
           await page.evaluate((targetPath) => {
             window.history.pushState({}, '', targetPath);
@@ -51,5 +60,4 @@ test.describe('Protected Route Access Guard', () => {
       });
     }
   });
-
 });

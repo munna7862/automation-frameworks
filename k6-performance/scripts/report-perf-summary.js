@@ -20,7 +20,7 @@ const {
   getWorkflowRunId,
   inferTestType,
   appendHistoryRecord,
-  analyzeCreepingRegression,
+  analyzeCreepingRegression
 } = require(path.join(utilsDir, 'history-tracker.js'));
 
 const REGRESSION_THRESHOLD_PERCENT = 20.0;
@@ -39,7 +39,13 @@ function getMetricValue(metric, key) {
 }
 
 function calculateDelta(current, baseline) {
-  if (current === undefined || baseline === undefined || isNaN(current) || isNaN(baseline) || baseline === 0) {
+  if (
+    current === undefined ||
+    baseline === undefined ||
+    isNaN(current) ||
+    isNaN(baseline) ||
+    baseline === 0
+  ) {
     return null;
   }
   return ((current - baseline) / baseline) * 100;
@@ -52,7 +58,8 @@ function formatDelta(delta) {
 }
 
 function getDeltaStatus(delta) {
-  if (delta === null || delta === undefined || isNaN(delta)) return { text: 'ℹ️ N/A', isRegression: false };
+  if (delta === null || delta === undefined || isNaN(delta))
+    return { text: 'ℹ️ N/A', isRegression: false };
   if (delta > REGRESSION_THRESHOLD_PERCENT) {
     return { text: `🔴 REGRESSION (${formatDelta(delta)})`, isRegression: true };
   }
@@ -65,16 +72,23 @@ function getDeltaStatus(delta) {
   return { text: `🟢 PASS (${formatDelta(delta)})`, isRegression: false };
 }
 
-function generateMarkdown(summaryData, title, baselineData = null, isRegressionSimulated = false, creepingAnalysis = null) {
+function generateMarkdown(
+  summaryData,
+  title,
+  baselineData = null,
+  isRegressionSimulated = false,
+  creepingAnalysis = null
+) {
   const metrics = summaryData.metrics || {};
   const rootGroup = summaryData.root_group || {};
 
   // Extract core metrics
-  const httpDuration = metrics['http_req_duration'] || metrics['http_req_duration{expected_response:true}'] || {};
+  const httpDuration =
+    metrics['http_req_duration'] || metrics['http_req_duration{expected_response:true}'] || {};
   const httpReqs = metrics['http_reqs'] || {};
   const httpFailed = metrics['http_req_failed'] || {};
   const vusMax = metrics['vus_max'] || metrics['vus'] || {};
-  const iterations = metrics['iterations'] || {};
+  const _iterations = metrics['iterations'] || {};
 
   const avgDuration = getMetricValue(httpDuration, 'avg');
   const medDuration = getMetricValue(httpDuration, 'med');
@@ -90,9 +104,12 @@ function generateMarkdown(summaryData, title, baselineData = null, isRegressionS
 
   const totalReqs = getMetricValue(httpReqs, 'count');
   const rps = getMetricValue(httpReqs, 'rate');
-  const failRate = getMetricValue(httpFailed, 'rate') !== undefined
-    ? getMetricValue(httpFailed, 'rate') * 100
-    : (getMetricValue(httpFailed, 'value') !== undefined ? getMetricValue(httpFailed, 'value') * 100 : 0);
+  const failRate =
+    getMetricValue(httpFailed, 'rate') !== undefined
+      ? getMetricValue(httpFailed, 'rate') * 100
+      : getMetricValue(httpFailed, 'value') !== undefined
+        ? getMetricValue(httpFailed, 'value') * 100
+        : 0;
   const maxVus = getMetricValue(vusMax, 'max') || getMetricValue(vusMax, 'value');
 
   // Check thresholds for pass/fail
@@ -114,7 +131,7 @@ function generateMarkdown(summaryData, title, baselineData = null, isRegressionS
         thresholdRows.push({
           metric: metricName,
           threshold: threshName,
-          status: !isBreached ? '✅ PASS' : '❌ FAIL',
+          status: !isBreached ? '✅ PASS' : '❌ FAIL'
         });
       }
     }
@@ -128,9 +145,24 @@ function generateMarkdown(summaryData, title, baselineData = null, isRegressionS
     const baseMetrics = baselineData.metrics || baselineData;
 
     const metricsToCompare = [
-      { key: 'http_req_duration', subKey: 'avg', label: 'http_req_duration (avg)', currentVal: avgDuration },
-      { key: 'http_req_duration', subKey: 'p(90)', label: 'http_req_duration (p90)', currentVal: p90Duration },
-      { key: 'http_req_duration', subKey: 'p(95)', label: 'http_req_duration (p95)', currentVal: p95Duration },
+      {
+        key: 'http_req_duration',
+        subKey: 'avg',
+        label: 'http_req_duration (avg)',
+        currentVal: avgDuration
+      },
+      {
+        key: 'http_req_duration',
+        subKey: 'p(90)',
+        label: 'http_req_duration (p90)',
+        currentVal: p90Duration
+      },
+      {
+        key: 'http_req_duration',
+        subKey: 'p(95)',
+        label: 'http_req_duration (p95)',
+        currentVal: p95Duration
+      }
     ];
 
     // Dynamically add all other custom Trend metrics ending in _duration
@@ -142,7 +174,7 @@ function generateMarkdown(summaryData, title, baselineData = null, isRegressionS
           key,
           subKey: 'p(95)',
           label: `${key} (p95)`,
-          currentVal: getMetricValue(metrics[key], 'p(95)'),
+          currentVal: getMetricValue(metrics[key], 'p(95)')
         });
       }
     }
@@ -155,7 +187,7 @@ function generateMarkdown(summaryData, title, baselineData = null, isRegressionS
           key,
           subKey: 'p(95)',
           label: `${key} (p95)`,
-          currentVal: getMetricValue(metrics[key], 'p(95)'),
+          currentVal: getMetricValue(metrics[key], 'p(95)')
         });
       }
     }
@@ -181,7 +213,7 @@ function generateMarkdown(summaryData, title, baselineData = null, isRegressionS
           baseline: formatNumber(baseVal, 2) + ' ms',
           current: formatNumber(currentVal, 2) + ' ms',
           delta: formatDelta(delta),
-          status: status.text,
+          status: status.text
         });
       }
     }
@@ -265,13 +297,22 @@ function generateMarkdown(summaryData, title, baselineData = null, isRegressionS
       md += `| **Process RSS (Avg / Max)** | \`${formatNumber(rssAvg, 2)} MB / ${formatNumber(rssMax, 2)} MB\` | — | ℹ️ |\n`;
     }
     if (driftMetric) {
-      const driftVal = getMetricValue(driftMetric, 'value') !== undefined ? getMetricValue(driftMetric, 'value') : (getMetricValue(driftMetric, 'max') !== undefined ? getMetricValue(driftMetric, 'max') : getMetricValue(driftMetric, 'avg'));
+      const driftVal =
+        getMetricValue(driftMetric, 'value') !== undefined
+          ? getMetricValue(driftMetric, 'value')
+          : getMetricValue(driftMetric, 'max') !== undefined
+            ? getMetricValue(driftMetric, 'max')
+            : getMetricValue(driftMetric, 'avg');
       const sign = driftVal > 0 ? '+' : '';
-      const driftStatus = (driftVal !== undefined && driftVal <= 30.0) ? '✅ PASS' : '🔴 LEAK DETECTED';
+      const driftStatus =
+        driftVal !== undefined && driftVal <= 30.0 ? '✅ PASS' : '🔴 LEAK DETECTED';
       md += `| **Heap Used Drift** | \`${sign}${formatNumber(driftVal, 2)}%\` | \`≤ +30.00%\` | ${driftStatus} |\n`;
     }
     if (leakMetric) {
-      const leakRate = getMetricValue(leakMetric, 'rate') !== undefined ? getMetricValue(leakMetric, 'rate') : getMetricValue(leakMetric, 'value');
+      const leakRate =
+        getMetricValue(leakMetric, 'rate') !== undefined
+          ? getMetricValue(leakMetric, 'rate')
+          : getMetricValue(leakMetric, 'value');
       const isBreached = leakRate !== undefined && leakRate > 0;
       const leakStatus = !isBreached ? '✅ NONE' : '🔴 BREACH';
       md += `| **Memory Leak Tripwire** | \`${leakStatus}\` | \`0.00%\` | ${!isBreached ? '✅' : '❌'} |\n`;
@@ -300,7 +341,12 @@ function generateMarkdown(summaryData, title, baselineData = null, isRegressionS
       md += `| **Process CPU % (Avg / Max)** | \`${formatNumber(cpuAvg, 1)}% / ${formatNumber(cpuMax, 1)}%\` | — | ℹ️ |\n`;
     }
     if (handlesMetric) {
-      const handlesVal = getMetricValue(handlesMetric, 'value') !== undefined ? getMetricValue(handlesMetric, 'value') : (getMetricValue(handlesMetric, 'max') !== undefined ? getMetricValue(handlesMetric, 'max') : getMetricValue(handlesMetric, 'avg'));
+      const handlesVal =
+        getMetricValue(handlesMetric, 'value') !== undefined
+          ? getMetricValue(handlesMetric, 'value')
+          : getMetricValue(handlesMetric, 'max') !== undefined
+            ? getMetricValue(handlesMetric, 'max')
+            : getMetricValue(handlesMetric, 'avg');
       md += `| **Active libuv Handles** | \`${Math.round(handlesVal || 0)}\` | — | ℹ️ |\n`;
     }
     md += `\n`;
@@ -355,7 +401,7 @@ function parseCommandLineArgs() {
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
     if (arg === '--check-drift') {
-      isCheckDrift = true;
+      title = 'k6 Baseline Drift Regression Gate';
     } else if (arg.startsWith('--baseline=')) {
       baselinePath = path.resolve(arg.split('=')[1]);
     } else if (arg === '--baseline' && i + 1 < args.length) {
@@ -411,10 +457,8 @@ function parseCommandLineArgs() {
   // Auto-detect golden baseline if omitted
   if (!baselinePath) {
     const baselineCandidates = [
-      path.resolve(process.cwd(), 'baseline-perf.json'),
-      path.resolve(__dirname, '..', 'baseline-perf.json'),
       path.resolve(__dirname, '..', 'baselines', 'baseline-perf.json'),
-      path.resolve(process.cwd(), 'baselines', 'baseline-perf.json'),
+      path.resolve(process.cwd(), 'baselines', 'baseline-perf.json')
     ];
     for (const b of baselineCandidates) {
       if (fs.existsSync(b)) {
@@ -432,14 +476,32 @@ function parseCommandLineArgs() {
     historyPath = path.resolve(utilsDir, '..', 'perf-history.json');
   }
 
-  return { summaryJsonPath, title, baselinePath, isRegressionSimulated, htmlPath, cleanMarkdown, historyPath };
+  return {
+    summaryJsonPath,
+    title,
+    baselinePath,
+    isRegressionSimulated,
+    htmlPath,
+    cleanMarkdown,
+    historyPath
+  };
 }
 
 function main() {
-  const { summaryJsonPath, title, baselinePath, isRegressionSimulated, htmlPath, cleanMarkdown, historyPath } = parseCommandLineArgs();
+  const {
+    summaryJsonPath,
+    title,
+    baselinePath,
+    isRegressionSimulated,
+    htmlPath,
+    cleanMarkdown,
+    historyPath
+  } = parseCommandLineArgs();
 
   if (!summaryJsonPath) {
-    console.error('Usage: node report-perf-summary.js <summary-json-path> [benchmark-title] [--baseline=<path>] [--history=<path>] [--html=<path>] [--clean] [--regression-test]');
+    console.error(
+      'Usage: node report-perf-summary.js <summary-json-path> [benchmark-title] [--baseline=<path>] [--history=<path>] [--html=<path>] [--clean] [--regression-test]'
+    );
     process.exit(1);
   }
 
@@ -465,23 +527,31 @@ function main() {
         baselineData = JSON.parse(rawBaseline);
         console.log(`🔍 Loaded baseline reference from: ${baselinePath}`);
       } catch (err) {
-        console.warn(`⚠️ Warning: Failed to parse baseline JSON at ${baselinePath}: ${err.message}`);
+        console.warn(
+          `⚠️ Warning: Failed to parse baseline JSON at ${baselinePath}: ${err.message}`
+        );
       }
     } else {
-      console.warn(`⚠️ Warning: Specified baseline file not found at ${baselinePath}. Continuing without baseline comparison.`);
+      console.warn(
+        `⚠️ Warning: Specified baseline file not found at ${baselinePath}. Continuing without baseline comparison.`
+      );
     }
   }
 
   // Extract core metrics for historical tracking
   const metrics = summaryData.metrics || {};
-  const httpDuration = metrics['http_req_duration'] || metrics['http_req_duration{expected_response:true}'] || {};
+  const httpDuration =
+    metrics['http_req_duration'] || metrics['http_req_duration{expected_response:true}'] || {};
   const httpReqs = metrics['http_reqs'] || {};
   const httpFailed = metrics['http_req_failed'] || {};
   const p95Duration = getMetricValue(httpDuration, 'p(95)');
   const rps = getMetricValue(httpReqs, 'rate') || 0;
-  const failRate = getMetricValue(httpFailed, 'rate') !== undefined
-    ? getMetricValue(httpFailed, 'rate') * 100
-    : (getMetricValue(httpFailed, 'value') !== undefined ? getMetricValue(httpFailed, 'value') * 100 : 0);
+  const failRate =
+    getMetricValue(httpFailed, 'rate') !== undefined
+      ? getMetricValue(httpFailed, 'rate') * 100
+      : getMetricValue(httpFailed, 'value') !== undefined
+        ? getMetricValue(httpFailed, 'value') * 100
+        : 0;
 
   const elMetric = metrics['node_event_loop_lag_ms'];
   const elP95 = elMetric ? getMetricValue(elMetric, 'p(95)') : undefined;
@@ -498,12 +568,14 @@ function main() {
     p95_latency: Number(formatNumber(p95Duration, 2)),
     error_rate: Number(formatNumber(failRate, 2)),
     event_loop_lag_p95: elP95 !== undefined ? Number(formatNumber(elP95, 2)) : undefined,
-    cpu_percent: cpuAvg !== undefined ? Number(formatNumber(cpuAvg, 2)) : undefined,
+    cpu_percent: cpuAvg !== undefined ? Number(formatNumber(cpuAvg, 2)) : undefined
   };
 
   // Append to perf-history.json
   const historyData = appendHistoryRecord(historyPath, currentRecord);
-  console.log(`📊 Persisted benchmark metrics to historical time-series (${historyPath}) [${historyData.history.length} builds recorded]`);
+  console.log(
+    `📊 Persisted benchmark metrics to historical time-series (${historyPath}) [${historyData.history.length} builds recorded]`
+  );
 
   // Extract baseline p95 for creeping regression analysis if available
   let baselineP95 = null;
@@ -516,10 +588,18 @@ function main() {
   const creepingAnalysis = analyzeCreepingRegression(historyData.history, testType, baselineP95);
 
   if (creepingAnalysis.isCreepingRegression) {
-    console.warn(`\n⚠️  CREEPING REGRESSION DETECTED: 5-run rolling average latency (${creepingAnalysis.rollingAvg.toFixed(2)}ms) degraded by +${creepingAnalysis.delta.toFixed(2)}% against ${creepingAnalysis.referenceType} (SLA Threshold: +10.00%).\n`);
+    console.warn(
+      `\n⚠️  CREEPING REGRESSION DETECTED: 5-run rolling average latency (${creepingAnalysis.rollingAvg.toFixed(2)}ms) degraded by +${creepingAnalysis.delta.toFixed(2)}% against ${creepingAnalysis.referenceType} (SLA Threshold: +10.00%).\n`
+    );
   }
 
-  const { md, hasThresholdFailures, hasRegression } = generateMarkdown(summaryData, title, baselineData, isRegressionSimulated, creepingAnalysis);
+  const { md, hasThresholdFailures, hasRegression } = generateMarkdown(
+    summaryData,
+    title,
+    baselineData,
+    isRegressionSimulated,
+    creepingAnalysis
+  );
 
   // Print to console
   console.log(md);
@@ -531,7 +611,7 @@ function main() {
       baselineData,
       isRegressionSimulated,
       historyData: historyData.history,
-      creepingAnalysis,
+      creepingAnalysis
     });
     fs.writeFileSync(htmlPath, htmlContent, 'utf8');
     console.log(`✅ Saved interactive HTML performance report to ${htmlPath}`);
@@ -560,7 +640,11 @@ function main() {
   const artifactPath = path.resolve(utilsDir, '..', 'k6-summary.md');
   try {
     if (cleanMarkdown) {
-      fs.writeFileSync(artifactPath, `# BuggyBooks k6 Performance Summary\n\nGenerated: ${new Date().toISOString()}\n\n`, 'utf8');
+      fs.writeFileSync(
+        artifactPath,
+        `# BuggyBooks k6 Performance Summary\n\nGenerated: ${new Date().toISOString()}\n\n`,
+        'utf8'
+      );
     }
     fs.appendFileSync(artifactPath, md, 'utf8');
     console.log(`✅ Saved performance summary artifact to ${artifactPath}`);
@@ -569,7 +653,9 @@ function main() {
   }
 
   if (hasRegression) {
-    console.error(`❌ Performance Baseline Regression Gate Breached! Latency degraded by more than +${REGRESSION_THRESHOLD_PERCENT}% against golden baseline.`);
+    console.error(
+      `❌ Performance Baseline Regression Gate Breached! Latency degraded by more than +${REGRESSION_THRESHOLD_PERCENT}% against golden baseline.`
+    );
     process.exit(1);
   }
 

@@ -2,7 +2,6 @@ import { BasePage } from '@automationframeworks/playwright-utils';
 import { expect, Locator } from '@playwright/test';
 
 export class CatalogPage extends BasePage {
-
   // Locators
   private get btnLogout(): Locator {
     return this.page.locator("//button[text()='Logout']");
@@ -94,35 +93,44 @@ export class CatalogPage extends BasePage {
 
   public async clickLogout() {
     await this.ensureNavElementVisible(this.btnLogout);
-    await this.doClick(this.btnLogout, "Clicking on Logout button");
+    await this.doClick(this.btnLogout, 'Clicking on Logout button');
   }
 
   public async verifyCheckoutPage() {
-    await this.logMessage('INFO', "Verifying landing on Checkout Page");
-    const checkoutLink = this.getNavigateLink("Checkout");
+    await this.logMessage('INFO', 'Verifying landing on Checkout Page');
+    const checkoutLink = this.getNavigateLink('Checkout');
     await this.ensureNavElementVisible(checkoutLink);
-    const actualText = await this.doGetText(checkoutLink, "Checking if Checkout label is visible");
-    await this.logMessage('INFO', "Landed on Checkout Page successfully and Text is: " + actualText);
-    return actualText?.trim() === "Checkout" ? true : false;
+    const actualText = await this.doGetText(checkoutLink, 'Checking if Checkout label is visible');
+    await this.logMessage(
+      'INFO',
+      'Landed on Checkout Page successfully and Text is: ' + actualText
+    );
+    return actualText?.trim() === 'Checkout' ? true : false;
   }
 
   public async isLoginVisible() {
-    const loginLink = this.getNavigateLink("Login");
+    const loginLink = this.getNavigateLink('Login');
     await this.ensureNavElementVisible(loginLink);
     await loginLink.waitFor({ state: 'visible', timeout: 5000 });
-    return await this.doesElementExist(loginLink, "Checking if Login link is visible on Catalog page");
+    return await this.doesElementExist(
+      loginLink,
+      'Checking if Login link is visible on Catalog page'
+    );
   }
 
   public async isLogoutVisible(): Promise<boolean> {
     await this.ensureNavElementVisible(this.btnLogout);
     await this.btnLogout.waitFor({ state: 'visible', timeout: 5000 });
-    return await this.doesElementExist(this.btnLogout, "Checking if Logout button is visible on Catalog page");
+    return await this.doesElementExist(
+      this.btnLogout,
+      'Checking if Logout button is visible on Catalog page'
+    );
   }
 
   public async getBooksCount() {
     await this.eleBooksCount.first().waitFor({ state: 'visible', timeout: 60000 });
     const count = await this.eleBooksCount.count();
-    await this.logMessage('INFO', "Total Books displayed in Catalog page are: " + count);
+    await this.logMessage('INFO', 'Total Books displayed in Catalog page are: ' + count);
     return count;
   }
 
@@ -131,29 +139,38 @@ export class CatalogPage extends BasePage {
   }
 
   public async clickPaginationButton(btnNumber: number) {
-    const responsePromise = this.page.waitForResponse(res => res.url().includes('/api/books') && res.status() === 200);
+    const responsePromise = this.page.waitForResponse(
+      (res) => res.url().includes('/api/books') && res.status() === 200
+    );
     const btn = this.getpaginationButton(btnNumber);
     await this.doClick(btn, `Clicking on Pagination button number ${btnNumber}`);
     await responsePromise;
-    await expect(btn).toHaveClass(/active/, { timeout: 10000 }).catch(() => undefined);
+    await expect(btn)
+      .toHaveClass(/active/, { timeout: 10000 })
+      .catch(() => undefined);
   }
 
   public async searchBooks(term: string): Promise<void> {
-    const responsePromise = this.page.waitForResponse(res => res.url().includes('/api/books') && res.status() === 200);
+    const responsePromise = this.page.waitForResponse(
+      (res) => res.url().includes('/api/books') && res.status() === 200
+    );
     await this.doEnterText(this.inputSearch, term, `Filling search input with: ${term}`);
     await this.doClick(this.btnSearch, `Clicking Search button`);
     await responsePromise;
-    await this.eleResultCount.or(this.eleEmptyCatalog).first().waitFor({ state: 'visible', timeout: 30000 });
+    await this.eleResultCount
+      .or(this.eleEmptyCatalog)
+      .first()
+      .waitFor({ state: 'visible', timeout: 30000 });
   }
 
   public async clearSearch(): Promise<void> {
-    const responsePromise = this.page.waitForResponse(res => res.url().includes('/api/books') && res.status() === 200);
+    const responsePromise = this.page.waitForResponse(
+      (res) => res.url().includes('/api/books') && res.status() === 200
+    );
     await this.doClick(this.btnClearSearch, `Clicking Clear search button`);
     await responsePromise;
     await this.btnClearSearch.waitFor({ state: 'hidden', timeout: 10000 });
   }
-
-
 
   public async getResultCountText(): Promise<string> {
     return await this.doGetText(this.eleResultCount, `Getting catalog result count text`);
@@ -164,7 +181,10 @@ export class CatalogPage extends BasePage {
   }
 
   public async clickBookTitle(bookId: string | number): Promise<void> {
-    await this.doClick(this.getBookTitleLink(bookId), `Clicking on book title link for book ID: ${bookId}`);
+    await this.doClick(
+      this.getBookTitleLink(bookId),
+      `Clicking on book title link for book ID: ${bookId}`
+    );
   }
 
   public async getFirstBookTitle(): Promise<string> {
@@ -172,21 +192,28 @@ export class CatalogPage extends BasePage {
   }
 
   public async clickAddToCartForBook(bookId: number): Promise<void> {
-    await this.doClick(this.getAddToCartButton(bookId), `Clicking on Add to Cart button for book id: ${bookId}`);
+    await this.doClick(
+      this.getAddToCartButton(bookId),
+      `Clicking on Add to Cart button for book id: ${bookId}`
+    );
   }
 
   public async getCartStatusMessage(): Promise<string> {
-    return await this.doGetText(this.alertStatus, "Getting add to cart status message");
+    return await this.doGetText(this.alertStatus, 'Getting add to cart status message');
   }
 
   public async waitForCartStatusMessage(expectedMessage: string): Promise<void> {
     await this.logMessage('INFO', `Waiting for cart status message: ${expectedMessage}`);
-    await expect(this.page.getByRole('status').filter({ hasText: expectedMessage }).first()).toBeVisible({ timeout: 60000 });
+    await expect(
+      this.page.getByRole('status').filter({ hasText: expectedMessage }).first()
+    ).toBeVisible({ timeout: 60000 });
     await this.logMessage('INFO', `Cart status message "${expectedMessage}" is visible`);
   }
 
   public async addBookToCart(bookId: number): Promise<void> {
-    const responsePromise = this.page.waitForResponse(res => res.url().includes('/api/cart') && res.status() === 200);
+    const responsePromise = this.page.waitForResponse(
+      (res) => res.url().includes('/api/cart') && res.status() === 200
+    );
     await this.clickAddToCartForBook(bookId);
     await responsePromise;
     await this.waitForCartStatusMessage('added to cart');
@@ -225,26 +252,31 @@ export class CatalogPage extends BasePage {
   }
 
   public async getGridComputedLayout(): Promise<{ display: string; columnCount: number }> {
-    return await this.eleGridWrapper.evaluate(el => {
+    return await this.eleGridWrapper.evaluate((el) => {
       const style = getComputedStyle(el);
-      const cols = style.gridTemplateColumns.trim().split(/\s+/).filter(s => s.length > 0);
+      const cols = style.gridTemplateColumns
+        .trim()
+        .split(/\s+/)
+        .filter((s) => s.length > 0);
       return { display: style.display, columnCount: cols.length };
     });
   }
 
   public async getFirstCoverTransform(): Promise<string> {
-    return await this.eleBookCover.first().evaluate(el => getComputedStyle(el).transform);
+    return await this.eleBookCover.first().evaluate((el) => getComputedStyle(el).transform);
   }
 
   public async hoverFirstBookCard(): Promise<void> {
-    await this.mouseHover(this.eleBooksCount.first(), "Hovering over first book card");
+    await this.mouseHover(this.eleBooksCount.first(), 'Hovering over first book card');
   }
 
   public async waitForFirstCoverTransformTransition(): Promise<void> {
-    await this.page.waitForFunction(() => {
-      const el = document.querySelector('.catalog-book-cover');
-      return el ? getComputedStyle(el).transform !== 'none' : false;
-    }).catch(() => undefined);
+    await this.page
+      .waitForFunction(() => {
+        const el = document.querySelector('.catalog-book-cover');
+        return el ? getComputedStyle(el).transform !== 'none' : false;
+      })
+      .catch(() => undefined);
   }
 
   public async waitForBookCardsVisible(): Promise<void> {
@@ -252,23 +284,23 @@ export class CatalogPage extends BasePage {
   }
 
   public async getFirstBookCardBorderColor(): Promise<string> {
-    return await this.eleBooksCount.first().evaluate(el => getComputedStyle(el).borderColor);
+    return await this.eleBooksCount.first().evaluate((el) => getComputedStyle(el).borderColor);
   }
 
   public async getFirstCoverFilter(): Promise<string> {
-    return await this.eleBookCover.first().evaluate(el => getComputedStyle(el).filter);
+    return await this.eleBookCover.first().evaluate((el) => getComputedStyle(el).filter);
   }
 
   public async getSearchFormTransform(): Promise<string> {
-    return await this.formSearch.evaluate(el => getComputedStyle(el).transform);
+    return await this.formSearch.evaluate((el) => getComputedStyle(el).transform);
   }
 
   public async getFirstPriceTagTransform(): Promise<string> {
-    return await this.elePriceTag.first().evaluate(el => getComputedStyle(el).transform);
+    return await this.elePriceTag.first().evaluate((el) => getComputedStyle(el).transform);
   }
 
   public async getFirstBookCardH3Styles(): Promise<{ fontSize: string; lineHeight: string }> {
-    return await this.eleInfoCellH3.first().evaluate(el => {
+    return await this.eleInfoCellH3.first().evaluate((el) => {
       const style = getComputedStyle(el);
       return { fontSize: style.fontSize, lineHeight: style.lineHeight };
     });
@@ -281,5 +313,4 @@ export class CatalogPage extends BasePage {
   public async waitForBookCardSelector(): Promise<void> {
     await this.eleBooksCount.first().waitFor({ state: 'visible', timeout: 30000 });
   }
-
 }

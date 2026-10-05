@@ -1,4 +1,4 @@
-import { By, until, WebElement, Key } from 'selenium-webdriver';
+import { By, Key } from 'selenium-webdriver';
 import { BasePage } from '@core/base/base.page';
 import { envConfig } from '@config/env.config';
 
@@ -132,14 +132,16 @@ export class CatalogPage extends BasePage {
     if (clearButtons.length > 0 && (await clearButtons[0].isDisplayed())) {
       await this.logMessage('INFO', 'Clicking Clear Search button');
       await clearButtons[0].click();
-      await this.driver.wait(
-        async () => {
-          const books = await this.driver.findElements(this.eleBooks);
-          return books.length > 1;
-        },
-        15000,
-        'Catalog did not reset after clearing search'
-      ).catch(() => undefined);
+      await this.driver
+        .wait(
+          async () => {
+            const books = await this.driver.findElements(this.eleBooks);
+            return books.length > 1;
+          },
+          15000,
+          'Catalog did not reset after clearing search'
+        )
+        .catch(() => undefined);
     } else {
       const input = await this.waitForVisible(this.inputSearch);
       await input.click();

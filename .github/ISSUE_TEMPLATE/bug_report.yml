@@ -1,0 +1,57 @@
+name: Bug Report
+description: Report an issue, broken test, or defect in the AutomationFrameworks monorepo.
+title: '[BUG]: '
+labels: ['bug', 'triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this bug. Please fill out the sections below to help us diagnose and resolve it quickly.
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe the defect or unexpected behavior...
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Framework / Component
+      description: Which area of the monorepo is affected?
+      options:
+        - playwright-e2e
+        - selenium-e2e
+        - wdio-e2e
+        - mobile-automation
+        - k6-performance
+        - jmeter
+        - ci-cd / github-actions
+        - packages/playwright-utils
+        - documentation / planning
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Exact command-line commands and steps to reproduce the failure.
+      placeholder: |
+        1. Run `npm test -- ...`
+        2. Observe failure...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs Actual Behavior
+      description: What did you expect to happen versus what actually happened?
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or Terminal Output
+      description: Relevant logs or error output.
+      render: shell

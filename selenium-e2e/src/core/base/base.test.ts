@@ -27,9 +27,12 @@ export class BaseTest {
       this.captureMode = options.networkCaptureMode || 'all';
       this.intercepting = true;
       try {
-        this.cdpConnection = await this.driver.createCDPConnection("page");
-        await this.cdpConnection.execute("Network.enable", { maxTotalBufferSize: 10000000, maxResourceBufferSize: 5000000 });
-        
+        this.cdpConnection = await this.driver.createCDPConnection('page');
+        await this.cdpConnection.execute('Network.enable', {
+          maxTotalBufferSize: 10000000,
+          maxResourceBufferSize: 5000000
+        });
+
         // Listen to Network.requestWillBeSent
         this.cdpConnection._wsConnection.on('message', (message: string) => {
           const parsed = JSON.parse(message);
@@ -46,8 +49,10 @@ export class BaseTest {
           }
         });
         logger.info(`Network interception enabled with mode: ${this.captureMode}`);
-      } catch (err) {
-        logger.warn('CDP network interception is mostly supported on Chromium-based browsers only.');
+      } catch {
+        logger.warn(
+          'CDP network interception is mostly supported on Chromium-based browsers only.'
+        );
       }
     }
 
@@ -61,16 +66,17 @@ export class BaseTest {
       }
       const envPropsPath = path.join(resultsDir, 'environment.properties');
       if (!fs.existsSync(envPropsPath)) {
-        const props = [
-          `Framework=Selenium WebDriver (TypeScript + Mocha)`,
-          `Framework.Version=^4.43.0`,
-          `Test.Environment=${envConfig.env || 'STAGING'}`,
-          `Base.URL=${envConfig.baseUrl}`,
-          `Browser.Target=Google Chrome (ChromeDriver)`,
-          `Operating.System=${process.platform} (${process.arch})`,
-          `Node.Version=${process.version}`,
-          `Timestamp=${new Date().toISOString()}`
-        ].join('\n') + '\n';
+        const props =
+          [
+            `Framework=Selenium WebDriver (TypeScript + Mocha)`,
+            `Framework.Version=^4.43.0`,
+            `Test.Environment=${envConfig.env || 'STAGING'}`,
+            `Base.URL=${envConfig.baseUrl}`,
+            `Browser.Target=Google Chrome (ChromeDriver)`,
+            `Operating.System=${process.platform} (${process.arch})`,
+            `Node.Version=${process.version}`,
+            `Timestamp=${new Date().toISOString()}`
+          ].join('\n') + '\n';
         fs.writeFileSync(envPropsPath, props, 'utf-8');
       }
     } catch {
@@ -96,7 +102,7 @@ export class BaseTest {
     }
 
     if (this.cdpConnection) {
-        // Driver close usually handles it, but explicit cleanup is good if API supports it easily.
+      // Driver close usually handles it, but explicit cleanup is good if API supports it easily.
     }
 
     if (this.driver) {

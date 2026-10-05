@@ -7,6 +7,7 @@ This document serves as the **always-on memory and operational baseline** for al
 ## 🧭 Repository Overview & Tech Stacks
 
 `AutomationFrameworks` is a multi-framework test automation monorepo for the **BuggyBooks** application:
+
 - **`playwright-e2e/`**: Primary E2E and API automation framework (Playwright, TypeScript, Allure, Monocart).
 - **`jmeter/`**: Performance and load testing test plans, CSV datasets, and HTML reporting (Apache JMeter 5.6+).
 - **`selenium-e2e/`**: TypeScript + Mocha + Chai + Selenium WebDriver.
@@ -18,6 +19,7 @@ This document serves as the **always-on memory and operational baseline** for al
 ## ⚡ Core Rules & Non-Negotiables (Must Follow)
 
 ### 1. Browser Execution Policy: ONLY Google Chrome UI and API
+
 - **Rule**: **Do NOT introduce multiple browsers** (no Firefox, WebKit, Mobile Safari, Mobile Chrome, or duplicate Chromium).
 - **Playwright Projects**: `playwright-e2e/src/config/playwright.config.ts` must contain **only 3 projects**:
   1. `setup`: Runs `src/tests/auth.setup.ts` using `channel: 'chrome'` to cache storage state (`.auth/user.json`).
@@ -27,6 +29,7 @@ This document serves as the **always-on memory and operational baseline** for al
 - **Setup Project Trap**: `auth.setup.ts` **must** declare `use: { channel: 'chrome' }`. If omitted, Playwright defaults to bundled `chromium_headless_shell` (which is not installed in CI), causing `setup` to crash and all 54 UI tests to skip!
 
 ### 2. Render Staging Cold-Start Latency & Pre-Flight Probe
+
 - **Environments**:
   - Frontend: `https://buggy-books-fe.onrender.com`
   - Backend: `https://buggy-books.onrender.com`
@@ -38,9 +41,10 @@ This document serves as the **always-on memory and operational baseline** for al
   npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
   npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
   ```
-  *Skipping this will cause initial test requests to time out and produce false-positive flakiness.*
+  _Skipping this will cause initial test requests to time out and produce false-positive flakiness._
 
 ### 3. Intentional Chaos Containment & State Reset
+
 - **Authoritative Manual**: Comprehensive specifications for all 8 intentional anti-patterns, failure signatures, and Playwright/Selenium/WDIO remediation recipes are documented in [**`docs/intentional_bugs.md`**](docs/intentional_bugs.md).
 - **Chaos Endpoints**:
   - Toggle Chaos: `POST /api/test/config` (e.g. `checkoutFailureRate`, `inventoryDelayMs`, `visualChaos`, `rateLimitMaxRequests`)
@@ -55,9 +59,10 @@ This document serves as the **always-on memory and operational baseline** for al
     await request.post('/api/test/reset');
   });
   ```
-  *Failing to reset leaves `checkoutFailureRate: 1.0` active, causing concurrent or subsequent tests (like `API_LOG_04` in `Test_001_LoggingAndCorrelationApi.spec.ts`) to fail with 500 errors.*
+  _Failing to reset leaves `checkoutFailureRate: 1.0` active, causing concurrent or subsequent tests (like `API_LOG_04` in `Test_001_LoggingAndCorrelationApi.spec.ts`) to fail with 500 errors._
 
 ### 4. Apache JMeter Performance Architecture
+
 - **Location**: `jmeter/Tests/` and `jmeter/TestData/`
 - **Suites**:
   - `BuggyBooks_Catalog_Load.jmx` (`TC-PERF-JM-001`): Catalog browsing, search (`GET /api/books?search=`), book detail (< 3000ms SLA).
@@ -67,6 +72,7 @@ This document serves as the **always-on memory and operational baseline** for al
 - **CI Workflow**: `.github/workflows/jmeter-performance.yaml` supports on-demand parameterization (`threads`, `ramp_time`, `iterations`) and generates HTML dashboards + Step Summaries.
 
 ### 5. Documentation & Dual-Catalog Strict Parity
+
 - **Rule**: Whenever automated tests are added, modified, or quarantined, **both** catalog files must be updated in 100% lockstep:
   1. `docs/test_cases_catalog.md`
   2. `playwright-e2e/test_cases_catalog.md`
@@ -75,6 +81,7 @@ This document serves as the **always-on memory and operational baseline** for al
 - **Quarantine Governance**: See [`docs/quarantine_lifecycle_guide.md`](docs/quarantine_lifecycle_guide.md) for the 14-day aging limit and closed-loop weekly 10x audit pipeline (`.github/workflows/quarantine-audit.yml`).
 
 ### 6. Git Hygiene & PR Conventions
+
 - **Secrets & Storage State**: `.auth/` and `reports/` must remain in `.gitignore`. Never commit session files.
 - **Commit Style**: Use conventional commit messages:
   - `feat(scope): ...`
@@ -87,7 +94,9 @@ This document serves as the **always-on memory and operational baseline** for al
 - **Staging Concurrency Lock**: Any workflow or test job that mutates shared staging state (`/api/test/config`, `/api/test/reset`, user registration, or stock manipulation) must declare `concurrency: { group: buggybooks-staging-state, cancel-in-progress: false }` to prevent concurrent jobs from corrupting shared staging state.
 
 ### 7. Virtual Sprint Team & Agent Personas
+
 The monorepo operates with 7 specialized virtual agent personas to drive execution sprint-by-sprint:
+
 1. [**`role-scrum-master`**](.agents/skills/role-scrum-master/SKILL.md): Sprint ceremony facilitation, velocity accounting (63 SP), DoR/DoD enforcement, blocker removal, and retrospective insights.
 2. [**`role-sdet-architect`**](.agents/skills/role-sdet-architect/SKILL.md): Overall test strategy, dual-catalog sync, monorepo workspaces, sprint reviews, and Quality Gates.
 3. [**`role-playwright-automation`**](.agents/skills/role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression, and `@automationframeworks/playwright-utils`.
@@ -97,17 +106,21 @@ The monorepo operates with 7 specialized virtual agent personas to drive executi
 7. [**`role-devops-engineer`**](.agents/skills/role-devops-engineer/SKILL.md): GitHub Actions CI/CD workflows, PR Quality Gate (`pr-gate.yml`), Render warm-up probes, Allure GitHub Pages deployment, and GitHub CLI PR release lifecycle.
 
 ### 8. Cross-Platform Markdown Link Portability
+
 - **Rule**: **Never commit absolute Windows file paths** (e.g. `file:///c:/Workspace/...`) in any documentation, plans, or skill files.
 - **Enforcement**: All internal links between planning docs, READMEs, skills, and catalogs must use standard relative markdown links (`../Phases/...`, `docs/...`). This ensures cross-platform rendering across GitHub web viewers, Linux CI runners, and teammate IDEs.
 
 ### 9. 5-Phase, 15-Sprint Delivery Architecture (63 Story Points)
+
 - **Roadmap Location**: [`planning/README.md`](planning/README.md) and [`planning/Master/master_plan.md`](planning/Master/master_plan.md).
 - **Structure**: 5 Phases (Foundations 10 SP, Multi-Framework 12 SP, Resilience & Mobile 14 SP, Governance 14 SP, Enterprise Maturity 13 SP) decomposed into 15 granular Sprints.
 - **Execution Standards**: Every sprint has clear DoD (Definition of Done), persona assignments, verification scripts, and breadcrumb navigation.
 - **Roadmap v2 (Phases 6–12, 21 Sprints, 95 SP)**: [`planning/Master/enhancement_roadmap_v2.md`](planning/Master/enhancement_roadmap_v2.md) — Phases 1–5 are complete. New sprints (`sprint_6_1` … `sprint_12_3`) each include a **Code Review Checklist** used as the external review gate before the PO merges. PO decisions: no paid cloud (free/OSS alternatives only), BuggyBooks images may be published to GHCR, Google Chrome preferred for every browser-based tool.
 
 ### 10. Sprint Execution Protocol, Persona Handover Sequence & `task.md`
+
 Whenever a sprint is kicked off (e.g. by the human user saying "Execute Sprint X.Y"):
+
 1. **Scrum Master Kick-off (`role-scrum-master`)**:
    - Creates/switches to feature branch `feat/sprint-X.Y-...`.
    - Initializes root `task.md` from `task.template.md` with user stories, task breakdowns, and persona assignments.
@@ -132,7 +145,6 @@ Whenever a sprint is kicked off (e.g. by the human user saying "Execute Sprint X
 ---
 
 ## 📖 Deep-Dive Reference
+
 For detailed recipes, code examples, troubleshooting steps, and architectural walkthroughs, consult the dedicated agent skill:
 👉 [**`.agents/skills/repo-learnings-and-patterns/SKILL.md`**](.agents/skills/repo-learnings-and-patterns/SKILL.md)
-
-

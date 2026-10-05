@@ -1,13 +1,11 @@
 import type { Options } from '@wdio/types';
 import path from 'path';
 import fs from 'fs';
-import { Logger } from '../utils/Logger.js';
+import { Logger } from '../core/Logger.js';
 
 export const sharedConfig: Options.Testrunner = {
   runner: 'local',
-  specs: [
-    path.join(process.cwd(), 'src/specs/**/*.spec.ts'),
-  ],
+  specs: [path.join(process.cwd(), 'src/specs/**/*.spec.ts')],
   maxInstances: 1,
   logLevel: 'info',
   bail: 0,
@@ -20,11 +18,11 @@ export const sharedConfig: Options.Testrunner = {
       {
         args: {
           relaxedSecurity: true,
-          log: path.join(process.cwd(), 'logs', 'appium.log'),
+          log: path.join(process.cwd(), 'logs', 'appium.log')
         },
-        logPath: './logs',
-      },
-    ],
+        logPath: './logs'
+      }
+    ]
   ],
   framework: 'mocha',
   reporters: [
@@ -35,9 +33,9 @@ export const sharedConfig: Options.Testrunner = {
         outputDir: 'allure-results',
         disableWebdriverStepsReporting: false,
         disableWebdriverScreenshotsReporting: false,
-        useCucumberStepReporter: false,
-      },
-    ],
+        useCucumberStepReporter: false
+      }
+    ]
   ],
   onPrepare: function () {
     try {
@@ -46,17 +44,18 @@ export const sharedConfig: Options.Testrunner = {
         fs.mkdirSync(resultsDir, { recursive: true });
       }
       const envPropsPath = path.join(resultsDir, 'environment.properties');
-      const props = [
-        `Framework=Appium 2.x + WebdriverIO Mobile`,
-        `Framework.Version=^2.16.1`,
-        `Test.Environment=STAGING`,
-        `Base.URL=https://buggy-books-fe.onrender.com/`,
-        `API.Base.URL=https://buggy-books.onrender.com`,
-        `Browser.Target=UiAutomator2 (Android Emulator - Pixel 6)`,
-        `Operating.System=${process.platform} (${process.arch})`,
-        `Node.Version=${process.version}`,
-        `Timestamp=${new Date().toISOString()}`
-      ].join('\n') + '\n';
+      const props =
+        [
+          `Framework=Appium 2.x + WebdriverIO Mobile`,
+          `Framework.Version=^2.16.1`,
+          `Test.Environment=STAGING`,
+          `Base.URL=https://buggy-books-fe.onrender.com/`,
+          `API.Base.URL=https://buggy-books.onrender.com`,
+          `Browser.Target=UiAutomator2 (Android Emulator - Pixel 6)`,
+          `Operating.System=${process.platform} (${process.arch})`,
+          `Node.Version=${process.version}`,
+          `Timestamp=${new Date().toISOString()}`
+        ].join('\n') + '\n';
       fs.writeFileSync(envPropsPath, props, 'utf-8');
     } catch {
       // Non-blocking
@@ -64,7 +63,7 @@ export const sharedConfig: Options.Testrunner = {
   },
   mochaOpts: {
     ui: 'bdd',
-    timeout: 90000,
+    timeout: 90000
   },
   beforeSession: () => {
     Logger.info('Starting WebdriverIO Mobile Automation Session');
@@ -89,5 +88,5 @@ export const sharedConfig: Options.Testrunner = {
     } else {
       Logger.info(`Test PASSED: ${test.title}`);
     }
-  },
+  }
 };

@@ -14,10 +14,7 @@ export class DriverFactory {
     options.addArguments('--window-size=1920,1080');
     options.addArguments('--ignore-certificate-errors');
 
-    const driver = await new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(options)
-      .build();
+    const driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
     await driver.manage().setTimeouts({ implicit: 0, pageLoad: 30000 });
     return driver;
