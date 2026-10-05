@@ -54,29 +54,22 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
         with:
           fetch-depth: 1
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Monorepo Environment
+        uses: ./.github/actions/setup-monorepo
         with:
-          node-version: 22
-          cache: 'npm'
+          install-chrome: 'false'
 
       - name: Setup k6
-        uses: grafana/setup-k6-action@v1
-
-      - name: Install dependencies
-        run: |
-          npm ci
+        uses: grafana/setup-k6-action@43b9fc21641a76002687994433dd586f56e791b1 # v1.1.0
 
       - name: Render Staging Warm-Up Pre-Flight Probe
-        shell: bash
-        run: |
-          echo "Waking Render staging instance: ${{ env.BASE_URL }}..."
-          curl -s -o /dev/null -w "Backend wake probe: %{http_code}\n" "${{ env.BASE_URL }}/api/books" || true
-          npx wait-on -t 90000 "${{ env.BASE_URL }}/api/books" || true
+        uses: ./.github/actions/staging-warmup
+        with:
+          api-url: ${{ env.BASE_URL }}/api/books
 
       - name: Execute k6 Performance Benchmark
         id: run-k6
@@ -95,17 +88,13 @@ jobs:
 
       - name: Teardown Staging State Reset
         if: always()
-        shell: bash
-        run: |
-          echo "Restoring staging application state..."
-          curl -s -X POST "${{ env.BASE_URL }}/api/test/config" \
-            -H "Content-Type: application/json" \
-            -d '{"checkoutFailureRate": 0, "inventoryDelayMs": 0, "visualChaos": false}' || true
-          curl -s -X POST "${{ env.BASE_URL }}/api/test/reset" || true
+        uses: ./.github/actions/chaos-reset
+        with:
+          api-base: ${{ env.BASE_URL }}
 
       - name: Upload Performance Reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
         with:
           name: k6-performance-reports
           path: |

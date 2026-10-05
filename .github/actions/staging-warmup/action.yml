@@ -1,0 +1,32 @@
+name: 'BuggyBooks Staging Warm-Up'
+description: 'Probes BuggyBooks backend and frontend endpoints to wake up free-tier Render instances before test execution'
+
+inputs:
+  api-url:
+    description: 'API endpoint for warm-up probe'
+    required: false
+    default: 'https://buggy-books.onrender.com/api/books'
+  fe-url:
+    description: 'Frontend endpoint for warm-up probe'
+    required: false
+    default: 'https://buggy-books-fe.onrender.com/'
+  timeout-ms:
+    description: 'Timeout in milliseconds for wait-on probe'
+    required: false
+    default: '90000'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Render Staging Warm-Up Pre-Flight Probe
+      shell: bash
+      env:
+        WARMUP_API_URL: ${{ inputs.api-url }}
+        WARMUP_FE_URL: ${{ inputs.fe-url }}
+        WARMUP_TIMEOUT_MS: ${{ inputs.timeout-ms }}
+      run: |
+        echo "Probing BuggyBooks staging endpoints for cold-start wake-up..."
+        curl -s -o /dev/null "$WARMUP_API_URL" || true
+        curl -s -o /dev/null "$WARMUP_FE_URL" || true
+        npx wait-on -t "$WARMUP_TIMEOUT_MS" "$WARMUP_API_URL"
+        npx wait-on -t "$WARMUP_TIMEOUT_MS" "$WARMUP_FE_URL"
