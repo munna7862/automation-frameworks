@@ -1,0 +1,93 @@
+# ==============================================================================
+# BuggyBooks AutomationFrameworks — Taskfile (go-task runner)
+#
+# Unified local developer task definitions matching CI workflows and root npm scripts.
+# https://taskfile.dev
+# ==============================================================================
+
+version: '3'
+
+vars:
+  DOCKER_COMPOSE_FILE: 'infra/docker-compose.test.yml'
+  DOCKER_BASE_URL: 'http://localhost:5173'
+  DOCKER_API_BASE_URL: 'http://localhost:4000'
+
+tasks:
+  default:
+    desc: 'List all available tasks'
+    cmds:
+      - task --list
+
+  env:up:
+    desc: 'Start ephemeral BuggyBooks containers via Docker Compose and wait for health'
+    cmds:
+      - docker compose -f {{.DOCKER_COMPOSE_FILE}} up -d --wait
+      - npx wait-on -t 60000 {{.DOCKER_API_BASE_URL}}/api/books {{.DOCKER_BASE_URL}}/
+      - echo "✅ BuggyBooks ephemeral environment is online at {{.DOCKER_BASE_URL}} (API {{.DOCKER_API_BASE_URL}})"
+
+  env:down:
+    desc: 'Stop and purge ephemeral BuggyBooks containers and volumes'
+    cmds:
+      - docker compose -f {{.DOCKER_COMPOSE_FILE}} down -v --remove-orphans
+      - echo "🧹 BuggyBooks ephemeral environment stopped and volumes purged."
+
+  env:logs:
+    desc: 'Tail logs from ephemeral BuggyBooks containers'
+    cmds:
+      - docker compose -f {{.DOCKER_COMPOSE_FILE}} logs -f
+
+  test:pr:
+    desc: 'Run PR Quality Gate validation (linting, typechecking, catalog sync, smoke tests)'
+    cmds:
+      - npm run lint:all
+      - npm run typecheck:all
+      - npm run format:check
+      - npm run test:verify-catalog
+      - npm run test:smoke:docker
+
+  test:pw:
+    desc: 'Run full Playwright test suite against local DOCKER environment'
+    env:
+      ENV: DOCKER
+      BASE_URL: '{{.DOCKER_BASE_URL}}'
+      API_BASE_URL: '{{.DOCKER_API_BASE_URL}}'
+    cmds:
+      - npm run test:e2e:all --workspace=playwright-e2e
+
+  test:selenium:
+    desc: 'Run full Selenium WebDriver test suite against local DOCKER environment'
+    env:
+      ENV: DOCKER
+      BASE_URL: '{{.DOCKER_BASE_URL}}'
+      API_BASE_URL: '{{.DOCKER_API_BASE_URL}}'
+    cmds:
+      - npm test --workspace=selenium-e2e
+
+  test:wdio:
+    desc: 'Run full WebdriverIO test suite against local DOCKER environment'
+    env:
+      ENV: DOCKER
+      BASE_URL: '{{.DOCKER_BASE_URL}}'
+      API_BASE_URL: '{{.DOCKER_API_BASE_URL}}'
+    cmds:
+      - npm test --workspace=wdio-e2e
+
+  perf:smoke:
+    desc: 'Run k6 smoke benchmark against local DOCKER environment'
+    cmds:
+      - npm run perf:smoke --workspace=k6-performance
+
+  perf:jmeter:
+    desc: 'Run JMeter catalog load test headless against local DOCKER environment'
+    cmds:
+      - jmeter -n -t jmeter/Tests/BuggyBooks_Catalog_Load.jmx -l jmeter/Results/catalog_report.jtl -e -o jmeter/Results/html-dashboard -Jserver.host=localhost -Jserver.port=4000
+
+  report:allure:
+    desc: 'Generate and open Playwright Allure report'
+    cmds:
+      - npm run report --workspace=playwright-e2e
+
+  security:scan:
+    desc: 'Run local security audits (Gitleaks secret scan and OSV vulnerability scanner)'
+    cmds:
+      - node scripts/run-security-scan.js
