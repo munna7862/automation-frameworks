@@ -107,6 +107,20 @@ export function formatZodIssues(issues: z.ZodIssue[]): string {
  * Validates raw environment inputs and resolves default profile fallbacks.
  * Exits fast with code 1 if validation fails (unless exitOnError is false).
  */
+function sanitizeBaseUrl(url: string, stripApiSuffix = false): string {
+  let s = (url || '').trim();
+  while (s.endsWith('/')) {
+    s = s.slice(0, -1);
+  }
+  if (stripApiSuffix && s.endsWith('/api')) {
+    s = s.slice(0, -4);
+    while (s.endsWith('/')) {
+      s = s.slice(0, -1);
+    }
+  }
+  return s;
+}
+
 export function validateEnvConfig(
   rawEnv: Record<string, any> = process.env,
   options: { exitOnError?: boolean } = { exitOnError: true }
@@ -128,8 +142,8 @@ export function validateEnvConfig(
   const rawApiBaseUrl = rawEnv.E2E_API_URL || rawEnv.API_BASE_URL || profileDefaults.apiBaseUrl;
 
   // Clean trailing slashes or /api suffixes for apiBaseUrl
-  const cleanApiBaseUrl = (rawApiBaseUrl || '').replace(/\/api\/?$/, '').replace(/\/+$/, '');
-  const cleanBaseUrl = (rawBaseUrl || '').replace(/\/+$/, '');
+  const cleanApiBaseUrl = sanitizeBaseUrl(rawApiBaseUrl, true);
+  const cleanBaseUrl = sanitizeBaseUrl(rawBaseUrl, false);
 
   const candidate = {
     ENV: targetEnvRaw,

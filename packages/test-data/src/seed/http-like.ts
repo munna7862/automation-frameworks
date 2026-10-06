@@ -23,6 +23,14 @@ export interface HttpLike {
   delete<T = any>(url: string, options?: HttpRequestOptions): Promise<HttpResponse<T>>;
 }
 
+function trimTrailingSlashes(str: string): string {
+  let s = str;
+  while (s.endsWith('/')) {
+    s = s.slice(0, -1);
+  }
+  return s;
+}
+
 /**
  * Adapter wrapping Playwright's APIRequestContext into an HttpLike interface.
  */
@@ -37,7 +45,7 @@ export function createPlaywrightAdapter(
 ): HttpLike {
   const resolveUrl = (path: string): string => {
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
-    const base = baseUrl.replace(/\/+$/, '');
+    const base = trimTrailingSlashes(baseUrl);
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
     return base ? `${base}${cleanPath}` : cleanPath;
   };
@@ -117,7 +125,7 @@ export function createAxiosAdapter(
 ): HttpLike {
   const resolveUrl = (path: string): string => {
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
-    const base = baseUrl.replace(/\/+$/, '');
+    const base = trimTrailingSlashes(baseUrl);
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
     return base ? `${base}${cleanPath}` : cleanPath;
   };
