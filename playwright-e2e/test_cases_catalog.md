@@ -722,8 +722,17 @@ These test suites provide consumer-driven contract testing with Pact (V3/V4 file
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **CT-PACT-008** | BuggyBooks Pact Provider Verification | Execute Pact Verifier against running backend provider (`providerBaseUrl`) verifying all interactions from `buggybooks-web-buggybooks-api.json` using state handlers (`/api/test/reset`, `/api/test/books/:id/stock`, seed user). | Critical | Pact Provider (`contract-tests`) | `@contract` `@pact` `@provider` | **Yes**<br>- Verifier: `playwright-e2e/contract-tests/provider/provider.verify.ts`<br>- Runner: `npm run test:contract:provider --workspace=playwright-e2e`<br>- Gate: `Pact verification clean exit 0` |
-| **CT-FUZZ-001** | Schemathesis Property-Based API Fuzzing | Run Schemathesis property-based fuzzing against BuggyBooks backend using generated OpenAPI 3.1 specification (`docs/api/openapi.yaml`), excluding chaos endpoints and verifying status code compliance, schema conformance, and no unhandled 5xx exceptions. | Critical | Schemathesis Fuzzing (`.github/workflows/api-fuzz.yml`) | `@fuzz` `@schemathesis` `@openapi` | **Yes**<br>- Workflow: `.github/workflows/api-fuzz.yml`<br>- Runner: `docker run schemathesis/schemathesis:stable run docs/api/openapi.yaml`<br>- Gate: `0 unhandled 5xx errors on non-chaos endpoints` |
 
+---
 
+## 28. Dynamic Application Security Testing (DAST & OWASP ZAP)
 
+*Sprint Source: [Sprint 9.1: DAST Pipeline with OWASP ZAP](../planning/Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md)*
 
+These test specifications define automated Dynamic Application Security Testing (DAST) pipelines utilizing OWASP ZAP to execute passive baseline vulnerability scanning on pull requests and active API penetration testing nightly against ephemeral container instances of BuggyBooks.
+
+### **Suite: OWASP ZAP DAST Specifications**
+| ID | Title | Description | Priority | Target Coverage | Tags | Covered |
+|:---|:---|:---|:---|:---|:---|:---|
+| **DAST-ZAP-001** | OWASP ZAP Passive Baseline Scan on PR | Execute automated passive DAST scan against frontend SPA (`http://localhost:5173`) using `zaproxy/action-baseline` with alpha rules enabled (`-a`) and `security/zap-rules.tsv` triage filter. Fail on unacknowledged High/Medium defects, generate HTML report artifact, and upload findings as SARIF under category `zap-baseline` to GitHub Code Scanning. | Critical | DAST Passive Baseline (`.github/workflows/security-dast.yml`) | `@security` `@dast` `@zap` `@baseline` | **Yes**<br>- Workflow: `.github/workflows/security-dast.yml` (`zap-baseline`)<br>- Target: `http://localhost:5173`<br>- Rules: `security/zap-rules.tsv`<br>- Gate: `0 unhandled High/Medium alerts; clean SARIF upload` |
+| **DAST-ZAP-002** | OWASP ZAP Active API Penetration Scan Nightly | Execute automated active API penetration scan against backend API (`http://localhost:4000`) using OpenAPI 3.1 specification (`docs/api/openapi.yaml`) and `zaproxy/action-api-scan`. Inject seeded JWT bearer token without bypass headers, strictly exclude chaos endpoints (`^/api/test/`) via context, upload SARIF under category `zap-api`, and stage HTML reports for the executive portal. | Critical | DAST Active API Scan (`.github/workflows/security-dast.yml`) | `@security` `@dast` `@zap` `@api` `@nightly` | **Yes**<br>- Workflow: `.github/workflows/security-dast.yml` (`zap-api-scan`)<br>- Target: `docs/api/openapi.yaml`<br>- Context: `security/zap-api-context.context`<br>- Gate: `Nightly execution with SARIF code scanning ingestion` |

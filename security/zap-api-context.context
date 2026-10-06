@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+    <context>
+        <name>BuggyBooks-API</name>
+        <desc>BuggyBooks API Context excluding test and chaos endpoints</desc>
+        <inscope>true</inscope>
+        <incregexes>^http:\/\/localhost:4000\/.*$</incregexes>
+        <excregexes>^http:\/\/localhost:4000\/api\/test\/.*$</excregexes>
+        <tech>
+            <include>Language.JavaScript</include>
+            <include>OS.Linux</include>
+            <include>Db.SQLite</include>
+        </tech>
+    </context>
+</configuration>

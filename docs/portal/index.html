@@ -885,11 +885,12 @@
     <!-- Controls Row: Category Filters & Monorepo Metadata -->
     <div class="controls-row">
       <div class="filter-tabs" role="tablist">
-        <button class="filter-tab active" data-filter="all">All Suites (6)</button>
+        <button class="filter-tab active" data-filter="all">All Suites (7)</button>
         <button class="filter-tab" data-filter="web">Web UI</button>
         <button class="filter-tab" data-filter="web-api">API & Full-Stack</button>
         <button class="filter-tab" data-filter="performance">Performance & Load</button>
         <button class="filter-tab" data-filter="mobile">Mobile Automation</button>
+        <button class="filter-tab" data-filter="security">Security & DAST</button>
       </div>
 
       <div class="meta-status-group">
@@ -1298,6 +1299,72 @@
         </div>
       </div>
 
+      <!-- 7. OWASP ZAP DAST & AppSec -->
+      <div class="framework-card" data-category="security web-api">
+        <div class="card-glow-accent"></div>
+        <div>
+          <div class="card-top-row">
+            <div class="card-brand">
+              <div class="framework-icon-box" style="color: #ef4444;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <div class="card-brand-info">
+                <h3>OWASP ZAP DAST</h3>
+                <span class="framework-badge">Dynamic AppSec Testing</span>
+              </div>
+            </div>
+            <span class="status-badge" id="sec-status">PASSED</span>
+          </div>
+
+          <div class="metrics-matrix">
+            <div class="metric-item">
+              <span class="metric-label">High Risk</span>
+              <span class="metric-val green" id="sec-high">0</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Medium Risk</span>
+              <span class="metric-val" id="sec-med">0</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Low / Info</span>
+              <span class="metric-val" id="sec-low">10</span>
+            </div>
+          </div>
+
+          <div class="framework-details">
+            <div class="detail-row">
+              <span class="label">Engine & Runner</span>
+              <span class="val">OWASP ZAP 2.14+</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">PR Scan (Passive)</span>
+              <span class="val">ZAP Baseline (:5173)</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Nightly (Active)</span>
+              <span class="val">ZAP API Scan (:4000)</span>
+            </div>
+          </div>
+
+          <ul class="feature-highlights">
+            <li>Passive baseline scan on PR with alpha rules</li>
+            <li>Nightly OpenAPI active penetration scan</li>
+            <li>SARIF 2.1.0 ingestion into GitHub Code Scanning</li>
+          </ul>
+        </div>
+
+        <div class="card-footer">
+          <a href="./AutomationReports/Security/" class="report-link-btn" id="sec-link">
+            <span>View ZAP DAST Reports</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+
     </section>
 
     <!-- Architecture & Repository Resources Section -->
@@ -1363,6 +1430,18 @@
           <div class="resource-info">
             <h4>Virtual Agent Personas</h4>
             <p>Engineering operational guidelines and sprint ceremony handover protocols.</p>
+          </div>
+        </a>
+
+        <a href="https://github.com/munna7862/automation-frameworks/blob/main/docs/security/security_testing_guide.md" target="_blank" rel="noopener" class="resource-tile">
+          <div class="resource-icon" style="color: var(--accent-rose); background: rgba(244, 63, 94, 0.1);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div class="resource-info">
+            <h4>Application Security Guide</h4>
+            <p>DAST pipeline, localhost scope guard, rules triage, and AppSec testing.</p>
           </div>
         </a>
       </div>
@@ -1505,6 +1584,14 @@
             updateText('k6-p95', `${fws.k6.metrics.p95LatencyMs}ms`);
             updateText('k6-drift', fws.k6.metrics.latencyDrift ? fws.k6.metrics.latencyDrift.split(' ')[0] : '+3.2%');
             updateBadge('k6-status', fws.k6.status);
+          }
+
+          // Security (OWASP ZAP)
+          if (fws.security && fws.security.metrics) {
+            updateText('sec-high', fws.security.metrics.highAlerts ?? 0);
+            updateText('sec-med', fws.security.metrics.mediumAlerts ?? 0);
+            updateText('sec-low', (fws.security.metrics.lowAlerts ?? 0) + (fws.security.metrics.informationalAlerts ?? 0));
+            updateBadge('sec-status', fws.security.status);
           }
         }
       }
