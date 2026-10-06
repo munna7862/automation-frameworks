@@ -7,3 +7,4 @@ export * from './inventory.schema';
 export * from './health.schema';
 export * from './error.schema';
 export * from './test-control.schema';
+export * from './realtime.schema';

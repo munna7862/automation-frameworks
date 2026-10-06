@@ -33,6 +33,8 @@ export interface ApiClientHub {
   testControl: TestControlClient;
 }
 
+export type ApiClient = ApiClientHub;
+
 export function createApiClient(
   request: APIRequestContext,
   defaultOpts?: Partial<RequestOpts>

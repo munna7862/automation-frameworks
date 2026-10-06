@@ -26,7 +26,6 @@ const apiBaseTest = base.extend<ApiFixtureType>({
       baseURL: envConfig.apiBaseUrl,
       extraHTTPHeaders: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
         'x-bypass-rate-limit': 'true',
         'x-test-session-id': testSessionId
       }

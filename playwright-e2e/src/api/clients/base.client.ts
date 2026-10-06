@@ -43,6 +43,17 @@ export abstract class BaseClient {
       mergedHeaders['Authorization'] = `Bearer ${token}`;
     }
 
+    if (opts.multipart) {
+      delete mergedHeaders['Content-Type'];
+      delete mergedHeaders['content-type'];
+    } else if (
+      opts.data !== undefined &&
+      !mergedHeaders['Content-Type'] &&
+      !mergedHeaders['content-type']
+    ) {
+      mergedHeaders['Content-Type'] = 'application/json';
+    }
+
     const fetchOptions: Parameters<APIRequestContext['fetch']>[1] = {
       method,
       headers: mergedHeaders,

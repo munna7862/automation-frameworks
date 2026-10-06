@@ -3,7 +3,7 @@
 **Navigation**: [🗺️ Planning Hub](../README.md) | [📖 Roadmap v2](../Master/enhancement_roadmap_v2.md) | [⬅️ Phase 7](phase_7_hermetic_environments_test_data_and_developer_experience.md) | **[Phase 8]** | [Phase 9 ➡️](phase_9_security_testing_dast_and_appsec.md)
 
 **Phase Identifier**: `PHASE-8-API-DEPTH-CLIENTS-SCHEMAS-CONTRACTS`
-**Phase Status**: In Progress (Sprint 8.1 Complete)
+**Phase Status**: In Progress (Sprint 8.1 & 8.2 Complete)
 **Priority**: P1 / Must (8.1, 8.2) · P2 / Should (8.3)
 **Total Phase Velocity**: **14 Story Points** (Sprint 8.1: 5 SP, Sprint 8.2: 5 SP, Sprint 8.3: 4 SP)
 **Phase Leads**: SDET Architect & Playwright QA Lead

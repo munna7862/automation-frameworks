@@ -11,7 +11,7 @@ export const ApiErrorDetailSchema = z
     path: z.array(z.union([z.string(), z.number()])).optional(),
     message: z.string().optional()
   })
-  .strict();
+  .passthrough();
 
 export const ApiErrorResponseSchema = z
   .object({
