@@ -1,0 +1,128 @@
+[
+  {
+    "username": "admin",
+    "password": "password123",
+    "fullName": "Administrator",
+    "email": "admin@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_001",
+    "password": "Password123!",
+    "fullName": "Nikita Crist",
+    "email": "perf_user_001@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_002",
+    "password": "Password123!",
+    "fullName": "Lilliana Wisozk",
+    "email": "perf_user_002@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_003",
+    "password": "Password123!",
+    "fullName": "Collin Leffler",
+    "email": "perf_user_003@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_004",
+    "password": "Password123!",
+    "fullName": "Lola Hilll",
+    "email": "perf_user_004@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_005",
+    "password": "Password123!",
+    "fullName": "Ciara Bayer",
+    "email": "perf_user_005@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_006",
+    "password": "Password123!",
+    "fullName": "Art SchowalterHaag",
+    "email": "perf_user_006@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_007",
+    "password": "Password123!",
+    "fullName": "Janelle Barton",
+    "email": "perf_user_007@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_008",
+    "password": "Password123!",
+    "fullName": "Major Lockman",
+    "email": "perf_user_008@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_009",
+    "password": "Password123!",
+    "fullName": "Paris Metz",
+    "email": "perf_user_009@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_010",
+    "password": "Password123!",
+    "fullName": "Crawford Howell",
+    "email": "perf_user_010@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_011",
+    "password": "Password123!",
+    "fullName": "Freeda Connelly",
+    "email": "perf_user_011@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_012",
+    "password": "Password123!",
+    "fullName": "Winfield Abshire",
+    "email": "perf_user_012@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_013",
+    "password": "Password123!",
+    "fullName": "Nestor Herzog",
+    "email": "perf_user_013@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_014",
+    "password": "Password123!",
+    "fullName": "Loyce Hahn",
+    "email": "perf_user_014@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_015",
+    "password": "Password123!",
+    "fullName": "Lynn Carter",
+    "email": "perf_user_015@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_016",
+    "password": "Password123!",
+    "fullName": "Jovany Ledner",
+    "email": "perf_user_016@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_017",
+    "password": "Password123!",
+    "fullName": "Audrey Haley",
+    "email": "perf_user_017@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_018",
+    "password": "Password123!",
+    "fullName": "Dell Fay",
+    "email": "perf_user_018@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_019",
+    "password": "Password123!",
+    "fullName": "Cara Nader",
+    "email": "perf_user_019@buggybooks.internal"
+  },
+  {
+    "username": "perf_user_020",
+    "password": "Password123!",
+    "fullName": "Conor Schoen",
+    "email": "perf_user_020@buggybooks.internal"
+  }
+]

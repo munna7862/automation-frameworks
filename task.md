@@ -1,123 +1,129 @@
 # Task Backlog: AutomationFrameworks Sprint Execution
 
-## Current Focus: Sprint 7.1 — Ephemeral BuggyBooks Environment in CI
+## Current Focus: Sprint 7.2 — Test Data Engineering & Typed Configuration
 
-**Sprint Identifier**: `SPRINT-7.1-EPHEMERAL-BUGGYBOOKS-ENV`  
+**Sprint Identifier**: `SPRINT-7.2-TEST-DATA-ENGINEERING`  
 **Phase**: Phase 7 (Hermetic Environments, Test Data & Developer Experience)  
-**Story Points**: 6 SP  
-**Branch**: `feat/sprint-7.1-ephemeral-env` (+ `feat/ghcr-images` in `buggy-books`)  
-**Goal**: Run every PR's tests against a fresh BuggyBooks started from GHCR images inside the CI runner, removing the shared-staging dependency from the PR path.
+**Story Points**: 4 SP  
+**Branch**: `feat/sprint-7.2-test-data`  
+**Goal**: Introduce a shared test-data package (factories, builders, API seeders, cleanup registry) and zod-validated typed configuration, so tests create exactly the state they need through the API and clean it up deterministically.
 
 ---
 
 ## 1. Persona Roles & Ownership Matrix
 
-| Persona                        | Role Assignment              | Responsibilities for this Sprint                                                                                                   | Status    |
-| :----------------------------- | :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------- | :-------- |
-| **Scrum Master**               | `role-scrum-master`          | Sprint kick-off, DoR verification, DoD audit, and velocity tracking.                                                               | `ACTIVE`  |
-| **SDET Architect**             | `role-sdet-architect`        | `ENV=DOCKER` profile architecture across frameworks, dual-catalog sync, and code acceptance review.                                | `ACTIVE`  |
-| **DevOps Engineer**            | `role-devops-engineer`       | GHCR workflow in `buggy-books`, `infra/docker-compose.test.yml`, composite actions, CI workflow updates, and PR release lifecycle. | `ACTIVE`  |
-| **Playwright QA Lead**         | `role-playwright-automation` | Playwright `DOCKER` profile alignment, register-if-missing seed user in `auth.setup.ts`, and spec cleanliness.                     | `ACTIVE`  |
-| **Selenium / WDIO Specialist** | `role-selenium-specialist`   | `DOCKER` profiles in `selenium-e2e` and `wdio-e2e` `env.config.ts`.                                                                | `ACTIVE`  |
-| **Performance Engineer**       | `role-performance-engineer`  | `k6` `TARGET_ENV` / `BASE_URL` profile default and JMeter localhost port parameterization.                                         | `ACTIVE`  |
-| **Product Owner**              | Human Tech Lead (`User`)     | Backlog prioritization, GHCR package visibility toggle, final PR review & merge.                                                   | `STANDBY` |
+| Persona                  | Role Assignment              | Responsibilities for this Sprint                                                                                           | Status    |
+| :----------------------- | :--------------------------- | :------------------------------------------------------------------------------------------------------------------------- | :-------- |
+| **Scrum Master**         | `role-scrum-master`          | Sprint kick-off, DoR verification, DoD audit, and velocity tracking.                                                       | `ACTIVE`  |
+| **SDET Architect**       | `role-sdet-architect`        | Package API design (builders, seeders, registry contracts), zod config schema, dual-catalog sync, code acceptance review.  | `ACTIVE`  |
+| **Playwright QA Lead**   | `role-playwright-automation` | Fixture integration in `data.fixture.ts`, merge into `base.fixture` / `api.fixture`, migrate 4 Playwright reference specs. | `ACTIVE`  |
+| **Selenium Specialist**  | `role-selenium-specialist`   | Consume seeders for setup in `Test_001_Selenium_Auth.spec.ts` with axios HttpLike adapter.                                 | `ACTIVE`  |
+| **Performance Engineer** | `role-performance-engineer`  | Author perf dataset generator (`generate-perf-datasets.ts`), root script `npm run data:perf`, and dataset parity.          | `ACTIVE`  |
+| **DevOps Engineer**      | `role-devops-engineer`       | Build integration, CI checks, documentation synchronization, and PR release lifecycle.                                     | `ACTIVE`  |
+| **Product Owner**        | Human Tech Lead (`User`)     | Backlog prioritization, final PR review & merge.                                                                           | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
-### US-AF-711: Publish BuggyBooks images to GHCR — _in `munna7862/buggy-books`_ (1.5 SP)
+### US-AF-721: `@automationframeworks/test-data` Package Architecture (1.5 SP)
 
-- [x] **US-AF-711.1** (`DevOps Engineer`): Author `.github/workflows/publish-images.yml` in `munna7862/buggy-books` with buildx, GHA layer caching, OCI labels, and multi-tag strategy (`latest`, short-sha, and `ci-localhost` with `VITE_API_URL=http://localhost:4000/api`).
-- [x] **US-AF-711.2** (`DevOps Engineer`): Create branch `feat/ghcr-images`, push workflow, open PR in `buggy-books`, and merge to `main`.
-- [x] **US-AF-711.3** (`DevOps Engineer`): Trigger/monitor workflow execution on `buggy-books` to publish `ghcr.io/munna7862/buggy-books-backend` and `ghcr.io/munna7862/buggy-books-frontend`.
+- [x] **US-AF-721.1** (`SDET Architect`): Scaffold `packages/test-data` with `package.json`, `tsconfig.json`, `eslint.config.mjs`, `src/index.ts`, and wire dependencies (`@faker-js/faker`, `zod`).
+- [x] **US-AF-721.2** (`SDET Architect`): Implement seedable faker provider (`TEST_DATA_SEED` env var support, deterministic replay, seed logging).
+- [x] **US-AF-721.3** (`SDET Architect`): Implement factories and builders: `UserFactory`, `CheckoutDetailsFactory`, `UserBuilder`.
+- [x] **US-AF-721.4** (`SDET Architect`): Implement shared constants: `TEST_CARD_NUMBERS`, `KNOWN_BOOK_IDS`, and `INVALID_INPUTS`.
+- [x] **US-AF-721.5** (`SDET Architect`): Author comprehensive unit tests in `packages/test-data/src/**/*.test.ts` verifying uniqueness under parallel workers, reproducible seeding, and builder contracts (14/14 tests passing).
 
-### US-AF-712: Test Compose & Composite Action — _in this repo_ (1.5 SP)
+### US-AF-722: API Seeders & Cleanup Registry (1.5 SP)
 
-- [x] **US-AF-712.1** (`DevOps Engineer`): Author `infra/docker-compose.test.yml` (ephemeral backend :4000 and frontend :5173, no volumes, healthcheck on `/api/health`).
-- [x] **US-AF-712.2** (`DevOps Engineer`): Author `.github/actions/buggybooks-up/action.yml` (launch compose, wait-on health endpoints, export digests to Step Summary and `$GITHUB_ENV`).
-- [x] **US-AF-712.3** (`DevOps Engineer`): Author `.github/actions/buggybooks-down/action.yml` (export container logs artifact, `docker compose down -v`).
-- [x] **US-AF-712.4** (`DevOps Engineer`): Author `infra/README.md` documenting architecture, environment variables, and local execution commands.
+- [x] **US-AF-722.1** (`SDET Architect`): Implement `HttpLike` interface and `ApiSeeder` (`createUser`, `login`, `addToCart`, `placeOrder`, `setStock`).
+- [x] **US-AF-722.2** (`SDET Architect`): Implement `CleanupRegistry` (LIFO execution, non-blocking error containment, Allure step/attachment warnings).
+- [x] **US-AF-722.3** (`Playwright QA Lead`): Implement `playwright-e2e/src/core/base/data.fixture.ts` with `seed` and `cleanup` fixtures, and merge into `base.fixture.ts` & `api.fixture.ts`.
+- [x] **US-AF-722.4** (`Playwright QA Lead`): Migrate reference spec 1: `Test_002_OrdersApi.spec.ts` to consume `seed.createAndLoginUser` and `seed.placeOrder`.
+- [x] **US-AF-722.5** (`Playwright QA Lead`): Migrate reference spec 2: `Test_001_CartAndInventoryApi.spec.ts` to consume `seed.createAndLoginUser` and `seed.addToCart`.
+- [x] **US-AF-722.6** (`Playwright QA Lead`): Migrate reference spec 3: `Test_006_ProfileSummaryAndOrderHistory.spec.ts` (API-seeded user/order state, UI validation).
+- [x] **US-AF-722.7** (`Playwright QA Lead`): Migrate reference spec 4: `Test_006_CartQuantityAdjustment.spec.ts` to consume `UserFactory` with zero hard-coded credentials.
+- [x] **US-AF-722.8** (`Selenium Specialist`): Migrate reference spec 5: `Test_001_Selenium_Auth.spec.ts` to consume `ApiSeeder` with axios `HttpLike` client.
 
-### US-AF-713: `ENV=DOCKER` Profile Across Frameworks (1.5 SP)
+### US-AF-723: Typed, Validated Configuration (0.5 SP)
 
-- [x] **US-AF-713.1** (`SDET Architect` / `Playwright QA Lead`): Implement `DOCKER`, `STAGING`, `INTEROP` profiles in `playwright-e2e/src/config/env.config.ts`.
-- [x] **US-AF-713.2** (`Selenium / WDIO Specialist`): Implement `DOCKER` profiles in `selenium-e2e/src/config/env.config.ts` and `wdio-e2e/src/config/env.config.ts`.
-- [x] **US-AF-713.3** (`Performance Engineer`): Implement `TARGET_ENV=DOCKER` handling in `k6-performance/config/options.js` and verify JMeter host/port parameter flexibility.
-- [x] **US-AF-713.4** (`Playwright QA Lead`): Implement register-if-missing idempotent seed user creation in `playwright-e2e/src/tests/auth.setup.ts`.
-- [x] **US-AF-713.5** (`DevOps Engineer`): Add `TargetEnv` and `BuggyBooksImage` fields in `scripts/generate-allure-environment.js`.
+- [x] **US-AF-723.1** (`SDET Architect`): Author shared zod configuration schema in `packages/test-data/src/config/schema.ts` (`ENV` enum `DOCKER|STAGING|INTEROP`, valid URLs, coerced booleans, conditional staging credential requirements).
+- [x] **US-AF-723.2** (`SDET Architect`): Refactor `playwright-e2e/src/config/env.config.ts` to validate using zod with fast fail and formatted error block.
+- [x] **US-AF-723.3** (`Selenium Specialist`): Refactor `selenium-e2e/src/config/env.config.ts` with zod validation.
+- [x] **US-AF-723.4** (`Selenium Specialist`): Refactor `wdio-e2e/src/config/env.config.ts` with zod validation.
 
-### US-AF-714: Switch PR Path to DOCKER; Keep STAGING Nightly (1.5 SP)
+### US-AF-724: Performance Datasets From Single Source (0.5 SP)
 
-- [x] **US-AF-714.1** (`DevOps Engineer`): Wire `buggybooks-up` and `buggybooks-down` into `.github/workflows/_reusable-e2e.yml` when `target-env == 'DOCKER'`; isolate concurrency lock for DOCKER runs.
-- [x] **US-AF-714.2** (`DevOps Engineer`): Switch `.github/workflows/pr-gate.yml` to `target-env: DOCKER` (using `buggybooks-up` / `buggybooks-down`), remove `buggybooks-staging-state` concurrency lock, and target localhost for chaos reset.
-- [x] **US-AF-714.3** (`DevOps Engineer`): Update `.github/workflows/nightly-regression.yml` with dual targets: full suite on `DOCKER` and contract subset on `STAGING` with `@staging-contract`.
-- [x] **US-AF-714.4** (`SDET Architect`): Purge any remaining hard-coded `onrender.com` in `*/src` files and update dual catalogs (`docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md`) in lockstep.
-- [x] **US-AF-714.5** (`SDET Architect`): Update `AGENTS.md` §2 documenting warm-up probe requirements for STAGING only.
+- [x] **US-AF-724.1** (`Performance Engineer`): Author `packages/test-data/scripts/generate-perf-datasets.ts` writing `jmeter/TestData/users.csv` and `k6-performance/data/users.json` from `UserFactory`.
+- [x] **US-AF-724.2** (`Performance Engineer`): Add root npm script `"data:perf": "tsx packages/test-data/scripts/generate-perf-datasets.ts"`.
+- [x] **US-AF-724.3** (`Performance Engineer`): Verify dataset generation and documented ephemeral setup integration.
 
 ### Verification, DoD & Release Protocol
 
-- [x] **US-AF-710.1** (`Scrum Master`): Verify Pre-Flight Definition of Ready (DoR).
-- [x] **US-AF-710.2** (`SDET Architect`): Conduct Code Acceptance Review against Code Review Checklist.
-- [x] **US-AF-710.3** (`Scrum Master`): Perform 4-point Definition of Done (DoD) audit.
-- [ ] **US-AF-710.4** (`DevOps Engineer`): Commit, push branch, open PR with full verification evidence, monitor CI checks.
+- [x] **US-AF-720.1** (`Scrum Master`): Verify Pre-Flight Definition of Ready (DoR).
+- [x] **US-AF-720.2** (`SDET Architect`): Conduct Code Acceptance Review on package exports, fixtures, zod error handling, and migrated specs.
+- [x] **US-AF-720.3** (`Scrum Master`): Verify 4-point Definition of Done (DoD).
+- [x] **US-AF-720.4** (`DevOps Engineer`): Update documentation (`docs/ReusablePackage.md`, sprint plans) and execute PR release lifecycle.
 
 ---
 
 ## 3. Sprint Review Comments & Refinement Loop
 
-| Gate / Reviewer                  | Target Role     | Review Feedback & Comments                                                                                                | Gate Status |
-| :------------------------------- | :-------------- | :------------------------------------------------------------------------------------------------------------------------ | :---------: |
-| **Pre-Flight Architecture Gate** | SDET Architect  | Staging pre-flight probe and DoR audit passed.                                                                            | `[PASSED]`  |
-| **Code Acceptance Review Gate**  | SDET Architect  | Verified single-browser Chrome rule, 0 onrender.com hardcodes in test specs, compose volume isolation, dual-catalog sync. | `[PASSED]`  |
-| **Scrum Master DoD Gate**        | Scrum Master    | Audited lint:all (0 errors), typecheck:all (0 errors), catalog zero diff, and PR verification.                            | `[PASSED]`  |
-| **DevOps Release Gate**          | DevOps Engineer | Validate GHCR workflow, composite actions, PR creation, and green CI status.                                              | `[ACTIVE]`  |
-| **Final Human Sign-Off**         | Human Tech Lead | Final PR review and merge to `main`.                                                                                      | `[PENDING]` |
+| Gate / Reviewer                  | Target Role              | Review Feedback & Comments                                                                                    | Gate Status  |
+| :------------------------------- | :----------------------- | :------------------------------------------------------------------------------------------------------------ | :----------: |
+| **Pre-Flight Architecture Gate** | SDET Architect           | Package design, HttpLike adapter, LIFO CleanupRegistry, and zod schema validated and approved.                | `[APPROVED]` |
+| **Code Acceptance Review Gate**  | SDET Architect           | Verified parallel worker isolation, test cards only, non-blocking cleanup, fast failure on invalid ENV.       | `[APPROVED]` |
+| **Scrum Master DoD Gate**        | Scrum Master             | 14/14 package unit tests green; 5/5 migrated reference specs green; dual-catalog parity verified; lint 0 err. | `[APPROVED]` |
+| **DevOps Release Gate**          | DevOps Engineer          | Package build clean; root npm scripts wired; docs synchronized; ready for branch push and PR creation.        | `[APPROVED]` |
+| **Final Human Sign-Off**         | Human Tech Lead (`User`) | Final PR review and merge to `main`.                                                                          |  `STANDBY`   |
 
 ---
 
 ## 4. Definition of Done (DoD) Checklist
 
-- [x] `npm run lint:all` covers all workspaces with 0 errors.
-- [x] `npm run typecheck:all` passes across all TypeScript workspaces with 0 errors.
-- [x] Prettier formatting verified on all modified and new files.
-- [x] Dual-catalog parity confirmed: `git diff --exit-code docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md` exits 0.
-- [x] Images published to GHCR (`ghcr.io/munna7862/buggy-books-backend` and `...-frontend`).
-- [x] `infra/docker-compose.test.yml`, `buggybooks-up`, `buggybooks-down` implemented and validated.
-- [x] PR gate runs on `DOCKER` with zero calls to `onrender.com`.
-- [x] Nightly regression contains both `DOCKER` (full) and `STAGING` (contract).
-- [ ] Pull request opened with structured summary and verification evidence (`gh pr create`).
+- [x] `packages/test-data` built to `dist` (`npm run build --workspace=packages/test-data`) with clean CommonJS and declaration files.
+- [x] Unit tests pass: `npx tsx --test packages/test-data/src/test-data.test.ts` (14/14 tests pass).
+- [x] 5 reference specs migrated and pass deterministically:
+  - `Test_002_OrdersApi.spec.ts` (Passed with ApiSeeder + KNOWN_BOOK_IDS)
+  - `Test_001_CartAndInventoryApi.spec.ts` (Passed with ApiSeeder + KNOWN_BOOK_IDS)
+  - `Test_006_ProfileSummaryAndOrderHistory.spec.ts` (Passed with seeded user/order + UI validation)
+  - `Test_006_CartQuantityAdjustment.spec.ts` (Passed with UserFactory)
+  - `Test_001_Selenium_Auth.spec.ts` (Passed with ApiSeeder + Axios adapter)
+- [x] Typed config fails fast on `ENV=BOGUS` with readable error block.
+- [x] Performance dataset generator (`npm run data:perf`) outputs valid CSV and JSON datasets.
+- [x] Dual-catalog parity confirmed: `npm run test:verify-catalog` exits 0.
+- [x] `npm run lint:all` and `npm run typecheck:all` exit 0 across all workspaces.
+- [x] `docs/ReusablePackage.md` updated with `@automationframeworks/test-data` usage guide.
+- [x] Pull request opened with structured summary and verification evidence: [PR #42](https://github.com/munna7862/automation-frameworks/pull/42).
+- [x] All 14 CI checks 100% green (Smoke Tests, CodeQL SAST, Dependency Review, k6 Performance Drift Gate, Actionlint, Zizmor, Gitleaks, License Compliance, OSV Scanner, Static Quality).
 
 ---
 
 ## 5. Verification & Execution Evidence
 
 ```bash
-# 1. Dual-Catalog Parity
-$ npm run test:verify-catalog
-✅ PARITY VERIFIED: Both catalogs are 100% character-for-character identical.
-   • Total Lines      : 619
-   • Total Characters : 1,19,194 bytes
-   • Catalog Test IDs : 182 verified test cases
+# 1. Package build and unit tests (14/14 pass)
+npm run build --workspace=packages/test-data
+npx tsx --test packages/test-data/src/test-data.test.ts
 
-# 2. Monorepo Workspace Linting
-$ npm run lint:all
-> @automationframeworks/playwright-utils@1.0.0 lint (0 errors)
-> playwright-e2e@1.0.0 lint (0 errors)
-> selenium-e2e@1.0.0 lint (0 errors)
-> wdio-e2e@1.0.0 lint (0 errors)
-> k6-performance@1.0.0 lint (0 errors)
-> mobile-automation@1.0.0 lint (0 errors)
+# 2. Performance dataset generation
+npm run data:perf
+# Output: jmeter/TestData/users.csv (21 rows), k6-performance/data/users.json (21 entries)
 
-# 3. Monorepo Workspace Typechecking
-$ npm run typecheck:all
-> @automationframeworks/playwright-utils@1.0.0 typecheck (0 errors)
-> playwright-e2e@1.0.0 typecheck (0 errors)
-> selenium-e2e@1.0.0 typecheck (0 errors)
-> wdio-e2e@1.0.0 typecheck (0 errors)
-> mobile-automation@1.0.0 typecheck (0 errors)
+# 3. Fast fail on bogus config
+ENV=BOGUS npx playwright test --list --config=src/config/playwright.config.ts
+# Output: Exited 1 with formatted error block: [ENV]: Invalid environment 'BOGUS'
 
-# 4. GHCR Images Published in munna7862/buggy-books (PR #104 merged)
-ghcr.io/munna7862/buggy-books-backend:latest
-ghcr.io/munna7862/buggy-books-frontend:ci-localhost
+# 4. Reference specs execution
+# Cart & Inventory API specs (15/15 repeat-each=5 pass):
+ENV=STAGING npx playwright test src/tests/api/CartAndInventory --config=src/config/playwright.config.ts --repeat-each=5
+
+# Profile UI spec with active seed:
+TEST_DATA_SEED=42 ENV=STAGING npx playwright test src/tests/ui/Profile/Test_006_ProfileSummaryAndOrderHistory.spec.ts --config=src/config/playwright.config.ts
+
+# Cart Quantity UI spec:
+ENV=STAGING npx playwright test src/tests/ui/Checkout/Test_006_CartQuantityAdjustment.spec.ts --config=src/config/playwright.config.ts
+
+# Selenium Auth smoke spec:
+npm run test:smoke --workspace=selenium-e2e
 ```

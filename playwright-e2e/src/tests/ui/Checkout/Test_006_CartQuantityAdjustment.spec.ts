@@ -1,35 +1,14 @@
-import * as path from 'path';
-import { randomBytes } from 'crypto';
 import { test } from '../../../core/base/base.fixture';
 import { envConfig } from '../../../config/env.config';
 import { CartPage } from '../../../pages/cart.page';
+import { UserFactory } from '@automationframeworks/test-data';
 
-type CartQuantityTestData = {
-  user: {
-    fullName: string;
-    password: string;
-  };
-  books: {
-    firstSearch: string;
-    firstBookId: number;
-    firstBookTitle: string;
-    secondSearch: string;
-    secondBookId: number;
-    secondBookTitle: string;
-  };
+const BOOKS_TEST_DATA = {
+  firstSearch: 'Mockingbird',
+  firstBookId: 2,
+  secondSearch: 'Gatsby',
+  secondBookId: 1
 };
-
-const testDataPath = path.join(
-  __dirname,
-  '../../../test-data/ui/Checkout/Test_006_CartQuantityAdjustment.json'
-);
-const TestData = require(testDataPath) as CartQuantityTestData;
-
-function uniqueUsername(prefix: string = 'cart_qty_user'): string {
-  const timestamp = Date.now();
-  const randomSuffix = randomBytes(4).toString('hex');
-  return `${prefix}_${timestamp}_${randomSuffix}`;
-}
 
 test.use({ storageState: { cookies: [], origins: [] } });
 
@@ -41,24 +20,19 @@ test.describe('Cart Quantity & Total Adjustment', () => {
     page
   }) => {
     const cartPage = new CartPage(page);
-    const username = uniqueUsername();
+    const user = UserFactory.build({ fullName: 'Cart Quantity User' });
     let initialSinglePrice = 0;
 
     await test.step('Register new user session', async () => {
       await catalogPage.navigateToCatalog(envConfig.baseUrl);
       await catalogPage.clickNavigateLink('Sign Up');
-      await signUpPage.registerNewUser(
-        TestData.user.fullName,
-        username,
-        TestData.user.password,
-        TestData.user.password
-      );
+      await signUpPage.registerNewUser(user.fullName, user.username, user.password, user.password);
     });
 
     await test.step('Add first book to cart and verify single item total', async () => {
       await catalogPage.clickNavigateLink('Catalog');
-      await catalogPage.searchBooks(TestData.books.firstSearch);
-      await catalogPage.addBookToCart(TestData.books.firstBookId);
+      await catalogPage.searchBooks(BOOKS_TEST_DATA.firstSearch);
+      await catalogPage.addBookToCart(BOOKS_TEST_DATA.firstBookId);
       await catalogPage.waitForCartStatusMessage('added to cart');
 
       await cartPage.openCart();
@@ -74,8 +48,8 @@ test.describe('Cart Quantity & Total Adjustment', () => {
 
     await test.step('Add second book to cart and verify dynamic subtotal increment', async () => {
       await catalogPage.clickNavigateLink('Catalog');
-      await catalogPage.searchBooks(TestData.books.secondSearch);
-      await catalogPage.addBookToCart(TestData.books.secondBookId);
+      await catalogPage.searchBooks(BOOKS_TEST_DATA.secondSearch);
+      await catalogPage.addBookToCart(BOOKS_TEST_DATA.secondBookId);
       await catalogPage.waitForCartStatusMessage('added to cart');
 
       await cartPage.openCart();

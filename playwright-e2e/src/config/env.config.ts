@@ -1,53 +1,23 @@
 import * as dotenv from 'dotenv';
+import { validateEnvConfig, ENV_PROFILES, TargetEnv } from '@automationframeworks/test-data';
 
 dotenv.config();
 
-export const PROFILES = {
-  DOCKER: { baseUrl: 'http://localhost:5173', apiBaseUrl: 'http://localhost:4000' },
-  STAGING: {
-    baseUrl: 'https://buggy-books-fe.onrender.com',
-    apiBaseUrl: 'https://buggy-books.onrender.com'
-  },
-  INTEROP: {
-    baseUrl: 'https://buggy-books-fe.onrender.com',
-    apiBaseUrl: 'https://buggy-books.onrender.com'
-  }
-} as const;
+// Fast-fail validation via zod schema
+const validated = validateEnvConfig(process.env, { exitOnError: true });
 
-type TargetProfileKey = keyof typeof PROFILES;
-
-const rawEnvKey = (
-  process.env.TARGET_ENV ||
-  process.env.ENV ||
-  'DOCKER'
-).toUpperCase() as TargetProfileKey;
-const currentProfile = PROFILES[rawEnvKey] || PROFILES.DOCKER;
-
-// Normalized URLs with profile defaults and explicit env overrides
-const rawBaseUrl =
-  process.env.E2E_BASE_URL ||
-  process.env.BASE_URL ||
-  process.env.STAGING_URL ||
-  currentProfile.baseUrl;
-
-const rawApiUrl = process.env.E2E_API_URL || process.env.API_BASE_URL || currentProfile.apiBaseUrl;
-
-// Strip trailing slash or /api for consistent baseURL joining
-const normalizedApiBase = rawApiUrl.replace(/\/api\/?$/, '').replace(/\/+$/, '');
-const normalizedBaseUrl = rawBaseUrl.replace(/\/+$/, '');
+export const PROFILES = ENV_PROFILES;
+export type TargetProfileKey = TargetEnv;
 
 export const envConfig = {
-  env: rawEnvKey,
-  baseUrl: normalizedBaseUrl,
-  apiBaseUrl: normalizedApiBase,
-  apiUrl: `${normalizedApiBase}/api`,
-  headless:
-    process.env.HEADLESS === 'true' || process.env.HEADLESS === undefined
-      ? true
-      : process.env.HEADLESS === 'true',
-  browser: process.env.BROWSER || 'chromium',
-  timeout: parseInt(process.env.ELEMENT_TIMEOUT || '15000', 10),
-  SUITENAME: process.env.SUITENAME || 'Default'
+  env: validated.ENV,
+  baseUrl: validated.baseUrl,
+  apiBaseUrl: validated.apiBaseUrl,
+  apiUrl: validated.apiUrl || `${validated.apiBaseUrl}/api`,
+  headless: validated.headless,
+  browser: validated.browser,
+  timeout: validated.timeout,
+  SUITENAME: validated.SUITENAME
 };
 
 const DEFAULT_SEED_FALLBACKS: Record<string, string> = {
@@ -56,11 +26,11 @@ const DEFAULT_SEED_FALLBACKS: Record<string, string> = {
   STAGING_URL: 'http://127.0.0.1:5173',
   API_BASE_URL: 'http://127.0.0.1:4000',
   E2E_API_URL: 'http://127.0.0.1:4000/api',
-  USER_NAME: 'admin',
-  PASSWORD: 'password123',
-  E2E_USER_NAME: 'admin',
-  E2E_USER_EMAIL: 'admin',
-  E2E_USER_PASSWORD: 'password123'
+  USER_NAME: validated.userName,
+  PASSWORD: validated.password,
+  E2E_USER_NAME: validated.userName,
+  E2E_USER_EMAIL: validated.userName,
+  E2E_USER_PASSWORD: validated.password
 };
 
 export const getRequiredEnv = (key: string, fallback?: string): string => {
@@ -76,7 +46,6 @@ export const getRequiredEnv = (key: string, fallback?: string): string => {
 };
 
 export const getLoginCredentials = () => ({
-  userName:
-    process.env.E2E_USER_NAME || process.env.E2E_USER_EMAIL || process.env.USER_NAME || 'admin',
-  password: process.env.E2E_USER_PASSWORD || process.env.PASSWORD || 'password123'
+  userName: validated.userName,
+  password: validated.password
 });

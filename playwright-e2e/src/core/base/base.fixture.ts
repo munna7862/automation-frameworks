@@ -12,8 +12,9 @@ import { envConfig } from '../../config/env.config';
 import { NetworkInterceptor } from '../network/network.interceptor';
 import { writeFile } from 'fs/promises';
 import { randomBytes } from 'crypto';
-import { test as base, expect, APIRequestContext } from '@playwright/test';
+import { test as base, expect, APIRequestContext, mergeTests } from '@playwright/test';
 import { captureFailureState } from './failure-hook';
+import { dataTest } from './data.fixture';
 import axios from 'axios';
 
 export { expect };
@@ -35,7 +36,7 @@ type TestFixtures = {
   request: APIRequestContext;
 };
 
-export const test = base.extend<TestFixtures>({
+const baseTest = base.extend<TestFixtures>({
   testSessionId: async ({}, use, testInfo) => {
     const rawId = `pw-w${testInfo.workerIndex}-${testInfo.parallelIndex}-${Date.now()}-${randomBytes(4).toString('hex')}`;
     await use(rawId);
@@ -142,6 +143,8 @@ export const test = base.extend<TestFixtures>({
     await use(new CommonFunctions());
   }
 });
+
+export const test = mergeTests(baseTest, dataTest);
 
 test.afterEach(async ({ page }, testInfo) => {
   if (testInfo.status !== testInfo.expectedStatus) {

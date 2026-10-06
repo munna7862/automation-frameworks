@@ -149,7 +149,7 @@ Suggested order: `6.1 → 6.2 → 7.1 → 6.3 → 6.4 → 7.2 → 8.1 → 10.1 �
 | **SPRINT-6.3** | [Supply-Chain & Repository Security](Sprints/sprint_6_3_supply_chain_and_repository_security.md) | Phase 6 | 5 SP | DevOps Engineer | Done |
 | **SPRINT-6.4** | [Repository Governance & Contributor Experience](Sprints/sprint_6_4_repository_governance_and_contributor_experience.md) | Phase 6 | 3 SP | SDET Architect | Done |
 | **SPRINT-7.1** | [Ephemeral BuggyBooks Environment in CI](Sprints/sprint_7_1_ephemeral_buggybooks_environment_in_ci.md) | Phase 7 | 6 SP | DevOps Engineer | Done |
-| **SPRINT-7.2** | [Test Data Engineering & Typed Configuration](Sprints/sprint_7_2_test_data_engineering_and_typed_configuration.md) | Phase 7 | 4 SP | SDET Architect | Not Started |
+| **SPRINT-7.2** | [Test Data Engineering & Typed Configuration](Sprints/sprint_7_2_test_data_engineering_and_typed_configuration.md) | Phase 7 | 4 SP | SDET Architect | Done |
 | **SPRINT-7.3** | [Dev Container & Local Developer Experience](Sprints/sprint_7_3_dev_container_and_local_developer_experience.md) | Phase 7 | 4 SP | DevOps Engineer | Not Started |
 | **SPRINT-8.1** | [Typed API Client Layer & Schema Validation](Sprints/sprint_8_1_typed_api_client_layer_and_schema_validation.md) | Phase 8 | 5 SP | Playwright QA Lead | Not Started |
 | **SPRINT-8.2** | [API Coverage Gaps & Negative Matrix](Sprints/sprint_8_2_api_coverage_gaps_and_negative_matrix.md) | Phase 8 | 5 SP | Playwright QA Lead | Not Started |
@@ -165,7 +165,7 @@ Suggested order: `6.1 → 6.2 → 7.1 → 6.3 → 6.4 → 7.2 → 8.1 → 10.1 �
 | **SPRINT-12.1** | [Test Analytics & Failure Intelligence](Sprints/sprint_12_1_test_analytics_and_failure_intelligence.md) | Phase 12 | 5 SP | SDET Architect | Not Started |
 | **SPRINT-12.2** | [AI-Assisted Triage & Self-Healing Loop](Sprints/sprint_12_2_ai_assisted_triage_and_self_healing_loop.md) | Phase 12 | 4 SP | SDET Architect | Not Started |
 | **SPRINT-12.3** | [Free Cloud-Native Execution Platform](Sprints/sprint_12_3_free_cloud_native_execution_platform.md) | Phase 12 | 4 SP | DevOps Engineer | Not Started |
-| **TOTAL** | **21 Sprints across 7 Phases** | **6–12** | **95 SP** | **Virtual Sprint Team + Claude review** | **In Progress (22/95 SP)** |
+| **TOTAL** | **21 Sprints across 7 Phases** | **6–12** | **95 SP** | **Virtual Sprint Team + Claude review** | **In Progress (26/95 SP)** |
 
 ---
 
