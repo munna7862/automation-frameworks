@@ -89,7 +89,7 @@ jobs:
           install-chrome: 'false'
 
       - name: Download Pact Contracts Artifact
-        uses: actions/download-artifact@ccb2de72d25ea7a4381340432190a44e62f38201 # v4.1.9
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: pact-contracts
           path: playwright-e2e/contract-tests/pacts/

@@ -122,6 +122,9 @@ jobs:
 
       - name: Generate Schemathesis Step Summary
         if: always()
+        env:
+          FUZZ_MAX_EXAMPLES: ${{ inputs.max_examples || '50' }}
+          FUZZ_CHECKS: ${{ inputs.checks || 'all' }}
         run: |
           {
             echo "### 🧪 Schemathesis Property-Based API Fuzzing Summary"
@@ -130,8 +133,8 @@ jobs:
             echo "| :--- | :--- |"
             echo "| **Target Environment** | Ephemeral DOCKER (http://localhost:4000) |"
             echo "| **Specification** | \`docs/api/openapi.yaml\` (OpenAPI 3.1) |"
-            echo "| **Max Examples** | ${{ inputs.max_examples || '50' }} per operation |"
-            echo "| **Checks Evaluated** | ${{ inputs.checks || 'all' }} |"
+            echo "| **Max Examples** | ${FUZZ_MAX_EXAMPLES} per operation |"
+            echo "| **Checks Evaluated** | ${FUZZ_CHECKS} |"
             echo "| **Chaos Exclusion** | Excluded \`^/api/test/\` endpoints |"
             echo "| **Authenticated User** | \`admin\` |"
             echo ""
