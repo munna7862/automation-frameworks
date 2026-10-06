@@ -11,8 +11,47 @@ The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven 
 - 📖 [**Master Plan (`planning/Master/master_plan.md`)**](planning/Master/master_plan.md)
 - 🗺️ [**Planning & Sprint Sitemap (`planning/README.md`)**](planning/README.md)
 - 📋 [**Test Cases Catalog (`docs/test_cases_catalog.md`)**](docs/test_cases_catalog.md)
+- 🚀 [**Developer Onboarding & Quick Start (`docs/onboarding.md`)**](docs/onboarding.md)
 - 🧠 [**Always-On Agent Memory (`AGENTS.md`)**](AGENTS.md)
 - 🛠️ [**Repository Learnings Playbook (`.agents/skills/repo-learnings-and-patterns/SKILL.md`)**](.agents/skills/repo-learnings-and-patterns/SKILL.md)
+
+---
+
+## 🚀 Quick Start & Zero-to-Green Onboarding
+
+Get from clone to a passing PR-grade test run in **under 10 minutes**! See the complete [**Developer Onboarding Guide (`docs/onboarding.md`)**](docs/onboarding.md).
+
+### 1. Choose Your Environment
+
+- **GitHub Codespaces (Zero Install)**: Launch directly from GitHub (**Code** ➔ **Codespaces** ➔ **New codespace**). Uses our batteries-included Dev Container with Chrome, Java, JMeter, k6, Allure, and Task. _Personal accounts receive 60 hours/month free allowance._
+- **Local Dev Container**: Open in VS Code and select **Reopen in Container** (requires Docker Desktop).
+- **Bare-Metal Host**: Install Node 24 LTS, Google Chrome stable, Docker, Java 17+, and run `npm ci`.
+
+### 2. Run the PR Verification Workflow
+
+Using [go-task](https://taskfile.dev) (installed in dev container) or root npm scripts:
+
+```bash
+# 1. Start ephemeral BuggyBooks containers (backend :4000, frontend :5173)
+task env:up          # or: npm run env:up
+
+# 2. Run PR quality gate (lint, typecheck, catalog parity, Chrome smoke tests)
+task test:pr         # or: npm run test:pr
+
+# 3. Tear down and purge containers
+task env:down        # or: npm run env:down
+```
+
+### 3. On-Demand Testcontainers Mode
+
+For automated local spec runs without manual compose commands, Playwright automatically spins up and tears down ephemeral BuggyBooks containers:
+
+```bash
+cd playwright-e2e
+cross-env ENV=DOCKER BUGGYBOOKS_AUTOSTART=true npx playwright test --grep @smoke
+```
+
+_(Requires Docker Desktop running locally. Automatically reuses existing stack if ports 4000/5173 already respond)._
 
 ---
 
@@ -22,6 +61,7 @@ The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven 
 | :------------------------------ | :------------------------------------------ | :------------------------------------------------------------------------------------------------- |
 | **`playwright-e2e`**            | Playwright, TypeScript, Allure              | **Primary Web & API**: Strictly Google Chrome (`channel: 'chrome'`) and headless API (~110 tests). |
 | **`packages/playwright-utils`** | `@automationframeworks/playwright-utils`    | Shared BasePage, Winston loggers, and typed assertion helpers.                                     |
+| **`packages/test-data`**        | `@automationframeworks/test-data`           | Shared data factories, builders, API seeders, cleanup registry, and Zod configuration schema.      |
 | **`selenium-e2e`**              | Selenium WebDriver, TypeScript, Mocha, Chai | W3C compliant E2E web automation on Google Chrome with WebDriverWait & Shadow DOM piercing.        |
 | **`wdio-e2e`**                  | WebdriverIO, TypeScript, Mocha, Allure      | Modern WebdriverIO web automation targeting BuggyBooks with `shadow$` selectors.                   |
 | **`mobile-automation`**         | Appium 2.x, WebdriverIO                     | Android (`UiAutomator2`) & iOS (`XCUITest`) Screen Objects & mobile chaos resilience.              |
@@ -33,11 +73,12 @@ The monorepo follows a structured 5-Phase, 15-Sprint execution lifecycle driven 
 ## ⚡ Non-Negotiable Operational Baseline
 
 1. **Browser Execution Policy**: All web suites execute strictly on **Google Chrome** (`channel: 'chrome'` or Chrome headless). Multi-browser configs (`firefox`, `webkit`, `safari`) are forbidden.
-2. **Render Staging Pre-Flight Warm-Up**: Free-tier Render instances sleep when idle. Always wake instances before test runs:
+2. **Render Staging Pre-Flight Warm-Up**: Free-tier Render instances sleep when idle. Always wake instances before test runs against `ENV=STAGING`:
    ```bash
    npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
    npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
    ```
+   _(Local and PR runs default to hermetic `ENV=DOCKER` to bypass cold-starts completely)._
 3. **Intentional Chaos Containment**: Any test toggling chaos knobs via `POST /api/test/config` must restore defaults via `POST /api/test/reset` in `afterEach`.
 4. **Dual-Catalog Parity**: Both `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` must remain 100% synchronized.
 

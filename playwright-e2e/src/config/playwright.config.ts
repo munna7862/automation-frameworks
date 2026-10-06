@@ -11,6 +11,8 @@ const authFile = path.resolve(__dirname, '../../.auth/user.json');
 const hasLocalServices = fs.existsSync(backendDir) && fs.existsSync(frontendDir);
 
 export default defineConfig({
+  globalSetup: path.resolve(__dirname, 'global-setup.ts'),
+  globalTeardown: path.resolve(__dirname, 'global-teardown.ts'),
   testDir: path.resolve(__dirname, '../tests'),
   testMatch: ['**/*.spec.ts', '**/*.setup.ts'],
   fullyParallel: true,

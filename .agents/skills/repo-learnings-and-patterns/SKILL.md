@@ -464,3 +464,22 @@ The entire roadmap is organized under [`planning/`](../../planning/):
   - Generates the **Stability Index** table directly in GitHub Step Summary:
     $$\text{Stability Index} = \left(\frac{\text{Passed Runs}}{\text{Total Runs} - \text{Skipped Runs}}\right) \times 100\%$$
   - De-quarantine graduation requires a **100.0% Stability Index** (10/10 green passes), triggering an automated de-quarantine advisory.
+
+---
+
+## 21. Dev Container, Task Runner & Testcontainers Local Developer Experience (Sprint 7.3)
+
+- **One-Click Dev Container & Codespaces Environment (`.devcontainer/`)**:
+  - Image base: `mcr.microsoft.com/devcontainers/typescript-node:24`.
+  - Pinned tools: Google Chrome Stable, Apache JMeter 5.6.3 (`/opt/jmeter`), Grafana k6, Allure CLI 2.34.1 (`/opt/allure`), and `go-task` (`/usr/local/bin/task`).
+  - Features: `docker-in-docker:2`, `java:17` (Temurin), `github-cli:1`.
+  - Port forwarding: `4000` (API), `5173` (Frontend), `3000` (Grafana), `9090` (Prometheus).
+  - GitHub Codespaces monthly free quota (60 hours/month on personal accounts) covers regular PR development and review runs without local setup.
+- **Unified Task Runner & Mirroring (`Taskfile.yml` & `package.json`)**:
+  - `Taskfile.yml` defines canonical workflows (`env:up`, `env:down`, `env:logs`, `test:pr`, `test:pw`, `test:selenium`, `test:wdio`, `perf:smoke`, `perf:jmeter`, `report:allure`, `security:scan`).
+  - Root `package.json` mirrors every task with 100% script parity, ensuring developers without `task` binary experience identical behavior.
+- **On-Demand Testcontainers Mode (`BUGGYBOOKS_AUTOSTART=true`)**:
+  - `playwright-e2e/src/config/global-setup.ts` and `global-teardown.ts` integrate `testcontainers` `DockerComposeEnvironment`.
+  - **Port Reuse Pattern**: Before spinning up containers, `global-setup.ts` probes `http://127.0.0.1:4000/api/health` and `http://127.0.0.1:5173/`. If an existing stack is already online (e.g. from `task env:up`), it skips startup and reuses the running stack.
+  - **CI Safety Guard**: Testcontainers is strictly disabled when `process.env.CI` is true, ensuring CI continues to use the dedicated GitHub Actions composite actions (`buggybooks-up` / `buggybooks-down`).
+  - **Dependency Isolation**: `testcontainers` is maintained strictly as a `devDependency` in `playwright-e2e`.
