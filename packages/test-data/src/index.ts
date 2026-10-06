@@ -4,3 +4,4 @@ export * from './factories';
 export * from './builders';
 export * from './seed';
 export * from './config';
+export * from './helpers/jwt-tokens';

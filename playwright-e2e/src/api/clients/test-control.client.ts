@@ -23,10 +23,25 @@ export class TestControlClient extends BaseClient {
   }
 
   public async setStock(
-    payload: { bookId: string; stock: number },
+    payloadOrId: { bookId: string; stock: number } | string,
+    stockOrOpts?: number | RequestOpts,
     opts?: RequestOpts
   ): Promise<ApiResponse<any>> {
-    return this.httpPost('/api/test/stock', payload, opts);
+    let bookId: string;
+    let stock: number;
+    let requestOpts: RequestOpts | undefined;
+
+    if (typeof payloadOrId === 'string') {
+      bookId = payloadOrId;
+      stock = typeof stockOrOpts === 'number' ? stockOrOpts : 0;
+      requestOpts = opts;
+    } else {
+      bookId = payloadOrId.bookId;
+      stock = payloadOrId.stock;
+      requestOpts = stockOrOpts as RequestOpts | undefined;
+    }
+
+    return this.httpPost(`/api/test/books/${bookId}/stock`, { stock }, requestOpts);
   }
 
   public async deleteSession(

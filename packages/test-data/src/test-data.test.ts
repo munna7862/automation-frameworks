@@ -16,7 +16,11 @@ import {
   KNOWN_BOOK_IDS,
   INVALID_INPUTS,
   validateEnvConfig,
-  EnvConfigValidationError
+  EnvConfigValidationError,
+  createExpiredToken,
+  createWrongSignatureToken,
+  createMalformedToken,
+  createValidToken
 } from './index';
 
 describe('@automationframeworks/test-data Package Unit Tests', () => {
@@ -259,6 +263,22 @@ describe('@automationframeworks/test-data Package Unit Tests', () => {
           return true;
         }
       );
+    });
+  });
+
+  describe('JWT Token Helpers', () => {
+    it('should generate expired, wrong-signature, and malformed tokens', async () => {
+      const expired = await createExpiredToken('alice');
+      assert.ok(typeof expired === 'string' && expired.split('.').length === 3);
+
+      const wrongSig = await createWrongSignatureToken('bob');
+      assert.ok(typeof wrongSig === 'string' && wrongSig.split('.').length === 3);
+
+      const malformed = createMalformedToken();
+      assert.ok(typeof malformed === 'string' && malformed.includes('corrupted_payload'));
+
+      const valid = await createValidToken('carol');
+      assert.ok(typeof valid === 'string' && valid.split('.').length === 3);
     });
   });
 });

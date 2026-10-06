@@ -146,7 +146,6 @@ export default defineConfig({
         baseURL: envConfig.apiBaseUrl,
         extraHTTPHeaders: {
           Accept: 'application/json',
-          'Content-Type': 'application/json',
           'x-bypass-rate-limit': 'true'
         }
       }

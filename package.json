@@ -27,6 +27,7 @@
     "generate-portal:metadata": "node scripts/generate-portal-metadata.js",
     "test:portal": "node scripts/test-portal.js",
     "test:verify-catalog": "tsx scripts/verify-catalog-sync.ts",
+    "test:api-coverage": "tsx scripts/api-coverage.ts",
     "test:quarantine:audit": "npm run test:quarantine:audit --workspace=playwright-e2e",
     "data:perf": "tsx packages/test-data/scripts/generate-perf-datasets.ts",
     "env:up": "docker compose -f infra/docker-compose.test.yml up -d --wait && npx wait-on -t 60000 http://localhost:4000/api/books http://localhost:5173/",

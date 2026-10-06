@@ -1,0 +1,140 @@
+[
+  {
+    "method": "GET",
+    "path": "/api/books",
+    "description": "List books with pagination, search, and filtering",
+    "authRequired": false
+  },
+  {
+    "method": "GET",
+    "path": "/api/books/:id",
+    "description": "Get detailed book information by ID",
+    "authRequired": false
+  },
+  {
+    "method": "POST",
+    "path": "/api/register",
+    "description": "Register a new user account",
+    "authRequired": false
+  },
+  {
+    "method": "POST",
+    "path": "/api/login",
+    "description": "Authenticate user and issue JWT cookies",
+    "authRequired": false
+  },
+  {
+    "method": "POST",
+    "path": "/api/logout",
+    "description": "Clear authentication cookies and terminate session",
+    "authRequired": false
+  },
+  {
+    "method": "POST",
+    "path": "/api/auth/refresh",
+    "description": "Refresh expired access token using refreshToken",
+    "authRequired": false
+  },
+  {
+    "method": "GET",
+    "path": "/api/cart",
+    "description": "Get current user active cart items",
+    "authRequired": true
+  },
+  {
+    "method": "POST",
+    "path": "/api/cart",
+    "description": "Add item to user shopping cart",
+    "authRequired": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/cart",
+    "description": "Clear all items from current user shopping cart",
+    "authRequired": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/cart/:bookId",
+    "description": "Remove single item from user shopping cart by book ID",
+    "authRequired": true
+  },
+  {
+    "method": "POST",
+    "path": "/api/checkout/process",
+    "description": "Process order checkout with payment and shipping",
+    "authRequired": true
+  },
+  {
+    "method": "GET",
+    "path": "/api/orders",
+    "description": "Retrieve order history for authenticated user",
+    "authRequired": true
+  },
+  {
+    "method": "GET",
+    "path": "/api/inventory/report",
+    "description": "Get stock availability report across all books",
+    "authRequired": false
+  },
+  {
+    "method": "GET",
+    "path": "/api/health",
+    "description": "Server health status and diagnostic telemetry",
+    "authRequired": false
+  },
+  {
+    "method": "GET",
+    "path": "/api/metrics",
+    "description": "Detailed runtime telemetry, event loop, and CPU metrics",
+    "authRequired": false
+  },
+  {
+    "method": "GET",
+    "path": "/api/profile",
+    "description": "Get authenticated user profile details",
+    "authRequired": true
+  },
+  {
+    "method": "POST",
+    "path": "/api/profile/upload",
+    "description": "Upload avatar picture for authenticated user",
+    "authRequired": true
+  },
+  {
+    "method": "GET",
+    "path": "/api/csrf-token",
+    "description": "Fetch CSRF token and set psifi.x-csrf-token cookie",
+    "authRequired": false
+  },
+  {
+    "method": "GET",
+    "path": "/api/test/config",
+    "description": "Get active test/chaos configuration",
+    "authRequired": false
+  },
+  {
+    "method": "POST",
+    "path": "/api/test/config",
+    "description": "Update active test/chaos configuration",
+    "authRequired": false
+  },
+  {
+    "method": "POST",
+    "path": "/api/test/reset",
+    "description": "Reset test database and clean state",
+    "authRequired": false
+  },
+  {
+    "method": "POST",
+    "path": "/api/test/books/:id/stock",
+    "description": "Set stock count for a specific book ID in test mode",
+    "authRequired": false
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/test/session/:id",
+    "description": "Delete ephemeral test session data store",
+    "authRequired": false
+  }
+]
