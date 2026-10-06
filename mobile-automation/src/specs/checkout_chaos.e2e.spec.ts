@@ -29,7 +29,11 @@ describe('Checkout Occlusion & Stochastic Gateway Retry Loop (TC-MOB-003, MOB_E2
     } catch {
       // Fallback: ensure backend state is reset via test reset endpoint
       try {
-        await fetch('https://buggy-books.onrender.com/api/test/reset', { method: 'POST' });
+        const apiBase = (process.env.API_BASE_URL || 'https://buggy-books.onrender.com').replace(
+          /\/api\/?$/,
+          ''
+        );
+        await fetch(`${apiBase}/api/test/reset`, { method: 'POST' });
       } catch {
         // Ignore fallback failure if network offline
       }

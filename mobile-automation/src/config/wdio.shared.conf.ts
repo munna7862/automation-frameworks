@@ -48,9 +48,9 @@ export const sharedConfig: Options.Testrunner = {
         [
           `Framework=Appium 2.x + WebdriverIO Mobile`,
           `Framework.Version=^2.16.1`,
-          `Test.Environment=STAGING`,
-          `Base.URL=https://buggy-books-fe.onrender.com/`,
-          `API.Base.URL=https://buggy-books.onrender.com`,
+          `Test.Environment=${process.env.ENVIRONMENT || process.env.ENV || 'STAGING'}`,
+          `Base.URL=${process.env.BASE_URL || 'https://buggy-books-fe.onrender.com/'}`,
+          `API.Base.URL=${process.env.API_BASE_URL || 'https://buggy-books.onrender.com'}`,
           `Browser.Target=UiAutomator2 (Android Emulator - Pixel 6)`,
           `Operating.System=${process.platform} (${process.arch})`,
           `Node.Version=${process.version}`,

@@ -33,7 +33,7 @@ export const test = base.extend<ApiTestFixtures>({
 
     // Session teardown: Clean up backend ephemeral session
     try {
-      const apiBase = envConfig.apiBaseUrl || 'https://buggy-books.onrender.com';
+      const apiBase = envConfig.apiBaseUrl;
       await axios.delete(`${apiBase}/api/test/session/${testSessionId}`, {
         headers: { 'x-bypass-rate-limit': 'true', 'x-test-session-id': testSessionId },
         timeout: 5000

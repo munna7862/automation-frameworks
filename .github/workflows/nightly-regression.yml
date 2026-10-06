@@ -1,12 +1,13 @@
 # ==============================================================================
 # BuggyBooks — Scheduled Nightly Multi-Framework Regression Suite
 #
-# Target Environment: BuggyBooks Render Staging (https://buggy-books-fe.onrender.com)
-# Note: Targets Render staging until Sprint 7.1 switches execution to local DOCKER services.
+# Target Environments:
+#   - Ephemeral DOCKER: Full multi-framework regression executed against fresh GHCR images.
+#   - Render STAGING: Contract verification subset (@staging-contract) executed against live deployment.
 #
 # Schedule: Runs daily at 01:30 UTC (cron: '30 1 * * *')
 # Orchestration: Executes Playwright (4 native shards), Selenium WebDriver,
-#                and WebdriverIO in parallel via _reusable-e2e.yml.
+#                WebdriverIO, and Staging Contract Check in parallel via _reusable-e2e.yml.
 # Governance: Aggregates execution outcomes into a unified executive step summary.
 # ==============================================================================
 
@@ -26,10 +27,10 @@ permissions: {}
 
 jobs:
   # ============================================================================
-  # 1. Playwright Sharded Regression (4 Shards, Chrome + API)
+  # 1. Playwright Sharded Regression on Ephemeral DOCKER (4 Shards, Chrome + API)
   # ============================================================================
-  playwright-regression:
-    name: Playwright Regression
+  playwright-docker-regression:
+    name: Playwright Regression (DOCKER)
     permissions:
       contents: write
       pages: write
@@ -37,6 +38,7 @@ jobs:
     uses: ./.github/workflows/_reusable-e2e.yml
     with:
       framework: playwright
+      target-env: DOCKER
       shards: 4
       publish-allure: true
       allure-namespace: Playwright
@@ -46,10 +48,32 @@ jobs:
       E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 
   # ============================================================================
-  # 2. Selenium WebDriver Regression (Chrome Headless)
+  # 2. Render Staging Deployment Contract Check (Live Staging, @staging-contract)
+  # ============================================================================
+  staging-contract-check:
+    name: Staging Deployment Contract (STAGING)
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/_reusable-e2e.yml
+    with:
+      framework: playwright
+      target-env: STAGING
+      grep: '@staging-contract'
+      shards: 1
+      publish-allure: true
+      allure-namespace: Staging-Contract
+      headless: ${{ inputs.headless || 'true' }}
+    secrets:
+      E2E_USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+  # ============================================================================
+  # 3. Selenium WebDriver Regression (Chrome Headless, DOCKER)
   # ============================================================================
   selenium-regression:
-    name: Selenium Regression
+    name: Selenium Regression (DOCKER)
     permissions:
       contents: write
       pages: write
@@ -57,6 +81,7 @@ jobs:
     uses: ./.github/workflows/_reusable-e2e.yml
     with:
       framework: selenium
+      target-env: DOCKER
       shards: 1
       publish-allure: true
       allure-namespace: Selenium
@@ -66,10 +91,10 @@ jobs:
       E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 
   # ============================================================================
-  # 3. WebdriverIO Regression (Chrome Headless)
+  # 4. WebdriverIO Regression (Chrome Headless, DOCKER)
   # ============================================================================
   wdio-regression:
-    name: WebdriverIO Regression
+    name: WebdriverIO Regression (DOCKER)
     permissions:
       contents: write
       pages: write
@@ -77,6 +102,7 @@ jobs:
     uses: ./.github/workflows/_reusable-e2e.yml
     with:
       framework: wdio
+      target-env: DOCKER
       shards: 1
       publish-allure: true
       allure-namespace: WDIO
@@ -86,11 +112,15 @@ jobs:
       E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 
   # ============================================================================
-  # 4. Consolidated Nightly Summary
+  # 5. Consolidated Nightly Summary
   # ============================================================================
   nightly-summary:
     name: Nightly Quality Matrix Summary
-    needs: [playwright-regression, selenium-regression, wdio-regression]
+    needs:
+      - playwright-docker-regression
+      - staging-contract-check
+      - selenium-regression
+      - wdio-regression
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     permissions:
@@ -99,7 +129,8 @@ jobs:
       - name: Build Consolidated Step Summary Table
         shell: bash
         env:
-          PW_RESULT: ${{ needs.playwright-regression.result }}
+          PW_DOCKER_RESULT: ${{ needs.playwright-docker-regression.result }}
+          STAGING_RESULT: ${{ needs.staging-contract-check.result }}
           SEL_RESULT: ${{ needs.selenium-regression.result }}
           WDIO_RESULT: ${{ needs.wdio-regression.result }}
         run: |
@@ -107,6 +138,7 @@ jobs:
           OWNER="${GITHUB_REPOSITORY%/*}"
           PORTAL_URL="https://${OWNER}.github.io/${REPO_NAME}/"
           PW_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Playwright/"
+          STAGING_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Staging-Contract/"
           SEL_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Selenium/"
           WDIO_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/WDIO/"
 
@@ -120,25 +152,26 @@ jobs:
             fi
           }
 
-          PW_STATUS=$(format_status "$PW_RESULT")
+          PW_STATUS=$(format_status "$PW_DOCKER_RESULT")
+          STAGING_STATUS=$(format_status "$STAGING_RESULT")
           SEL_STATUS=$(format_status "$SEL_RESULT")
           WDIO_STATUS=$(format_status "$WDIO_RESULT")
 
           echo "## 🌙 BuggyBooks Nightly Multi-Framework Quality Matrix" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "> **Target Environment**: BuggyBooks Render Staging (\`https://buggy-books-fe.onrender.com/\`)" >> $GITHUB_STEP_SUMMARY
-          echo "> *Note: Regression targets Render staging until Sprint 7.1 migrates execution to local containerized DOCKER services.*" >> $GITHUB_STEP_SUMMARY
+          echo "> **Execution Topology**: Dual-target verification combining ephemeral containerized execution (\`ENV=DOCKER\`) for full multi-framework regression with scheduled staging contract probing (\`ENV=STAGING\`)." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Framework | Outcome | Shards / Strategy | Environment | Allure Dashboard |" >> $GITHUB_STEP_SUMMARY
+          echo "| Suite / Discipline | Outcome | Strategy | Target Environment | Allure Dashboard |" >> $GITHUB_STEP_SUMMARY
           echo "| :--- | :--- | :--- | :--- | :--- |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Playwright E2E** | ${PW_STATUS} | 4 Native Shards (Chrome + API) | Render Staging | [View Allure](${PW_URL}) |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Selenium WebDriver** | ${SEL_STATUS} | 1 Shard (Chrome Headless) | Render Staging | [View Allure](${SEL_URL}) |" >> $GITHUB_STEP_SUMMARY
-          echo "| **WebdriverIO** | ${WDIO_STATUS} | 1 Shard (Chrome Headless) | Render Staging | [View Allure](${WDIO_URL}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Playwright E2E** | ${PW_STATUS} | 4 Native Shards (Chrome + API) | Ephemeral (DOCKER) | [View Allure](${PW_URL}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Staging Contract Check** | ${STAGING_STATUS} | 1 Shard (\`@staging-contract\`) | Render Staging | [View Allure](${STAGING_URL}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Selenium WebDriver** | ${SEL_STATUS} | 1 Shard (Chrome Headless) | Ephemeral (DOCKER) | [View Allure](${SEL_URL}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **WebdriverIO** | ${WDIO_STATUS} | 1 Shard (Chrome Headless) | Ephemeral (DOCKER) | [View Allure](${WDIO_URL}) |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "🏛️ **Unified Portal**: [BuggyBooks Executive Quality Portal](${PORTAL_URL})" >> $GITHUB_STEP_SUMMARY
 
       - name: Enforce Nightly Regression Outcome Gate
-        if: always() && (needs.playwright-regression.result == 'failure' || needs.selenium-regression.result == 'failure' || needs.wdio-regression.result == 'failure')
+        if: always() && (needs.playwright-docker-regression.result == 'failure' || needs.staging-contract-check.result == 'failure' || needs.selenium-regression.result == 'failure' || needs.wdio-regression.result == 'failure')
         shell: bash
         run: |
           echo "::error::Nightly regression failed — one or more frameworks reported failing tests."

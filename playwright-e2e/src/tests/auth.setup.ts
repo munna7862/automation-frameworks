@@ -15,10 +15,31 @@ setup('authenticate seed user and cache storage state', async ({ page }) => {
   const { userName, password } = getLoginCredentials();
 
   // 1. Direct API authentication via page.request (automatically synchronizes cookies into page.context)
-  const loginRes = await page.request.post(`${envConfig.apiBaseUrl}/api/login`, {
+  let loginRes = await page.request.post(`${envConfig.apiBaseUrl}/api/login`, {
     data: { username: userName, password },
     headers: { 'x-bypass-rate-limit': 'true' }
   });
+
+  // If seed user is not found (e.g. freshly started hermetic DOCKER container), register idempotently
+  if (!loginRes.ok()) {
+    const registerRes = await page.request.post(`${envConfig.apiBaseUrl}/api/register`, {
+      data: {
+        username: userName,
+        password,
+        email: `${userName}@buggybooks.internal`,
+        fullName: 'Seed User'
+      },
+      headers: { 'x-bypass-rate-limit': 'true' }
+    });
+
+    if (registerRes.ok()) {
+      loginRes = await page.request.post(`${envConfig.apiBaseUrl}/api/login`, {
+        data: { username: userName, password },
+        headers: { 'x-bypass-rate-limit': 'true' }
+      });
+    }
+  }
+
   expect(loginRes.ok()).toBeTruthy();
 
   // 2. Navigate to base URL to establish origin domain and write localStorage auth token

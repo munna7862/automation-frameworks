@@ -5,8 +5,15 @@
  * for smoke, average load, stress, spike, and soak testing.
  */
 
-// Target backend URL: defaults to Render staging unless overridden by BASE_URL
-export const BASE_URL = __ENV.BASE_URL || 'https://buggy-books.onrender.com';
+const targetEnv = (__ENV.TARGET_ENV || __ENV.ENV || 'DOCKER').toUpperCase();
+const ENV_URLS = {
+  DOCKER: 'http://localhost:4000',
+  STAGING: 'https://buggy-books.onrender.com',
+  INTEROP: 'https://buggy-books.onrender.com'
+};
+
+// Target backend URL: defaults to DOCKER or targetEnv profile unless overridden by BASE_URL
+export const BASE_URL = __ENV.BASE_URL || ENV_URLS[targetEnv] || 'http://localhost:4000';
 
 /**
  * Reusable Virtual User Topologies

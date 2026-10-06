@@ -64,13 +64,21 @@ function generateProperties(frameworkKey) {
     driverVersion: 'Unknown'
   };
 
-  const env = process.env.ENVIRONMENT || process.env.ENV || 'STAGING';
-  const baseUrl = process.env.BASE_URL || 'https://buggy-books-fe.onrender.com/';
-  const apiBaseUrl = process.env.API_BASE_URL || 'https://buggy-books.onrender.com';
+  const env = process.env.ENVIRONMENT || process.env.ENV || 'DOCKER';
+  const defaultBaseUrl =
+    env === 'DOCKER' ? 'http://localhost:5173/' : 'https://buggy-books-fe.onrender.com/';
+  const defaultApiBaseUrl =
+    env === 'DOCKER' ? 'http://localhost:4000' : 'https://buggy-books.onrender.com';
+  const baseUrl = process.env.BASE_URL || defaultBaseUrl;
+  const apiBaseUrl = process.env.API_BASE_URL || defaultApiBaseUrl;
   const headless = process.env.HEADLESS !== undefined ? process.env.HEADLESS : 'true';
   const ciRunner = process.env.CI
     ? `GitHub Actions (Run #${process.env.GITHUB_RUN_NUMBER || 'CI'}, Ref: ${process.env.GITHUB_REF || 'unknown'})`
     : 'Local Workstation';
+  const buggyBooksImage =
+    process.env.BUGGYBOOKS_BACKEND_DIGEST || process.env.BUGGYBOOKS_TAG || 'latest';
+  const buggyBooksFrontendImage =
+    process.env.BUGGYBOOKS_FRONTEND_DIGEST || process.env.BUGGYBOOKS_FE_TAG || 'ci-localhost';
 
   const properties =
     [
@@ -78,6 +86,9 @@ function generateProperties(frameworkKey) {
       `Framework=${config.name}`,
       `Framework.Version=${config.driverVersion}`,
       `Test.Environment=${env}`,
+      `TargetEnv=${env}`,
+      `BuggyBooksImage=${buggyBooksImage}`,
+      `BuggyBooksFrontendImage=${buggyBooksFrontendImage}`,
       `Base.URL=${baseUrl}`,
       `API.Base.URL=${apiBaseUrl}`,
       `Browser.Target=${config.browser}`,
