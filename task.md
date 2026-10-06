@@ -79,7 +79,7 @@
 - [x] `docs/onboarding.md` created and linked from root `README.md`.
 - [x] `npm run lint:all` and `npm run typecheck:all` exit 0 across all workspaces.
 - [x] `npm run test:verify-catalog` exits 0 (dual-catalog parity).
-- [x] PR created with structured summary, test verification evidence, and all CI checks green.
+- [x] PR created with structured summary, test verification evidence, and all CI checks green: [PR #43](https://github.com/munna7862/automation-frameworks/pull/43) (14/14 CI checks passing).
 
 ---
 
@@ -109,4 +109,22 @@ npx tsx --test packages/test-data/src/test-data.test.ts
 # 6. Local Security Scanner Runner
 node scripts/run-security-scan.js
 # Output: Gitleaks and OSV scanner runners executed cleanly
+
+# 7. GitHub Actions CI Checks (PR #43)
+gh pr checks 43
+# Output: 14/14 checks pass
+# - Actionlint Workflow Linter: pass
+# - CodeQL: pass
+# - CodeQL Analysis (JavaScript / TypeScript): pass
+# - Conventional Commits Validation: pass
+# - Dependency Review (PR Gate): pass
+# - Gitleaks Secret Detection: pass
+# - License Compliance, Audit & SBOM: pass
+# - OSV Vulnerability Scanner: pass
+# - Smoke Tests (Chrome UI + API): pass
+# - Static Quality & Linting: pass
+# - Zizmor Workflow Security Audit: pass
+# - k6 Performance & Drift Gate: pass
+# - osv-scanner: pass
+# - zizmor: pass
 ```
