@@ -66,13 +66,13 @@
 
 ## 3. Sprint Review Comments & Refinement Loop
 
-| Gate / Reviewer                  | Target Role     | Review Feedback & Comments                                                                  | Gate Status |
-| :------------------------------- | :-------------- | :------------------------------------------------------------------------------------------ | :---------: |
-| **Pre-Flight Architecture Gate** | SDET Architect  | Verified DoR: DOCKER env ready, openapi.yaml generated, branch feat/sprint-9.1-dast-zap.    | `[PASSED]`  |
-| **Code Acceptance Review Gate**  | SDET Architect  | Enforce scope guard (localhost only), no bypass headers in API scan, chaos route exclusion. | `[PASSED]`  |
-| **Scrum Master DoD Gate**        | Scrum Master    | 4-point DoD: static analysis clean, catalog parity clean, SARIF schema valid, docs sync.    | `[PASSED]`  |
-| **DevOps Release Gate**          | DevOps Engineer | Workflow syntax valid, action pinning verified, gh pr created with verification proofs.     | `[ACTIVE]`  |
-| **Final Human Sign-Off**         | Human Tech Lead | Final PR review and merge to main.                                                          | `[PENDING]` |
+| Gate / Reviewer                  | Target Role     | Review Feedback & Comments                                                                                   | Gate Status |
+| :------------------------------- | :-------------- | :----------------------------------------------------------------------------------------------------------- | :---------: |
+| **Pre-Flight Architecture Gate** | SDET Architect  | Verified DoR: DOCKER env ready, openapi.yaml generated, branch feat/sprint-9.1-dast-zap.                     | `[PASSED]`  |
+| **Code Acceptance Review Gate**  | SDET Architect  | Enforce scope guard (localhost only), no bypass headers in API scan, chaos route exclusion.                  | `[PASSED]`  |
+| **Scrum Master DoD Gate**        | Scrum Master    | 4-point DoD: static analysis clean, catalog parity clean, SARIF schema valid, docs sync.                     | `[PASSED]`  |
+| **DevOps Release Gate**          | DevOps Engineer | Workflow syntax valid, action pinning verified, gh pr created with verification proofs, all CI checks green. | `[PASSED]`  |
+| **Final Human Sign-Off**         | Human Tech Lead | Final PR review and merge to main.                                                                           | `[PENDING]` |
 
 ---
 
@@ -87,7 +87,7 @@
 - [x] Dual-catalog parity confirmed: `npm run test:verify-catalog` exits 0.
 - [x] Portal metadata script produces security card metrics and `npm run test:portal` passes across desktop and mobile.
 - [x] Documentation updated (`repo_security_controls.md`, `security_testing_guide.md`, `AGENTS.md`, `planning/README.md`, `phase_9_security_testing_dast_and_appsec.md`).
-- [ ] Pull request opened with structured summary and verification evidence (`gh pr create`).
+- [x] Pull request opened with structured summary and verification evidence: PR [#48](https://github.com/munna7862/automation-frameworks/pull/48).
 
 ---
 
@@ -103,4 +103,8 @@ npm run lint:all; npm run typecheck:all
 # Command 3: Portal metadata & portal integration test
 node scripts/generate-portal-metadata.js
 npm run test:portal
+
+# Command 4: GitHub PR CI checks
+gh pr checks 48
+# All 14 checks passed green including ZAP Baseline Passive Scan, CodeQL, Smoke Tests, Linting
 ```
