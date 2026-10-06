@@ -1,16 +1,15 @@
-import { test, expect } from '../../../core/base/api.fixture';
-import { envConfig } from '../../../config/env.config';
+import { test, expect } from '../../../api/api.fixture';
 import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import { KNOWN_BOOK_IDS } from '@automationframeworks/test-data';
+import { OrdersListSchema } from '../../../api/schemas';
 
 const commonUtil = new CommonFunctions();
 
 test.describe('Orders API Endpoint', () => {
   test('API_ORD_01: Authenticate user, complete checkout via API, and verify GET /api/orders history response @smoke @regression', async ({
-    request,
+    api,
     seed
   }) => {
-    const apiBase = envConfig.apiBaseUrl;
     let authSession: any;
 
     await test.step('Register and authenticate new user session via API seeder', async () => {
@@ -28,11 +27,13 @@ test.describe('Orders API Endpoint', () => {
     });
 
     await test.step('Fetch GET /api/orders and verify orders list payload', async () => {
-      const ordersRes = await request.get(`${apiBase}/api/orders`, {
+      const ordersRes = await api.orders.list({
         headers: authSession.headers
       });
-      expect(ordersRes.status()).toBe(200);
-      const orders = await ordersRes.json();
+      await expect(ordersRes).toHaveStatus(200);
+      await expect(ordersRes).toMatchSchema(OrdersListSchema);
+      expect(ordersRes.status).toBe(200);
+      const orders = ordersRes.body;
       expect(Array.isArray(orders)).toBe(true);
       expect(orders.length).toBeGreaterThan(0);
       await commonUtil.logMessage(

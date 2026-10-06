@@ -1,8 +1,14 @@
-import { test, expect } from '../../../core/base/api.fixture';
+import { test, expect } from '../../../api/api.fixture';
 import { envConfig } from '../../../config/env.config';
 import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import TestData from '../../../test-data/api/UserManagement/Test_002_TokenRefreshAndProfileApi.json';
 import { randomBytes } from 'crypto';
+import { createApiClient } from '../../../api/clients';
+import {
+  AuthTokensResponseSchema,
+  ApiErrorResponseSchema,
+  TestConfigPostResponseSchema
+} from '../../../api/schemas';
 
 const commonUtil = new CommonFunctions();
 
@@ -11,28 +17,28 @@ function uniqueUsername(prefix: string = 'tokenuser'): string {
 }
 
 test.describe('Token Refresh and Profile Upload API Suite', () => {
-  test('API_REF_01: Dynamic Access Token Expiry @smoke @regression @chaos', async ({ request }) => {
+  test('API_REF_01: Dynamic Access Token Expiry @smoke @regression @chaos', async ({ api }) => {
     const username = uniqueUsername('token_exp');
     const password = TestData.PASSWORD;
     const fullName = TestData.FULL_NAME;
 
     try {
-      const regRes = await request.post('/api/register', {
-        data: { username, password, fullName }
-      });
-      expect(regRes.status()).toBe(201);
+      const regRes = await api.auth.register({ username, password, fullName });
+      await expect(regRes).toHaveStatus(201);
+      await expect(regRes).toMatchSchema(AuthTokensResponseSchema);
+      expect(regRes.status).toBe(201);
 
-      const configRes = await request.post('/api/test/config', {
-        data: { jwtExpirySeconds: 2 }
-      });
-      expect(configRes.status()).toBe(200);
+      const configRes = await api.testControl.setConfig({ jwtExpirySeconds: 2 });
+      await expect(configRes).toHaveStatus(200);
+      await expect(configRes).toMatchSchema(TestConfigPostResponseSchema);
+      expect(configRes.status).toBe(200);
 
-      const loginRes = await request.post('/api/login', {
-        data: { username, password }
-      });
-      expect(loginRes.status()).toBe(200);
+      const loginRes = await api.auth.login({ username, password });
+      await expect(loginRes).toHaveStatus(200);
+      await expect(loginRes).toMatchSchema(AuthTokensResponseSchema);
+      expect(loginRes.status).toBe(200);
 
-      const setCookieHeaders = loginRes
+      const setCookieHeaders = loginRes.raw
         .headersArray()
         .filter((h) => h.name.toLowerCase() === 'set-cookie');
       const cookieHeader = setCookieHeaders.map((c) => c.value.split(';')[0]).join('; ');
@@ -40,35 +46,35 @@ test.describe('Token Refresh and Profile Upload API Suite', () => {
       // Wait 3s so that the 2s access token expires
       await new Promise((r) => setTimeout(r, 3000));
 
-      const protectedRes = await request.get('/api/cart', {
+      const protectedRes = await api.cart.get({
         headers: { Cookie: cookieHeader }
       });
 
       await commonUtil.logMessage('INFO', 'Verifying 403 Forbidden returned for expired token');
-      expect(protectedRes.status()).toBe(403);
+      await expect(protectedRes).toHaveStatus(403);
+      await expect(protectedRes).toMatchSchema(ApiErrorResponseSchema);
+      expect(protectedRes.status).toBe(403);
     } finally {
-      await request.post('/api/test/config', {
-        data: { jwtExpirySeconds: 900 }
-      });
+      await api.testControl.setConfig({ jwtExpirySeconds: 900 });
     }
   });
 
-  test('API_REF_02: Refresh Token Issuance @smoke @regression', async ({ request }) => {
+  test('API_REF_02: Refresh Token Issuance @smoke @regression', async ({ api }) => {
     const username = uniqueUsername('ref_issue');
     const password = TestData.PASSWORD;
     const fullName = TestData.FULL_NAME;
 
-    const regRes = await request.post('/api/register', {
-      data: { username, password, fullName }
-    });
-    expect(regRes.status()).toBe(201);
+    const regRes = await api.auth.register({ username, password, fullName });
+    await expect(regRes).toHaveStatus(201);
+    await expect(regRes).toMatchSchema(AuthTokensResponseSchema);
+    expect(regRes.status).toBe(201);
 
-    const loginRes = await request.post('/api/login', {
-      data: { username, password }
-    });
-    expect(loginRes.status()).toBe(200);
+    const loginRes = await api.auth.login({ username, password });
+    await expect(loginRes).toHaveStatus(200);
+    await expect(loginRes).toMatchSchema(AuthTokensResponseSchema);
+    expect(loginRes.status).toBe(200);
 
-    const setCookieHeaders = loginRes
+    const setCookieHeaders = loginRes.raw
       .headersArray()
       .filter((h) => h.name.toLowerCase() === 'set-cookie');
     const setCookieStr = setCookieHeaders.map((h) => h.value).join('; ');
@@ -83,35 +89,37 @@ test.describe('Token Refresh and Profile Upload API Suite', () => {
     expect(setCookieStr.toLowerCase().includes('httponly')).toBe(true);
   });
 
-  test('API_REF_03: Silent Token Refresh @regression', async ({ request }) => {
+  test('API_REF_03: Silent Token Refresh @regression', async ({ api }) => {
     const username = uniqueUsername('silent_ref');
     const password = TestData.PASSWORD;
     const fullName = TestData.FULL_NAME;
 
-    const regRes = await request.post('/api/register', {
-      data: { username, password, fullName }
-    });
-    expect(regRes.status()).toBe(201);
+    const regRes = await api.auth.register({ username, password, fullName });
+    await expect(regRes).toHaveStatus(201);
+    await expect(regRes).toMatchSchema(AuthTokensResponseSchema);
+    expect(regRes.status).toBe(201);
 
-    const loginRes = await request.post('/api/login', {
-      data: { username, password }
-    });
-    expect(loginRes.status()).toBe(200);
+    const loginRes = await api.auth.login({ username, password });
+    await expect(loginRes).toHaveStatus(200);
+    await expect(loginRes).toMatchSchema(AuthTokensResponseSchema);
+    expect(loginRes.status).toBe(200);
 
-    const setCookieHeaders = loginRes
+    const setCookieHeaders = loginRes.raw
       .headersArray()
       .filter((h) => h.name.toLowerCase() === 'set-cookie');
     const refreshCookie = setCookieHeaders.find((c) => c.value.startsWith('refreshToken='));
     const refreshTokenHeader = refreshCookie ? refreshCookie.value.split(';')[0] : '';
 
-    const refreshRes = await request.post('/api/auth/refresh', {
+    const refreshRes = await api.auth.refresh(undefined, {
       headers: { Cookie: refreshTokenHeader }
     });
 
     await commonUtil.logMessage('INFO', 'Verifying POST /api/auth/refresh returns 200 OK');
-    expect(refreshRes.status()).toBe(200);
+    await expect(refreshRes).toHaveStatus(200);
+    await expect(refreshRes).toMatchSchema(AuthTokensResponseSchema);
+    expect(refreshRes.status).toBe(200);
 
-    const refreshSetCookieHeaders = refreshRes
+    const refreshSetCookieHeaders = refreshRes.raw
       .headersArray()
       .filter((h) => h.name.toLowerCase() === 'set-cookie');
     const refreshSetCookieStr = refreshSetCookieHeaders.map((h) => h.value).join('; ');
@@ -128,22 +136,21 @@ test.describe('Token Refresh and Profile Upload API Suite', () => {
         'x-bypass-csrf': 'true'
       }
     });
-    const uploadRes = await unauthContext.post('/api/profile/upload', {
-      multipart: {
-        avatar: {
-          name: 'avatar.png',
-          mimeType: 'image/png',
-          buffer: Buffer.from('mock-avatar-bytes')
-        }
-      }
+    const unauthApi = createApiClient(unauthContext);
+    const uploadRes = await unauthApi.profile.uploadAvatar({
+      name: 'avatar.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from('mock-avatar-bytes')
     });
-    const status = uploadRes.status();
+    const status = uploadRes.status;
     await unauthContext.dispose();
 
     await commonUtil.logMessage(
       'INFO',
       'Verifying 401 Unauthorized for unauthenticated upload request'
     );
+    await expect(uploadRes).toHaveStatus(401);
+    await expect(uploadRes).toMatchSchema(ApiErrorResponseSchema);
     expect(status).toBe(401);
   });
 });

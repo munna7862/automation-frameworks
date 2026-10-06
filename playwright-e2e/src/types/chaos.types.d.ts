@@ -1,17 +1,15 @@
 /**
- * Chaos/testing configuration type definitions shared across backend and frontend.
- *
- * Controls intentional failure injection for QA testing practice.
+ * Chaos/testing configuration type definitions derived directly from Zod schemas.
+ * Single source of truth is src/api/schemas/test-control.schema.ts
  */
+import type {
+  ChaosConfig as SchemaChaosConfig,
+  TestConfigPostResponse as SchemaTestConfigPostResponse,
+  TestResetResponse as SchemaTestResetResponse,
+  TestSessionDeleteResponse as SchemaTestSessionDeleteResponse
+} from '../api/schemas/test-control.schema';
 
-/** Configuration for chaos engineering features (failure injection, delays, etc.). */
-export interface ChaosConfig {
-  checkoutFailureRate: number; // 0.0 to 1.0 (default 0.15)
-  inventoryDelayMs: number; // milliseconds (default 3000)
-  jwtExpirySeconds: number; // seconds (default 900)
-  websocketDropRate: number; // 0.0 to 1.0 (default 0.0)
-  uploadFailureRate: number; // 0.0 to 1.0 (default 0.0)
-  injectA11yViolations: boolean; // default false
-  visualChaos: boolean; // default false
-  inventoryLockingRate: number; // 0.0 to 1.0 (default 0.0)
-}
+export type ChaosConfig = SchemaChaosConfig;
+export type TestConfigPostResponse = SchemaTestConfigPostResponse;
+export type TestResetResponse = SchemaTestResetResponse;
+export type TestSessionDeleteResponse = SchemaTestSessionDeleteResponse;

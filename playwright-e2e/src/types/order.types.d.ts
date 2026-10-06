@@ -1,14 +1,13 @@
 /**
- * Order-related type definitions shared across backend, frontend, and E2E tests.
+ * Order-related type definitions derived directly from Zod schemas.
+ * Single source of truth is src/api/schemas/order.schema.ts
  */
+import type {
+  Order as SchemaOrder,
+  OrdersList as SchemaOrdersList,
+  CheckoutResponse as SchemaCheckoutResponse
+} from '../api/schemas/order.schema';
 
-import type { Book } from './book.types';
-
-/** Represents a completed purchase order. */
-export interface Order {
-  id: string;
-  items: Book[];
-  total: number;
-  customerName: string;
-  date: string;
-}
+export type Order = SchemaOrder;
+export type OrdersList = SchemaOrdersList;
+export type CheckoutResponse = SchemaCheckoutResponse;

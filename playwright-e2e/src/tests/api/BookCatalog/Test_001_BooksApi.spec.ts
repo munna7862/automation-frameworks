@@ -1,7 +1,8 @@
-import { test, expect } from '../../../core/base/api.fixture';
+import { test, expect } from '../../../api/api.fixture';
 import type { Book, PaginatedBooks } from '@buggybooks/types';
 import { CommonFunctions } from '@automationframeworks/playwright-utils';
 import testData from '../../../test-data/api/BookCatalog/Test_001_BooksApi.json';
+import { PaginatedBooksSchema, BookListSchema } from '../../../api/schemas';
 
 const commonUtil = new CommonFunctions();
 
@@ -52,17 +53,19 @@ async function validateBookContract(book: Book | Record<string, unknown>) {
 
 test.describe('Books API - List and Security', () => {
   test('Testcase 1: GET /api/books?page=1&limit=8 - should return a paged book list with valid contract for page 1 @smoke @regression @staging-contract', async ({
-    request
+    api
   }) => {
-    const response = await request.get(
-      `/api/books?page=${testData.defaultPagination.page}&limit=${testData.defaultPagination.limit}`
-    );
+    const response = await api.books.list<PaginatedBooks>({
+      page: testData.defaultPagination.page,
+      limit: testData.defaultPagination.limit
+    });
 
-    expect(response.status()).toBe(200);
-    expect(response.ok()).toBeTruthy();
-    const data = (await response.json()) as PaginatedBooks;
+    await expect(response).toHaveStatus(200);
+    await expect(response).toMatchSchema(PaginatedBooksSchema);
+    expect(response.status).toBe(200);
+    const data = response.body;
 
-    await commonUtil.compareTwoValues(response.status(), 200, 'Response status');
+    await commonUtil.compareTwoValues(response.status, 200, 'Response status');
     await commonUtil.compareTwoValues(
       Array.isArray(data.books),
       true,
@@ -117,17 +120,19 @@ test.describe('Books API - List and Security', () => {
   });
 
   test('Testcase 2: GET /api/books?page=2&limit=8 - should return a paged book list with valid contract for page 2 @smoke @regression', async ({
-    request
+    api
   }) => {
-    const response = await request.get(
-      `/api/books?page=${testData.page2Pagination.page}&limit=${testData.page2Pagination.limit}`
-    );
+    const response = await api.books.list<PaginatedBooks>({
+      page: testData.page2Pagination.page,
+      limit: testData.page2Pagination.limit
+    });
 
-    expect(response.status()).toBe(200);
-    expect(response.ok()).toBeTruthy();
-    const data = (await response.json()) as PaginatedBooks;
+    await expect(response).toHaveStatus(200);
+    await expect(response).toMatchSchema(PaginatedBooksSchema);
+    expect(response.status).toBe(200);
+    const data = response.body;
 
-    await commonUtil.compareTwoValues(response.status(), 200, 'Response status');
+    await commonUtil.compareTwoValues(response.status, 200, 'Response status');
     await commonUtil.compareTwoValues(
       Array.isArray(data.books),
       true,
@@ -186,16 +191,19 @@ test.describe('Books API - List and Security', () => {
 
   for (const scenario of paginationScenarios) {
     test(`Testcase 3: Pagination: ${scenario.description} (page=${scenario.page}, limit=${scenario.limit}) @regression`, async ({
-      request
+      api
     }) => {
-      const response = await request.get(
-        `/api/books?page=${scenario.page}&limit=${scenario.limit}`
-      );
-      expect(response.status()).toBe(200);
-      const data = (await response.json()) as PaginatedBooks;
+      const response = await api.books.list<PaginatedBooks>({
+        page: scenario.page,
+        limit: scenario.limit
+      });
+      await expect(response).toHaveStatus(200);
+      await expect(response).toMatchSchema(PaginatedBooksSchema);
+      expect(response.status).toBe(200);
+      const data = response.body;
 
       await commonUtil.compareTwoValues(
-        response.status(),
+        response.status,
         200,
         `Status code should be 200 for ${scenario.description}`
       );
@@ -226,16 +234,21 @@ test.describe('Books API - List and Security', () => {
 
   // Data Integrity - No Duplicates across pages
   test('Testcase 4: Data Integrity: Page 1 last item should not be Page 2 first item @regression', async ({
-    request
+    api
   }) => {
-    const page1Res = await request.get('/api/books?page=1&limit=5');
-    const page2Res = await request.get('/api/books?page=2&limit=5');
+    const page1Res = await api.books.list<PaginatedBooks>({ page: 1, limit: 5 });
+    const page2Res = await api.books.list<PaginatedBooks>({ page: 2, limit: 5 });
 
-    expect(page1Res.status()).toBe(200);
-    expect(page2Res.status()).toBe(200);
+    await expect(page1Res).toHaveStatus(200);
+    await expect(page2Res).toHaveStatus(200);
+    await expect(page1Res).toMatchSchema(PaginatedBooksSchema);
+    await expect(page2Res).toMatchSchema(PaginatedBooksSchema);
 
-    const page1 = (await page1Res.json()) as PaginatedBooks;
-    const page2 = (await page2Res.json()) as PaginatedBooks;
+    expect(page1Res.status).toBe(200);
+    expect(page2Res.status).toBe(200);
+
+    const page1 = page1Res.body;
+    const page2 = page2Res.body;
 
     const lastItemP1 = page1.books[page1.books.length - 1].id;
     await commonUtil.logMessage('INFO', `Last item on page 1 ID: ${lastItemP1}`);
@@ -249,42 +262,44 @@ test.describe('Books API - List and Security', () => {
   const negativeScenarios = testData.negativeScenarios;
 
   for (const neg of negativeScenarios) {
-    test(`Testcase 5: Negative: ${neg.description} @regression`, async ({ request }) => {
-      const response = await request.get(`/api/books?${neg.query}`);
+    test(`Testcase 5: Negative: ${neg.description} @regression`, async ({ api }) => {
+      const response = await api.books.get(`/api/books?${neg.query}`);
       await commonUtil.compareTwoValues(
-        testData.allowedInvalidParameterStatus.includes(response.status()),
+        testData.allowedInvalidParameterStatus.includes(response.status),
         true,
         `Status code should be ${testData.allowedInvalidParameterStatus.join(' or ')} for invalid parameters: ${neg.description}`
       );
-      expect(testData.allowedInvalidParameterStatus).toContain(response.status());
+      expect(testData.allowedInvalidParameterStatus).toContain(response.status);
     });
   }
 
   // Security - Unauthorized Access / Missing Headers
   test('Testcase 6: Security: Request without Content-Type header should be handled @regression', async ({
-    request
+    api
   }) => {
-    const response = await request.get('/api/books', {
+    const response = await api.books.list(undefined, {
       headers: {} // Empty headers
     });
     await commonUtil.compareTwoValues(
-      response.status(),
+      response.status,
       200,
       'Status code should be 200 when Content-Type header is missing'
     );
-    expect(response.status()).toBe(200);
+    expect(response.status).toBe(200);
   });
 
   // Default Parameters
   test('Testcase 7: Defaults: Verify API works without query parameters @smoke @regression', async ({
-    request
+    api
   }) => {
-    const response = await request.get('/api/books');
-    expect(response.status()).toBe(200);
-    const data = (await response.json()) as Book[];
+    const response = await api.books.list<Book[]>();
+    await expect(response).toHaveStatus(200);
+    await expect(response).toMatchSchema(BookListSchema);
+    expect(response.status).toBe(200);
+    const data = response.body;
 
     await commonUtil.compareTwoValues(
-      response.status(),
+      response.status,
       200,
       'Status code should be 200 when no query parameters are provided'
     );

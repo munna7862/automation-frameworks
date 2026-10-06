@@ -1,33 +1,17 @@
 /**
- * Authentication-related type definitions shared across backend, frontend, and mobile.
+ * Authentication-related type definitions derived directly from Zod schemas.
+ * Single source of truth is src/api/schemas/auth.schema.ts and src/api/schemas/profile.schema.ts
  */
+import type {
+  UserRecord as SchemaUserRecord,
+  AuthUser as SchemaAuthUser,
+  AuthTokensResponse as SchemaAuthTokensResponse,
+  LogoutResponse as SchemaLogoutResponse
+} from '../api/schemas/auth.schema';
+import type { UserProfile as SchemaUserProfile } from '../api/schemas/profile.schema';
 
-/** Stored user record in the backend data store. */
-export interface UserRecord {
-  passwordHash: string;
-  fullName?: string;
-  avatarUrl?: string;
-}
-
-/** Authenticated user payload decoded from JWT access token. */
-export interface AuthUser {
-  username: string;
-  type?: 'access' | string;
-  fullName?: string;
-}
-
-/** Dual-auth token response payload returned by login, register, and refresh endpoints. */
-export interface AuthTokensResponse {
-  message?: string;
-  success?: boolean;
-  username: string;
-  token: string;
-  refreshToken: string;
-}
-
-/** User profile metadata returned by profile endpoints. */
-export interface UserProfile {
-  username: string;
-  fullName?: string;
-  avatarUrl?: string;
-}
+export type UserRecord = SchemaUserRecord;
+export type AuthUser = SchemaAuthUser;
+export type AuthTokensResponse = SchemaAuthTokensResponse;
+export type LogoutResponse = SchemaLogoutResponse;
+export type UserProfile = SchemaUserProfile;
