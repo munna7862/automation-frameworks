@@ -152,8 +152,8 @@ Suggested order: `6.1 → 6.2 → 7.1 → 6.3 → 6.4 → 7.2 → 8.1 → 10.1 �
 | **SPRINT-7.2** | [Test Data Engineering & Typed Configuration](Sprints/sprint_7_2_test_data_engineering_and_typed_configuration.md) | Phase 7 | 4 SP | SDET Architect | Done |
 | **SPRINT-7.3** | [Dev Container & Local Developer Experience](Sprints/sprint_7_3_dev_container_and_local_developer_experience.md) | Phase 7 | 4 SP | DevOps Engineer | Done |
 | **SPRINT-8.1** | [Typed API Client Layer & Schema Validation](Sprints/sprint_8_1_typed_api_client_layer_and_schema_validation.md) | Phase 8 | 5 SP | Playwright QA Lead | Done |
-| **SPRINT-8.2** | [API Coverage Gaps & Negative Matrix](Sprints/sprint_8_2_api_coverage_gaps_and_negative_matrix.md) | Phase 8 | 5 SP | Playwright QA Lead | In Progress |
-| **SPRINT-8.3** | [OpenAPI Specification & Contract Testing](Sprints/sprint_8_3_openapi_specification_and_contract_testing.md) | Phase 8 | 4 SP | SDET Architect | Not Started |
+| **SPRINT-8.2** | [API Coverage Gaps & Negative Matrix](Sprints/sprint_8_2_api_coverage_gaps_and_negative_matrix.md) | Phase 8 | 5 SP | Playwright QA Lead | Done |
+| **SPRINT-8.3** | [OpenAPI Specification & Contract Testing](Sprints/sprint_8_3_openapi_specification_and_contract_testing.md) | Phase 8 | 4 SP | SDET Architect | Done |
 | **SPRINT-9.1** | [DAST Pipeline with OWASP ZAP](Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md) | Phase 9 | 4 SP | Security Test Engineer | Not Started |
 | **SPRINT-9.2** | [AppSec Security Test Suite](Sprints/sprint_9_2_appsec_security_test_suite.md) | Phase 9 | 6 SP | Security Test Engineer | Not Started |
 | **SPRINT-10.1** | [UI Determinism & Lint Enforcement](Sprints/sprint_10_1_ui_determinism_and_lint_enforcement.md) | Phase 10 | 4 SP | Playwright QA Lead | Not Started |

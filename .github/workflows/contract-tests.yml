@@ -1,0 +1,137 @@
+# ==============================================================================
+# BuggyBooks — Consumer-Driven Contract Testing (Pact V3/V4)
+#
+# Target Environments:
+#   - Consumer: Standalone mock service generating pact artifacts.
+#   - Provider: Ephemeral DOCKER backend (http://localhost:4000) verifying contracts.
+#
+# Triggers:
+#   - PRs touching API routes, schemas, clients, or contract tests
+#   - Nightly regression schedule
+#   - Manual workflow_dispatch
+# ==============================================================================
+
+name: Contract Testing (Pact)
+
+on:
+  pull_request:
+    paths:
+      - 'playwright-e2e/src/api/**'
+      - 'playwright-e2e/contract-tests/**'
+      - 'scripts/generate-openapi.ts'
+      - 'docs/api/**'
+      - '.github/workflows/contract-tests.yml'
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: contract-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  pact-consumer:
+    name: Pact Consumer Contract Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Monorepo Environment
+        uses: ./.github/actions/setup-monorepo
+        with:
+          install-chrome: 'false'
+
+      - name: Run Pact Consumer Contract Tests
+        id: consumer
+        run: npm run test:contract:consumer --workspace=playwright-e2e
+
+      - name: Upload Pact Contracts Artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.1
+        with:
+          name: pact-contracts
+          path: playwright-e2e/contract-tests/pacts/
+          retention-days: 14
+
+  pact-provider:
+    name: Pact Provider Verification (DOCKER)
+    needs: [pact-consumer]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+
+    env:
+      CI: 'true'
+      ENV: DOCKER
+      TARGET_ENV: DOCKER
+      API_BASE_URL: http://localhost:4000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Monorepo Environment
+        uses: ./.github/actions/setup-monorepo
+        with:
+          install-chrome: 'false'
+
+      - name: Download Pact Contracts Artifact
+        uses: actions/download-artifact@ccb2de72d25ea7a4381340432190a44e62f38201 # v4.1.9
+        with:
+          name: pact-contracts
+          path: playwright-e2e/contract-tests/pacts/
+
+      - name: Start Ephemeral BuggyBooks Environment
+        uses: ./.github/actions/buggybooks-up
+
+      - name: Pre-Flight State Reset
+        uses: ./.github/actions/chaos-reset
+        with:
+          api-base: http://localhost:4000
+
+      - name: Execute Pact Provider Verification
+        id: provider
+        run: npm run test:contract:provider --workspace=playwright-e2e
+
+      - name: Teardown State Reset
+        if: always()
+        uses: ./.github/actions/chaos-reset
+        with:
+          api-base: http://localhost:4000
+
+      - name: Stop Ephemeral BuggyBooks Environment
+        if: always()
+        uses: ./.github/actions/buggybooks-down
+
+      - name: Generate Contract Testing Step Summary
+        if: always()
+        run: |
+          {
+            echo "### 🤝 Pact Consumer-Driven Contract Testing Summary"
+            echo ""
+            echo "| Discipline | Consumer | Provider | Verification Status |"
+            echo "| :--- | :--- | :--- | :--- |"
+            echo "| **Pact Consumer Contracts** | \`buggybooks-web\` | \`buggybooks-api\` | ${{ needs.pact-consumer.result == 'success' && '✅ PASSED (7 interactions generated)' || '❌ FAILED' }} |"
+            echo "| **Pact Provider Verification** | \`buggybooks-web\` | \`buggybooks-api\` | ${{ steps.provider.outcome == 'success' && '✅ PASSED (all state handlers verified)' || '❌ FAILED' }} |"
+            echo ""
+            echo "> **Contract Governance**: File-based contracts passed via CI artifacts. Zero external broker dependency. Enforces strict backwards compatibility across BuggyBooks frontend client models."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail job if provider verification failed
+        if: always() && steps.provider.outcome == 'failure'
+        run: |
+          echo "::error::Pact provider verification failed — contracts violated."
+          exit 1

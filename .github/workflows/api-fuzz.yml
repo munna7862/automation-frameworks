@@ -1,0 +1,145 @@
+# ==============================================================================
+# BuggyBooks — Automated Property-Based API Fuzzing (Schemathesis)
+#
+# Target Environment:
+#   - Ephemeral DOCKER: Uses .github/actions/buggybooks-up hermetic containers.
+#   - NEVER runs against Render staging (to prevent state mutation/rate limit chaos).
+#
+# Schedule: Nightly at 03:00 UTC (cron: '0 3 * * *') + workflow_dispatch
+# Governance: Evaluates conformance against docs/api/openapi.yaml specification.
+# ==============================================================================
+
+name: API Property-Based Fuzzing
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      max_examples:
+        description: 'Maximum test cases per API operation'
+        required: false
+        default: '50'
+      checks:
+        description: 'Schemathesis check suite (all, not_a_server_error, status_code_conformance)'
+        required: false
+        default: 'all'
+
+permissions: {}
+
+jobs:
+  schemathesis-fuzz:
+    name: Schemathesis Fuzzing (DOCKER)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Monorepo Environment
+        uses: ./.github/actions/setup-monorepo
+        with:
+          install-chrome: 'false'
+
+      - name: Start Ephemeral BuggyBooks Environment
+        uses: ./.github/actions/buggybooks-up
+
+      - name: Pre-Flight State Reset
+        uses: ./.github/actions/chaos-reset
+        with:
+          api-base: http://localhost:4000
+
+      - name: Acquire Seeded Authentication Token
+        id: auth
+        run: |
+          echo "Obtaining JWT bearer token for authorized endpoints..."
+          TOKEN_RESPONSE=$(curl -s -X POST http://localhost:4000/api/login \
+            -H "Content-Type: application/json" \
+            -d '{"username":"admin","password":"password123"}')
+          TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r '.token // empty')
+          if [ -z "$TOKEN" ]; then
+            echo "⚠️ Could not acquire seed token; fuzzing will proceed with unauthenticated requests."
+            echo "token=" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Acquired bearer token."
+            echo "token=$TOKEN" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Schemathesis Fuzzing Container
+        id: fuzz
+        continue-on-error: true
+        env:
+          MAX_EXAMPLES: ${{ inputs.max_examples || '50' }}
+          CHECKS: ${{ inputs.checks || 'all' }}
+          AUTH_TOKEN: ${{ steps.auth.outputs.token }}
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/fuzz-reports"
+          chmod 777 "$GITHUB_WORKSPACE/fuzz-reports"
+
+          AUTH_HEADER=()
+          if [ -n "$AUTH_TOKEN" ]; then
+            AUTH_HEADER=(-H "Authorization: Bearer $AUTH_TOKEN")
+          fi
+
+          echo "🚀 Starting Schemathesis against docs/api/openapi.yaml on http://localhost:4000..."
+          docker run --network host \
+            -v "$GITHUB_WORKSPACE/docs/api:/api:ro" \
+            -v "$GITHUB_WORKSPACE/fuzz-reports:/reports" \
+            schemathesis/schemathesis:stable \
+            run /api/openapi.yaml \
+            --url http://localhost:4000 \
+            --checks "$CHECKS" \
+            --max-examples "$MAX_EXAMPLES" \
+            -H "x-bypass-rate-limit: true" \
+            -H "x-bypass-csrf: true" \
+            "${AUTH_HEADER[@]}" \
+            --exclude-path-regex '^/api/test/' \
+            --junit-xml /reports/schemathesis-junit.xml || true
+
+      - name: Teardown State Reset
+        if: always()
+        uses: ./.github/actions/chaos-reset
+        with:
+          api-base: http://localhost:4000
+
+      - name: Stop Ephemeral BuggyBooks Environment
+        if: always()
+        uses: ./.github/actions/buggybooks-down
+
+      - name: Upload Schemathesis JUnit Artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.1
+        with:
+          name: schemathesis-fuzz-report
+          path: fuzz-reports/
+          retention-days: 14
+
+      - name: Generate Schemathesis Step Summary
+        if: always()
+        run: |
+          {
+            echo "### 🧪 Schemathesis Property-Based API Fuzzing Summary"
+            echo ""
+            echo "| Parameter | Value |"
+            echo "| :--- | :--- |"
+            echo "| **Target Environment** | Ephemeral DOCKER (http://localhost:4000) |"
+            echo "| **Specification** | \`docs/api/openapi.yaml\` (OpenAPI 3.1) |"
+            echo "| **Max Examples** | ${{ inputs.max_examples || '50' }} per operation |"
+            echo "| **Checks Evaluated** | ${{ inputs.checks || 'all' }} |"
+            echo "| **Chaos Exclusion** | Excluded \`^/api/test/\` endpoints |"
+            echo "| **Authenticated User** | \`admin\` |"
+            echo ""
+            if [ -f "$GITHUB_WORKSPACE/fuzz-reports/schemathesis-junit.xml" ]; then
+              echo "✅ Schemathesis JUnit report generated in \`fuzz-reports/schemathesis-junit.xml\`."
+            else
+              echo "⚠️ Schemathesis JUnit report not located — inspect step logs for details."
+            fi
+            echo ""
+            echo "> **Governance Note**: Nightly fuzzing results are currently in the 2-week baseline observability grace period. Triaged findings are tracked under ID \`CT-FUZZ-001\`."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,1512 @@
+openapi: 3.1.0
+info:
+  title: BuggyBooks REST API
+  version: 1.0.0
+  description: Enterprise REST API specification for BuggyBooks — an e-commerce
+    book catalog featuring deliberate chaos injection endpoints for Software
+    Quality Engineering.
+  contact:
+    name: BuggyBooks SQE Automation Team
+    url: https://github.com/munna7862/automation-frameworks
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:4000
+    description: Ephemeral Docker / Local Development Environment (ENV=DOCKER)
+  - url: https://buggy-books.onrender.com
+    description: Shared Staging Environment (ENV=STAGING)
+tags:
+  - name: Books
+    description: Catalog discovery, pagination, search, and book detail inspection
+  - name: Authentication
+    description: User registration, login, logout, and token renewal
+  - name: Cart
+    description: Shopping cart manipulation, item additions, and clearing
+  - name: Orders
+    description: Order checkout processing and customer order history
+  - name: Inventory
+    description: Stock availability reports and valuations
+  - name: Profile
+    description: Customer profiles and avatar asset uploads
+  - name: System
+    description: Health checks, telemetry metrics, and CSRF protection
+  - name: Test Control & Chaos
+    description: Chaos fault injection and state reset test harness
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT authorization bearer token in Authorization header
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+      description: HttpOnly session token cookie set on login
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        price:
+          type: number
+        image:
+          type: string
+        genre:
+          type: string
+        description:
+          type: string
+        stock:
+          type: number
+        version:
+          type: number
+      required:
+        - id
+        - title
+        - author
+        - price
+        - image
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        price:
+          type: number
+      required:
+        - id
+        - title
+        - price
+    PaginatedBooks:
+      type: object
+      properties:
+        books:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              author:
+                type: string
+              price:
+                type: number
+              image:
+                type: string
+              genre:
+                type: string
+              description:
+                type: string
+              stock:
+                type: number
+              version:
+                type: number
+            required:
+              - id
+              - title
+              - author
+              - price
+              - image
+        total:
+          type: number
+        page:
+          type: number
+        totalPages:
+          type: number
+        limit:
+          type: number
+      required:
+        - books
+        - total
+        - page
+        - totalPages
+        - limit
+    AuthTokensResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        username:
+          type: string
+        token:
+          type: string
+        refreshToken:
+          type: string
+      required:
+        - username
+        - token
+        - refreshToken
+      additionalProperties: false
+    AuthUser:
+      type: object
+      properties:
+        username:
+          type: string
+        type:
+          type: string
+        fullName:
+          type: string
+      required:
+        - username
+      additionalProperties: false
+    LogoutResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+      required:
+        - message
+      additionalProperties: false
+    Cart:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          title:
+            type: string
+          author:
+            type: string
+          price:
+            type: number
+          image:
+            type: string
+          genre:
+            type: string
+          description:
+            type: string
+          stock:
+            type: number
+          version:
+            type: number
+        required:
+          - id
+          - title
+          - author
+          - price
+          - image
+    CartClearResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              author:
+                type: string
+              price:
+                type: number
+              image:
+                type: string
+              genre:
+                type: string
+              description:
+                type: string
+              stock:
+                type: number
+              version:
+                type: number
+            required:
+              - id
+              - title
+              - author
+              - price
+              - image
+        total:
+          type: number
+        customerName:
+          type: string
+        date:
+          type: string
+      required:
+        - id
+        - items
+        - total
+        - customerName
+        - date
+    OrdersList:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                title:
+                  type: string
+                author:
+                  type: string
+                price:
+                  type: number
+                image:
+                  type: string
+                genre:
+                  type: string
+                description:
+                  type: string
+                stock:
+                  type: number
+                version:
+                  type: number
+              required:
+                - id
+                - title
+                - author
+                - price
+                - image
+          total:
+            type: number
+          customerName:
+            type: string
+          date:
+            type: string
+        required:
+          - id
+          - items
+          - total
+          - customerName
+          - date
+    CheckoutResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        orderId:
+          type: string
+      required:
+        - success
+        - message
+    UserProfile:
+      type: object
+      properties:
+        username:
+          type: string
+        fullName:
+          type:
+            - string
+            - "null"
+        avatarUrl:
+          type:
+            - string
+            - "null"
+      required:
+        - username
+    AvatarUploadResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        avatarUrl:
+          type: string
+      required:
+        - avatarUrl
+    InventoryReport:
+      type: object
+      properties:
+        totalBooks:
+          type: number
+        totalValue:
+          type: number
+        timestamp:
+          type: string
+      required:
+        - totalBooks
+        - totalValue
+        - timestamp
+    Health:
+      type: object
+      properties:
+        status:
+          type: string
+        uptime:
+          type: number
+        memory:
+          type: object
+          properties:
+            heapUsed:
+              type: number
+            heapTotal:
+              type: number
+            rss:
+              type: number
+            external:
+              type: number
+            arrayBuffers:
+              type: number
+          required:
+            - heapUsed
+            - heapTotal
+            - rss
+      required:
+        - status
+        - uptime
+    Metrics:
+      type: object
+      properties:
+        status:
+          type: string
+        uptime:
+          type: number
+        memory:
+          type: object
+          properties:
+            heapUsed:
+              type: number
+            heapTotal:
+              type: number
+            rss:
+              type: number
+            external:
+              type: number
+            arrayBuffers:
+              type: number
+          required:
+            - heapUsed
+            - heapTotal
+            - rss
+      required:
+        - status
+        - uptime
+    CsrfToken:
+      type: object
+      properties:
+        csrfToken:
+          type: string
+      required:
+        - csrfToken
+    ApiErrorDetail:
+      type: object
+      properties:
+        expected:
+          type: string
+        code:
+          type: string
+        path:
+          type: array
+          items:
+            anyOf:
+              - type: string
+              - type: number
+        message:
+          type: string
+    ApiErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        correlationId:
+          type: string
+        errorName:
+          type: string
+        details:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: object
+                properties:
+                  expected:
+                    type: string
+                  code:
+                    type: string
+                  path:
+                    type: array
+                    items:
+                      anyOf:
+                        - type: string
+                        - type: number
+                  message:
+                    type: string
+            - type: object
+              additionalProperties: {}
+      required:
+        - error
+      additionalProperties: false
+    ChaosConfig:
+      type: object
+      properties:
+        checkoutFailureRate:
+          type: number
+        inventoryDelayMs:
+          type: number
+        jwtExpirySeconds:
+          type: number
+        websocketDropRate:
+          type: number
+        uploadFailureRate:
+          type: number
+        injectA11yViolations:
+          type: boolean
+        visualChaos:
+          type: boolean
+        inventoryLockingRate:
+          type: number
+    TestConfigPostResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        config:
+          type: object
+          properties:
+            checkoutFailureRate:
+              type: number
+            inventoryDelayMs:
+              type: number
+            jwtExpirySeconds:
+              type: number
+            websocketDropRate:
+              type: number
+            uploadFailureRate:
+              type: number
+            injectA11yViolations:
+              type: boolean
+            visualChaos:
+              type: boolean
+            inventoryLockingRate:
+              type: number
+      required:
+        - config
+    TestResetResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message
+    TestSessionDeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        deleted:
+          type: boolean
+        activeSessions:
+          type: number
+      required:
+        - success
+        - message
+    BookstoreEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - purchase
+            - sale
+            - views
+            - stock
+        message:
+          type: string
+        timestamp:
+          type: string
+      required:
+        - id
+        - type
+        - message
+        - timestamp
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+        fullName:
+          type: string
+      required:
+        - username
+        - password
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+      required:
+        - username
+        - password
+    AddToCartRequest:
+      type: object
+      properties:
+        bookId:
+          type: string
+          minLength: 1
+        quantity:
+          type: integer
+          exclusiveMinimum: 0
+          default: 1
+      required:
+        - bookId
+    CheckoutRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        creditCard:
+          type: string
+          minLength: 13
+      required:
+        - firstName
+        - lastName
+        - creditCard
+    StockUpdateRequest:
+      type: object
+      properties:
+        stock:
+          type: integer
+          minimum: 0
+      required:
+        - stock
+  parameters: {}
+paths:
+  /api/books:
+    get:
+      operationId: listBooks
+      summary: List Books Catalog
+      description: Retrieve books from catalog with support for pagination, search
+        queries, and filtering.
+      tags:
+        - Books
+      security: []
+      parameters:
+        - schema:
+            type: string
+            description: Search term filtering by title or author
+          required: false
+          name: search
+          in: query
+        - schema:
+            type: string
+            description: Filter books by genre/category
+          required: false
+          name: category
+          in: query
+        - schema:
+            type: integer
+            exclusiveMinimum: 0
+            description: Page number for paginated results
+          required: false
+          name: page
+          in: query
+        - schema:
+            type: integer
+            exclusiveMinimum: 0
+            description: Number of items per page
+          required: false
+          name: limit
+          in: query
+      responses:
+        "200":
+          description: List of books matching filter criteria
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/Book"
+                  - $ref: "#/components/schemas/PaginatedBooks"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/books/{id}:
+    get:
+      operationId: getBookById
+      summary: Get Book by ID
+      description: Retrieve detailed book information, price, author, reviews, and
+        inventory status.
+      tags:
+        - Books
+      security: []
+      parameters:
+        - schema:
+            type: string
+            description: Unique book identifier (UUID or numeric ID)
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Book details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Not Found — requested resource was not located
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/register:
+    post:
+      operationId: registerUser
+      summary: Register New User
+      description: Create a new customer account with username and password credentials.
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        description: User registration credentials
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: User created successfully and authenticated session issued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthTokensResponse"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "409":
+          description: Conflict — username already taken
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/login:
+    post:
+      operationId: loginUser
+      summary: Authenticate User
+      description: Authenticate user with username and password, issuing access JWT
+        and refresh token.
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        description: Login credentials
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Authentication successful with tokens and user record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthTokensResponse"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Unauthorized — missing, invalid, or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/logout:
+    post:
+      operationId: logoutUser
+      summary: Terminate User Session
+      description: Clear authentication session cookies and terminate user login session.
+      tags:
+        - Authentication
+      security: []
+      responses:
+        "200":
+          description: Session cleared successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogoutResponse"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/auth/refresh:
+    post:
+      operationId: refreshAuthToken
+      summary: Refresh Access Token
+      description: Exchange refresh token cookie for a new short-lived access JWT.
+      tags:
+        - Authentication
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Access token renewed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthTokensResponse"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Unauthorized — missing, invalid, or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/cart:
+    get:
+      operationId: getCart
+      summary: Retrieve User Shopping Cart
+      description: Get active items and total count in current user cart.
+      tags:
+        - Cart
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Shopping cart items array
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Unauthorized — missing, invalid, or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+    post:
+      operationId: addToCart
+      summary: Add Item to Shopping Cart
+      description: Add a book item to user cart or increment quantity.
+      tags:
+        - Cart
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      requestBody:
+        description: Item to add to cart
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddToCartRequest"
+      responses:
+        "200":
+          description: Updated shopping cart contents
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Unauthorized — missing, invalid, or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Not Found — requested resource was not located
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+    delete:
+      operationId: clearCart
+      summary: Clear Entire Shopping Cart
+      description: Remove all items from current user shopping cart.
+      tags:
+        - Cart
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Cart emptied successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartClearResponse"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Unauthorized — missing, invalid, or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/cart/{bookId}:
+    delete:
+      operationId: removeCartItem
+      summary: Remove Single Item from Cart
+      description: Remove a specific book item from the shopping cart by ID.
+      tags:
+        - Cart
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - schema:
+            type: string
+            description: Book ID to remove from cart
+          required: true
+          name: bookId
+          in: path
+      responses:
+        "200":
+          description: Updated shopping cart after item removal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Unauthorized — missing, invalid, or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Not Found — requested resource was not located
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/checkout/process:
+    post:
+      operationId: processCheckout
+      summary: Process Order Checkout
+      description: Submit order payment and delivery address to complete purchase.
+      tags:
+        - Orders
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      requestBody:
+        description: Order shipping and payment information
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckoutRequest"
+      responses:
+        "200":
+          description: Order processed successfully with confirmation order ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutResponse"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Unauthorized — missing, invalid, or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/orders:
+    get:
+      operationId: listOrders
+      summary: List Customer Orders
+      description: Retrieve order history for the authenticated user.
+      tags:
+        - Orders
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      responses:
+        "200":
+          description: List of historical customer orders
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrdersList"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Unauthorized — missing, invalid, or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/inventory/report:
+    get:
+      operationId: getInventoryReport
+      summary: Inventory Stock Report
+      description: Retrieve stock level aggregates, inventory valuations, and catalog count.
+      tags:
+        - Inventory
+      security: []
+      responses:
+        "200":
+          description: Inventory valuation and total stock report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryReport"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/health:
+    get:
+      operationId: getHealth
+      summary: Server Health Check
+      description: Diagnostic probe verifying server runtime status, uptime, and
+        memory usage.
+      tags:
+        - System
+      security: []
+      responses:
+        "200":
+          description: Server health status report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/metrics:
+    get:
+      operationId: getMetrics
+      summary: System Telemetry & Metrics
+      description: Runtime telemetry including process uptime, event loop metrics, and
+        heap usage.
+      tags:
+        - System
+      security: []
+      responses:
+        "200":
+          description: Runtime system telemetry metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Metrics"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/profile:
+    get:
+      operationId: getUserProfile
+      summary: Get User Profile
+      description: Retrieve authenticated customer profile details, username, and
+        avatar URL.
+      tags:
+        - Profile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      responses:
+        "200":
+          description: User profile details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Unauthorized — missing, invalid, or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/profile/upload:
+    post:
+      operationId: uploadUserAvatar
+      summary: Upload User Avatar
+      description: Upload a picture file to update the authenticated user avatar.
+      tags:
+        - Profile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      requestBody:
+        description: Avatar image upload multipart payload
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  description: Avatar image file
+                  format: binary
+      responses:
+        "200":
+          description: Avatar image uploaded and profile updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvatarUploadResponse"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "401":
+          description: Unauthorized — missing, invalid, or expired authentication token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/csrf-token:
+    get:
+      operationId: getCsrfToken
+      summary: Fetch CSRF Token
+      description: Issue CSRF protection token and set psifi.x-csrf-token cookie.
+      tags:
+        - System
+      security: []
+      responses:
+        "200":
+          description: CSRF token payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsrfToken"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/test/config:
+    get:
+      operationId: getTestConfig
+      summary: Get Chaos Test Configuration
+      description: Read active chaos injection parameters (checkout failure rate,
+        delays, drop rate).
+      tags:
+        - Test Control & Chaos
+      security: []
+      responses:
+        "200":
+          description: Active chaos configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChaosConfig"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+    post:
+      operationId: updateTestConfig
+      summary: Update Chaos Test Configuration
+      description: Modify active chaos injection parameters to simulate faults during
+        testing.
+      tags:
+        - Test Control & Chaos
+      security: []
+      requestBody:
+        description: Updated chaos parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                checkoutFailureRate:
+                  type: number
+                inventoryDelayMs:
+                  type: number
+                jwtExpirySeconds:
+                  type: number
+                websocketDropRate:
+                  type: number
+                uploadFailureRate:
+                  type: number
+                injectA11yViolations:
+                  type: boolean
+                visualChaos:
+                  type: boolean
+                inventoryLockingRate:
+                  type: number
+      responses:
+        "200":
+          description: Chaos configuration updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestConfigPostResponse"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/test/reset:
+    post:
+      operationId: resetTestState
+      summary: Reset Test State
+      description: Restore seed database state, flush active sessions, and reset chaos
+        knobs to 0.
+      tags:
+        - Test Control & Chaos
+      security: []
+      responses:
+        "200":
+          description: Application state reset successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestResetResponse"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/test/books/{id}/stock:
+    post:
+      operationId: updateBookStock
+      summary: Set Book Stock in Test Mode
+      description: Directly set inventory stock count for a book to test out-of-stock
+        scenarios.
+      tags:
+        - Test Control & Chaos
+      security: []
+      parameters:
+        - schema:
+            type: string
+            description: Book ID to update stock
+          required: true
+          name: id
+          in: path
+      requestBody:
+        description: Stock quantity update payload
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StockUpdateRequest"
+      responses:
+        "200":
+          description: Stock updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  stock:
+                    type: number
+                required:
+                  - id
+                  - stock
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "404":
+          description: Not Found — requested resource was not located
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+  /api/test/session/{id}:
+    delete:
+      operationId: deleteTestSession
+      summary: Delete Test Session Store
+      description: Purge ephemeral isolated test session data store.
+      tags:
+        - Test Control & Chaos
+      security: []
+      parameters:
+        - schema:
+            type: string
+            description: Test session identifier
+          required: true
+          name: id
+          in: path
+      responses:
+        "200":
+          description: Test session purged successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestSessionDeleteResponse"
+        "400":
+          description: Bad Request — validation error or malformed body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+        "500":
+          description: Internal Server Error — server-side unhandled exception or chaos
+            injection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+webhooks: {}

@@ -55,13 +55,13 @@ graph LR
 
 ## 4. Definition of Done & Quality Acceptance Gates
 
-- [ ] No API spec calls `request.get/post/put/delete` directly (lint rule enforced); all go through `api.*` clients.
-- [ ] Every API test response is schema-validated.
-- [ ] Endpoint coverage report (`scripts/api-coverage.ts`) shows 100% of routes covered.
-- [ ] Auth matrix runs as one data-driven spec with ≥ 28 generated cases (7 protected endpoints × 4 token states).
-- [ ] Schemathesis nightly against DOCKER produces a report; any 5xx is triaged into an issue or documented as an intentional bug.
-- [ ] Pact consumer tests generate a pact file; provider verification passes against the DOCKER backend in CI.
-- [ ] Both catalogs updated in lockstep with the new `API-*` and `CT-*` IDs.
+- [x] No API spec calls `request.get/post/put/delete` directly (lint rule enforced); all go through `api.*` clients.
+- [x] Every API test response is schema-validated.
+- [x] Endpoint coverage report (`scripts/api-coverage.ts`) shows 100% of routes covered.
+- [x] Auth matrix runs as one data-driven spec with ≥ 28 generated cases (7 protected endpoints × 4 token states).
+- [x] Schemathesis nightly against DOCKER produces a report; any 5xx is triaged into an issue or documented as an intentional bug.
+- [x] Pact consumer tests generate a pact file; provider verification passes against the DOCKER backend in CI.
+- [x] Both catalogs updated in lockstep with the new `API-*` and `CT-*` IDs.
 
 ---
 

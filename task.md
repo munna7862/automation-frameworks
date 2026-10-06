@@ -1,116 +1,103 @@
 # Task Backlog: AutomationFrameworks Sprint Execution
 
-## Current Focus: Sprint 8.2 — API Coverage Gaps & Negative Test Matrix
+## Current Focus: Sprint 8.3 — OpenAPI Specification & Contract Testing
 
-**Sprint Identifier**: `SPRINT-8.2-API-COVERAGE-AND-NEGATIVE-MATRIX`  
+**Sprint Identifier**: `SPRINT-8.3-OPENAPI-AND-CONTRACT-TESTING`  
 **Phase**: Phase 8 (API Depth: Typed Clients, Schemas & Contracts)  
-**Story Points**: 5 SP  
-**Branch**: `feat/sprint-8.2-api-coverage`  
-**Goal**: Reach 100% routed-endpoint coverage, add a systematic authorization and validation matrix, verify error-envelope consistency, and test Socket.IO at the protocol level.
+**Story Points**: 4 SP  
+**Branch**: `feat/sprint-8.3-contract-testing`  
+**Goal**: Produce an OpenAPI 3.1 specification from zod schemas, fuzz the API with Schemathesis, and implement consumer-driven contract testing with Pact (file-based, no paid broker).
 
 ---
 
 ## 1. Persona Roles & Ownership Matrix
 
-| Persona                | Role Assignment              | Responsibilities for this Sprint                                                                                             | Status    |
-| :--------------------- | :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------- | :-------- |
-| **Scrum Master**       | `role-scrum-master`          | Sprint planning, `task.md` tracking, DoR verification, and DoD audit.                                                        | `ACTIVE`  |
-| **SDET Architect**     | `role-sdet-architect`        | Matrix contract design, catalog IDs (`API-COV-*`, `API-AUTHZ-*`, `API-VAL-*`, `API-ERR-*`, `API-WS-*`), dual-catalog parity. | `ACTIVE`  |
-| **Playwright QA Lead** | `role-playwright-automation` | Implement uncovered endpoint specs, authorization matrix, validation matrix, Socket.IO spec, and client helpers.             | `ACTIVE`  |
-| **DevOps Engineer**    | `role-devops-engineer`       | API coverage script `scripts/api-coverage.ts`, CI gate integration, and PR release lifecycle.                                | `ACTIVE`  |
-| **Product Owner**      | Human Tech Lead (`User`)     | Backlog prioritization, sprint kickoff, and final PR review & merge.                                                         | `STANDBY` |
+| Persona                | Role Assignment              | Responsibilities for this Sprint                                                                                              | Status    |
+| :--------------------- | :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------- | :-------- |
+| **Scrum Master**       | `role-scrum-master`          | Sprint planning, `task.md` governance, DoR verification, DoD auditing, velocity accounting.                                   | `ACTIVE`  |
+| **SDET Architect**     | `role-sdet-architect`        | OpenAPI route registry design, contract testing strategy, dual-catalog sync (`CT-*` IDs), and architecture review.            | `ACTIVE`  |
+| **Playwright QA Lead** | `role-playwright-automation` | OpenAPI generator implementation, Pact consumer test suite, Pact provider verification with state handlers.                   | `ACTIVE`  |
+| **DevOps Engineer**    | `role-devops-engineer`       | Schemathesis fuzzing workflow (`api-fuzz.yml`), contract testing workflow (`contract-tests.yml`), CI drift gates, PR release. | `ACTIVE`  |
+| **Product Owner**      | Human Tech Lead (`User`)     | Backlog prioritization, sprint kickoff, and final PR review & merge.                                                          | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
-### US-AF-821: Uncovered Endpoints (1 SP)
+### US-AF-831: OpenAPI 3.1 from zod (1.5 SP)
 
-- [x] **US-AF-821.1** (`SDET Architect`): Define scenario contracts and catalog entries for `DELETE /cart`, `DELETE /cart/:bookId`, `POST /logout`, `GET /metrics`, `GET /csrf-token`.
-- [x] **US-AF-821.2** (`Playwright QA Lead`): Implement `playwright-e2e/src/tests/api/CartAndInventory/Test_003_CartRemovalApi.spec.ts` (single item removal, stock/total assertions, cart clear, non-existent item removal, cross-session isolation).
-- [x] **US-AF-821.3** (`Playwright QA Lead`): Implement `playwright-e2e/src/tests/api/UserManagement/Test_003_LogoutApi.spec.ts` (cookie clear verification, token rejection assertion marked `test.fail()` if backend lacks server-side JWT revocation, documented as finding).
-- [x] **US-AF-821.4** (`Playwright QA Lead`): Implement `playwright-e2e/src/tests/api/System/Test_001_MetricsAndCsrfApi.spec.ts` (`/metrics` diagnostics schema validation without sensitive data leaks, `/csrf-token` response and cookie assertion).
+- [x] **US-AF-831.1** (`SDET Architect`): Design OpenAPI 3.1 registry structure covering all 23 routed endpoints from `docs/api/routes.json`, security schemes (`bearerAuth`, cookie auth), parameters, and error envelopes.
+- [x] **US-AF-831.2** (`Playwright QA Lead`): Implement `scripts/generate-openapi.ts` using `@asteasolutions/zod-to-openapi` generating `docs/api/openapi.yaml` and standalone Redoc portal documentation.
+- [x] **US-AF-831.3** (`DevOps Engineer`): Wire `npm run openapi:generate`, `npm run openapi:lint`, `npm run openapi:docs` into root `package.json` and add OpenAPI drift gate to `.github/workflows/pr-gate.yml`.
 
-### US-AF-822: Authorization Matrix (1.5 SP)
+### US-AF-832: Schemathesis Property-Based Fuzzing (1 SP)
 
-- [x] **US-AF-822.1** (`SDET Architect`): Design data-driven matrix over protected endpoints (`GET /cart`, `POST /cart`, `DELETE /cart`, `DELETE /cart/:bookId`, `POST /checkout/process`, `GET /orders`, `GET /profile`, `POST /profile/upload`) and token states (`none`, `malformed`, `expired`, `wrongSignature`).
-- [x] **US-AF-822.2** (`SDET Architect` & `Playwright QA Lead`): Author JWT token test helpers in `packages/test-data/src/helpers/jwt-tokens.ts` using `jose` (expired token, wrong-signature token, malformed token).
-- [x] **US-AF-822.3** (`Playwright QA Lead`): Implement `playwright-e2e/src/tests/api/Security/Test_001_AuthorizationMatrix.spec.ts` executing the authorization test matrix, asserting 401/403 rejection and strict error envelope schema (`ApiErrorResponseSchema`).
+- [x] **US-AF-832.1** (`SDET Architect`): Define Schemathesis fuzzing strategy (exclude chaos `/test/*` routes, bypass rate limit/CSRF headers, seed auth token).
+- [x] **US-AF-832.2** (`DevOps Engineer`): Implement `.github/workflows/api-fuzz.yml` (nightly + workflow_dispatch) running Schemathesis container against ephemeral BuggyBooks (`ENV=DOCKER`) and publishing JUnit reports.
+- [x] **US-AF-832.3** (`SDET Architect`): Document Schemathesis triage baseline and register fuzzing contract test case in dual catalogs.
 
-### US-AF-823: Validation & Boundary Matrix (1 SP)
+### US-AF-833: Pact Consumer-Driven Contracts (1.5 SP)
 
-- [x] **US-AF-823.1** (`SDET Architect`): Map boundary matrices for register, cart, checkout, and search across `INVALID_INPUTS` constants.
-- [x] **US-AF-823.2** (`Playwright QA Lead`): Implement `playwright-e2e/src/tests/api/Validation/Test_001_InputValidationApi.spec.ts`:
-  - Registration boundaries (empty, whitespace, 1-char, 256+ char, emoji, duplicate username, weak password).
-  - Cart item boundaries (quantity 0, -1, 1.5, non-numeric, MAX_SAFE_INTEGER; invalid/non-existent bookId, injection string).
-  - Checkout payload boundaries (missing shipping fields, invalid card format, empty cart).
-  - Search query boundaries (very long query, special chars, regex metacharacters).
-  - Assert 4xx response with structured error envelope; flag any unexpected 5xx with `test.fail()` linking to bug documentation.
-
-### US-AF-824: Error Envelope, Idempotency, Correlation, Socket.IO (1 SP)
-
-- [x] **US-AF-824.1** (`SDET Architect` & `Playwright QA Lead`): Validate strict error envelope compliance across all negative tests (`ApiErrorResponseSchema`: no stack in production, no internal system leaks).
-- [x] **US-AF-824.2** (`Playwright QA Lead`): Add concurrency & idempotency tests (double-submit checkout via `Promise.all` guaranteeing exactly one order created and correct inventory decrement).
-- [x] **US-AF-824.3** (`Playwright QA Lead`): Add correlation ID validation (inbound `x-correlation-id` echoed back in response header, auto-generated UUID when omitted).
-- [x] **US-AF-824.4** (`Playwright QA Lead`): Implement `playwright-e2e/src/tests/api/Realtime/Test_001_SocketIoApi.spec.ts` using `socket.io-client`:
-  - Connection/disconnection lifecycle.
-  - Verification of `bookstore-event` payload shape (`id`, `type`, `message`, `timestamp`).
-  - Chaos simulation: `websocketDropRate = 1.0` triggers immediate disconnect; `websocketDropRate = 0.5` triggers client reconnection within SLA. Scoped by `x-test-session-id`. Teardown clean socket closing and chaos reset.
-
-### US-AF-825: API Coverage Report (0.5 SP)
-
-- [x] **US-AF-825.1** (`DevOps Engineer`): Generate `docs/api/routes.json` cataloging all routed endpoints and HTTP methods from BuggyBooks.
-- [x] **US-AF-825.2** (`DevOps Engineer`): Author `scripts/api-coverage.ts` inspecting test run output / client usage to verify 100% route coverage and output coverage summary table.
-- [x] **US-AF-825.3** (`DevOps Engineer`): Wire `npm run test:api-coverage` script into root `package.json`.
+- [x] **US-AF-833.1** (`SDET Architect`): Design consumer interactions (`buggybooks-web` consumer vs `buggybooks-api` provider) using Pact V3/V4 type matchers (`like`, `eachLike`, `regex`) for books, cart, auth, checkout, orders.
+- [x] **US-AF-833.2** (`Playwright QA Lead`): Implement Pact consumer contract test suite in `playwright-e2e/contract-tests/consumer/` generating `playwright-e2e/contract-tests/pacts/buggybooks-web-buggybooks-api.json`.
+- [x] **US-AF-833.3** (`Playwright QA Lead`): Implement Pact provider verification in `playwright-e2e/contract-tests/provider/` with state handlers using test-control endpoints (`/api/test/reset`, `/api/test/books/:id/stock`, seed user).
+- [x] **US-AF-833.4** (`DevOps Engineer`): Add `.github/workflows/contract-tests.yml` (triggered on PR and nightly), wire scripts `test:contract`, `test:contract:consumer`, `test:contract:provider` into `playwright-e2e/package.json` and root `package.json`.
+- [x] **US-AF-833.5** (`SDET Architect`): Author comprehensive contract testing guide `docs/contract_testing.md` and sync `CT-PACT-*` & `CT-FUZZ-*` test cases in dual catalogs.
 
 ### Traceability, DoD & Release Protocol
 
-- [x] **US-AF-820.1** (`Scrum Master`): Verify Pre-Flight Definition of Ready (DoR).
-- [x] **US-AF-820.2** (`SDET Architect`): Maintain 100% lockstep parity across dual test case catalogs (`docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md`).
-- [x] **US-AF-820.3** (`SDET Architect`): Perform Code Acceptance Review on all authored spec files and helpers.
-- [x] **US-AF-820.4** (`Scrum Master`): Verify 4-Point Definition of Done (DoD) (lint: 0, typecheck: 0, 100% green pass, dual-catalog sync).
-- [x] **US-AF-820.5** (`DevOps Engineer`): Execute PR release lifecycle with conventional commit and GitHub CLI.
+- [x] **US-AF-830.1** (`Scrum Master`): Verify Pre-Flight Definition of Ready (DoR) — staging probe passed, clean branch `feat/sprint-8.3-contract-testing`.
+- [x] **US-AF-830.2** (`SDET Architect`): Maintain 100% lockstep parity across dual test case catalogs (`docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md`).
+- [x] **US-AF-830.3** (`SDET Architect`): Conduct Code Acceptance Review on all authored spec files, scripts, schemas, and contract tests.
+- [x] **US-AF-830.4** (`Scrum Master`): Verify 4-Point Definition of Done (DoD) (lint: 0, typecheck: 0, 100% green pass, dual-catalog sync).
+- [x] **US-AF-830.5** (`DevOps Engineer`): Execute PR release lifecycle with conventional commit and GitHub CLI.
 
 ---
 
 ## 3. Sprint Review Comments & Refinement Loop
 
-| Gate / Reviewer                  | Target Role              | Review Feedback & Comments                                                        | Gate Status  |
-| :------------------------------- | :----------------------- | :-------------------------------------------------------------------------------- | :----------: |
-| **Pre-Flight Architecture Gate** | SDET Architect           | Verify test matrix design, endpoint catalog, and DoR conditions.                  | `[APPROVED]` |
-| **Code Acceptance Review Gate**  | SDET Architect           | Verify single-browser rule (Chrome only), 0 blind timeouts, teardown state reset. | `[APPROVED]` |
-| **Scrum Master DoD Gate**        | Scrum Master             | Audit lint, typecheck, 100% green pass rate, and catalog diff.                    | `[APPROVED]` |
-| **DevOps Release Gate**          | DevOps Engineer          | Validate CI workflows, PR creation, and green CI status.                          | `[APPROVED]` |
-| **Final Human Sign-Off**         | Human Tech Lead (`User`) | Final PR review and merge to `main`.                                              |  `STANDBY`   |
+| Gate / Reviewer                  | Target Role              | Review Feedback & Comments                                                         | Gate Status  |
+| :------------------------------- | :----------------------- | :--------------------------------------------------------------------------------- | :----------: |
+| **Pre-Flight Architecture Gate** | SDET Architect           | Verify OpenAPI schema mappings, Pact matcher designs, and DoR conditions.          | `[APPROVED]` |
+| **Code Acceptance Review Gate**  | SDET Architect           | Verify Redocly clean lint, type matchers only, idempotent provider state handlers. | `[APPROVED]` |
+| **Scrum Master DoD Gate**        | Scrum Master             | Audit lint, typecheck, contract pass rate, and catalog diff.                       | `[APPROVED]` |
+| **DevOps Release Gate**          | DevOps Engineer          | Validate CI workflows (`api-fuzz.yml`, `contract-tests.yml`), PR creation.         | `[APPROVED]` |
+| **Final Human Sign-Off**         | Human Tech Lead (`User`) | Final PR review and merge to `main`.                                               |  `STANDBY`   |
 
 ---
 
 ## 4. Definition of Done (DoD) Checklist
 
-- [x] `npm run lint:all` and `npm run typecheck:all` pass across all active workspaces with 0 errors.
-- [x] 100% deterministic green execution across authored test specs (no flaky retries).
-- [x] Dual-catalog parity confirmed: `git diff --exit-code docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md` exits 0.
-- [x] Single-browser execution policy strictly preserved (Google Chrome UI + API only).
-- [x] Teardown state reset probe (`POST /api/test/reset` and chaos config reset) verified in all chaos-mutating tests.
-- [x] API coverage script reports 100% coverage across all routed endpoints.
-- [x] Sprint documentation and `docs/intentional_bugs.md` updated where applicable.
-- [x] Pull request opened with structured summary and verification evidence (`gh pr create`).
+- [x] `docs/api/openapi.yaml` generated from Zod schemas, passes `npx @redocly/cli lint` with 0 errors.
+- [x] OpenAPI drift gate enforced in PR Quality Gate.
+- [x] Standalone Redoc HTML documentation generated in `AutomationReports/API-Docs/index.html`.
+- [x] Schemathesis workflow `.github/workflows/api-fuzz.yml` configured against ephemeral DOCKER BuggyBooks backend.
+- [x] Pact consumer tests generate valid contract JSON using flexible type matchers (`like`, `eachLike`, `regex`).
+- [x] Pact provider verification runs cleanly with idempotent state handlers.
+- [x] Workflow `.github/workflows/contract-tests.yml` created and verified.
+- [x] Contract testing documentation authored in `docs/contract_testing.md`.
+- [x] Dual-catalog parity confirmed: `npm run test:verify-catalog` exits 0.
+- [x] `npm run lint:all` and `npm run typecheck:all` exit 0 across all workspaces.
+- [x] PR opened with structured summary and verification evidence (`gh pr create`).
 
 ---
 
 ## 5. Verification & Execution Evidence
 
 ```bash
-# Command 1: Dual-catalog parity check
+# Command 1: Generate OpenAPI spec and verify drift
+npx tsx scripts/generate-openapi.ts && git diff --exit-code docs/api/openapi.yaml
+
+# Command 2: Lint OpenAPI spec
+npx @redocly/cli lint docs/api/openapi.yaml
+
+# Command 3: Run Pact consumer and provider tests
+npm run test:contract --workspace=playwright-e2e
+
+# Command 4: Dual-catalog parity check
 npm run test:verify-catalog
 
-# Command 2: Static analysis
+# Command 5: Static analysis
 npm run lint:all
 npm run typecheck:all
-
-# Command 3: Deterministic test execution
-cross-env ENV=STAGING npx playwright test --project=api --config=src/config/playwright.config.ts
-
-# Command 4: API coverage verification
-npm run test:api-coverage
 ```
