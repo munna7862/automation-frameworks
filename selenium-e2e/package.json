@@ -25,7 +25,7 @@
     "@types/selenium-webdriver": "^4.35.5",
     "allure-commandline": "^2.38.1",
     "allure-mocha": "^3.7.1",
-    "chai": "^4.5.0",
+    "chai": "^6.2.2",
     "eslint": "^10.10.0",
     "eslint-plugin-mocha": "^11.0.0",
     "globals": "^17.12.0",
