@@ -1,0 +1,9 @@
+# Redocly Configuration for BuggyBooks OpenAPI 3.1 Specification
+extends:
+  - recommended
+
+rules:
+  # Allow localhost development and docker URLs in servers array
+  no-server-example.com: off
+  # Components like BookstoreEvent and CartItem provide schema documentation across protocols
+  no-unused-components: off

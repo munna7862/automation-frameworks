@@ -28,6 +28,12 @@
     "test:portal": "node scripts/test-portal.js",
     "test:verify-catalog": "tsx scripts/verify-catalog-sync.ts",
     "test:api-coverage": "tsx scripts/api-coverage.ts",
+    "openapi:generate": "tsx scripts/generate-openapi.ts",
+    "openapi:lint": "redocly lint docs/api/openapi.yaml",
+    "openapi:docs": "redocly build-docs docs/api/openapi.yaml -o AutomationReports/API-Docs/index.html",
+    "test:contract:consumer": "npm run test:contract:consumer --workspace=playwright-e2e",
+    "test:contract:provider": "npm run test:contract:provider --workspace=playwright-e2e",
+    "test:contract": "npm run test:contract --workspace=playwright-e2e",
     "test:quarantine:audit": "npm run test:quarantine:audit --workspace=playwright-e2e",
     "data:perf": "tsx packages/test-data/scripts/generate-perf-datasets.ts",
     "env:up": "docker compose -f infra/docker-compose.test.yml up -d --wait && npx wait-on -t 60000 http://localhost:4000/api/books http://localhost:5173/",
@@ -55,8 +61,10 @@
     ]
   },
   "devDependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.4",
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
+    "@redocly/cli": "^2.59.0",
     "cross-env": "^10.1.0",
     "eslint-plugin-mocha": "^12.0.2",
     "eslint-plugin-wdio": "^10.0.0",
@@ -64,6 +72,7 @@
     "lint-staged": "^17.6.0",
     "prettier": "^3.9.9",
     "tsx": "^4.19.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "yaml": "^2.9.1"
   }
 }

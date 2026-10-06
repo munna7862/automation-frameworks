@@ -50,6 +50,13 @@ jobs:
         id: catalog
         run: npm run test:verify-catalog
 
+      - name: OpenAPI Specification Lint & Drift Gate
+        id: openapi
+        run: |
+          npm run openapi:lint
+          npm run openapi:generate
+          git diff --exit-code docs/api/openapi.yaml
+
       - name: Generate Static Quality Summary
         if: always()
         run: |
@@ -58,6 +65,7 @@ jobs:
           echo "- **TypeScript**: ${{ steps.typecheck.outcome == 'success' && '✅ Passed (tsc --noEmit) with 0 errors' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Prettier**: ${{ steps.prettier.outcome == 'success' && '✅ Passed with consistent code style' || '❌ Formatting issues detected' }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Dual-Catalog Parity**: ${{ steps.catalog.outcome == 'success' && '✅ 100% byte-for-byte verified (docs vs playwright-e2e)' || '❌ Out of sync' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **OpenAPI 3.1 Spec**: ${{ steps.openapi.outcome == 'success' && '✅ Lint clean (Redocly) and zero drift' || '❌ Drift or lint failure' }}" >> $GITHUB_STEP_SUMMARY
 
   commitlint:
     name: Conventional Commits Validation
