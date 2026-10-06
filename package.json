@@ -28,6 +28,7 @@
     "test:portal": "node scripts/test-portal.js",
     "test:verify-catalog": "tsx scripts/verify-catalog-sync.ts",
     "test:quarantine:audit": "npm run test:quarantine:audit --workspace=playwright-e2e",
+    "data:perf": "tsx packages/test-data/scripts/generate-perf-datasets.ts",
     "clean": "npm run clean --workspaces --if-present",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",

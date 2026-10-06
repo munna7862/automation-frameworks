@@ -1,8 +1,9 @@
-import { test as base, expect, APIRequestContext } from '@playwright/test';
+import { test as base, expect, APIRequestContext, mergeTests } from '@playwright/test';
 import { randomBytes } from 'crypto';
 import { envConfig } from '../../config/env.config';
 import axios from 'axios';
 import { logger } from '@automationframeworks/playwright-utils';
+import { dataTest } from './data.fixture';
 
 export { expect, APIRequestContext };
 
@@ -11,7 +12,7 @@ type ApiTestFixtures = {
   request: APIRequestContext;
 };
 
-export const test = base.extend<ApiTestFixtures>({
+const apiBaseTest = base.extend<ApiTestFixtures>({
   testSessionId: async ({}, use, testInfo) => {
     const rawId = `pw-api-w${testInfo.workerIndex}-${testInfo.parallelIndex}-${Date.now()}-${randomBytes(4).toString('hex')}`;
     await use(rawId);
@@ -44,3 +45,5 @@ export const test = base.extend<ApiTestFixtures>({
     }
   }
 });
+
+export const test = mergeTests(apiBaseTest, dataTest);

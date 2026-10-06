@@ -1,43 +1,24 @@
 import { test, expect } from '../../../core/base/api.fixture';
-import { randomBytes } from 'crypto';
-
-function uniqueUsername(prefix: string = 'cartuser'): string {
-  return `${prefix}_${Date.now()}_${randomBytes(4).toString('hex')}`;
-}
+import { KNOWN_BOOK_IDS } from '@automationframeworks/test-data';
 
 test.describe('Cart & Inventory API', () => {
   test('API_CART_01: Cart persistence after server crash @smoke @regression', async ({
-    request
+    request,
+    seed
   }) => {
-    // 1. Register a new user
-    const username = uniqueUsername();
-    const password = 'Password123!';
-    const fullName = 'Cart Test User';
+    // 1. Create and authenticate user via ApiSeeder
+    const authSession = await seed.createAndLoginUser({ fullName: 'Cart Test User' });
+    expect(authSession.user.username).toBeTruthy();
 
-    const registerRes = await request.post('/api/register', {
-      data: { username, password, fullName }
-    });
-    expect(registerRes.status()).toBe(201);
+    // 2. Add book 3 to cart via ApiSeeder
+    const bookId = KNOWN_BOOK_IDS[2]; // '3'
+    await seed.addToCart(authSession, bookId);
 
-    // 2. Login to get cookies in APIRequestContext
-    const loginRes = await request.post('/api/login', {
-      data: { username, password }
-    });
-    expect(loginRes.status()).toBe(200);
-
-    // 3. Add item to cart
-    const addRes = await request.post('/api/cart', {
-      data: { bookId: '3' }
-    });
-    expect(addRes.status()).toBe(200);
-    const addData = await addRes.json();
-    expect(addData).toContainEqual(expect.objectContaining({ id: '3' }));
-
-    // 4. Get Cart and verify book 3 is still there
-    const getRes = await request.get('/api/cart');
+    // 3. Get Cart and verify book 3 is present
+    const getRes = await request.get('/api/cart', { headers: authSession.headers });
     expect(getRes.status()).toBe(200);
     const getData = await getRes.json();
-    expect(getData).toContainEqual(expect.objectContaining({ id: '3' }));
+    expect(getData).toContainEqual(expect.objectContaining({ id: bookId }));
   });
 
   test('API_INV_01: Trigger inventory report @smoke @regression', async ({ request }) => {

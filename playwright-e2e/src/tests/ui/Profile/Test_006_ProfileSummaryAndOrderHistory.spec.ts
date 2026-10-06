@@ -1,27 +1,7 @@
-import * as path from 'path';
-import { randomBytes } from 'crypto';
 import { test } from '../../../core/base/base.fixture';
 import { envConfig } from '../../../config/env.config';
 import { ProfilePage } from '../../../pages/profile.page';
-
-type ProfileSummaryTestData = {
-  user: {
-    fullName: string;
-    password: string;
-  };
-};
-
-const testDataPath = path.join(
-  __dirname,
-  '../../../test-data/ui/Profile/Test_006_ProfileSummaryAndOrderHistory.json'
-);
-const TestData = require(testDataPath) as ProfileSummaryTestData;
-
-function uniqueUsername(prefix: string = 'profile_user'): string {
-  const timestamp = Date.now();
-  const randomSuffix = randomBytes(4).toString('hex');
-  return `${prefix}_${timestamp}_${randomSuffix}`;
-}
+import { UserFactory, ApiSeeder, createPlaywrightAdapter } from '@automationframeworks/test-data';
 
 test.use({ storageState: { cookies: [], origins: [] } });
 
@@ -33,17 +13,21 @@ test.describe('Profile Summary and Order History', () => {
     page
   }) => {
     const profilePage = new ProfilePage(page);
-    const username = uniqueUsername();
+    const user = UserFactory.build({ fullName: 'Profile Test User' });
+    const pageHttp = createPlaywrightAdapter(page.request, envConfig.apiBaseUrl);
+    const seeder = new ApiSeeder(pageHttp);
 
-    await test.step('Register new account and navigate to Profile', async () => {
+    await test.step('Seed user account and order state via API seeder', async () => {
+      await seeder.createUser(user);
+      const session = await seeder.login(user);
+      await seeder.addToCart(session, '1');
+      await seeder.placeOrder(session);
+    });
+
+    await test.step('Log in with seeded user credentials and open Profile', async () => {
       await catalogPage.navigateToCatalog(envConfig.baseUrl);
-      await catalogPage.clickNavigateLink('Sign Up');
-      await signUpPage.registerNewUser(
-        TestData.user.fullName,
-        username,
-        TestData.user.password,
-        TestData.user.password
-      );
+      await catalogPage.clickNavigateLink('Login');
+      await signUpPage.login(user.username, user.password);
       await profilePage.openProfile();
     });
 
@@ -51,8 +35,8 @@ test.describe('Profile Summary and Order History', () => {
       const profileInfoText = await profilePage.getProfileInfoText();
       const avatarSrc = await profilePage.getAvatarPreviewSrc();
 
-      const nameMatch = profileInfoText.includes(TestData.user.fullName);
-      const usernameMatch = profileInfoText.includes(username);
+      const nameMatch = profileInfoText.includes(user.fullName);
+      const usernameMatch = profileInfoText.includes(user.username);
       const avatarValid = avatarSrc.length > 0;
 
       await commonFunctions.verifyCondition(
