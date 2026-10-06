@@ -3,7 +3,7 @@ import { envConfig } from '../../../config/env.config';
 import TestData from '../../../test-data/ui/BookCatalog/Test_001_InitialCatalog.json';
 
 test.describe('Initial Catalog', () => {
-  test('Verify Books Count in pagination @smoke @regression', async ({
+  test('Verify Books Count in pagination @smoke @regression @staging-contract', async ({
     catalogPage,
     commonFunctions,
     page

@@ -112,7 +112,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     concurrency:
-      group: buggybooks-staging-state
+      group: ${{ inputs.target-env == 'DOCKER' && format('buggybooks-docker-{0}-{1}', github.run_id, matrix.shardIndex) || 'buggybooks-staging-state' }}
       cancel-in-progress: false
     permissions:
       contents: read
@@ -129,8 +129,10 @@ jobs:
       SHARD_TOTAL: ${{ needs.build-matrix.outputs.shard-total }}
       HEADLESS: ${{ inputs.headless }}
       ENVIRONMENT: ${{ inputs.target-env }}
-      BASE_URL: https://buggy-books-fe.onrender.com/
-      API_BASE_URL: https://buggy-books.onrender.com
+      ENV: ${{ inputs.target-env }}
+      TARGET_ENV: ${{ inputs.target-env }}
+      BASE_URL: ${{ inputs.target-env == 'DOCKER' && 'http://localhost:5173' || 'https://buggy-books-fe.onrender.com/' }}
+      API_BASE_URL: ${{ inputs.target-env == 'DOCKER' && 'http://localhost:4000' || 'https://buggy-books.onrender.com' }}
       USER_NAME: ${{ secrets.E2E_USER_NAME }}
       PASSWORD: ${{ secrets.E2E_PASSWORD }}
       TZ: Australia/Adelaide
@@ -149,7 +151,12 @@ jobs:
           install-chrome: 'true'
 
       - name: Render Staging Warm-Up
+        if: inputs.target-env != 'DOCKER'
         uses: ./.github/actions/staging-warmup
+
+      - name: Start Ephemeral BuggyBooks Environment
+        if: inputs.target-env == 'DOCKER'
+        uses: ./.github/actions/buggybooks-up
 
       - name: Execute Test Suite
         id: tests
@@ -189,6 +196,12 @@ jobs:
       - name: Reset Chaos State Teardown
         if: always()
         uses: ./.github/actions/chaos-reset
+        with:
+          api-base: ${{ inputs.target-env == 'DOCKER' && 'http://localhost:4000' || 'https://buggy-books.onrender.com' }}
+
+      - name: Stop Ephemeral BuggyBooks Environment
+        if: always() && inputs.target-env == 'DOCKER'
+        uses: ./.github/actions/buggybooks-down
 
       - name: Upload Allure Results Artifact
         if: always()
@@ -258,7 +271,7 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.58.0-jammy
     concurrency:
-      group: buggybooks-staging-state
+      group: ${{ inputs.target-env == 'DOCKER' && format('buggybooks-docker-ct-{0}-{1}', github.run_id, matrix.shardIndex) || 'buggybooks-staging-state' }}
       cancel-in-progress: false
     permissions:
       contents: read
@@ -275,8 +288,10 @@ jobs:
       SHARD_TOTAL: ${{ needs.build-matrix.outputs.shard-total }}
       HEADLESS: ${{ inputs.headless }}
       ENVIRONMENT: ${{ inputs.target-env }}
-      BASE_URL: https://buggy-books-fe.onrender.com/
-      API_BASE_URL: https://buggy-books.onrender.com
+      ENV: ${{ inputs.target-env }}
+      TARGET_ENV: ${{ inputs.target-env }}
+      BASE_URL: ${{ inputs.target-env == 'DOCKER' && 'http://localhost:5173' || 'https://buggy-books-fe.onrender.com/' }}
+      API_BASE_URL: ${{ inputs.target-env == 'DOCKER' && 'http://localhost:4000' || 'https://buggy-books.onrender.com' }}
       USER_NAME: ${{ secrets.E2E_USER_NAME }}
       PASSWORD: ${{ secrets.E2E_PASSWORD }}
       TZ: Australia/Adelaide
@@ -296,7 +311,12 @@ jobs:
           npx playwright install --with-deps chrome
 
       - name: Render Staging Warm-Up
+        if: inputs.target-env != 'DOCKER'
         uses: ./.github/actions/staging-warmup
+
+      - name: Start Ephemeral BuggyBooks Environment
+        if: inputs.target-env == 'DOCKER'
+        uses: ./.github/actions/buggybooks-up
 
       - name: Execute Test Suite
         id: tests
@@ -336,6 +356,12 @@ jobs:
       - name: Reset Chaos State Teardown
         if: always()
         uses: ./.github/actions/chaos-reset
+        with:
+          api-base: ${{ inputs.target-env == 'DOCKER' && 'http://localhost:4000' || 'https://buggy-books.onrender.com' }}
+
+      - name: Stop Ephemeral BuggyBooks Environment
+        if: always() && inputs.target-env == 'DOCKER'
+        uses: ./.github/actions/buggybooks-down
 
       - name: Upload Allure Results Artifact
         if: always()

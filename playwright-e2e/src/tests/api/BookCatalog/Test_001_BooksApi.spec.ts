@@ -51,7 +51,7 @@ async function validateBookContract(book: Book | Record<string, unknown>) {
 }
 
 test.describe('Books API - List and Security', () => {
-  test('Testcase 1: GET /api/books?page=1&limit=8 - should return a paged book list with valid contract for page 1 @smoke @regression', async ({
+  test('Testcase 1: GET /api/books?page=1&limit=8 - should return a paged book list with valid contract for page 1 @smoke @regression @staging-contract', async ({
     request
   }) => {
     const response = await request.get(

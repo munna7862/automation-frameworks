@@ -1,0 +1,57 @@
+name: 'BuggyBooks Ephemeral Up'
+description: 'Launches ephemeral BuggyBooks backend and frontend containers via Docker Compose and gates on health probes'
+
+inputs:
+  backend-tag:
+    description: 'Tag of ghcr.io/munna7862/buggy-books-backend'
+    required: false
+    default: 'latest'
+  frontend-tag:
+    description: 'Tag of ghcr.io/munna7862/buggy-books-frontend'
+    required: false
+    default: 'ci-localhost'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Launch BuggyBooks Services via Docker Compose
+      shell: bash
+      env:
+        BUGGYBOOKS_TAG: ${{ inputs.backend-tag }}
+        BUGGYBOOKS_FE_TAG: ${{ inputs.frontend-tag }}
+      run: |
+        echo "🚀 Starting BuggyBooks ephemeral environment with backend:${BUGGYBOOKS_TAG} and frontend:${BUGGYBOOKS_FE_TAG}..."
+        docker compose -f infra/docker-compose.test.yml up -d --wait
+
+    - name: Await Service Availability
+      shell: bash
+      run: |
+        echo "⏳ Probing ephemeral backend (:4000) and frontend (:5173)..."
+        npx wait-on -t 60000 http://localhost:4000/api/books http://localhost:5173/
+        echo "✅ Ephemeral BuggyBooks services are online and responding!"
+
+    - name: Capture Image Digests & Export Environment
+      shell: bash
+      env:
+        BACKEND_TAG: ${{ inputs.backend-tag }}
+        FRONTEND_TAG: ${{ inputs.frontend-tag }}
+      run: |
+        BACKEND_IMG="ghcr.io/munna7862/buggy-books-backend:${BACKEND_TAG}"
+        FRONTEND_IMG="ghcr.io/munna7862/buggy-books-frontend:${FRONTEND_TAG}"
+
+        BACKEND_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$BACKEND_IMG" 2>/dev/null || docker inspect --format='{{.Id}}' "$BACKEND_IMG" 2>/dev/null || echo "${BACKEND_TAG}")
+        FRONTEND_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$FRONTEND_IMG" 2>/dev/null || docker inspect --format='{{.Id}}' "$FRONTEND_IMG" 2>/dev/null || echo "${FRONTEND_TAG}")
+
+        echo "BUGGYBOOKS_BACKEND_DIGEST=${BACKEND_DIGEST}" >> "$GITHUB_ENV"
+        echo "BUGGYBOOKS_FRONTEND_DIGEST=${FRONTEND_DIGEST}" >> "$GITHUB_ENV"
+        echo "BUGGYBOOKS_TAG=${BACKEND_TAG}" >> "$GITHUB_ENV"
+        echo "BUGGYBOOKS_FE_TAG=${FRONTEND_TAG}" >> "$GITHUB_ENV"
+
+        {
+          echo "### 🐳 Ephemeral BuggyBooks Environment Initialized"
+          echo ""
+          echo "| Service | Port | Image Tag | Image Digest / ID |"
+          echo "| :--- | :--- | :--- | :--- |"
+          echo "| **Backend API** | \`http://localhost:4000\` | \`${BACKEND_TAG}\` | \`${BACKEND_DIGEST}\` |"
+          echo "| **Frontend UI** | \`http://localhost:5173\` | \`${FRONTEND_TAG}\` | \`${FRONTEND_DIGEST}\` |"
+        } >> "$GITHUB_STEP_SUMMARY"

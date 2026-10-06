@@ -1,0 +1,37 @@
+name: 'BuggyBooks Ephemeral Down'
+description: 'Dumps ephemeral BuggyBooks container logs, uploads them as artifacts, and destroys the compose stack'
+
+inputs:
+  log-file:
+    description: 'Output filename for container logs'
+    required: false
+    default: 'buggybooks-container-logs.txt'
+  artifact-name:
+    description: 'Name of the uploaded artifact containing container logs'
+    required: false
+    default: 'buggybooks-container-logs'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Export BuggyBooks Container Logs
+      shell: bash
+      env:
+        LOG_FILE: ${{ inputs.log-file }}
+      run: |
+        echo "📋 Collecting container logs from ephemeral BuggyBooks stack..."
+        docker compose -f infra/docker-compose.test.yml logs --no-color > "${LOG_FILE}" 2>&1 || true
+
+    - name: Upload BuggyBooks Container Logs Artifact
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.1
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ inputs.log-file }}
+        retention-days: 7
+
+    - name: Tear Down Docker Compose Stack
+      shell: bash
+      run: |
+        echo "🛑 Tearing down ephemeral BuggyBooks containers..."
+        docker compose -f infra/docker-compose.test.yml down -v --remove-orphans || true
+        echo "🧹 Containers stopped and volumes purged."

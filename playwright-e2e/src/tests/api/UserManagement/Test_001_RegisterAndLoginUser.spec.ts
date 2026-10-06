@@ -215,7 +215,7 @@ async function validateSuccessfulLoginContract(responseData: any, expectedUserna
 }
 
 test.describe('Register User API - Positive, Negative, Contract and Security', () => {
-  test('Testcase 1: Positive and Contract: POST /api/register should register a user and allow login @smoke @regression', async ({
+  test('Testcase 1: Positive and Contract: POST /api/register should register a user and allow login @smoke @regression @staging-contract', async ({
     request
   }) => {
     const payload = buildValidPayload();
@@ -353,7 +353,7 @@ test.describe('Login API - Positive, Negative and Security', () => {
     registeredUser = await createRegisteredUser(request);
   });
 
-  test('Testcase 7: Positive and Contract: POST /api/login should login a registered user successfully @smoke @regression', async ({
+  test('Testcase 7: Positive and Contract: POST /api/login should login a registered user successfully @smoke @regression @staging-contract', async ({
     request
   }) => {
     const loginResponse = await loginUser(

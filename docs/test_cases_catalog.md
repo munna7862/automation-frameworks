@@ -1,6 +1,10 @@
 # 📋 BuggyBooks Test Case Catalog
 
-This document provides a unified master catalog of all test cases for the BuggyBooks application. Test cases are categorized by their function, target execution tier, assigned tags (`@smoke`, `@regression`, `@chaos`, `@a11y`), and implementation status.
+This document provides a unified master catalog of all test cases for the BuggyBooks application. Test cases are categorized by their function, target execution tier, assigned tags (`@smoke`, `@regression`, `@chaos`, `@a11y`, `@staging-contract`), and implementation status.
+
+> **Target Environment Profiles**:
+> - **`ENV=DOCKER` (Default in CI/PRs)**: Hermetic, disposable BuggyBooks container stack (`backend:4000`, `frontend:5173`) deployed via `infra/docker-compose.test.yml`. Fast feedback, zero cold starts, independent state.
+> - **`ENV=STAGING` (Nightly Deployment Gate)**: Live staging deployment on Render (`https://buggy-books-fe.onrender.com` / `https://buggy-books.onrender.com`). Validated nightly using the `@staging-contract` test subset and warm-up probe.
 
 ---
 
@@ -20,7 +24,7 @@ These test cases verify user-facing interfaces and behaviors inside a real brows
 ### **Suite: Catalog & Book Discovery**
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
-| **UI_CAT_01** | Initial Catalog Load | Verify that exactly 8 books are displayed on the first page of the catalog. | Smoke | Playwright UI | `@smoke` `@regression` | **Yes**<br>- File: `BookCatalog/Test_001_InitialCatalog.spec.ts`<br>- Test: `Verify Books Count in pagination @smoke @regression` |
+| **UI_CAT_01** | Initial Catalog Load | Verify that exactly 8 books are displayed on the first page of the catalog. | Smoke | Playwright UI | `@smoke` `@regression` `@staging-contract` | **Yes**<br>- File: `BookCatalog/Test_001_InitialCatalog.spec.ts`<br>- Test: `Verify Books Count in pagination @smoke @regression @staging-contract` |
 | **UI_CAT_02** | Pagination Navigation | Click the "2" or "Next" button in the pagination bar. Verify that new books are loaded and URL contains `page=2`. | Regression | Playwright UI | `@regression` | **Yes**<br>- File: `BookCatalog/Test_001_InitialCatalog.spec.ts`<br>- Test: `Verify Next Page Navigation` |
 | **UI_CAT_03** | Search Filtering | Type "Mockingbird" in the search bar and submit. Verify that the list updates to show the matching book. | Regression | Playwright UI | `@regression` | **Yes**<br>- File: `BookCatalog/Test_002_SearchAndDetailCatalog.spec.ts`<br>- Test: `UI_CAT_03: Search Filtering @regression` |
 | **UI_CAT_04** | Search - No Results | Search for a gibberish string and submit. Verify a "No books found" message is displayed. | Regression | Playwright UI | `@regression` | **Yes**<br>- File: `BookCatalog/Test_002_SearchAndDetailCatalog.spec.ts`<br>- Test: `UI_CAT_04: Search - No Results @regression` |
@@ -117,7 +121,7 @@ These test cases verify the logic, security, and integrity of backend endpoints 
 ### **Suite: API Authentication**
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
-| **API_AUTH_01** | `POST /api/login` Success | Send valid credentials. Verify 200 OK and that `Set-Cookie` header contains a valid JWT token. | Smoke | Playwright API | `@smoke` `@regression` | **Yes**<br>- File: `api/UserManagement/Test_001_RegisterAndLoginUser.spec.ts`<br>- Test: `Testcase 7: Positive and Contract: POST /api/login should login a registered user successfully @smoke @regression` |
+| **API_AUTH_01** | `POST /api/login` Success | Send valid credentials. Verify 200 OK and that `Set-Cookie` header contains a valid JWT token. | Smoke | Playwright API | `@smoke` `@regression` `@staging-contract` | **Yes**<br>- File: `api/UserManagement/Test_001_RegisterAndLoginUser.spec.ts`<br>- Test: `Testcase 7: Positive and Contract: POST /api/login should login a registered user successfully @smoke @regression @staging-contract` |
 | **API_AUTH_02** | `POST /api/register` Conflict | Send a username that already exists. Verify 409 Conflict. | Smoke | Playwright API | `@smoke` `@regression` | **Yes**<br>- File: `api/UserManagement/Test_001_RegisterAndLoginUser.spec.ts`<br>- Test: `Testcase 3: Negative: POST /api/register should reject duplicate usernames @smoke @regression` |
 | **API_AUTH_03** | Protected Route Access | Attempt `GET /api/cart` without a cookie. Verify 401 Unauthorized. | Smoke | Playwright API | `@smoke` `@regression` | **Yes**<br>- File: `api/UserManagement/Test_001_RegisterAndLoginUser.spec.ts`<br>- Test: `Testcase 13: Security: GET /api/cart without auth cookies should return 401 Unauthorized @smoke @regression` |
 | **API_REF_01** | Dynamic Access Token Expiry | Inject `jwtExpirySeconds: 2` via chaos configuration. Request a protected route after 3 seconds. Verify `403 Forbidden` response is returned. | Smoke | Playwright API | `@smoke` `@regression` `@chaos` | **Yes**<br>- File: `api/UserManagement/Test_002_TokenRefreshAndProfileApi.spec.ts`<br>- Test: `API_REF_01: Dynamic Access Token Expiry @smoke @regression @chaos` |

@@ -82,9 +82,6 @@ jobs:
 
   smoke-e2e:
     name: Smoke Tests (Chrome UI + API)
-    concurrency:
-      group: buggybooks-staging-state
-      cancel-in-progress: false
     needs: [static-quality, commitlint]
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -94,9 +91,10 @@ jobs:
 
     env:
       CI: 'true'
-      ENV: INTEROP
-      BASE_URL: https://buggy-books-fe.onrender.com/
-      API_BASE_URL: https://buggy-books.onrender.com
+      ENV: DOCKER
+      TARGET_ENV: DOCKER
+      BASE_URL: http://localhost:5173
+      API_BASE_URL: http://localhost:4000
       USER_NAME: ${{ secrets.E2E_USER_NAME }}
       PASSWORD: ${{ secrets.E2E_PASSWORD }}
       TZ: Australia/Adelaide
@@ -112,20 +110,28 @@ jobs:
         with:
           install-chrome: 'true'
 
-      - name: Render Staging Warm-Up
-        uses: ./.github/actions/staging-warmup
+      - name: Start Ephemeral BuggyBooks Environment
+        uses: ./.github/actions/buggybooks-up
 
-      - name: Pre-Flight Staging State Reset
+      - name: Pre-Flight State Reset
         uses: ./.github/actions/chaos-reset
+        with:
+          api-base: http://localhost:4000
 
       - name: Run Smoke Tests
         id: tests
         run: npm run test:smoke:all
         continue-on-error: true
 
-      - name: Teardown Staging State Reset
+      - name: Teardown State Reset
         if: always()
         uses: ./.github/actions/chaos-reset
+        with:
+          api-base: http://localhost:4000
+
+      - name: Stop Ephemeral BuggyBooks Environment
+        if: always()
+        uses: ./.github/actions/buggybooks-down
 
       - name: Upload Test Artifacts
         if: always()
@@ -152,9 +158,9 @@ jobs:
             echo "| Stage | Result | Environment | Target / Browser |"
             echo "| :--- | :--- | :--- | :--- |"
             echo "| **Static Quality & Linting** | ${{ needs.static-quality.result == 'success' && '✅ PASSED' || '❌ FAILED' }} | Monorepo Workspaces | Node.js $(cat .nvmrc) (lint + typecheck) |"
-            echo "| **Smoke Tests (UI & API)** | ${{ steps.tests.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }} | BuggyBooks Staging | Google Chrome (Channel: chrome) |"
+            echo "| **Smoke Tests (UI & API)** | ${{ steps.tests.outcome == 'success' && '✅ PASSED' || '❌ FAILED' }} | Ephemeral BuggyBooks (DOCKER) | Google Chrome (Channel: chrome) |"
             echo ""
-            echo "> **Quality Gate SLA**: Fast-feedback verification (< 3 min) validating static quality, Render staging warm-up, single-browser Chrome smoke execution, and automated teardown state reset."
+            echo "> **Quality Gate SLA**: Fast-feedback verification (< 3 min) validating static quality, hermetic ephemeral BuggyBooks containers, single-browser Chrome smoke execution, and automated teardown state reset."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail job if smoke tests failed

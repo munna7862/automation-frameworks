@@ -31,17 +31,18 @@ This document serves as the **always-on memory and operational baseline** for al
 ### 2. Render Staging Cold-Start Latency & Pre-Flight Probe
 
 - **Environments**:
-  - Frontend: `https://buggy-books-fe.onrender.com`
-  - Backend: `https://buggy-books.onrender.com`
+  - Ephemeral CI/PR (`ENV=DOCKER`): `http://localhost:5173` (Frontend) & `http://localhost:4000` (Backend API). Managed via `infra/docker-compose.test.yml`, `.github/actions/buggybooks-up`, and `buggybooks-down`.
+  - Shared Staging (`ENV=STAGING`): `https://buggy-books-fe.onrender.com` (Frontend) & `https://buggy-books.onrender.com` (Backend API).
+- **Environment Execution Policy**: PR Quality Gate runs exclusively against `ENV=DOCKER` with hermetic GHCR images, eliminating cold-starts and shared staging concurrency locks. Staging runs are reserved for scheduled nightly regression checks (`@staging-contract`).
 - **Render Idle Sleep Quirk**: Free-tier Render instances spin down after ~15 minutes of inactivity. First HTTP response takes 30–60 seconds.
-- **Mandatory Pre-Flight Ping**: All CI workflows and local runs targeting staging **must** execute the wake-up probe before tests start:
+- **Mandatory Pre-Flight Ping for STAGING**: The warm-up probe is **required for STAGING runs only**; PR runs use `ENV=DOCKER`:
   ```bash
   curl -s -o /dev/null https://buggy-books.onrender.com/api/books || true
   curl -s -o /dev/null https://buggy-books-fe.onrender.com/ || true
   npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
   npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
   ```
-  _Skipping this will cause initial test requests to time out and produce false-positive flakiness._
+  _Skipping this on STAGING will cause initial test requests to time out and produce false-positive flakiness._
 
 ### 3. Intentional Chaos Containment & State Reset
 
