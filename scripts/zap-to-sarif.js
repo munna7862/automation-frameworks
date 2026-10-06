@@ -36,15 +36,29 @@ function parseArgs() {
   return options;
 }
 
-function stripHtml(htmlStr) {
-  if (!htmlStr) return '';
-  return htmlStr
-    .replace(/<[^>]*>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .trim();
+function cleanText(str) {
+  if (!str || typeof str !== 'string') return '';
+  let text = '';
+  let insideTag = false;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    if (ch === '<') {
+      insideTag = true;
+    } else if (ch === '>') {
+      insideTag = false;
+    } else if (!insideTag) {
+      text += ch;
+    }
+  }
+
+  const entityMap = {
+    nbsp: ' ',
+    amp: '&',
+    quot: '"',
+    lt: '<',
+    gt: '>'
+  };
+  return text.replace(/&(nbsp|amp|quot|lt|gt);/g, (_, code) => entityMap[code] || _).trim();
 }
 
 function mapRiskToLevel(riskCode) {
@@ -81,9 +95,9 @@ function convertZapToSarif(zapData, category) {
     for (const alert of alerts) {
       const ruleId = String(alert.pluginid || alert.alertRef || alert.name);
       const ruleName = alert.alert || alert.name || 'OWASP ZAP Finding';
-      const cleanDesc = stripHtml(alert.desc) || ruleName;
-      const cleanSolution = stripHtml(alert.solution) || 'Review endpoint configuration';
-      const cleanReference = stripHtml(alert.reference) || 'https://www.zaproxy.org/';
+      const cleanDesc = cleanText(alert.desc) || ruleName;
+      const cleanSolution = cleanText(alert.solution) || 'Review endpoint configuration';
+      const cleanReference = cleanText(alert.reference) || 'https://www.zaproxy.org/';
       const level = mapRiskToLevel(alert.riskcode);
 
       if (!seenRuleIds.has(ruleId)) {

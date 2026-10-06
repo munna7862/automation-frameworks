@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-06T17:46:16.766Z",
+  "generatedAt": "2026-10-06T17:58:15.007Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,9 +10,9 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "b7baeb6",
+    "commit": "bcd97ec",
     "branch": "feat/sprint-9.1-dast-zap",
-    "message": "feat(playwright): OpenAPI 3.1, Schemathesis Fuzzing & Pact Contracts (Sprint 8.3) (#46)",
+    "message": "feat(security): implement DAST pipeline with OWASP ZAP (Sprint 9.1)",
     "ciRun": "Local-Development"
   },
   "kpis": {

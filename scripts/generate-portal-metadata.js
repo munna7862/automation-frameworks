@@ -407,8 +407,10 @@ function aggregateMetrics(options) {
 
   // 6. Security DAST (OWASP ZAP)
   const secReportPaths = [
+    path.join(rootDir, 'report_json.json'),
     path.join(rootDir, 'zap-baseline.json'),
     path.join(rootDir, 'zap-api.json'),
+    path.join(rootDir, 'security', 'report_json.json'),
     path.join(rootDir, 'security', 'zap-baseline.json'),
     path.join(rootDir, 'security', 'zap-api.json'),
     path.join(rootDir, 'AutomationReports', 'Security', 'ZAP', 'latest', 'report.json')
@@ -416,6 +418,7 @@ function aggregateMetrics(options) {
   for (const dir of searchDirs) {
     secReportPaths.push(
       path.join(dir, 'AutomationReports', 'Security', 'ZAP', 'latest', 'report.json'),
+      path.join(dir, 'report_json.json'),
       path.join(dir, 'zap-baseline.json'),
       path.join(dir, 'zap-api.json')
     );
