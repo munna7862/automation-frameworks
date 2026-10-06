@@ -49,5 +49,19 @@ export default defineConfig([
       'playwright/no-eval': 'error',
       'playwright/prefer-web-first-assertions': 'error'
     }
+  },
+  {
+    files: ['src/tests/api/**/*.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "CallExpression[callee.object.name='request'][callee.property.name=/^(get|post|put|patch|delete)$/]",
+          message:
+            'Direct request.<method> calls are forbidden in API tests. Use typed api.* clients instead.'
+        }
+      ]
+    }
   }
 ]);

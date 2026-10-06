@@ -1,14 +1,14 @@
 /**
- * API-related type definitions shared across backend, frontend, and E2E tests.
+ * API-related type definitions derived directly from Zod schemas.
+ * Single source of truth is src/api/schemas/error.schema.ts
  */
+import type {
+  ApiErrorResponse as SchemaApiErrorResponse,
+  ApiErrorDetail as SchemaApiErrorDetail
+} from '../api/schemas/error.schema';
 
-/** Standard error response shape returned by all API endpoints. */
-export interface ApiErrorResponse {
-  error: string;
-  message?: string;
-  correlationId?: string;
-  details?: unknown;
-}
+export type ApiErrorResponse = SchemaApiErrorResponse;
+export type ApiErrorDetail = SchemaApiErrorDetail;
 
 /** Real-time bookstore event emitted over WebSocket. */
 export interface BookstoreEvent {

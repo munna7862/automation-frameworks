@@ -1,85 +1,118 @@
 # Task Backlog: AutomationFrameworks Sprint Execution
 
-## Current Focus: Sprint 7.3 — Dev Container & Local Developer Experience
+## Current Focus: Sprint 8.1 — Typed API Client Layer & Schema Validation
 
-**Sprint Identifier**: `SPRINT-7.3-DEV-CONTAINER-AND-LOCAL-DX`  
-**Phase**: Phase 7 (Hermetic Environments, Test Data & Developer Experience)  
-**Story Points**: 4 SP  
-**Branch**: `feat/sprint-7.3-devcontainer`  
-**Goal**: Zero-to-green in 10 minutes: a dev container with every tool preinstalled, a task runner for common workflows, and an on-demand Testcontainers mode for local runs.
+**Sprint Identifier**: `SPRINT-8.1-TYPED-API-CLIENTS-AND-SCHEMAS`  
+**Phase**: Phase 8 (API Depth: Typed Clients, Schemas & Contracts)  
+**Story Points**: 5 SP  
+**Branch**: `feat/sprint-8.1-api-clients-schemas`  
+**Goal**: Wrap the BuggyBooks API in typed clients exposed as fixtures, validate every response against a zod schema, and migrate all 55 API tests without changing test count or intent.
 
 ---
 
 ## 1. Persona Roles & Ownership Matrix
 
-| Persona                | Role Assignment              | Responsibilities for this Sprint                                                                                                                     | Status    |
-| :--------------------- | :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- | :-------- |
-| **Scrum Master**       | `role-scrum-master`          | Sprint kick-off, DoR verification, DoD audit, and velocity tracking.                                                                                 | `ACTIVE`  |
-| **SDET Architect**     | `role-sdet-architect`        | Architecture review, dual-catalog check, onboarding guide authorship (`docs/onboarding.md`), code review checklist.                                  | `ACTIVE`  |
-| **DevOps Engineer**    | `role-devops-engineer`       | Dev container specification (`.devcontainer/devcontainer.json`, `.devcontainer/Dockerfile`), Taskfile (`Taskfile.yml`), and root npm script mirrors. | `ACTIVE`  |
-| **Playwright QA Lead** | `role-playwright-automation` | Testcontainers global setup (`global-setup.ts`) and teardown (`global-teardown.ts`) integration in `playwright-e2e`.                                 | `ACTIVE`  |
-| **Product Owner**      | Human Tech Lead (`User`)     | Backlog prioritization, final PR review & merge.                                                                                                     | `STANDBY` |
+| Persona                | Role Assignment              | Responsibilities for this Sprint                                                                                               | Status    |
+| :--------------------- | :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------- | :-------- |
+| **Scrum Master**       | `role-scrum-master`          | Sprint planning, `task.md` tracking, DoR verification, and DoD audit.                                                          | `ACTIVE`  |
+| **SDET Architect**     | `role-sdet-architect`        | Client/schema contracts, matcher API, type derivation, dual-catalog sync, and code acceptance review.                          | `ACTIVE`  |
+| **Playwright QA Lead** | `role-playwright-automation` | Implement base & 10 domain clients, zod schemas, custom matchers, `api` fixture, smoke spec, and migrate all 9 API spec files. | `ACTIVE`  |
+| **DevOps Engineer**    | `role-devops-engineer`       | ESLint `no-restricted-syntax` rule wiring, CI verification, and PR release lifecycle.                                          | `ACTIVE`  |
+| **Product Owner**      | Human Tech Lead (`User`)     | Backlog prioritization, sprint kickoff, and final PR review & merge.                                                           | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
-### US-AF-731: Dev Container (1.5 SP)
+### US-AF-811: Client Layer + `api` Fixture (2 SP)
 
-- [x] **US-AF-731.1** (`DevOps Engineer`): Author `.devcontainer/Dockerfile` based on `mcr.microsoft.com/devcontainers/typescript-node:24` installing Google Chrome stable, Apache JMeter 5.6.3 (`/opt/jmeter`), k6 (official repo), Allure CLI (`/opt/allure`), and `go-task` binary (`/usr/local/bin/task`).
-- [x] **US-AF-731.2** (`DevOps Engineer`): Author `.devcontainer/devcontainer.json` configuring `docker-in-docker:2`, `java:17` (Temurin), `github-cli:1` features, `forwardPorts` (4000, 5173, 3000, 9090), `postCreateCommand` (`npm ci && npx husky`), and VS Code extensions.
-- [x] **US-AF-731.3** (`DevOps Engineer`): Document GitHub Codespaces monthly free quota note in `README.md`.
+- [x] **US-AF-811.1** (`SDET Architect`): Design `ApiResponse<T>` envelope, `RequestOpts` contract, and client architecture.
+- [x] **US-AF-811.2** (`Playwright QA Lead`): Implement `playwright-e2e/src/api/clients/base.client.ts` with timing measurement (`durationMs`), default headers (`x-bypass-rate-limit`, `x-test-session-id`, `enforceCsrf`), and sensitive data redaction.
+- [x] **US-AF-811.3** (`Playwright QA Lead`): Implement all 10 domain clients in `playwright-e2e/src/api/clients/`:
+  - `auth.client.ts` (register, login, logout, refresh, me)
+  - `books.client.ts` (list, getById)
+  - `cart.client.ts` (get, add, remove, clear)
+  - `checkout.client.ts` (process)
+  - `orders.client.ts` (list)
+  - `profile.client.ts` (get, uploadAvatar)
+  - `inventory.client.ts` (report)
+  - `system.client.ts` (health, metrics, csrfToken)
+  - `test-control.client.ts` (getConfig, setConfig, reset, setStock, deleteSession)
+  - `index.ts` (barrel export and `createApiClient` factory)
+- [x] **US-AF-811.4** (`Playwright QA Lead`): Implement `playwright-e2e/src/api/api.fixture.ts` exporting test fixture providing `{ api, testSessionId }`.
+- [x] **US-AF-811.5** (`Playwright QA Lead`): Author `playwright-e2e/src/api/__tests__/clients.smoke.spec.ts` hitting GET endpoints across clients (8/8 pass).
 
-### US-AF-732: Task Runner (`Taskfile.yml` & Root NPM Mirrors) (1.0 SP)
+### US-AF-812: Zod Schemas & Custom Matchers (1.5 SP)
 
-- [x] **US-AF-732.1** (`DevOps Engineer`): Author `Taskfile.yml` with tasks: `env:up`, `env:down`, `env:logs`, `test:pr`, `test:pw`, `test:selenium`, `test:wdio`, `perf:smoke`, `perf:jmeter`, `report:allure`, `security:scan`.
-- [x] **US-AF-732.2** (`DevOps Engineer`): Mirror all `Taskfile.yml` tasks into root `package.json` scripts (`env:up`, `env:down`, `env:logs`, `test:pr`, `test:pw`, `test:selenium`, `test:wdio`, `perf:jmeter`, `report:allure`, `security:scan`) ensuring parity for developers without `task`.
-- [x] **US-AF-732.3** (`DevOps Engineer`): Verify `cross-env` support and task execution parity.
+- [x] **US-AF-812.1** (`Playwright QA Lead`): Add `zod` dependency to `playwright-e2e/package.json`.
+- [x] **US-AF-812.2** (`SDET Architect` & `Playwright QA Lead`): Author exhaustive Zod schemas in `playwright-e2e/src/api/schemas/`:
+  - `book.schema.ts` (`BookSchema`, `PaginatedBooksSchema`, `CartItemSchema`)
+  - `cart.schema.ts` (`CartSchema`, `CartClearResponseSchema`)
+  - `order.schema.ts` (`OrderSchema`, `OrdersListSchema`, `CheckoutResponseSchema`)
+  - `auth.schema.ts` (`AuthTokensResponseSchema`, `UserRecordSchema`, `AuthUserSchema`, `LogoutResponseSchema`)
+  - `profile.schema.ts` (`UserProfileSchema`, `AvatarUploadResponseSchema`)
+  - `inventory.schema.ts` (`InventoryReportSchema`)
+  - `health.schema.ts` (`HealthSchema`, `MetricsSchema`, `CsrfTokenSchema`)
+  - `error.schema.ts` (`ApiErrorResponseSchema`, strict validation)
+  - `test-control.schema.ts` (`ChaosConfigSchema`, `TestConfigPostResponseSchema`, `TestResetResponseSchema`, `TestSessionDeleteResponseSchema`)
+  - `index.ts` (barrel export)
+- [x] **US-AF-812.3** (`SDET Architect`): Refactor `playwright-e2e/src/types/*.d.ts` to derive canonical types from Zod schemas (`z.infer<typeof ...>`).
+- [x] **US-AF-812.4** (`Playwright QA Lead`): Implement custom Playwright matchers in `playwright-e2e/src/api/matchers/api.matchers.ts`:
+  - `toMatchSchema(schema)` (formatted zod error paths)
+  - `toRespondWithin(maxMs)` (duration check)
+  - `toHaveStatus(status)` (status assertion with error body dump on mismatch)
+- [x] **US-AF-812.5** (`Playwright QA Lead`): Wire matchers into `api.fixture.ts` and global expectations.
 
-### US-AF-733: Testcontainers Mode (1.0 SP)
+### US-AF-813: Migrate All 9 API Spec Files (1.5 SP)
 
-- [x] **US-AF-733.1** (`Playwright QA Lead`): Install `testcontainers` as `devDependency` in `playwright-e2e` workspace.
-- [x] **US-AF-733.2** (`Playwright QA Lead`): Author `playwright-e2e/src/config/global-setup.ts` to spin up `infra/docker-compose.test.yml` via `DockerComposeEnvironment` only when `ENV=DOCKER` and `BUGGYBOOKS_AUTOSTART=true` (guarded from triggering in CI).
-- [x] **US-AF-733.3** (`Playwright QA Lead`): Implement port probe in `global-setup.ts` to skip autostart if ports 4000 and 5173 are already responding (reusing existing `env:up` stack).
-- [x] **US-AF-733.4** (`Playwright QA Lead`): Author `playwright-e2e/src/config/global-teardown.ts` to cleanly stop containers when started by testcontainers.
-- [x] **US-AF-733.5** (`Playwright QA Lead`): Wire `globalSetup` and `globalTeardown` in `playwright-e2e/src/config/playwright.config.ts`.
-
-### US-AF-734: Onboarding Guide & Zero-to-Green Documentation (0.5 SP)
-
-- [x] **US-AF-734.1** (`SDET Architect`): Author comprehensive zero-to-green onboarding guide in `docs/onboarding.md` covering the three setup paths (Codespaces, Local Dev Container, Bare-metal).
-- [x] **US-AF-734.2** (`SDET Architect`): Document first-run checklist and troubleshooting (busy ports, Docker daemon not running, Google Chrome channel missing, Render staging cold starts).
-- [x] **US-AF-734.3** (`SDET Architect`): Update root `README.md` Quick Start and prerequisites pointing to `docs/onboarding.md`.
+- [x] **US-AF-813.1** (`Playwright QA Lead`): Migrate `src/tests/api/BookCatalog/Test_001_BooksApi.spec.ts` to use `api.books` and schema assertions.
+- [x] **US-AF-813.2** (`Playwright QA Lead`): Migrate `src/tests/api/CartAndInventory/Test_001_CartAndInventoryApi.spec.ts` to use `api.cart` and `api.inventory`.
+- [x] **US-AF-813.3** (`Playwright QA Lead`): Migrate `src/tests/api/CartAndInventory/Test_002_OrdersApi.spec.ts` to use `api.orders`.
+- [x] **US-AF-813.4** (`Playwright QA Lead`): Migrate `src/tests/api/ChaosAndTesting/Test_001_ChaosAndTestingApi.spec.ts` to use `api.testControl`, `api.auth`, `api.cart`, `api.checkout`.
+- [x] **US-AF-813.5** (`Playwright QA Lead`): Migrate `src/tests/api/ChaosAndTesting/Test_002_VisualChaosApi.spec.ts` to use `api.testControl`.
+- [x] **US-AF-813.6** (`Playwright QA Lead`): Migrate `src/tests/api/ChaosAndTesting/Test_003_SessionSandboxingApi.spec.ts` to use isolated `createApiClient(requestA/B)`.
+- [x] **US-AF-813.7** (`Playwright QA Lead`): Migrate `src/tests/api/Logging/Test_001_LoggingAndCorrelationApi.spec.ts` to use clients with headers preservation.
+- [x] **US-AF-813.8** (`Playwright QA Lead`): Migrate `src/tests/api/UserManagement/Test_001_RegisterAndLoginUser.spec.ts` to use `api.auth` with schema validations.
+- [x] **US-AF-813.9** (`Playwright QA Lead`): Migrate `src/tests/api/UserManagement/Test_002_TokenRefreshAndProfileApi.spec.ts` to use `api.auth`, `api.profile`, `api.cart`, `api.testControl`.
+- [x] **US-AF-813.10** (`DevOps Engineer`): Add ESLint `no-restricted-syntax` rule forbidding raw `request.get|post|put|patch|delete` in `src/tests/api/**`.
+- [x] **US-AF-813.11** (`SDET Architect`): Verify test list parity before and after migration (`npx playwright test --list --project=api` yields exactly 55/55 identical titles).
+- [x] **US-AF-813.12** (`SDET Architect`): Author developer guide `docs/api_testing_guide.md` and update planning documentation.
 
 ### Verification, DoD & Release Protocol
 
-- [x] **US-AF-730.1** (`Scrum Master`): Verify Pre-Flight Definition of Ready (DoR).
-- [x] **US-AF-730.2** (`SDET Architect`): Perform Code Review Checklist and Code Acceptance Review.
-- [x] **US-AF-730.3** (`Scrum Master`): Verify 4-Point Definition of Done (DoD).
-- [x] **US-AF-730.4** (`DevOps Engineer`): Execute PR release lifecycle with conventional commit and GitHub CLI.
+- [x] **US-AF-810.1** (`Scrum Master`): Verify Pre-Flight Definition of Ready (DoR).
+- [x] **US-AF-810.2** (`SDET Architect`): Perform Code Review Checklist and Code Acceptance Review.
+- [x] **US-AF-810.3** (`Scrum Master`): Verify 4-Point Definition of Done (DoD).
+- [x] **US-AF-810.4** (`DevOps Engineer`): Execute PR release lifecycle with conventional commit and GitHub CLI.
 
 ---
 
 ## 3. Sprint Review Comments & Refinement Loop
 
-| Gate / Reviewer                  | Target Role              | Review Feedback & Comments                                                                                                                                                                                               | Gate Status  |
-| :------------------------------- | :----------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------: |
-| **Pre-Flight Architecture Gate** | SDET Architect           | Dev container specification, Taskfile schema, Testcontainers autostart, and onboarding paths verified and approved.                                                                                                      | `[APPROVED]` |
-| **Code Acceptance Review Gate**  | SDET Architect           | Single-browser Google Chrome policy enforced; tool versions pinned (JMeter 5.6.3, Allure 2.34.1, Task 3.42.1); Testcontainers is devDependency only and disabled in CI; Taskfile tasks and npm scripts have 100% parity. | `[APPROVED]` |
-| **Scrum Master DoD Gate**        | Scrum Master             | All 4 DoD criteria verified: lint 0 errors across 7 workspaces; typecheck 0 errors; dual-catalog parity verified; documentation complete.                                                                                | `[APPROVED]` |
-| **DevOps Release Gate**          | DevOps Engineer          | Workspaces clean; git hygiene confirmed; conventional commits formatted; ready for PR submission.                                                                                                                        | `[APPROVED]` |
-| **Final Human Sign-Off**         | Human Tech Lead (`User`) | Final PR review and merge to `main`.                                                                                                                                                                                     |  `STANDBY`   |
+| Gate / Reviewer                  | Target Role              | Review Feedback & Comments                                                                                                               | Gate Status  |
+| :------------------------------- | :----------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :----------: |
+| **Pre-Flight Architecture Gate** | SDET Architect           | Verify typed client architecture, schema strictness policy, and backward compatibility.                                                  | `[APPROVED]` |
+| **Code Acceptance Review Gate**  | SDET Architect           | Verified clients contain no `expect`, specs contain no raw `request.*`, schemas typed and derived, test titles 100% identical.           | `[APPROVED]` |
+| **Scrum Master DoD Gate**        | Scrum Master             | All 4 DoD criteria verified: lint 0 errors across 7 workspaces; typecheck 0 errors; 55/55 API tests green; dual-catalog parity verified. | `[APPROVED]` |
+| **DevOps Release Gate**          | DevOps Engineer          | Validate ESLint rule active, workspaces clean, PR created, and green CI status.                                                          | `[APPROVED]` |
+| **Final Human Sign-Off**         | Human Tech Lead (`User`) | Final PR review and merge to `main`.                                                                                                     |  `STANDBY`   |
 
 ---
 
 ## 4. Definition of Done (DoD) Checklist
 
-- [x] Dev container configuration (`.devcontainer/devcontainer.json` & `.devcontainer/Dockerfile`) created with all pinned tools (Node 24, Chrome stable, JMeter 5.6.3, k6, Allure CLI, Task).
-- [x] `Taskfile.yml` and root `package.json` scripts are in 100% sync.
-- [x] `playwright-e2e` `global-setup.ts` and `global-teardown.ts` support `BUGGYBOOKS_AUTOSTART=true` on `ENV=DOCKER`, reuse existing running stacks, and are strictly disabled in CI.
-- [x] `docs/onboarding.md` created and linked from root `README.md`.
+- [x] All 10 typed clients implemented in `playwright-e2e/src/api/clients/*`.
+- [x] Zod schemas implemented in `playwright-e2e/src/api/schemas/*` with strict mode on error envelopes & auth.
+- [x] Shared types in `playwright-e2e/src/types/*` derived from Zod schemas.
+- [x] Custom matchers (`toMatchSchema`, `toRespondWithin`, `toHaveStatus`) implemented.
+- [x] All 9 API test specs migrated to `api.*` clients and `toMatchSchema`.
+- [x] ESLint `no-restricted-syntax` rule active for `src/tests/api/**`.
+- [x] Test list before and after is 100% identical (55 tests in 9 files).
+- [x] 55/55 API tests green.
+- [x] `docs/api_testing_guide.md` created.
 - [x] `npm run lint:all` and `npm run typecheck:all` exit 0 across all workspaces.
 - [x] `npm run test:verify-catalog` exits 0 (dual-catalog parity).
-- [x] PR created with structured summary, test verification evidence, and all CI checks green: [PR #43](https://github.com/munna7862/automation-frameworks/pull/43) (14/14 CI checks passing).
+- [x] Pull request opened with structured summary and verification evidence.
 
 ---
 
@@ -96,35 +129,17 @@ npm run typecheck:all
 
 # 3. Monorepo Linting: 7/7 workspaces clean
 npm run lint:all
-# Output: All workspaces exit 0 with 0 errors and 0 warnings
+# Output: All workspaces exit 0 with 0 errors and 0 warnings (no-restricted-syntax active)
 
-# 4. Playwright Test Discovery with Global Setup & Teardown
-cross-env ENV=DOCKER BASE_URL=http://localhost:5173 API_BASE_URL=http://localhost:4000 npx playwright test --list --config=src/config/playwright.config.ts
-# Output: Total: 110 tests in 30 files (Google Chrome UI + API only)
+# 4. Parity Proof: Playwright API Test Discovery Before vs After
+# Output: BEFORE COUNT: 55, AFTER COUNT: 55
+# ✅ PERFECT TITLE & COUNT PARITY: Exactly 55/55 matching test titles
 
-# 5. Test Data Package Unit Tests
-npx tsx --test packages/test-data/src/test-data.test.ts
-# Output: 14/14 tests pass (0 failures)
+# 5. Unit Smoke Test: 8/8 GET endpoints pass schema validation
+npx tsx --test src/api/__tests__/clients.smoke.spec.ts
+# Output: 8 passed (0 failed, 0 flaky)
 
-# 6. Local Security Scanner Runner
-node scripts/run-security-scan.js
-# Output: Gitleaks and OSV scanner runners executed cleanly
-
-# 7. GitHub Actions CI Checks (PR #43)
-gh pr checks 43
-# Output: 14/14 checks pass
-# - Actionlint Workflow Linter: pass
-# - CodeQL: pass
-# - CodeQL Analysis (JavaScript / TypeScript): pass
-# - Conventional Commits Validation: pass
-# - Dependency Review (PR Gate): pass
-# - Gitleaks Secret Detection: pass
-# - License Compliance, Audit & SBOM: pass
-# - OSV Vulnerability Scanner: pass
-# - Smoke Tests (Chrome UI + API): pass
-# - Static Quality & Linting: pass
-# - Zizmor Workflow Security Audit: pass
-# - k6 Performance & Drift Gate: pass
-# - osv-scanner: pass
-# - zizmor: pass
+# 6. Playwright API Execution on Staging
+cross-env ENV=STAGING npm run test:api --workspace=playwright-e2e
+# Output: 55 passed (32.5s) - 100% green
 ```

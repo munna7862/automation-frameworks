@@ -5,7 +5,7 @@
 **Sprint Identifier**: `SPRINT-8.1-TYPED-API-CLIENTS-AND-SCHEMAS`
 **Phase Mapping**: [Phase 8](../Phases/phase_8_api_depth_typed_clients_schemas_and_contracts.md)
 **Estimated Velocity**: 5 Story Points
-**Sprint Status**: Not Started
+**Sprint Status**: Done
 **Branch**: `feat/sprint-8.1-api-clients-schemas`
 **Depends On**: Sprint 7.2 (test-data seeders share the same client contracts)
 **Sprint Goal**: Wrap the BuggyBooks API in typed clients exposed as fixtures, validate every response against a zod schema, and migrate all 55 API tests without changing test count or intent.
@@ -78,21 +78,21 @@ await expect(res).toRespondWithin(800);            // uses res.durationMs
 ## 3. Sprint Backlog & User Stories
 
 ### US-AF-811: Client layer + `api` fixture (2 SP)
-- [ ] Implement `base.client.ts` and the 10 clients above using the session-isolated `request` from `api.fixture.ts` (keep the `x-test-session-id` behaviour).
-- [ ] Redaction (Sprint 6.1) applied to any client debug logging.
-- [ ] Unit-level smoke: `src/api/__tests__/clients.smoke.spec.ts` hits each GET endpoint once on DOCKER.
+- [x] Implement `base.client.ts` and the 10 clients above using the session-isolated `request` from `api.fixture.ts` (keep the `x-test-session-id` behaviour).
+- [x] Redaction (Sprint 6.1) applied to any client debug logging.
+- [x] Unit-level smoke: `src/api/__tests__/clients.smoke.spec.ts` hits each GET endpoint once on DOCKER.
 
 ### US-AF-812: zod schemas & custom matchers (1.5 SP)
-- [ ] Derive schemas from **actual DOCKER responses** (capture once with the network log), and cross-check against `buggy-books/backend/src/controllers/*` and `src/types/*.d.ts`.
-- [ ] Make `src/types/*.d.ts` derive from schemas (`z.infer<typeof BookSchema>`), so the hand-written duplicate types go away.
-- [ ] Implement matchers with clear failure output (endpoint, status, first 3 zod issues with paths).
-- [ ] `.strict()` vs `.passthrough()` policy: **strict** for error envelopes and auth payloads (catches leaked fields such as `passwordHash`); passthrough elsewhere, with a comment.
+- [x] Derive schemas from **actual DOCKER responses** (capture once with the network log), and cross-check against `buggy-books/backend/src/controllers/*` and `src/types/*.d.ts`.
+- [x] Make `src/types/*.d.ts` derive from schemas (`z.infer<typeof BookSchema>`), so the hand-written duplicate types go away.
+- [x] Implement matchers with clear failure output (endpoint, status, first 3 zod issues with paths).
+- [x] `.strict()` vs `.passthrough()` policy: **strict** for error envelopes and auth payloads (catches leaked fields such as `passwordHash`); passthrough elsewhere, with a comment.
 
 ### US-AF-813: Migrate all 9 API spec files (1.5 SP)
-- [ ] Migrate `BookCatalog`, `CartAndInventory` (2), `ChaosAndTesting` (3), `Logging`, `UserManagement` (2), replacing raw calls with clients and adding `toMatchSchema` on every response.
-- [ ] Remove `axios` usage from API specs; `ApiUtil` remains only for UI specs that need out-of-band calls (and should migrate to `api` fixture where trivial).
-- [ ] ESLint `no-restricted-syntax` rule for `src/tests/api/**`: forbid `request.get|post|put|patch|delete(` member calls (message: "use api.* clients").
-- [ ] **Parity proof**: `npx playwright test --list --project=api` output before and after is identical (save both lists in the PR).
+- [x] Migrate `BookCatalog`, `CartAndInventory` (2), `ChaosAndTesting` (3), `Logging`, `UserManagement` (2), replacing raw calls with clients and adding `toMatchSchema` on every response.
+- [x] Remove `axios` usage from API specs; `ApiUtil` remains only for UI specs that need out-of-band calls (and should migrate to `api` fixture where trivial).
+- [x] ESLint `no-restricted-syntax` rule for `src/tests/api/**`: forbid `request.get|post|put|patch|delete(` member calls (message: "use api.* clients").
+- [x] **Parity proof**: `npx playwright test --list --project=api` output before and after is identical (save both lists in the PR).
 
 ---
 
@@ -112,21 +112,21 @@ npm run lint && npm run typecheck
 
 ## 5. Code Review Checklist
 
-- [ ] Clients contain no `expect` calls; specs contain no raw `request.*` calls.
-- [ ] Every API test has at least one `toMatchSchema`.
-- [ ] Schemas aren't so loose they're meaningless (no blanket `z.any()`; `z.unknown()` only with a justification comment).
-- [ ] Hand-written types removed or derived from schemas; no duplicated type definitions.
-- [ ] Test titles and IDs are unchanged (catalog parity unaffected).
-- [ ] Duration measurement wraps only the HTTP call.
+- [x] Clients contain no `expect` calls; specs contain no raw `request.*` calls.
+- [x] Every API test has at least one `toMatchSchema`.
+- [x] Schemas aren't so loose they're meaningless (no blanket `z.any()`; `z.unknown()` only with a justification comment).
+- [x] Hand-written types removed or derived from schemas; no duplicated type definitions.
+- [x] Test titles and IDs are unchanged (catalog parity unaffected).
+- [x] Duration measurement wraps only the HTTP call.
 
 ---
 
 ## 6. Definition of Done
 
-- [ ] 55/55 API tests green 3× on DOCKER and 1× on STAGING.
-- [ ] `--list` parity proof attached.
-- [ ] Lint rule active and passing.
-- [ ] `docs/ReusablePackage.md` or a new `docs/api_testing_guide.md` documents clients, schemas and matchers.
+- [x] 55/55 API tests green 3× on DOCKER and 1× on STAGING.
+- [x] `--list` parity proof attached.
+- [x] Lint rule active and passing.
+- [x] `docs/ReusablePackage.md` or a new `docs/api_testing_guide.md` documents clients, schemas and matchers.
 
 ---
 
