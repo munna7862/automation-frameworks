@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-02T06:25:31.661Z",
+  "generatedAt": "2026-10-06T10:10:19.842Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,19 +10,19 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "90edb2b",
+    "commit": "12abad5",
     "branch": "main",
-    "message": "feat(portal): GitHub Pages Portal Landing Page & Executive KPI Badging (Sprint 5.2) (#US-AF-521, #US-AF-522) (#27)",
-    "ciRun": "2"
+    "message": "feat(infra): dev container, task runner, and local developer experience (Sprint 7.3) (#43)",
+    "ciRun": "5"
   },
   "kpis": {
-    "totalTests": 282,
-    "totalPassed": 281,
+    "totalTests": 274,
+    "totalPassed": 273,
     "totalFailed": 1,
     "totalSkipped": 0,
     "overallPassRate": "99.6%",
     "activeFrameworks": 6,
-    "totalDurationMs": 293360,
+    "totalDurationMs": 251060,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -137,11 +137,11 @@
       "reportPath": "./AutomationReports/Mobile/",
       "status": "PASSED",
       "metrics": {
-        "total": 8,
-        "passed": 8,
+        "total": 0,
+        "passed": 0,
         "failed": 0,
         "skipped": 0,
-        "durationMs": 42300,
+        "durationMs": 0,
         "passRate": "100.0%"
       },
       "highlights": [
