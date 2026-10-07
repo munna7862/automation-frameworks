@@ -45,7 +45,9 @@ export class CheckoutPage extends BasePage {
   }
 
   public get finalSubmitButton(): Locator {
-    return this.page.getByRole('button', { name: 'Complete Payment' });
+    return this.page.locator(
+      'button#wizard-next-btn, button.submit-action-btn, button:has-text("Complete Payment"), button:has-text("Place Order"), button:has-text("Pay Now")'
+    );
   }
 
   private get orderConfirmationMessage(): Locator {

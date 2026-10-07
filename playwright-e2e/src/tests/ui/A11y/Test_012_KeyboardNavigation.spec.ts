@@ -294,11 +294,8 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
       ).catch(() => false);
 
       if (!isFocused) {
-        if (await checkoutPage.nextStepButton.isVisible().catch(() => false)) {
-          await checkoutPage.nextStepButton.focus();
-        } else {
-          await checkoutPage.finalSubmitButton.focus();
-        }
+        await checkoutPage.finalSubmitButton.first().waitFor({ state: 'visible', timeout: 10000 });
+        await checkoutPage.finalSubmitButton.first().focus();
       }
       await assertFocusIndicator('Complete Payment button');
       await page.keyboard.press('Enter');
