@@ -1,0 +1,12 @@
+# ==============================================================================
+# BuggyBooks — OWASP ZAP API Active Scanning Rules Configuration
+#
+# Target: docs/api/openapi.yaml against http://localhost:4000
+# Exclusions: ^/api/test/ endpoints excluded via scan config
+# ==============================================================================
+10015	WARN	Re-examine Cache-Control Directives — API endpoints caching policy; review: 2026-11-01
+10021	WARN	X-Content-Type-Options Header Missing — JSON content responses; review: 2026-11-01
+10037	WARN	Server Leaks Information via "Server" Header — Express server banner; review: 2026-11-01
+10038	WARN	Content Security Policy (CSP) Header Not Set — Non-HTML JSON REST API; review: 2026-11-01
+10096	WARN	Timestamp Disclosure — Unix timestamps in inventory/reports; review: 2026-11-01
+10202	IGNORE	Absence of Anti-CSRF Tokens — Stateless JWT bearer token authentication; review: 2026-11-01

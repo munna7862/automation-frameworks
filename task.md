@@ -1,103 +1,110 @@
 # Task Backlog: AutomationFrameworks Sprint Execution
 
-## Current Focus: Sprint 8.3 — OpenAPI Specification & Contract Testing
+## Current Focus: Sprint 9.1 — DAST Pipeline with OWASP ZAP
 
-**Sprint Identifier**: `SPRINT-8.3-OPENAPI-AND-CONTRACT-TESTING`  
-**Phase**: Phase 8 (API Depth: Typed Clients, Schemas & Contracts)  
+**Sprint Identifier**: `SPRINT-9.1-DAST-PIPELINE-OWASP-ZAP`  
+**Phase**: Phase 9 (Security Testing: DAST & AppSec)  
 **Story Points**: 4 SP  
-**Branch**: `feat/sprint-8.3-contract-testing`  
-**Goal**: Produce an OpenAPI 3.1 specification from zod schemas, fuzz the API with Schemathesis, and implement consumer-driven contract testing with Pact (file-based, no paid broker).
+**Branch**: `feat/sprint-9.1-dast-zap`  
+**Goal**: Run OWASP ZAP passive scans on every PR and active API scans nightly against the disposable BuggyBooks instance, with SARIF results in GitHub code scanning and managed risk acceptance.
 
 ---
 
 ## 1. Persona Roles & Ownership Matrix
 
-| Persona                | Role Assignment              | Responsibilities for this Sprint                                                                                              | Status    |
-| :--------------------- | :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------- | :-------- |
-| **Scrum Master**       | `role-scrum-master`          | Sprint planning, `task.md` governance, DoR verification, DoD auditing, velocity accounting.                                   | `ACTIVE`  |
-| **SDET Architect**     | `role-sdet-architect`        | OpenAPI route registry design, contract testing strategy, dual-catalog sync (`CT-*` IDs), and architecture review.            | `ACTIVE`  |
-| **Playwright QA Lead** | `role-playwright-automation` | OpenAPI generator implementation, Pact consumer test suite, Pact provider verification with state handlers.                   | `ACTIVE`  |
-| **DevOps Engineer**    | `role-devops-engineer`       | Schemathesis fuzzing workflow (`api-fuzz.yml`), contract testing workflow (`contract-tests.yml`), CI drift gates, PR release. | `ACTIVE`  |
-| **Product Owner**      | Human Tech Lead (`User`)     | Backlog prioritization, sprint kickoff, and final PR review & merge.                                                          | `STANDBY` |
+| Persona                    | Role Assignment          | Responsibilities for this Sprint                                                                | Status    |
+| :------------------------- | :----------------------- | :---------------------------------------------------------------------------------------------- | :-------- |
+| **Scrum Master**           | `role-scrum-master`      | Sprint planning, `task.md` governance, DoR verification, DoD auditing, velocity accounting.     | `ACTIVE`  |
+| **Security Test Engineer** | `role-security-engineer` | ZAP configuration, rules file triage, persona skill authoring, security testing guide skeleton. | `ACTIVE`  |
+| **SDET Architect**         | `role-sdet-architect`    | Risk acceptance review, dual-catalog sync (`DAST-ZAP-*`), architecture alignment.               | `ACTIVE`  |
+| **DevOps Engineer**        | `role-devops-engineer`   | GitHub Actions DAST workflow (`security-dast.yml`), SARIF upload, portal metadata integration.  | `ACTIVE`  |
+| **Product Owner**          | Human Tech Lead (`User`) | Backlog prioritization, sprint kickoff, and final PR review & merge.                            | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
-### US-AF-831: OpenAPI 3.1 from zod (1.5 SP)
+### US-AF-911: Security Persona & Testing Guide (0.5 SP)
 
-- [x] **US-AF-831.1** (`SDET Architect`): Design OpenAPI 3.1 registry structure covering all 23 routed endpoints from `docs/api/routes.json`, security schemes (`bearerAuth`, cookie auth), parameters, and error envelopes.
-- [x] **US-AF-831.2** (`Playwright QA Lead`): Implement `scripts/generate-openapi.ts` using `@asteasolutions/zod-to-openapi` generating `docs/api/openapi.yaml` and standalone Redoc portal documentation.
-- [x] **US-AF-831.3** (`DevOps Engineer`): Wire `npm run openapi:generate`, `npm run openapi:lint`, `npm run openapi:docs` into root `package.json` and add OpenAPI drift gate to `.github/workflows/pr-gate.yml`.
+- [x] **US-AF-911.1** (`Security Test Engineer`): Author `.agents/skills/role-security-engineer/SKILL.md` following standard persona structure: responsibilities, scope guard, tools (ZAP, Playwright `@security`, Phase 6 scanners), code review checklist, OWASP mapping rules.
+- [x] **US-AF-911.2** (`SDET Architect`): Update `AGENTS.md` §7 to register the 8th persona (`role-security-engineer`); update `planning/README.md` team matrix and architecture diagram.
+- [x] **US-AF-911.3** (`Security Test Engineer`): Author `docs/security/security_testing_guide.md` skeleton covering scope guard, DAST architecture, manual verification commands, and triage procedures.
 
-### US-AF-832: Schemathesis Property-Based Fuzzing (1 SP)
+### US-AF-912: ZAP Baseline Passive Scan on PR (1.5 SP)
 
-- [x] **US-AF-832.1** (`SDET Architect`): Define Schemathesis fuzzing strategy (exclude chaos `/test/*` routes, bypass rate limit/CSRF headers, seed auth token).
-- [x] **US-AF-832.2** (`DevOps Engineer`): Implement `.github/workflows/api-fuzz.yml` (nightly + workflow_dispatch) running Schemathesis container against ephemeral BuggyBooks (`ENV=DOCKER`) and publishing JUnit reports.
-- [x] **US-AF-832.3** (`SDET Architect`): Document Schemathesis triage baseline and register fuzzing contract test case in dual catalogs.
+- [x] **US-AF-912.1** (`Security Test Engineer`): Create `security/zap-rules.tsv` with baseline passive scan rule configurations, justifications, and review dates.
+- [x] **US-AF-912.2** (`DevOps Engineer`): Author `scripts/zap-to-sarif.js` for converting ZAP JSON vulnerability output to standardized SARIF v2.1.0 format with rule descriptions, severity mapping, and artifact links.
+- [x] **US-AF-912.3** (`DevOps Engineer`): Implement `zap-baseline` job in `.github/workflows/security-dast.yml` triggered on pull requests to `main`:
+  - Ephemeral environment launch via `.github/actions/buggybooks-up`.
+  - Target guard step enforcing `^http://localhost(:\d+)?/`.
+  - SHA-pinned `zaproxy/action-baseline` execution against `http://localhost:5173` with `-a`, `rules_file_name: security/zap-rules.tsv`, `fail_action: true`.
+  - SARIF conversion & upload via `github/codeql-action/upload-sarif` (`category: zap-baseline`).
+  - Report upload as GitHub Actions artifact.
+  - Ephemeral teardown via `.github/actions/buggybooks-down`.
 
-### US-AF-833: Pact Consumer-Driven Contracts (1.5 SP)
+### US-AF-913: ZAP API Active Scan Nightly (1.5 SP)
 
-- [x] **US-AF-833.1** (`SDET Architect`): Design consumer interactions (`buggybooks-web` consumer vs `buggybooks-api` provider) using Pact V3/V4 type matchers (`like`, `eachLike`, `regex`) for books, cart, auth, checkout, orders.
-- [x] **US-AF-833.2** (`Playwright QA Lead`): Implement Pact consumer contract test suite in `playwright-e2e/contract-tests/consumer/` generating `playwright-e2e/contract-tests/pacts/buggybooks-web-buggybooks-api.json`.
-- [x] **US-AF-833.3** (`Playwright QA Lead`): Implement Pact provider verification in `playwright-e2e/contract-tests/provider/` with state handlers using test-control endpoints (`/api/test/reset`, `/api/test/books/:id/stock`, seed user).
-- [x] **US-AF-833.4** (`DevOps Engineer`): Add `.github/workflows/contract-tests.yml` (triggered on PR and nightly), wire scripts `test:contract`, `test:contract:consumer`, `test:contract:provider` into `playwright-e2e/package.json` and root `package.json`.
-- [x] **US-AF-833.5** (`SDET Architect`): Author comprehensive contract testing guide `docs/contract_testing.md` and sync `CT-PACT-*` & `CT-FUZZ-*` test cases in dual catalogs.
+- [x] **US-AF-913.1** (`Security Test Engineer`): Author scan configuration and rule overrides in `security/zap-api-rules.tsv` and `security/zap-api-context.context` to exclude chaos `/api/test/*` routes and inject seeded JWT `Authorization: Bearer <token>` without any bypass headers (`x-bypass-rate-limit`, `x-bypass-csrf`).
+- [x] **US-AF-913.2** (`DevOps Engineer`): Implement `zap-api-scan` job in `.github/workflows/security-dast.yml` triggered nightly at 04:00 UTC and on `workflow_dispatch`:
+  - Target guard step enforcing `^http://localhost(:\d+)?/`.
+  - Ephemeral environment setup & state reset.
+  - Seeded authentication token acquisition (`admin` / `password123`) without bypass headers.
+  - SHA-pinned `zaproxy/action-api-scan` targeting `docs/api/openapi.yaml` with `-f openapi`, excluded regex `^/api/test/`, custom rules, and bearer token replacer.
+  - SARIF upload via `github/codeql-action/upload-sarif` (`category: zap-api`).
+  - Report artifact upload & stage for portal at `AutomationReports/Security/ZAP/latest/`.
+  - Teardown & state reset.
+- [x] **US-AF-913.3** (`DevOps Engineer`): Add optional `zap-proxy-crawl` job triggered via `zap_proxy_crawl` dispatch input.
 
-### Traceability, DoD & Release Protocol
+### US-AF-914: Portal & Documentation Integration (0.5 SP)
 
-- [x] **US-AF-830.1** (`Scrum Master`): Verify Pre-Flight Definition of Ready (DoR) — staging probe passed, clean branch `feat/sprint-8.3-contract-testing`.
-- [x] **US-AF-830.2** (`SDET Architect`): Maintain 100% lockstep parity across dual test case catalogs (`docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md`).
-- [x] **US-AF-830.3** (`SDET Architect`): Conduct Code Acceptance Review on all authored spec files, scripts, schemas, and contract tests.
-- [x] **US-AF-830.4** (`Scrum Master`): Verify 4-Point Definition of Done (DoD) (lint: 0, typecheck: 0, 100% green pass, dual-catalog sync).
-- [x] **US-AF-830.5** (`DevOps Engineer`): Execute PR release lifecycle with conventional commit and GitHub CLI.
+- [x] **US-AF-914.1** (`DevOps Engineer`): Update `scripts/generate-portal-metadata.js` to aggregate security metrics (last ZAP run date, severity breakdown, links) and display the Security Quality card on the executive portal; update `docs/portal/index.html` and `scripts/test-portal.js` for 7 interactive framework cards.
+- [x] **US-AF-914.2** (`Security Test Engineer`): Update `docs/security/repo_security_controls.md` with DAST governance rows (ZAP baseline, ZAP API scan, rules review, scope guard).
+- [x] **US-AF-914.3** (`SDET Architect`): Add `DAST-ZAP-001` and `DAST-ZAP-002` to both catalogs (`docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md`) in 100% lockstep parity and verify via `npm run test:verify-catalog`.
+- [x] **US-AF-914.4** (`Scrum Master`): Update sprint status in `planning/README.md`, `planning/Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md`, and Phase 9 overview.
 
 ---
 
 ## 3. Sprint Review Comments & Refinement Loop
 
-| Gate / Reviewer                  | Target Role              | Review Feedback & Comments                                                         | Gate Status  |
-| :------------------------------- | :----------------------- | :--------------------------------------------------------------------------------- | :----------: |
-| **Pre-Flight Architecture Gate** | SDET Architect           | Verify OpenAPI schema mappings, Pact matcher designs, and DoR conditions.          | `[APPROVED]` |
-| **Code Acceptance Review Gate**  | SDET Architect           | Verify Redocly clean lint, type matchers only, idempotent provider state handlers. | `[APPROVED]` |
-| **Scrum Master DoD Gate**        | Scrum Master             | Audit lint, typecheck, contract pass rate, and catalog diff.                       | `[APPROVED]` |
-| **DevOps Release Gate**          | DevOps Engineer          | Validate CI workflows (`api-fuzz.yml`, `contract-tests.yml`), PR creation.         | `[APPROVED]` |
-| **Final Human Sign-Off**         | Human Tech Lead (`User`) | Final PR review and merge to `main`.                                               |  `STANDBY`   |
+| Gate / Reviewer                  | Target Role     | Review Feedback & Comments                                                                                   | Gate Status |
+| :------------------------------- | :-------------- | :----------------------------------------------------------------------------------------------------------- | :---------: |
+| **Pre-Flight Architecture Gate** | SDET Architect  | Verified DoR: DOCKER env ready, openapi.yaml generated, branch feat/sprint-9.1-dast-zap.                     | `[PASSED]`  |
+| **Code Acceptance Review Gate**  | SDET Architect  | Enforce scope guard (localhost only), no bypass headers in API scan, chaos route exclusion.                  | `[PASSED]`  |
+| **Scrum Master DoD Gate**        | Scrum Master    | 4-point DoD: static analysis clean, catalog parity clean, SARIF schema valid, docs sync.                     | `[PASSED]`  |
+| **DevOps Release Gate**          | DevOps Engineer | Workflow syntax valid, action pinning verified, gh pr created with verification proofs, all CI checks green. | `[PASSED]`  |
+| **Final Human Sign-Off**         | Human Tech Lead | Final PR review and merge to main.                                                                           | `[PENDING]` |
 
 ---
 
 ## 4. Definition of Done (DoD) Checklist
 
-- [x] `docs/api/openapi.yaml` generated from Zod schemas, passes `npx @redocly/cli lint` with 0 errors.
-- [x] OpenAPI drift gate enforced in PR Quality Gate.
-- [x] Standalone Redoc HTML documentation generated in `AutomationReports/API-Docs/index.html`.
-- [x] Schemathesis workflow `.github/workflows/api-fuzz.yml` configured against ephemeral DOCKER BuggyBooks backend.
-- [x] Pact consumer tests generate valid contract JSON using flexible type matchers (`like`, `eachLike`, `regex`).
-- [x] Pact provider verification runs cleanly with idempotent state handlers.
-- [x] Workflow `.github/workflows/contract-tests.yml` created and verified.
-- [x] Contract testing documentation authored in `docs/contract_testing.md`.
+- [x] `npm run lint:all` and `npm run typecheck:all` pass across all workspaces with 0 errors.
+- [x] Target guard step verified: fails immediately if target is not `^http://localhost(:\d+)?/`.
+- [x] ZAP baseline workflow configured with SHA-pinned actions, `-a`, `zap-rules.tsv`, and SARIF upload.
+- [x] ZAP API scan excludes `/api/test/*` and injects seed auth token without bypass headers.
+- [x] Distinct SARIF categories (`zap-baseline`, `zap-api`) prevent collision with CodeQL or OSV.
+- [x] `security/zap-rules.tsv` and `security/zap-api-rules.tsv` document rule levels with review dates.
 - [x] Dual-catalog parity confirmed: `npm run test:verify-catalog` exits 0.
-- [x] `npm run lint:all` and `npm run typecheck:all` exit 0 across all workspaces.
-- [x] PR opened with structured summary and verification evidence (`gh pr create`).
+- [x] Portal metadata script produces security card metrics and `npm run test:portal` passes across desktop and mobile.
+- [x] Documentation updated (`repo_security_controls.md`, `security_testing_guide.md`, `AGENTS.md`, `planning/README.md`, `phase_9_security_testing_dast_and_appsec.md`).
+- [x] Pull request opened with structured summary and verification evidence: PR [#48](https://github.com/munna7862/automation-frameworks/pull/48).
 
 ---
 
 ## 5. Verification & Execution Evidence
 
 ```bash
-# Command 1: Generate OpenAPI spec and verify drift
-npx tsx scripts/generate-openapi.ts && git diff --exit-code docs/api/openapi.yaml
-
-# Command 2: Lint OpenAPI spec
-npx @redocly/cli lint docs/api/openapi.yaml
-
-# Command 3: Run Pact consumer and provider tests
-npm run test:contract --workspace=playwright-e2e
-
-# Command 4: Dual-catalog parity check
+# Command 1: Dual-catalog parity check
 npm run test:verify-catalog
 
-# Command 5: Static analysis
-npm run lint:all
-npm run typecheck:all
+# Command 2: Static analysis
+npm run lint:all; npm run typecheck:all
+
+# Command 3: Portal metadata & portal integration test
+node scripts/generate-portal-metadata.js
+npm run test:portal
+
+# Command 4: GitHub PR CI checks
+gh pr checks 48
+# All 14 checks passed green including ZAP Baseline Passive Scan, CodeQL, Smoke Tests, Linting
 ```

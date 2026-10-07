@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-02T04:53:50.394Z",
+  "generatedAt": "2026-10-06T17:58:15.007Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,19 +10,19 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "5cc6735",
-    "branch": "feat/sprint-5.2-portal-landing-page",
-    "message": "docs(sprint-5.1): finalize sprint 5.1 delivery and close backlog gates",
+    "commit": "bcd97ec",
+    "branch": "feat/sprint-9.1-dast-zap",
+    "message": "feat(security): implement DAST pipeline with OWASP ZAP (Sprint 9.1)",
     "ciRun": "Local-Development"
   },
   "kpis": {
-    "totalTests": 283,
-    "totalPassed": 283,
+    "totalTests": 285,
+    "totalPassed": 285,
     "totalFailed": 0,
     "totalSkipped": 0,
     "overallPassRate": "100.0%",
-    "activeFrameworks": 6,
-    "totalDurationMs": 287750,
+    "activeFrameworks": 7,
+    "totalDurationMs": 332750,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "PASSED"
   },
@@ -174,6 +174,35 @@
         "PR drift comparison against historical master baselines",
         "Strict P95 response time thresholds (< 800ms)",
         "Automated PR quality gate regression blocking"
+      ]
+    },
+    "security": {
+      "id": "security",
+      "name": "OWASP ZAP DAST",
+      "category": "security",
+      "badge": "Dynamic AppSec Testing",
+      "engine": "OWASP ZAP 2.14+",
+      "runner": "ZAP Baseline (PR) + API Active Scan (Nightly)",
+      "target": "BuggyBooks Frontend (:5173) & API (:4000)",
+      "reportPath": "./AutomationReports/Security/",
+      "status": "PASSED",
+      "metrics": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 45000,
+        "passRate": "100.0%",
+        "highAlerts": 0,
+        "mediumAlerts": 0,
+        "lowAlerts": 6,
+        "informationalAlerts": 4,
+        "lastScanDate": "2026-10-06"
+      },
+      "highlights": [
+        "DAST Passive Baseline scan on every PR (:5173)",
+        "DAST Active API scan with OpenAPI specification (:4000)",
+        "SARIF 2.1.0 ingestion into GitHub Code Scanning"
       ]
     }
   }

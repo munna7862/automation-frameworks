@@ -1,0 +1,29 @@
+# ==============================================================================
+# BuggyBooks — OWASP ZAP Baseline Scanning Rules Configuration
+#
+# Format: <Rule-ID>\t<Threshold>\t<Description / Justification & Review Date>
+# Thresholds:
+#   - FAIL   : True positive security defect; fails CI quality gate
+#   - WARN   : Security warning under monitoring; logged without breaking build
+#   - IGNORE : Formally accepted risk or dev/test environment artifact
+#
+# Governance: All IGNORE and WARN entries require technical rationale and review date.
+# ==============================================================================
+10015	IGNORE	Re-examine Cache-Control Directives — Static frontend assets; review: 2026-11-01
+10020	IGNORE	Anti-clickjacking Header — Handled at gateway level; review: 2026-11-01
+10021	IGNORE	X-Content-Type-Options Header Missing — Dev SPA container assets; review: 2026-11-01
+10027	IGNORE	Information Disclosure - Suspicious Comments — Minified vendor bundle comments; review: 2026-11-01
+10036	IGNORE	Server Leaks Version Information via Server Header — Dev server banner; review: 2026-11-01
+10037	IGNORE	Server Leaks Information via Server Header — Express/Nginx banner; review: 2026-11-01
+10038	IGNORE	Content Security Policy (CSP) Header Not Set — Tracked for Phase 10 hardening; review: 2026-11-01
+10049	IGNORE	Storable and Cacheable Content — Static assets in dev container; review: 2026-11-01
+10054	IGNORE	Cookie without SameSite Attribute — Local container test sessions; review: 2026-11-01
+10063	IGNORE	Permissions Policy Header Not Set — Development SPA container; review: 2026-11-01
+10094	IGNORE	Base64 Disclosure — Inline data URLs in Vite bundles; review: 2026-11-01
+10096	IGNORE	Timestamp Disclosure — Unix epoch telemetry in inventory responses; review: 2026-11-01
+10098	IGNORE	Cross-Domain Misconfiguration — Localhost CORS policy; review: 2026-11-01
+10109	IGNORE	Modern Web Application — SPA client-side routing; review: 2026-11-01
+10202	IGNORE	Absence of Anti-CSRF Tokens — REST API token-based auth; review: 2026-11-01
+90004	IGNORE	Cross-Origin-Embedder-Policy Header Missing or Invalid — Local container environment; review: 2026-11-01
+90005	IGNORE	Sec-Fetch-Dest Header is Missing — Container crawling; review: 2026-11-01
+90033	IGNORE	Insufficient Site Isolation Against Spectre — Container dev environment; review: 2026-11-01

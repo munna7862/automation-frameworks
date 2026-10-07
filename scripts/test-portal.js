@@ -74,6 +74,12 @@ server.listen(8099, async () => {
     const visibleCards = await page.locator('.framework-card:visible').count();
     console.log('Visible cards under Web filter:', visibleCards);
 
+    // Test security filter tab click
+    await page.click('button[data-filter="security"]');
+    await page.waitForTimeout(200);
+    const secCards = await page.locator('.framework-card:visible').count();
+    console.log('Visible cards under Security filter:', secCards);
+
     // Test reset filter
     await page.click('button[data-filter="all"]');
     await page.waitForTimeout(200);
@@ -89,7 +95,13 @@ server.listen(8099, async () => {
     await browser.close();
     server.close();
 
-    if (errors.length > 0 || allCards !== 6 || visibleCards === 0 || mobileCardsCount !== 6) {
+    if (
+      errors.length > 0 ||
+      allCards !== 7 ||
+      visibleCards === 0 ||
+      secCards !== 1 ||
+      mobileCardsCount !== 7
+    ) {
       console.error('Portal validation failed!');
       process.exit(1);
     } else {

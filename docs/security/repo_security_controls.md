@@ -28,6 +28,8 @@ flowchart TD
         LC[License Checker Compliance]
         SBOM[CycloneDX SBOM Generation]
         WL[Actionlint & Zizmor Linting]
+        ZAP1[ZAP Baseline Passive Scan]
+        ZAP2[ZAP Active API Scan]
     end
 
     subgraph Target [GitHub Security & Releases]
@@ -43,15 +45,19 @@ flowchart TD
     PR --> OSV
     PR --> LC
     PR --> WL
+    PR --> ZAP1
     
     QL --> SARIF
     OSV --> SARIF
     WL --> SARIF
+    ZAP1 --> SARIF
+    ZAP2 --> SARIF
     
     DR --> BP
     GL --> BP
     QL --> BP
     WL --> BP
+    ZAP1 --> BP
     LC --> SBOM --> Rel
 ```
 
@@ -71,6 +77,8 @@ flowchart TD
 | **Software Bill of Materials (SBOM)** | Anchore Syft (`anchore/sbom-action`) | CycloneDX JSON format artifact generation for release lifecycle | PR, Push (`main`), Weekly Cron | **Yes** (Artifact Gate) | DevOps Engineer |
 | **Workflow Syntax Linting** | Actionlint (`rhysd/actionlint`) | Validates GitHub Actions syntax, expression types, and runner properties | PR, Push (`main`) | **Yes** | DevOps Engineer |
 | **Workflow Security Auditing** | Zizmor (`zizmorcore/zizmor`) | Static security analysis for Actions: template injection, credentials, least privilege | PR, Push (`main`) | **Yes** (Medium/High) | DevOps Engineer |
+| **DAST (Passive Baseline Scan)** | OWASP ZAP (`zaproxy/action-baseline`) | Probes frontend SPA (`:5173`) with alpha rules, `security/zap-rules.tsv`, uploads SARIF (`zap-baseline`) | PR to `main`, Dispatch | **Yes** (FAIL rules) | Security Test Engineer |
+| **DAST (Active API Penetration)** | OWASP ZAP (`zaproxy/action-api-scan`) | Active penetration scan against `docs/api/openapi.yaml` (`:4000`), excluding `/api/test/*`, SARIF (`zap-api`) | Nightly (`04:00 UTC`), Dispatch | **Yes** (Reporting Gate) | Security Test Engineer |
 
 ---
 
@@ -86,6 +94,7 @@ To guarantee that no code merges to `main` without satisfying the security basel
 5. `Dependency Review (PR Gate)` (from `Security - Dependencies & SBOM` / `security-deps.yml`)
 6. `Actionlint Workflow Linter` (from `Security - Workflow Linting` / `lint-workflows.yml`)
 7. `Zizmor Workflow Security Audit` (from `Security - Workflow Linting` / `lint-workflows.yml`)
+8. `ZAP Baseline Passive Scan (PR)` (from `Security - DAST` / `security-dast.yml`)
 
 ---
 

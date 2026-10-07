@@ -3,7 +3,7 @@
 **Navigation**: [🗺️ Planning Hub](../README.md) | [📖 Roadmap v2](../Master/enhancement_roadmap_v2.md) | [⬅️ Phase 8](phase_8_api_depth_typed_clients_schemas_and_contracts.md) | **[Phase 9]** | [Phase 10 ➡️](phase_10_ui_quality_web_vitals_and_framework_parity.md)
 
 **Phase Identifier**: `PHASE-9-SECURITY-TESTING-DAST-APPSEC`
-**Phase Status**: Not Started
+**Phase Status**: In Progress (4/10 SP)
 **Priority**: P2 / Should
 **Total Phase Velocity**: **10 Story Points** (Sprint 9.1: 4 SP, Sprint 9.2: 6 SP)
 **Phase Leads**: Security Test Engineer (new persona) & SDET Architect
