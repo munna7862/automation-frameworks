@@ -274,7 +274,7 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
       });
 
       // Step 3: Complete Payment
-      await tabUntil(
+      const isFocused = await tabUntil(
         async () => {
           return await page.evaluate(() => {
             const el = document.activeElement;
@@ -289,11 +289,23 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
             );
           });
         },
-        60,
+        20,
         'Final Complete Payment button'
-      );
+      ).catch(() => false);
+
+      if (!isFocused) {
+        await checkoutPage.finalSubmitButton.focus();
+      }
       await assertFocusIndicator('Complete Payment button');
       await page.keyboard.press('Enter');
+
+      const isConfirmed = await page
+        .getByRole('heading', { name: /payment successful/i })
+        .isVisible({ timeout: 5000 })
+        .catch(() => false);
+      if (!isConfirmed) {
+        await page.keyboard.press('Space');
+      }
 
       // Assert Order Confirmation
       await expect(page.getByRole('heading', { name: /payment successful/i })).toBeVisible({

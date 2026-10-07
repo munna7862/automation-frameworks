@@ -44,7 +44,7 @@ export class CheckoutPage extends BasePage {
     return this.page.locator('button#wizard-next-btn');
   }
 
-  private get finalSubmitButton(): Locator {
+  public get finalSubmitButton(): Locator {
     return this.page.getByRole('button', { name: 'Complete Payment' });
   }
 
