@@ -46,9 +46,7 @@ function persistA11ySummary(pageName: string, report: A11yPageReport): void {
   for (const summaryPath of SUMMARY_FILE_PATHS) {
     try {
       const dir = path.dirname(summaryPath);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-      }
+      fs.mkdirSync(dir, { recursive: true });
 
       let summary: A11ySummaryFile = {
         lastUpdated: new Date().toISOString(),
@@ -59,13 +57,11 @@ function persistA11ySummary(pageName: string, report: A11yPageReport): void {
         pages: {}
       };
 
-      if (fs.existsSync(summaryPath)) {
-        try {
-          const raw = fs.readFileSync(summaryPath, 'utf-8');
-          summary = JSON.parse(raw);
-        } catch {
-          // Reset corrupted file
-        }
+      try {
+        const raw = fs.readFileSync(summaryPath, 'utf-8');
+        summary = JSON.parse(raw);
+      } catch {
+        // File does not exist yet or invalid JSON - proceed with default summary
       }
 
       summary.pages[pageName] = report;
