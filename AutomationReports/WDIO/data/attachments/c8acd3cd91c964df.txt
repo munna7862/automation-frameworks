@@ -1,0 +1,52 @@
+[2026-10-07 17:57:56] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1791358076436-f5200327
+[2026-10-07 17:57:56] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:57:56] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:57] INFO: Entering full name: Full wiz_user_NA5Gl
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:57] INFO: Entering username: wiz_user_NA5Gl
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:57] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:57] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:57] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:58] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:58] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:58] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:58] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:58] INFO: Total Books displayed in Catalog page are: 8
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:58] INFO: Clicking on Add to Cart button for book id: 1
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Waiting for cart status message: added to cart
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Cart status message "added to cart" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Clicking on Cart link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Clicking on Proceed to Checkout button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Entering first name: John
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Clicking on Catalog link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Verifying dirty navigation confirm dialog message on dismiss - Matched: [You have unsaved changes. Are you sure you want to leave the checkout wizard?]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Verifying navigation blocked when dialog is dismissed - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Verifying input value preserved after dialog dismiss - Matched: [John]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Clicking on Catalog link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Verifying dirty navigation confirm dialog message on accept - Matched: [You have unsaved changes. Are you sure you want to leave the checkout wizard?]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Verifying navigated away from checkout when dialog accepted - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Captured 23 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Checkout-Test_004_Checkout-3222e-ion-Alert-Dialog-regression-chrome/network-log.json
+[2026-10-07 17:58:00] INFO: Cleaned up ephemeral test session: pw-w2-1-1791358076436-f5200327

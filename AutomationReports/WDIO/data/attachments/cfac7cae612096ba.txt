@@ -1,0 +1,32 @@
+[2026-10-07 17:57:38] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1791358058442-bc89d177
+[2026-10-07 17:57:38] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:57:38] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Total Books displayed in Catalog page are: 8
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Clicking on book title link for book ID: 2
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying book detail URL - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Getting book detail title
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying book detail title - Matched: [To Kill a Mockingbird Exception]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Getting book detail author
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying book detail author - Matched: [by Harper Lee]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Getting book detail price
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying book detail price - Matched: [$15.50]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Getting book detail description
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying book detail description - Matched: [A coming-of-age tale with unhandled exceptions.]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Clicking Back to Catalog link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying back to catalog URL - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Captured 10 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/BookCatalog-Test_002_Searc-ade1c-etail-View-smoke-regression-chrome/network-log.json
+[2026-10-07 17:57:40] INFO: Cleaned up ephemeral test session: pw-w4-3-1791358058442-bc89d177

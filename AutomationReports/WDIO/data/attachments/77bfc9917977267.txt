@@ -1,0 +1,34 @@
+[2026-10-07 17:58:32] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w1-0-1791358112235-1b5acd3f
+[2026-10-07 17:58:32] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:58:33] INFO: Checking if Login page title is visible - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:33] INFO: Checking if Username input field is visible on Login page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Password input field is visible on Login page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Sign In button is visible on Login page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Verifying direct navigation to /checkout redirects to /login and Login page elements are fully loaded - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Login page title is visible - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Username input field is visible on Login page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Password input field is visible on Login page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Sign In button is visible on Login page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Verifying direct navigation to /profile redirects to /login and Login page elements are fully loaded - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Login page title is visible - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Username input field is visible on Login page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Password input field is visible on Login page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Sign In button is visible on Login page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Verifying direct navigation to /cart redirects to /login and Login page elements are fully loaded - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Captured 27 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_003_Pr-be7bf-s-to-Login-smoke-regression-chrome/network-log.json
+[2026-10-07 17:58:34] INFO: Cleaned up ephemeral test session: pw-w1-0-1791358112235-1b5acd3f

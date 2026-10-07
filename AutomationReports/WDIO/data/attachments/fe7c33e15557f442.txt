@@ -1,0 +1,27 @@
+[2026-10-07 17:58:31] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1791358111747-46a36551
+[2026-10-07 17:58:31] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:58:32] INFO: Clicking on Login link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:32] INFO: Entering username: admin
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:32] INFO: Entering password: password123
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:33] INFO: Clicking on Sign In button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:33] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:33] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:33] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:33] INFO: Verifying if user logged in successfully - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: ✅ Authentication state saved to: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/.auth/user.json
+[2026-10-07 17:58:34] INFO: Clicking on Logout button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Checking if Login link is visible on Catalog page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Verifying if user logged out successfully - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:34] INFO: Captured 10 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_002_Lo-5491b-sting-User-smoke-regression-chrome/network-log.json
+[2026-10-07 17:58:34] INFO: Cleaned up ephemeral test session: pw-w4-3-1791358111747-46a36551

@@ -1,0 +1,10 @@
+[2026-10-07 17:58:27] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w1-0-1791358107068-8d00846d
+[2026-10-07 17:58:27] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:58:27] INFO: Verifying .layout-wrapper-xyz987 is display:grid with >= 2 columns at desktop (display=grid, cols=3) - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Verifying .layout-wrapper-xyz987 is display:grid with >= 1 column at tablet (display=grid, cols=2) - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Verifying .layout-wrapper-xyz987 collapses to 1 column at mobile (display=grid, cols=1) - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Captured 7 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Styling-Test_009_UIStyleAn-59778-t-Responsiveness-regression-chrome/network-log.json
+[2026-10-07 17:58:27] INFO: Cleaned up ephemeral test session: pw-w1-0-1791358107068-8d00846d

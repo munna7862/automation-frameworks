@@ -1,0 +1,28 @@
+[2026-10-07 17:57:38] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1791358058186-e9a491f8
+[2026-10-07 17:57:38] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:57:38] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:39] INFO: Total Books displayed in Catalog page are: 8
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:39] INFO: Filling search input with: Mockingbird
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Clicking Search button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying search results books count - Matched: [1]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Getting catalog result count text
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying result count text contains search query - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Getting first book title in catalog
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying search result book title - Matched: [To Kill a Mockingbird Exception]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Clicking Clear search button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Total Books displayed in Catalog page are: 8
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying catalog count after search clear - Matched: [8]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Captured 9 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/BookCatalog-Test_002_Searc-d5fa1-Search-Filtering-regression-chrome/network-log.json
+[2026-10-07 17:57:41] INFO: Cleaned up ephemeral test session: pw-w2-1-1791358058186-e9a491f8

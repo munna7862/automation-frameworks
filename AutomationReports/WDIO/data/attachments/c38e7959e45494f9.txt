@@ -1,0 +1,24 @@
+[2026-10-07 17:58:26] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w6-1-1791358106683-1c06bb18
+[2026-10-07 17:58:26] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:58:27] INFO: Filling search input with: the
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Clicking Search button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Verifying .layout-wrapper-xyz987 grid wrapper selector exists in DOM - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Verifying .complex-item-box-alpha book card selector exists in DOM - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Verifying .catalog-book-cover image selector exists in DOM - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Verifying .info-cell-beta info cell selector exists in DOM - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Verifying .price-tag-value price tag selector exists in DOM - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Verifying #book-search-input selector exists in DOM - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Verifying #book-search-btn selector exists in DOM - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Verifying #book-search-clear-btn selector exists in DOM after search - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:27] INFO: Captured 8 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Styling-Test_009_UIStyleAn-4342e--Selectors-smoke-regression-chrome/network-log.json
+[2026-10-07 17:58:27] INFO: Cleaned up ephemeral test session: pw-w6-1-1791358106683-1c06bb18
