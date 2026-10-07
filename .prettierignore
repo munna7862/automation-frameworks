@@ -34,3 +34,5 @@ package-lock.json
 planning/
 docs/
 **/test_cases_catalog.md
+*.har
+**/*.har

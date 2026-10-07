@@ -19,7 +19,8 @@ async function recordAndRedactHar() {
     recordHar: {
       path: tempHarPath,
       mode: 'minimal',
-      content: 'attach'
+      content: 'embed',
+      urlFilter: '**/api/books**'
     }
   });
 
@@ -44,6 +45,9 @@ async function recordAndRedactHar() {
   const har = JSON.parse(rawHarContent);
 
   if (har.log && Array.isArray(har.log.entries)) {
+    har.log.entries = har.log.entries.filter(
+      (entry: any) => entry.request && entry.request.url && entry.request.url.includes('/api/books')
+    );
     for (const entry of har.log.entries) {
       if (entry.request) {
         if (Array.isArray(entry.request.headers)) {
