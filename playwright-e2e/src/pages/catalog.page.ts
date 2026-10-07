@@ -313,4 +313,33 @@ export class CatalogPage extends BasePage {
   public async waitForBookCardSelector(): Promise<void> {
     await this.eleBooksCount.first().waitFor({ state: 'visible', timeout: 30000 });
   }
+
+  public get emptyCatalog(): Locator {
+    return this.eleEmptyCatalog;
+  }
+
+  public get loadingIndicator(): Locator {
+    return this.page.locator('.catalog-loading');
+  }
+
+  public async getEmptyCatalogText(): Promise<string> {
+    await this.eleEmptyCatalog.waitFor({ state: 'visible', timeout: 10000 });
+    return (await this.eleEmptyCatalog.textContent()) || '';
+  }
+
+  public async isCatalogEmptyVisible(): Promise<boolean> {
+    return await this.eleEmptyCatalog.isVisible();
+  }
+
+  public get appContainer(): Locator {
+    return this.page.locator('.app-container');
+  }
+
+  public async enterSearchTerm(term: string): Promise<void> {
+    await this.doEnterText(this.inputSearch, term, `Filling search input with: ${term}`);
+  }
+
+  public async clickSearchButton(): Promise<void> {
+    await this.doClick(this.btnSearch, `Clicking Search button`);
+  }
 }

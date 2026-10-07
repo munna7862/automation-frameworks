@@ -200,7 +200,11 @@ export class CheckoutPage extends BasePage {
     }
   }
 
-  private async fillShippingDetails(firstName: string, lastName: string): Promise<void> {
+  public get errorBanner(): Locator {
+    return this.page.locator('.error-banner');
+  }
+
+  public async fillShippingDetails(firstName: string, lastName: string): Promise<void> {
     await this.enterFirstName(firstName);
     await this.enterLastName(lastName);
     await this.enterShippingAddress(CheckoutPage.DEFAULT_SHIPPING_ADDRESS);
@@ -208,7 +212,7 @@ export class CheckoutPage extends BasePage {
     await this.clickNextStep();
   }
 
-  private async fillPaymentDetails(cardNumber: string): Promise<void> {
+  public async fillPaymentDetails(cardNumber: string): Promise<void> {
     await this.enterCardNumber(cardNumber);
     await this.enterExpiry('12/30');
     await this.enterCvv('123');
@@ -343,5 +347,9 @@ export class CheckoutPage extends BasePage {
 
   public async waitForNextStepButton(): Promise<void> {
     await this.nextStepButton.waitFor({ state: 'visible', timeout: 30000 });
+  }
+
+  public get confirmationHeading(): Locator {
+    return this.orderConfirmationMessage;
   }
 }

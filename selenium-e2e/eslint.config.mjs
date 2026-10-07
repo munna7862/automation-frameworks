@@ -38,14 +38,22 @@ export default defineConfig([
     }
   },
   {
-    files: ['src/tests/**/*.ts'],
+    files: ['src/tests/**/*.ts', 'src/pages/**/*.ts'],
     plugins: {
       mocha
     },
     rules: {
       'mocha/no-exclusive-tests': 'error',
       'mocha/no-pending-tests': 'warn',
-      '@typescript-eslint/no-unused-expressions': 'off'
+      '@typescript-eslint/no-unused-expressions': 'off',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "CallExpression[callee.property.name='sleep']",
+          message:
+            'driver.sleep is forbidden. Use WebDriverWait and ExpectedConditions for explicit condition-based waiting.'
+        }
+      ]
     }
   }
 ]);

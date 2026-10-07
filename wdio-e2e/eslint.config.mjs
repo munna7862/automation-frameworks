@@ -51,7 +51,7 @@ export default defineConfig([
       'mocha/no-exclusive-tests': 'error',
       'mocha/no-pending-tests': 'warn',
       '@typescript-eslint/no-unused-expressions': 'off',
-      'wdio/no-pause': 'warn',
+      'wdio/no-pause': 'error',
       'wdio/await-expect': 'off'
     }
   }

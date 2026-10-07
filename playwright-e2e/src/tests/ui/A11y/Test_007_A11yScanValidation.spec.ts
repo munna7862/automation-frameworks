@@ -9,31 +9,41 @@ const CONFIG_URL = `${envConfig.apiBaseUrl}/api/test/config`;
 async function enableA11yChaos(request: any) {
   const postRes = await request.post(CONFIG_URL, { data: TestData.ENABLE_A11Y_CHAOS });
   expect(postRes.ok()).toBe(true);
-  for (let i = 0; i < 15; i++) {
-    const res = await request.get(CONFIG_URL);
-    if (res.ok()) {
-      const data = await res.json();
-      if (data.injectA11yViolations === true || data.config?.injectA11yViolations === true) {
-        break;
+  await expect
+    .poll(
+      async () => {
+        const res = await request.get(CONFIG_URL);
+        if (!res.ok()) return false;
+        const data = await res.json();
+        return data.injectA11yViolations === true || data.config?.injectA11yViolations === true;
+      },
+      {
+        message: 'Waiting for injectA11yViolations chaos knob to activate',
+        timeout: 10_000,
+        intervals: [200, 400]
       }
-    }
-    await new Promise((r) => setTimeout(r, 400));
-  }
+    )
+    .toBe(true);
 }
 
 async function disableA11yChaos(request: any) {
   const postRes = await request.post(CONFIG_URL, { data: TestData.DISABLE_A11Y_CHAOS });
   expect(postRes.ok()).toBe(true);
-  for (let i = 0; i < 15; i++) {
-    const res = await request.get(CONFIG_URL);
-    if (res.ok()) {
-      const data = await res.json();
-      if (data.injectA11yViolations === false || data.config?.injectA11yViolations === false) {
-        break;
+  await expect
+    .poll(
+      async () => {
+        const res = await request.get(CONFIG_URL);
+        if (!res.ok()) return false;
+        const data = await res.json();
+        return data.injectA11yViolations === false || data.config?.injectA11yViolations === false;
+      },
+      {
+        message: 'Waiting for injectA11yViolations chaos knob to deactivate',
+        timeout: 10_000,
+        intervals: [200, 400]
       }
-    }
-    await new Promise((r) => setTimeout(r, 400));
-  }
+    )
+    .toBe(true);
 }
 
 test.describe('Accessibility (a11y) Scans Suite', () => {
@@ -48,7 +58,10 @@ test.describe('Accessibility (a11y) Scans Suite', () => {
 
     await test.step('Navigate to catalog page', async () => {
       await page.goto(envConfig.baseUrl);
-      await page.waitForSelector('.catalog-book-cover');
+      await expect(page.getByRole('main')).toBeVisible();
+      await page.waitForFunction(() =>
+        document.getAnimations().every((a) => a.playState !== 'running')
+      );
     });
 
     await test.step('Perform Axe accessibility scan on catalog page', async () => {

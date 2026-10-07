@@ -43,12 +43,25 @@ test.describe('Token Refresh and Profile Upload API Suite', () => {
         .filter((h) => h.name.toLowerCase() === 'set-cookie');
       const cookieHeader = setCookieHeaders.map((c) => c.value.split(';')[0]).join('; ');
 
-      // Wait 3s so that the 2s access token expires
-      await new Promise((r) => setTimeout(r, 3000));
-
-      const protectedRes = await api.cart.get({
+      // Poll cart endpoint until short-lived access token expires and yields 403 Forbidden
+      let protectedRes = await api.cart.get({
         headers: { Cookie: cookieHeader }
       });
+      await expect
+        .poll(
+          async () => {
+            protectedRes = await api.cart.get({
+              headers: { Cookie: cookieHeader }
+            });
+            return protectedRes.status;
+          },
+          {
+            message: 'Waiting for short-lived access token to expire and return 403 Forbidden',
+            timeout: 10_000,
+            intervals: [250, 500]
+          }
+        )
+        .toBe(403);
 
       await commonUtil.logMessage('INFO', 'Verifying 403 Forbidden returned for expired token');
       await expect(protectedRes).toHaveStatus(403);

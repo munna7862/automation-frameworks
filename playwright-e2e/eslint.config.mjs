@@ -45,9 +45,27 @@ export default defineConfig([
     rules: {
       'playwright/missing-playwright-await': 'error',
       'playwright/no-wait-for-timeout': 'error',
+      'playwright/no-force-option': 'error',
+      'playwright/prefer-web-first-assertions': 'error',
+      'playwright/no-conditional-in-test': 'warn',
+      'playwright/no-networkidle': 'error',
       'playwright/no-element-handle': 'error',
+      'playwright/no-page-pause': 'error',
+      'playwright/no-focused-test': 'error',
       'playwright/no-eval': 'error',
-      'playwright/prefer-web-first-assertions': 'error'
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "NewExpression[callee.name='Promise'] CallExpression[callee.name='setTimeout']",
+          message:
+            'Hard waits via setTimeout inside new Promise are forbidden. Use expect.poll or web-first assertions instead.'
+        },
+        {
+          selector: "CallExpression[callee.object.name='page'][callee.property.name='locator']",
+          message:
+            'Direct page.locator(...) calls in test specs are forbidden. Encapsulate element locators inside Page Object Models under src/pages/.'
+        }
+      ]
     }
   },
   {
@@ -60,6 +78,11 @@ export default defineConfig([
             "CallExpression[callee.object.name='request'][callee.property.name=/^(get|post|put|patch|delete)$/]",
           message:
             'Direct request.<method> calls are forbidden in API tests. Use typed api.* clients instead.'
+        },
+        {
+          selector: "NewExpression[callee.name='Promise'] CallExpression[callee.name='setTimeout']",
+          message:
+            'Hard waits via setTimeout inside new Promise are forbidden. Use expect.poll or web-first assertions instead.'
         }
       ]
     }

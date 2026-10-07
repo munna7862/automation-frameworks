@@ -156,7 +156,7 @@ Suggested order: `6.1 → 6.2 → 7.1 → 6.3 → 6.4 → 7.2 → 8.1 → 10.1 �
 | **SPRINT-8.3** | [OpenAPI Specification & Contract Testing](Sprints/sprint_8_3_openapi_specification_and_contract_testing.md) | Phase 8 | 4 SP | SDET Architect | Done |
 | **SPRINT-9.1** | [DAST Pipeline with OWASP ZAP](Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md) | Phase 9 | 4 SP | Security Test Engineer | Done |
 | **SPRINT-9.2** | [AppSec Security Test Suite](Sprints/sprint_9_2_appsec_security_test_suite.md) | Phase 9 | 6 SP | Security Test Engineer | Done |
-| **SPRINT-10.1** | [UI Determinism & Lint Enforcement](Sprints/sprint_10_1_ui_determinism_and_lint_enforcement.md) | Phase 10 | 4 SP | Playwright QA Lead | Not Started |
+| **SPRINT-10.1** | [UI Determinism & Lint Enforcement](Sprints/sprint_10_1_ui_determinism_and_lint_enforcement.md) | Phase 10 | 4 SP | Playwright QA Lead | Done |
 | **SPRINT-10.2** | [Accessibility, Web Vitals & Visual Hardening](Sprints/sprint_10_2_accessibility_web_vitals_and_visual_hardening.md) | Phase 10 | 5 SP | Playwright QA Lead | Not Started |
 | **SPRINT-10.3** | [Selenium & WDIO Parity Expansion](Sprints/sprint_10_3_selenium_and_wdio_parity_expansion.md) | Phase 10 | 4 SP | Selenium Specialist | Not Started |
 | **SPRINT-11.1** | [k6 Performance Maturity](Sprints/sprint_11_1_k6_performance_maturity.md) | Phase 11 | 5 SP | Performance Engineer | Not Started |

@@ -9,15 +9,21 @@ const RESET_URL = `${envConfig.apiBaseUrl}/api/test/reset`;
 
 async function syncVisualChaos(request: any, state: boolean) {
   await request.post(CONFIG_URL, { data: { visualChaos: state } });
-  for (let i = 0; i < 10; i++) {
-    const res = await request.get(CONFIG_URL);
-    const data = await res.json();
-    const current = data.visualChaos ?? data.config?.visualChaos;
-    if (current === state) {
-      break;
-    }
-    await new Promise((r) => setTimeout(r, 300));
-  }
+  await expect
+    .poll(
+      async () => {
+        const res = await request.get(CONFIG_URL);
+        if (!res.ok()) return undefined;
+        const data = await res.json();
+        return data.visualChaos ?? data.config?.visualChaos;
+      },
+      {
+        message: `Waiting for visualChaos knob to match state: ${state}`,
+        timeout: 10_000,
+        intervals: [100, 300]
+      }
+    )
+    .toBe(state);
 }
 
 test.describe('Visual Regression & Layout Chaos Suite', () => {
@@ -48,7 +54,7 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     await test.step('Navigate to catalog page', async () => {
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardSelector();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     });
 
     await test.step('Assert screenshot matches baseline', async () => {
@@ -258,14 +264,27 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
 
     await test.step('Call reset endpoint to clear chaos', async () => {
       await request.post(RESET_URL);
-      // Wait for polling
-      await new Promise((r) => setTimeout(r, 3500));
+      await expect
+        .poll(
+          async () => {
+            const res = await request.get(CONFIG_URL);
+            if (!res.ok()) return true;
+            const data = await res.json();
+            return (data.visualChaos ?? data.config?.visualChaos) === true;
+          },
+          {
+            message: 'Waiting for visualChaos to reset to false post reset call',
+            timeout: 10_000,
+            intervals: [200, 400]
+          }
+        )
+        .toBe(false);
     });
 
     await test.step('Navigate to catalog and assert screenshot matches baseline', async () => {
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardSelector();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await expect(page).toHaveScreenshot('catalog-baseline.png', {
         maxDiffPixelRatio: 0.05,
         threshold: 0.2,
