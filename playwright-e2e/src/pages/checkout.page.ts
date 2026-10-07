@@ -46,7 +46,7 @@ export class CheckoutPage extends BasePage {
 
   public get finalSubmitButton(): Locator {
     return this.page.locator(
-      'button#wizard-next-btn, button.submit-action-btn, button:has-text("Complete Payment"), button:has-text("Place Order"), button:has-text("Pay Now")'
+      'button#wizard-next-btn, button.submit-action-btn.primary-x2, button[name="btn_submit_rnd"], button[type="submit"].submit-action-btn'
     );
   }
 
@@ -139,7 +139,7 @@ export class CheckoutPage extends BasePage {
     await this.doClick(this.nextStepButton, 'Clicking on Next Step button');
     await Promise.race([
       this.cardNumberInput.waitFor({ state: 'visible', timeout: 5000 }),
-      this.finalSubmitButton.waitFor({ state: 'visible', timeout: 5000 }),
+      this.finalSubmitButton.first().waitFor({ state: 'visible', timeout: 5000 }),
       this.stepIndicator3.waitFor({ state: 'visible', timeout: 5000 })
     ]).catch(() => undefined);
   }
@@ -203,7 +203,7 @@ export class CheckoutPage extends BasePage {
       await this.doClick(this.nextStepButton, 'Clicking on Next Step button on Payment page');
     } else {
       await this.doClick(
-        this.finalSubmitButton,
+        this.finalSubmitButton.first(),
         'Clicking on Complete Payment button on Confirm page'
       );
     }
@@ -296,6 +296,7 @@ export class CheckoutPage extends BasePage {
         'Clicking on Next Step button on Payment page to advance to Confirm step'
       );
       await this.finalSubmitButton
+        .first()
         .waitFor({ state: 'visible', timeout: 15000 })
         .catch(() => undefined);
     }
@@ -326,6 +327,7 @@ export class CheckoutPage extends BasePage {
         'Clicking on Next Step button to advance to Confirm step'
       );
       await this.finalSubmitButton
+        .first()
         .waitFor({ state: 'visible', timeout: 15000 })
         .catch(() => undefined);
     }
@@ -340,6 +342,7 @@ export class CheckoutPage extends BasePage {
         'Clicking on Next Step button to advance to Confirm step'
       );
       await this.finalSubmitButton
+        .first()
         .waitFor({ state: 'visible', timeout: 15000 })
         .catch(() => undefined);
     }
