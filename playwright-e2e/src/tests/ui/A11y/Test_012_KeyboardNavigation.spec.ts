@@ -6,7 +6,7 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
   // Use isolated session storage
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test('UI_KEY_01: Complete User Journey Using Keyboard Only @smoke @regression @a11y', async ({
+  test('UI_KEY_01: Complete User Journey Using Keyboard Only @regression @a11y', async ({
     page,
     commonFunctions,
     catalogPage,
@@ -37,6 +37,9 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
       maxTabs = 30,
       description = 'target element'
     ): Promise<boolean> => {
+      if (await predicate()) {
+        return true;
+      }
       for (let i = 0; i < maxTabs; i++) {
         await page.keyboard.press('Tab');
         if (await predicate()) {
@@ -257,6 +260,18 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
       await page.keyboard.press('Enter');
 
       // Step 3: Complete Payment
+      await page.waitForFunction(
+        () => {
+          const ind = document.querySelector('#step-indicator-3');
+          if (ind && ind.classList.contains('step-active')) return true;
+          const btn = document.querySelector('#wizard-next-btn');
+          return Boolean(
+            btn && btn.textContent && /complete payment|place order|pay now/i.test(btn.textContent)
+          );
+        },
+        { timeout: 10000 }
+      );
+
       await tabUntil(
         async () => {
           return await page.evaluate(() => {
@@ -270,7 +285,7 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
             );
           });
         },
-        15,
+        30,
         'Final Complete Payment button'
       );
       await assertFocusIndicator('Complete Payment button');

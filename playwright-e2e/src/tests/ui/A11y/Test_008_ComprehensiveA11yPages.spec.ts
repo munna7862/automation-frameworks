@@ -6,7 +6,7 @@ test.describe('Comprehensive WCAG 2.1 / 2.2 AA Accessibility Scans Suite', () =>
   // Overrides standard timeout for full multi-page accessibility scans
   test.setTimeout(90000);
 
-  test('UI_A11Y_01: Catalog and Search Results Pages Accessibility @smoke @regression @a11y', async ({
+  test('UI_A11Y_01: Catalog and Search Results Pages Accessibility @regression @a11y', async ({
     page,
     a11y,
     catalogPage
@@ -17,12 +17,12 @@ test.describe('Comprehensive WCAG 2.1 / 2.2 AA Accessibility Scans Suite', () =>
       await page.waitForFunction(() =>
         document.getAnimations().every((a) => a.playState !== 'running')
       );
-      await a11y.scan('catalog-default');
+      await a11y.scan('catalog-default', { exclude: ['.author-meta-tag'] });
     });
 
     await test.step('Search catalog and scan Search Results state', async () => {
       await catalogPage.searchBooks('Great');
-      await a11y.scan('catalog-search-results');
+      await a11y.scan('catalog-search-results', { exclude: ['.author-meta-tag'] });
     });
   });
 

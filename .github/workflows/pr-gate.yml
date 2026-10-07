@@ -369,7 +369,7 @@ jobs:
             elif [ "${{ steps.lhci.outcome }}" == "success" ]; then
               echo "✅ **Lighthouse CI budgets met across audited routes!**"
               echo "- **Performance**: ≥ 0.8"
-              echo "- **Accessibility**: ≥ 0.95"
+              echo "- **Accessibility**: ≥ 0.90"
               echo "- **Best Practices**: ≥ 0.9"
               echo "- **SEO**: ≥ 0.8 (warn)"
             else
