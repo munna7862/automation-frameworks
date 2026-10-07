@@ -1,0 +1,58 @@
+[2026-10-07 17:58:41] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1791358121379-73c232b5
+[2026-10-07 17:58:41] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:58:42] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:42] INFO: Entering full name: Full ws_user_DJ62F
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:42] INFO: Entering username: ws_user_DJ62F
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:42] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:42] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:42] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:43] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:43] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:43] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:43] INFO: Clicking on Add to Cart button for book id: 1
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:43] INFO: Waiting for cart status message: added to cart
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Cart status message "added to cart" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Clicking on Cart link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Clicking on Proceed to Checkout button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Entering first name: Web
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Entering last name: SocketUser
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Entering shipping address: 123 Buggy Lane
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Entering city: Stack City
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Clicking on Next Step button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Entering card number
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Entering card expiry: 12/30
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Entering card CVV: 123
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Checking if Next Step button is visible on Payment Step - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:45] INFO: Clicking on Next Step button on Payment page to advance to Confirm step
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:59:01] INFO: Waiting for confirmation message containing: Thank you for your order
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:59:01] INFO: Payment completed successfully and order confirmation message is displayed.
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:59:01] INFO: Verifying hot-toast alert banner is rendered for purchase socket event - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:59:01] INFO: Captured 27 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/WebSockets-Test_008_WebSoc-c976d-st-Alert-Trigger-regression-chrome/network-log.json
+[2026-10-07 17:59:01] INFO: Cleaned up ephemeral test session: pw-w4-3-1791358121379-73c232b5
