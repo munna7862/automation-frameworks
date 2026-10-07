@@ -5,6 +5,7 @@ export interface ApiResponse<T = any> {
   status: number;
   headers: Record<string, string>;
   body: T;
+  data: T;
   durationMs: number;
   raw: APIResponse;
 }
@@ -13,6 +14,8 @@ export interface RequestOpts {
   token?: string;
   headers?: Record<string, string>;
   enforceCsrf?: boolean;
+  omitBypassHeaders?: boolean;
+  expectStatus?: number | number[];
   params?: Record<string, string | number | boolean>;
   data?: any;
   timeout?: number;
@@ -30,10 +33,15 @@ export abstract class BaseClient {
     url: string,
     opts: RequestOpts = {}
   ): Promise<ApiResponse<T>> {
+    const omitBypass = opts.omitBypassHeaders ?? this.defaultOpts.omitBypassHeaders ?? false;
     const mergedHeaders: Record<string, string> = {
       Accept: 'application/json',
-      'x-bypass-rate-limit': 'true',
-      ...(opts.enforceCsrf ? { 'x-enforce-csrf': 'true' } : { 'x-bypass-csrf': 'true' }),
+      ...(!omitBypass ? { 'x-bypass-rate-limit': 'true' } : {}),
+      ...(opts.enforceCsrf
+        ? { 'x-enforce-csrf': 'true' }
+        : !omitBypass
+          ? { 'x-bypass-csrf': 'true' }
+          : {}),
       ...this.defaultOpts.headers,
       ...opts.headers
     };
@@ -92,6 +100,7 @@ export abstract class BaseClient {
       status: raw.status(),
       headers: raw.headers(),
       body,
+      data: body,
       durationMs,
       raw
     };

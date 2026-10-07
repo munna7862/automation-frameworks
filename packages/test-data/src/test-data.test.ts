@@ -20,7 +20,10 @@ import {
   createExpiredToken,
   createWrongSignatureToken,
   createMalformedToken,
-  createValidToken
+  createValidToken,
+  createNoneAlgorithmToken,
+  createKidTamperedToken,
+  createTamperedPayloadToken
 } from './index';
 
 describe('@automationframeworks/test-data Package Unit Tests', () => {
@@ -279,6 +282,15 @@ describe('@automationframeworks/test-data Package Unit Tests', () => {
 
       const valid = await createValidToken('carol');
       assert.ok(typeof valid === 'string' && valid.split('.').length === 3);
+
+      const noneAlg = createNoneAlgorithmToken('dave');
+      assert.ok(typeof noneAlg === 'string' && noneAlg.endsWith('.'));
+
+      const kidTampered = await createKidTamperedToken('eve');
+      assert.ok(typeof kidTampered === 'string' && kidTampered.split('.').length === 3);
+
+      const tamperedPayload = createTamperedPayloadToken(valid, { username: 'mallory' });
+      assert.ok(typeof tamperedPayload === 'string' && tamperedPayload.split('.').length === 3);
     });
   });
 });

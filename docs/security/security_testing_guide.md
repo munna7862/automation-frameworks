@@ -176,10 +176,52 @@ docker compose -f infra/docker-compose.test.yml down -v --remove-orphans
 
 ---
 
-## 6. 🚀 Roadmap: Sprint 9.2 AppSec Test Suite Preview
+## 6. 🛡️ Application Security (AppSec) Automated Test Suite
 
-In **Sprint 9.2**, this DAST foundation will be complemented with a comprehensive Playwright `@security` test suite covering:
-- **OWASP API1 (BOLA)**: Cross-user order and cart tampering assertions.
-- **OWASP API2 (Auth)**: JWT token tampering, secret brute-force resilience, expired session rejection.
-- **OWASP API4 (Rate Limiting)**: Burst traffic rate limiting without `x-bypass-rate-limit`.
-- **OWASP API8 (Misconfig)**: CORS headers, strict cookies, and CSRF enforcement with `x-enforce-csrf: true`.
+In **Sprint 9.2**, the DAST pipeline is complemented with a comprehensive Playwright `@security` automated test suite consisting of 39 deterministic specifications in `playwright-e2e/src/tests/api/Security/` and `playwright-e2e/src/tests/ui/Security/`.
+
+### A. Fixture Architecture: `securityApi`
+
+Standard functional test specs utilize the `api` fixture, which automatically injects `x-bypass-rate-limit: true` and `x-bypass-csrf: true` to prevent test infrastructure bottlenecks.
+
+For genuine penetration and security testing, the suite introduces the **`securityApi`** fixture defined in [`src/core/base/security.fixture.ts`](../../playwright-e2e/src/core/base/security.fixture.ts):
+- **Zero Bypass Headers**: Strictly omits `x-bypass-rate-limit` and `x-bypass-csrf`.
+- **Isolated Sessions**: Allocates an ephemeral `x-test-session-id` per worker and cleans it up during teardown.
+- **Omit Bypass Client Flag**: Sets `omitBypassHeaders: true` on the `ApiClientHub` instance so underlying HTTP calls do not inject bypasses.
+
+### B. OWASP Classification & Test Mapping
+
+All tests carry the primary `@security` tag plus an industry-standard OWASP taxonomy tag:
+
+| OWASP Category | Focus Area | Spec File | Test IDs |
+| :--- | :--- | :--- | :--- |
+| **API1:2023** | Broken Object Level Authorization (BOLA) | `Test_003_ObjectLevelAuthorization.spec.ts` | `SEC-AUTHZ-01` to `SEC-AUTHZ-04` |
+| **API2:2023 / A07:2021** | Broken Authentication & Session Security | `Test_002_JwtAndSessionSecurity.spec.ts` | `SEC-AUTH-01` to `SEC-AUTH-07` |
+| **API3:2023** | Broken Object Property Level Authorization (BOPLA) | `Test_003_ObjectLevelAuthorization.spec.ts` | `SEC-AUTHZ-05` |
+| **API4:2023** | Unrestricted Resource Consumption | `Test_005_AvatarUploadSecurity.spec.ts`, `Test_008_BruteForceRateLimit.spec.ts` | `SEC-UPL-01`, `SEC-UPL-03`, `SEC-RL-01` |
+| **API8:2023 / A05:2021** | Security Misconfiguration & Leakage | `Test_006_SecurityHeadersAndCors.spec.ts`, `Test_009_InformationLeakage.spec.ts` | `SEC-HDR-01` to `SEC-HDR-09`, `SEC-LEAK-01` to `SEC-LEAK-03` |
+| **A01:2021** | Broken Access Control (CSRF) | `Test_007_CsrfEnforcement.spec.ts` | `SEC-CSRF-01` to `SEC-CSRF-03` |
+| **A03:2021** | Injection & Cross-Site Scripting (XSS) | `Test_004_InjectionPayloads.spec.ts`, `ui/Security/Test_001_StoredXss.spec.ts` | `SEC-INJ-01` to `SEC-INJ-06` |
+
+### C. Execution Commands
+
+```bash
+# Run full security test suite against ephemeral Docker environment
+cross-env ENV=DOCKER npm run test:security
+
+# List all discovered @security test cases
+npx playwright test --grep "@security" --list --config=src/config/playwright.config.ts
+
+# Execute specific AppSec test suite
+cross-env ENV=DOCKER npx playwright test src/tests/api/Security/Test_002_JwtAndSessionSecurity.spec.ts --config=src/config/playwright.config.ts
+
+# Run passive transport and security header checks against shared staging
+cross-env ENV=STAGING npx playwright test src/tests/api/Security/Test_006_SecurityHeadersAndCors.spec.ts --config=src/config/playwright.config.ts
+```
+
+### D. Findings Triage & `test.fail()` Governance
+
+When an automated security test uncovers an application vulnerability:
+1. **Intentional Anti-Patterns**: If the defect is an intentional BuggyBooks training scenario, document it in [`docs/intentional_bugs.md`](../intentional_bugs.md) and annotate the spec with `test.fail(condition, 'AppSec Finding: <description>')`.
+2. **Unintentional Product Vulnerabilities**: File a high-priority issue in `munna7862/buggy-books` and track remediation in the sprint backlog.
+

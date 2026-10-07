@@ -15,6 +15,7 @@ It serves as the definitive reference for SDETs, QA automation specialists, and 
   - [3.2 Delayed Inventory Report (`inventoryDelayMs`)](#32-delayed-inventory-report-inventorydelayms)
   - [3.3 Express Rate Limiting (`429 Too Many Requests`)](#33-express-rate-limiting-429-too-many-requests)
   - [3.4 Session Sandboxing (`x-test-session-id`)](#34-session-sandboxing-x-test-session-id)
+  - [3.5 CSRF Bypass via Rate-Limit Header (`x-bypass-rate-limit`)](#35-csrf-bypass-via-rate-limit-header-x-bypass-rate-limit)
 - [4. Frontend & UI Anti-Patterns](#4-frontend--ui-anti-patterns)
   - [4.1 Dynamic Actionability Delay (500–3500ms Button Latency)](#41-dynamic-actionability-delay-5003500ms-button-latency)
   - [4.2 Obfuscated Locators & Missing `data-testid` Attributes](#42-obfuscated-locators--missing-data-testid-attributes)
@@ -355,6 +356,21 @@ export const config: WebdriverIO.Config = {
   // headers: { 'x-test-session-id': browser.sharedSessionId }
 };
 ```
+
+---
+
+### 3.5 CSRF Bypass via Rate-Limit Header (`x-bypass-rate-limit`)
+
+#### Failure Signature
+- **Target Endpoints**: State-changing endpoints (`POST /api/cart`, `POST /api/checkout/process`, `POST /api/profile/upload`)
+- **Status Code**: `200 OK` (when `403 Forbidden` was expected)
+- **Symptom**: In `buggy-books/backend/src/app.ts`, double-submit CSRF verification (`csrf-csrf`) is bypassed when either `x-bypass-csrf: true` **or** `x-bypass-rate-limit: true` is present on the incoming request.
+- **Security Finding**: When automated test suites send `x-bypass-rate-limit: true` without `x-enforce-csrf: true`, state mutations succeed even when the client provides no CSRF token or cookie. This behavior masks missing CSRF controls in testing.
+
+#### Remediation Strategy
+1. **Use `securityApi` Fixture**: For AppSec test specs, use `securityApi` which strictly omits both `x-bypass-rate-limit` and `x-bypass-csrf`.
+2. **Explicit CSRF Enforcement**: Pass `x-enforce-csrf: true` along with tokens acquired from `GET /api/csrf-token` to prove that CSRF double-submit protection works as designed.
+3. **Traceability**: Tested and documented via `SEC-CSRF-01`, `SEC-CSRF-02`, and `SEC-CSRF-03` in `Test_007_CsrfEnforcement.spec.ts`.
 
 ---
 

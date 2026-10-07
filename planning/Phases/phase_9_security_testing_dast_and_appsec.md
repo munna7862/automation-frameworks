@@ -3,7 +3,7 @@
 **Navigation**: [🗺️ Planning Hub](../README.md) | [📖 Roadmap v2](../Master/enhancement_roadmap_v2.md) | [⬅️ Phase 8](phase_8_api_depth_typed_clients_schemas_and_contracts.md) | **[Phase 9]** | [Phase 10 ➡️](phase_10_ui_quality_web_vitals_and_framework_parity.md)
 
 **Phase Identifier**: `PHASE-9-SECURITY-TESTING-DAST-APPSEC`
-**Phase Status**: In Progress (4/10 SP)
+**Phase Status**: Completed (10/10 SP)
 **Priority**: P2 / Should
 **Total Phase Velocity**: **10 Story Points** (Sprint 9.1: 4 SP, Sprint 9.2: 6 SP)
 **Phase Leads**: Security Test Engineer (new persona) & SDET Architect
@@ -46,19 +46,19 @@ graph LR
     S91[Sprint 9.1: DAST Pipeline with OWASP ZAP · 4 SP] --> S92[Sprint 9.2: AppSec Test Suite · 6 SP]
 ```
 
-1. **[Sprint 9.1: DAST Pipeline with OWASP ZAP](../Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md)** — 4 SP
-2. **[Sprint 9.2: AppSec Security Test Suite](../Sprints/sprint_9_2_appsec_security_test_suite.md)** — 6 SP
+1. **[Sprint 9.1: DAST Pipeline with OWASP ZAP](../Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md)** — 4 SP (Done)
+2. **[Sprint 9.2: AppSec Security Test Suite](../Sprints/sprint_9_2_appsec_security_test_suite.md)** — 6 SP (Done)
 
 ---
 
 ## 4. Definition of Done & Quality Acceptance Gates
 
-- [ ] ZAP baseline runs on every PR against DOCKER and uploads SARIF; no unacknowledged High alerts.
-- [ ] ZAP API scan runs nightly against DOCKER using `docs/api/openapi.yaml`.
-- [ ] `@security` suite exists with ≥ 30 tests, green (known intentional bugs marked `test.fail()` with references).
-- [ ] Every `SEC-*` entry in both catalogs carries an OWASP mapping.
-- [ ] `docs/security/security_testing_guide.md` explains the scope guard, tools, how to triage, and how to add tests.
-- [ ] `role-security-engineer` persona skill added and referenced from AGENTS.md §7.
+- [x] ZAP baseline runs on every PR against DOCKER and uploads SARIF; no unacknowledged High alerts.
+- [x] ZAP API scan runs nightly against DOCKER using `docs/api/openapi.yaml`.
+- [x] `@security` suite exists with ≥ 30 tests, green (known intentional bugs marked `test.fail()` with references).
+- [x] Every `SEC-*` entry in both catalogs carries an OWASP mapping.
+- [x] `docs/security/security_testing_guide.md` explains the scope guard, tools, how to triage, and how to add tests.
+- [x] `role-security-engineer` persona skill added and referenced from AGENTS.md §7.
 
 ---
 
