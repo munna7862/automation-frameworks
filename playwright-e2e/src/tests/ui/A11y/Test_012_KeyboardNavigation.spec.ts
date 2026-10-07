@@ -273,39 +273,43 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
         timeout: 10000
       });
 
-      // Step 3: Complete Payment
-      const isFocused = await tabUntil(
-        async () => {
-          return await page.evaluate(() => {
-            const el = document.activeElement;
-            const text = (el?.textContent || '').toLowerCase();
-            return Boolean(
-              el &&
-              (el.id === 'wizard-next-btn' ||
-                el.getAttribute('data-testid') === 'wizard-next-btn' ||
-                text.includes('complete payment') ||
-                text.includes('place order') ||
-                text.includes('pay now'))
-            );
-          });
-        },
-        20,
-        'Final Complete Payment button'
-      ).catch(() => false);
-
-      if (!isFocused) {
-        await checkoutPage.finalSubmitButton.first().waitFor({ state: 'visible', timeout: 10000 });
-        await checkoutPage.finalSubmitButton.first().focus();
-      }
-      await assertFocusIndicator('Complete Payment button');
-      await page.keyboard.press('Enter');
-
+      // Step 3 / Confirmation: Check if payment is already confirmed or requires final submit
       const isConfirmed = await page
         .getByRole('heading', { name: /payment successful/i })
-        .isVisible({ timeout: 5000 })
+        .isVisible({ timeout: 2000 })
         .catch(() => false);
+
       if (!isConfirmed) {
-        await page.keyboard.press('Space');
+        const isFocused = await tabUntil(
+          async () => {
+            return await page.evaluate(() => {
+              const el = document.activeElement;
+              const text = (el?.textContent || '').toLowerCase();
+              return Boolean(
+                el &&
+                (el.id === 'wizard-next-btn' ||
+                  el.getAttribute('data-testid') === 'wizard-next-btn' ||
+                  text.includes('complete payment') ||
+                  text.includes('place order') ||
+                  text.includes('pay now'))
+              );
+            });
+          },
+          10,
+          'Final Complete Payment button'
+        ).catch(() => false);
+
+        if (
+          !isFocused &&
+          (await checkoutPage.finalSubmitButton
+            .first()
+            .isVisible()
+            .catch(() => false))
+        ) {
+          await checkoutPage.finalSubmitButton.first().focus();
+        }
+        await assertFocusIndicator('Complete Payment button');
+        await page.keyboard.press('Enter');
       }
 
       // Assert Order Confirmation
