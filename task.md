@@ -69,7 +69,7 @@
 - [x] **US-AF-927.2** (`SDET Architect`): Add all `SEC-*` catalog entries to `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` in 100% lockstep parity.
 - [x] **US-AF-927.3** (`Security Test Engineer`): Expand `docs/security/security_testing_guide.md` with AppSec test suite documentation, fixture usage, OWASP mapping, and finding triage.
 - [x] **US-AF-927.4** (`Scrum Master`): Update `planning/README.md`, `planning/Sprints/sprint_9_2_appsec_security_test_suite.md`, and Phase 9 overview.
-- [ ] **US-AF-927.5** (`DevOps Engineer`): Verify CI integration, create pull request via `gh pr create`, monitor CI checks.
+- [x] **US-AF-927.5** (`DevOps Engineer`): Verify CI integration, create pull request via `gh pr create`, monitor CI checks.
 
 ---
 
@@ -81,7 +81,7 @@
 | **Code Acceptance Review Gate**  | SDET Architect  | Code review checklist: securityApi fixture, single-browser, inert XSS, OWASP tags. | `[PASSED]`  |
 | **Scrum Master DoD Gate**        | Scrum Master    | 4-point DoD: static analysis clean, test passes, catalog parity, docs sync.        | `[PASSED]`  |
 | **DevOps Release Gate**          | DevOps Engineer | Workflow verification, PR creation, green CI status.                               | `[PASSED]`  |
-| **Final Human Sign-Off**         | Human Tech Lead | Final PR review and merge to `main`.                                               | `[PENDING]` |
+| **Final Human Sign-Off**         | Human Tech Lead | Final PR review and merge to `main` (PR #49).                                      | `[PENDING]` |
 
 ---
 
@@ -93,8 +93,8 @@
 - [x] Dual-catalog parity confirmed: `npm run test:verify-catalog` exits 0.
 - [x] Single-browser execution policy strictly preserved (Google Chrome UI + API only).
 - [x] Documentation updated (`security_testing_guide.md`, `planning/Sprints/sprint_9_2_appsec_security_test_suite.md`, `planning/README.md`).
-- [ ] Pull request opened with structured summary and verification evidence (`gh pr create`).
-- [ ] All CI workflow checks green.
+- [x] Pull request opened with structured summary and verification evidence (`gh pr create` -> PR #49).
+- [x] All CI workflow checks green.
 
 ---
 
