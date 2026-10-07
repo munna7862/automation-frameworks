@@ -40,7 +40,7 @@ export class CheckoutPage extends BasePage {
     return this.page.locator('input[name="txt_cvv_78"], input[placeholder="3 digits"]');
   }
 
-  private get nextStepButton(): Locator {
+  public get nextStepButton(): Locator {
     return this.page.locator('button#wizard-next-btn');
   }
 
