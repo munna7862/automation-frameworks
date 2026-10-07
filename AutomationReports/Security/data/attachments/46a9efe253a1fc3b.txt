@@ -1,0 +1,18 @@
+[2026-10-07 17:57:38] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1791358058293-9013dd03
+[2026-10-07 17:57:38] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:57:38] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:39] INFO: Total Books displayed in Catalog page are: 8
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:39] INFO: Filling search input with: xyz999nonexistent
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:39] INFO: Clicking Search button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying zero books displayed for gibberish search - Matched: [0]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Getting catalog empty state text
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Verifying empty state message text - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:40] INFO: Captured 8 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/BookCatalog-Test_002_Searc-0f373-rch---No-Results-regression-chrome/network-log.json
+[2026-10-07 17:57:40] INFO: Cleaned up ephemeral test session: pw-w3-2-1791358058293-9013dd03

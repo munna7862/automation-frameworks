@@ -1,0 +1,90 @@
+[2026-10-07 17:57:58] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1791358078358-abebde12
+[2026-10-07 17:57:58] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:57:58] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:58] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:58] INFO: Entering full name: E2E Test User
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Entering username: e2e_customer_1791358078524_1e092fb8
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:57:59] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Verifying new user registered and logged in successfully - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Clicking on Catalog link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Filling search input with: Mockingbird
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Clicking Search button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Getting catalog result count text
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Verifying catalog search results for 'Mockingbird' - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Clicking on book title link for book ID: 2
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Getting book detail title
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Getting book detail price
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Verifying book detail title and price are displayed - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Clicking Add to Cart button on Book Detail page
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Waiting for cart status message: added to cart
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Cart status message "added to cart" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Clicking on Cart link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Getting cart item text
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Getting cart total text
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Verifying cart contains item and order total - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:00] INFO: Clicking on Proceed to Checkout button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:01] INFO: Entering first name: Alex
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:01] INFO: Entering last name: Rivera
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:01] INFO: Entering shipping address: 123 Buggy Lane
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:01] INFO: Entering city: Stack City
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:01] INFO: Clicking on Next Step button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:01] INFO: Entering card number
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:01] INFO: Entering card expiry: 12/30
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:01] INFO: Entering card CVV: 123
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:01] INFO: Checking if Next Step button is visible on Payment Step - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:01] INFO: Clicking on Next Step button on Payment page to advance to Confirm step
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:16] INFO: Waiting for confirmation message containing: Order placed successfully
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:16] INFO: Payment completed successfully and order confirmation message is displayed.
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:16] INFO: Clicking on Logout button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:16] INFO: Checking if Login link is visible on Catalog page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:16] INFO: Verifying user logged out successfully after completing order - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:16] INFO: Captured 23 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Checkout-Test_005_EndToEnd-32cb3-o-Checkout-smoke-regression-chrome/network-log.json
+[2026-10-07 17:58:16] INFO: Cleaned up ephemeral test session: pw-w4-3-1791358078358-abebde12

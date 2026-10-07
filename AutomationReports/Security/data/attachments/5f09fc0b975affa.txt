@@ -1,0 +1,22 @@
+[2026-10-07 18:00:53] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w10-0-1791358253042-c11c9804
+[2026-10-07 18:00:53] INFO: Network interception enabled with mode: api-only
+[2026-10-07 18:00:53] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 18:00:54] INFO: Entering full name: <img src=x onerror="window.__xss=1">
+no test runtime is found. Please check test framework configuration
+[2026-10-07 18:00:54] INFO: Entering username: xss_user_4cb0001e@security.local
+no test runtime is found. Please check test framework configuration
+[2026-10-07 18:00:54] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-07 18:00:54] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-07 18:00:54] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 18:00:54] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-07 18:00:54] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 18:00:55] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-07 18:00:55] INFO: Captured 15 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Security-Test_001_StoredXs-c809c-t-in-DOM-security-owasp-a03-chrome/network-log.json
+[2026-10-07 18:00:55] INFO: Cleaned up ephemeral test session: pw-w10-0-1791358253042-c11c9804

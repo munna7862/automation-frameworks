@@ -1,0 +1,4 @@
+[2026-10-07 17:58:33] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1791358113067-c71b8870
+[2026-10-07 17:58:33] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:58:34] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/VisualRegression-Test_010_-d0458-creenshot-regression-visual-chrome/network-log.json
+[2026-10-07 17:58:34] INFO: Cleaned up ephemeral test session: pw-w3-2-1791358113067-c71b8870

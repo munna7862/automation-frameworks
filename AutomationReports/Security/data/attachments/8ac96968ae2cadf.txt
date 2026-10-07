@@ -1,0 +1,28 @@
+[2026-10-07 17:58:20] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1791358100281-6c275643
+[2026-10-07 17:58:20] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:58:20] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:21] INFO: Clicking on Login link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:21] INFO: Entering username: abigale_w4_muxsd0iq_00b646_1
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:21] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:21] INFO: Clicking on Sign In button
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:22] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:22] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:22] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:22] INFO: Clicking on Profile navbar link
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:23] INFO: Getting profile info section text
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:23] INFO: Getting profile avatar preview image src
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:28] INFO: Verifying profile page renders registered full name, username, and avatar preview - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:28] INFO: Captured 12 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Profile-Test_006_ProfileSu-b3f10--correctly-smoke-regression-chrome/network-log.json
+[2026-10-07 17:58:28] INFO: Cleaned up ephemeral test session: pw-w4-3-1791358100281-6c275643

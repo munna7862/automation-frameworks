@@ -1,0 +1,21 @@
+[2026-10-07 17:58:10] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w5-1-1791358090759-93af77d6
+[2026-10-07 17:58:10] INFO: Network interception enabled with mode: api-only
+[2026-10-07 17:58:10] INFO:  Legacy equality comparison Success !! Actual and Expected Values are:: alpha
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:10] INFO: Verifying legacy compareTwoValues returns true - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:10] ERROR:  Legacy inequality comparison Failed!! Expected Value:: beta || Actual Value:: alpha
+[2026-10-07 17:58:10] ERROR:  Legacy inequality comparison Failed!! Expected Value:: beta || Actual Value:: alpha
+no test runtime is found. Please check test framework configuration
+[2026-10-07 17:58:10] INFO: Verifying legacy compareTwoValues returns false on mismatch - Matched: [false]
+no test runtime is found. Please check test framework configuration
+
+[Failure Hook] Capturing state for failing test: "TC-ASSERT-003: Backward compatibility for deprecated compareTwoValues wrapper @regression"...
+[Failure Hook] Failure state successfully captured and written to:
+  DOM Snapshot:  file:////home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/snapshots/failure-dom.html
+  ARIA Snapshot: file:////home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/snapshots/failure-aria.yaml
+  Context JSON:  file:////home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/snapshots/failure-context.json
+[Failure Hook] You can now ask Antigravity to heal this test using these failure reports.
+
+[2026-10-07 17:58:10] INFO: Captured 0 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Diagnostic-Test_011_Diagno-a4758-woValues-wrapper-regression-chrome-retry1/network-log.json
+[2026-10-07 17:58:10] INFO: Cleaned up ephemeral test session: pw-w5-1-1791358090759-93af77d6
