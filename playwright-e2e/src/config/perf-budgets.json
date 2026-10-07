@@ -1,0 +1,30 @@
+{
+  "description": "BuggyBooks Core Web Vitals CI Performance Budgets & SLA Thresholds",
+  "environments": {
+    "DOCKER": {
+      "LCP": 2500,
+      "CLS": 0.1,
+      "INP": 200,
+      "TTFB": 800,
+      "FCP": 1800
+    },
+    "STAGING": {
+      "LCP": 4500,
+      "CLS": 0.1,
+      "INP": 250,
+      "TTFB": 2500,
+      "FCP": 3000
+    }
+  },
+  "default": {
+    "LCP": 2500,
+    "CLS": 0.1,
+    "INP": 200,
+    "TTFB": 800,
+    "FCP": 1800
+  },
+  "cdp": {
+    "maxJSHeapBytes": 104857600,
+    "maxLayoutCount": 100
+  }
+}

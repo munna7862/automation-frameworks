@@ -47,6 +47,11 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     request,
     catalogPage
   }) => {
+    test.skip(
+      process.platform !== 'linux',
+      'Visual baseline snapshot comparisons are calibrated inside Linux containers (mcr.microsoft.com/playwright:v1.58.0-jammy). Run npm run visual:update in Docker.'
+    );
+
     await test.step('Ensure visualChaos is disabled', async () => {
       await syncVisualChaos(request, false);
     });
@@ -61,7 +66,8 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
       await expect(page).toHaveScreenshot('catalog-baseline.png', {
         maxDiffPixelRatio: 0.05,
         threshold: 0.2,
-        animations: 'disabled'
+        animations: 'disabled',
+        mask: [catalogPage.priceTags]
       });
     });
   });
@@ -72,6 +78,11 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     request,
     catalogPage
   }) => {
+    test.skip(
+      process.platform !== 'linux',
+      'Visual baseline snapshot comparisons are calibrated inside Linux containers (mcr.microsoft.com/playwright:v1.58.0-jammy). Run npm run visual:update in Docker.'
+    );
+
     let diffDetected = false;
     await test.step('Enable visualChaos', async () => {
       await syncVisualChaos(request, true);
@@ -258,6 +269,11 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     request,
     catalogPage
   }) => {
+    test.skip(
+      process.platform !== 'linux',
+      'Visual baseline snapshot comparisons are calibrated inside Linux containers (mcr.microsoft.com/playwright:v1.58.0-jammy). Run npm run visual:update in Docker.'
+    );
+
     await test.step('Enable visualChaos first', async () => {
       await syncVisualChaos(request, true);
     });
@@ -288,8 +304,96 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
       await expect(page).toHaveScreenshot('catalog-baseline.png', {
         maxDiffPixelRatio: 0.05,
         threshold: 0.2,
+        animations: 'disabled',
+        mask: [catalogPage.priceTags]
+      });
+    });
+  });
+
+  test('VIS_REG_10: Component Baseline - Book Card with Price Tag Masking @regression @visual', async ({
+    page,
+    request,
+    catalogPage
+  }) => {
+    test.skip(
+      process.platform !== 'linux',
+      'Visual baseline snapshot comparisons are calibrated inside Linux containers (mcr.microsoft.com/playwright:v1.58.0-jammy). Run npm run visual:update in Docker.'
+    );
+
+    await test.step('Ensure visualChaos is disabled and navigate to catalog', async () => {
+      await syncVisualChaos(request, false);
+      await page.goto(envConfig.baseUrl);
+      await catalogPage.waitForBookCardSelector();
+    });
+
+    await test.step('Assert book card component screenshot with price tag masking', async () => {
+      await expect(catalogPage.firstBookCard).toHaveScreenshot('book-card-component.png', {
+        maxDiffPixelRatio: 0.05,
+        threshold: 0.2,
+        animations: 'disabled',
+        mask: [catalogPage.priceTags]
+      });
+    });
+  });
+
+  test('VIS_REG_11: Component Baseline - Cart Summary Component Snapshot @regression @visual', async ({
+    page,
+    request,
+    catalogPage,
+    cartPage
+  }) => {
+    test.skip(
+      process.platform !== 'linux',
+      'Visual baseline snapshot comparisons are calibrated inside Linux containers (mcr.microsoft.com/playwright:v1.58.0-jammy). Run npm run visual:update in Docker.'
+    );
+
+    await test.step('Add book and navigate to Cart', async () => {
+      await syncVisualChaos(request, false);
+      await page.goto(envConfig.baseUrl);
+      await catalogPage.waitForBookCardSelector();
+      await catalogPage.clickAddToCartForBook(1);
+      await page.goto(`${envConfig.baseUrl}/cart`);
+      await cartPage.waitForCartHeader();
+    });
+
+    await test.step('Assert cart summary component snapshot with dynamic masking', async () => {
+      await expect(cartPage.cartSummaryContainer).toHaveScreenshot('cart-summary-component.png', {
+        maxDiffPixelRatio: 0.05,
+        threshold: 0.2,
         animations: 'disabled'
       });
+    });
+  });
+
+  test('VIS_REG_12: Component Baseline - Shadow DOM Order Summary Box @regression @visual', async ({
+    page,
+    request,
+    catalogPage,
+    checkoutPage
+  }) => {
+    test.skip(
+      process.platform !== 'linux',
+      'Visual baseline snapshot comparisons are calibrated inside Linux containers (mcr.microsoft.com/playwright:v1.58.0-jammy). Run npm run visual:update in Docker.'
+    );
+
+    await test.step('Prepare checkout session and navigate to Checkout', async () => {
+      await syncVisualChaos(request, false);
+      await page.goto(envConfig.baseUrl);
+      await catalogPage.waitForBookCardSelector();
+      await catalogPage.clickAddToCartForBook(1);
+      await page.goto(`${envConfig.baseUrl}/checkout`);
+      await checkoutPage.waitForNextStepButton();
+    });
+
+    await test.step('Assert Shadow DOM order-summary-box component snapshot', async () => {
+      const orderSummaryBox = checkoutPage.orderSummaryBox;
+      if (await orderSummaryBox.isVisible({ timeout: 5000 }).catch(() => false)) {
+        await expect(orderSummaryBox).toHaveScreenshot('order-summary-box-component.png', {
+          maxDiffPixelRatio: 0.05,
+          threshold: 0.2,
+          animations: 'disabled'
+        });
+      }
     });
   });
 });

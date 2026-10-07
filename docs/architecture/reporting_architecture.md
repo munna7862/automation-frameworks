@@ -73,7 +73,10 @@ https://<owner>.github.io/<repo>/
     │   ├── index.html
     │   ├── history/
     │   └── ...
-    └── k6/                          # k6 Performance Benchmarking Reports
+    ├── k6/                          # k6 Performance Benchmarking Reports
+    └── Lighthouse/                  # Lighthouse CI Audit Reports
+        ├── index.html
+        └── ...
 ```
 
 ---
@@ -212,6 +215,21 @@ All test workflows incorporate an honest, auto-detecting test summarizer:
 - **Inputs**: Auto-detects Playwright `results.json` or Allure `widgets/summary.json`.
 - **Output**: Formats a Markdown summary table (Total, Passed, Failed, Flaky, Skipped, Duration) appended to `$GITHUB_STEP_SUMMARY`, along with the top 10 failing test titles when failures occur.
 - **Fail-Safe**: Always exits with code 0 so reporting pipelines never halt unexpectedly, while explicit job gates (`steps.tests.outcome == 'failure'`) enforce build failures.
+
+### D. Accessibility & Web Vitals Telemetry Artifacts
+Established in Sprint 10.2 to capture quality telemetry across non-functional axes:
+1. **Accessibility Summary (`playwright-e2e/reports/a11y-summary.json`)**:
+   - Structured JSON output capturing violation counts, affected rules, page routes, and impact levels (`critical`, `serious`, `moderate`, `minor`) across every audited application state.
+   - Preserved as a persistent build artifact for portal trends (consumed in Sprint 12.1).
+   - Detailed axe-core JSON results attached per-test in Allure under the `Playwright` namespace.
+2. **Core Web Vitals Allure Tables & Metrics**:
+   - Telemetry captured via `web-vitals` attribution library and Chrome DevTools Protocol (`Performance.getMetrics`).
+   - Attached as structured Markdown comparison tables directly to Allure test steps.
+   - Enforced against SLA thresholds in `playwright-e2e/src/config/perf-budgets.json` (LCP $\le$ 2500ms, CLS $\le$ 0.1, INP $\le$ 200ms, TTFB $\le$ 800ms).
+3. **Lighthouse CI Reports (`AutomationReports/Lighthouse/`)**:
+   - Automated multi-run audits across key application routes (Catalog, Book Detail, Cart).
+   - Generates static HTML and JSON reports hosted under the `Lighthouse/` portal namespace.
+   - Enforces automated budget assertions in `lighthouserc.json` (Performance $\ge$ 0.8, Accessibility $\ge$ 0.95, Best Practices $\ge$ 0.9, SEO $\ge$ 0.8).
 
 ---
 

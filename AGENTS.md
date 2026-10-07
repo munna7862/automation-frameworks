@@ -27,6 +27,7 @@ This document serves as the **always-on memory and operational baseline** for al
   3. `chrome`: Runs `src/tests/ui/` in Google Chrome (`channel: 'chrome'`), dependent on `setup`.
 - **Expected Test Count**: Exactly **~110 tests** (55 API tests + 54 Chrome UI tests + 1 auth setup). If you see ~380 tests, redundant multi-browser projects have erroneously leaked back into the config.
 - **Setup Project Trap**: `auth.setup.ts` **must** declare `use: { channel: 'chrome' }`. If omitted, Playwright defaults to bundled `chromium_headless_shell` (which is not installed in CI), causing `setup` to crash and all 54 UI tests to skip!
+- **Viewport Variation**: Viewport variation inside the chrome project is allowed; new device/browser projects are not.
 
 ### 2. Render Staging Cold-Start Latency & Pre-Flight Probe
 

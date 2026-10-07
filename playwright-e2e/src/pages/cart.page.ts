@@ -118,4 +118,19 @@ export class CartPage extends BasePage {
   public async proceedToCheckout(): Promise<void> {
     await this.clickProceedToCheckout();
   }
+
+  public async waitForCartHeader(): Promise<void> {
+    await this.cartHeader.waitFor({ state: 'visible', timeout: 15000 });
+  }
+
+  public async waitForCartItemOrEmpty(): Promise<void> {
+    await this.cartItems
+      .or(this.emptyCartMessage)
+      .first()
+      .waitFor({ state: 'visible', timeout: 15000 });
+  }
+
+  public get cartSummaryContainer(): Locator {
+    return this.cartTotalHeading;
+  }
 }

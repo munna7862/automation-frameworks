@@ -27,6 +27,7 @@ export default defineConfig({
       animations: 'disabled'
     }
   },
+  snapshotPathTemplate: '{testDir}/{testFileDir}/{testFileName}-snapshots/{arg}{ext}',
 
   reporter: [
     ['list'],

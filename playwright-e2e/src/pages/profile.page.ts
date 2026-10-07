@@ -101,4 +101,8 @@ export class ProfilePage extends BasePage {
   public async getErrorMessageText(): Promise<string> {
     return await this.doGetText(this.uploadStatusError, 'Getting upload error message text');
   }
+
+  public async waitForProfileLoaded(): Promise<void> {
+    await this.headingUserProfile.waitFor({ state: 'visible', timeout: 15000 });
+  }
 }

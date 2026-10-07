@@ -17,6 +17,9 @@ import { captureFailureState } from './failure-hook';
 import { dataTest } from './data.fixture';
 import axios from 'axios';
 
+import { A11yScanner } from '../a11y/a11y.fixture';
+import { WebVitalsMeasurer } from '../perf/web-vitals.fixture';
+
 export { expect };
 
 type TestFixtures = {
@@ -34,6 +37,8 @@ type TestFixtures = {
   apiUtil: ApiUtil;
   sessionIsolation: void;
   request: APIRequestContext;
+  a11y: A11yScanner;
+  vitals: WebVitalsMeasurer;
 };
 
 const baseTest = base.extend<TestFixtures>({
@@ -141,6 +146,14 @@ const baseTest = base.extend<TestFixtures>({
 
   commonFunctions: async ({}, use) => {
     await use(new CommonFunctions());
+  },
+
+  a11y: async ({ page }, use, testInfo) => {
+    await use(new A11yScanner(page, testInfo));
+  },
+
+  vitals: async ({ page }, use, testInfo) => {
+    await use(new WebVitalsMeasurer(page, testInfo));
   }
 });
 

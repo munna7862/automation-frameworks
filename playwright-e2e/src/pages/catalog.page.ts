@@ -342,4 +342,20 @@ export class CatalogPage extends BasePage {
   public async clickSearchButton(): Promise<void> {
     await this.doClick(this.btnSearch, `Clicking Search button`);
   }
+
+  public async isSearchButtonVisible(): Promise<boolean> {
+    return await this.btnSearch.isVisible();
+  }
+
+  public async isBookCardVisible(): Promise<boolean> {
+    return (await this.eleBooksCount.count()) > 0;
+  }
+
+  public get firstBookCard(): Locator {
+    return this.eleBooksCount.first();
+  }
+
+  public get priceTags(): Locator {
+    return this.elePriceTag;
+  }
 }

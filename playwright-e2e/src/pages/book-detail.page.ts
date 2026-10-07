@@ -57,4 +57,8 @@ export class BookDetailPage extends BasePage {
   public async clickAddToCart(): Promise<void> {
     await this.doClick(this.btnAddToCart, 'Clicking Add to Cart button on Book Detail page');
   }
+
+  public async waitForTitle(): Promise<void> {
+    await this.eleTitle.waitFor({ state: 'visible', timeout: 15000 });
+  }
 }

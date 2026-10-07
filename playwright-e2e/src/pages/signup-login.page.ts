@@ -158,6 +158,14 @@ export class SignUpPage extends BasePage {
     return isTitleVisible && isUsernameVisible && isPasswordVisible && isButtonVisible;
   }
 
+  public async waitForLoginPageLoaded(): Promise<void> {
+    await this.btnSignIn.waitFor({ state: 'visible', timeout: 15000 });
+  }
+
+  public async waitForRegisterPageLoaded(): Promise<void> {
+    await this.btnCreateAccount.waitFor({ state: 'visible', timeout: 15000 });
+  }
+
   public async getLoginUsernameId(): Promise<string | null> {
     return await this.inputLoginUsername.getAttribute('id');
   }

@@ -299,3 +299,86 @@ jobs:
         run: |
           echo "::error::Burn-in test execution failed! One or more changed specs failed across 5 repeats with 0 retries."
           exit 1
+
+  lighthouse:
+    name: Lighthouse CI (Google Chrome)
+    needs: [static-quality, commitlint]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository (full history)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Monorepo Environment
+        uses: ./.github/actions/setup-monorepo
+        with:
+          install-chrome: 'true'
+
+      - name: Check for Page Changes
+        id: check-pages
+        run: |
+          PAGE_CHANGES=$(git diff --name-only origin/main...HEAD -- 'playwright-e2e/src/pages/**' 'lighthouserc.json' || true)
+          if [ -n "$(echo "$PAGE_CHANGES" | xargs)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Detected page or LHCI config changes: $PAGE_CHANGES"
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No page or LHCI config changes in this PR. Lighthouse no-op."
+          fi
+
+      - name: Start Ephemeral BuggyBooks Environment
+        if: steps.check-pages.outputs.has_changes == 'true'
+        uses: ./.github/actions/buggybooks-up
+
+      - name: Run Lighthouse CI Audits
+        if: steps.check-pages.outputs.has_changes == 'true'
+        id: lhci
+        run: |
+          npx @lhci/cli autorun --config=lighthouserc.json
+        continue-on-error: true
+
+      - name: Stop Ephemeral BuggyBooks Environment
+        if: always() && steps.check-pages.outputs.has_changes == 'true'
+        uses: ./.github/actions/buggybooks-down
+
+      - name: Upload Lighthouse Reports Artifact
+        if: always() && steps.check-pages.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.1
+        with:
+          name: lighthouse-reports
+          path: |
+            .lighthouseci/
+            AutomationReports/Lighthouse/
+          retention-days: 7
+
+      - name: Generate Lighthouse Step Summary
+        if: always()
+        run: |
+          {
+            echo "### 🚦 Lighthouse CI Audit Results"
+            echo ""
+            if [ "${{ steps.check-pages.outputs.has_changes }}" != "true" ]; then
+              echo "ℹ️ **No page objects modified in this PR** — Lighthouse audit skipped (no-op)."
+            elif [ "${{ steps.lhci.outcome }}" == "success" ]; then
+              echo "✅ **Lighthouse CI budgets met across audited routes!**"
+              echo "- **Performance**: ≥ 0.8"
+              echo "- **Accessibility**: ≥ 0.95"
+              echo "- **Best Practices**: ≥ 0.9"
+              echo "- **SEO**: ≥ 0.8 (warn)"
+            else
+              echo "❌ **Lighthouse CI assertions failed or reported budget violations.**"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Gate on Lighthouse Outcome
+        if: always() && steps.check-pages.outputs.has_changes == 'true' && steps.lhci.outcome == 'failure'
+        run: |
+          echo "::error::Lighthouse CI audit failed assertions."
+          exit 1

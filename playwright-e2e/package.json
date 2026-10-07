@@ -28,7 +28,8 @@
     "test:contract:consumer": "tsx contract-tests/consumer/run-consumer-tests.ts",
     "test:contract:provider": "tsx contract-tests/provider/provider.verify.ts",
     "test:contract": "npm run test:contract:consumer && npm run test:contract:provider",
-    "har:record": "tsx scripts/record-har.ts"
+    "har:record": "tsx scripts/record-har.ts",
+    "visual:update": "docker run --rm --network host -v ${PWD}/..:/work -w /work/playwright-e2e mcr.microsoft.com/playwright:v1.58.0-jammy npx playwright test src/tests/ui/VisualRegression --update-snapshots"
   },
   "keywords": [],
   "author": "",
@@ -51,7 +52,8 @@
     "testcontainers": "^10.28.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.70.0"
+    "typescript-eslint": "^8.70.0",
+    "web-vitals": "^6.2.3"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.3.4",

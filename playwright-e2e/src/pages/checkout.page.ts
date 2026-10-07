@@ -352,4 +352,8 @@ export class CheckoutPage extends BasePage {
   public get confirmationHeading(): Locator {
     return this.orderConfirmationMessage;
   }
+
+  public get orderSummaryBox(): Locator {
+    return this.page.locator('order-summary-box');
+  }
 }
