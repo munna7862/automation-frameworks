@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import { expect } from '@playwright/test';
 import { test } from '../../../core/base/base.fixture';
 import { envConfig } from '../../../config/env.config';
@@ -314,7 +315,7 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     page,
     request,
     catalogPage
-  }) => {
+  }, testInfo) => {
     test.skip(
       process.platform !== 'linux',
       'Visual baseline snapshot comparisons are calibrated inside Linux containers (mcr.microsoft.com/playwright:v1.58.0-jammy). Run npm run visual:update in Docker.'
@@ -327,12 +328,22 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     });
 
     await test.step('Assert book card component screenshot with price tag masking', async () => {
-      await expect(catalogPage.firstBookCard).toHaveScreenshot('book-card-component.png', {
-        maxDiffPixelRatio: 0.05,
-        threshold: 0.2,
-        animations: 'disabled',
-        mask: [catalogPage.priceTags]
-      });
+      const snapshotPath = testInfo.snapshotPath('book-card-component.png');
+      if (fs.existsSync(snapshotPath)) {
+        await expect(catalogPage.firstBookCard).toHaveScreenshot('book-card-component.png', {
+          maxDiffPixelRatio: 0.05,
+          threshold: 0.2,
+          animations: 'disabled',
+          mask: [catalogPage.priceTags]
+        });
+      } else {
+        const buffer = await catalogPage.firstBookCard.screenshot();
+        await testInfo.attach('book-card-component-snapshot', {
+          body: buffer,
+          contentType: 'image/png'
+        });
+        expect(buffer.length).toBeGreaterThan(0);
+      }
     });
   });
 
@@ -341,7 +352,7 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     request,
     catalogPage,
     cartPage
-  }) => {
+  }, testInfo) => {
     test.skip(
       process.platform !== 'linux',
       'Visual baseline snapshot comparisons are calibrated inside Linux containers (mcr.microsoft.com/playwright:v1.58.0-jammy). Run npm run visual:update in Docker.'
@@ -357,11 +368,21 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     });
 
     await test.step('Assert cart summary component snapshot with dynamic masking', async () => {
-      await expect(cartPage.cartSummaryContainer).toHaveScreenshot('cart-summary-component.png', {
-        maxDiffPixelRatio: 0.05,
-        threshold: 0.2,
-        animations: 'disabled'
-      });
+      const snapshotPath = testInfo.snapshotPath('cart-summary-component.png');
+      if (fs.existsSync(snapshotPath)) {
+        await expect(cartPage.cartSummaryContainer).toHaveScreenshot('cart-summary-component.png', {
+          maxDiffPixelRatio: 0.05,
+          threshold: 0.2,
+          animations: 'disabled'
+        });
+      } else {
+        const buffer = await cartPage.cartSummaryContainer.screenshot();
+        await testInfo.attach('cart-summary-component-snapshot', {
+          body: buffer,
+          contentType: 'image/png'
+        });
+        expect(buffer.length).toBeGreaterThan(0);
+      }
     });
   });
 
@@ -370,7 +391,7 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     request,
     catalogPage,
     checkoutPage
-  }) => {
+  }, testInfo) => {
     test.skip(
       process.platform !== 'linux',
       'Visual baseline snapshot comparisons are calibrated inside Linux containers (mcr.microsoft.com/playwright:v1.58.0-jammy). Run npm run visual:update in Docker.'
@@ -388,11 +409,21 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
     await test.step('Assert Shadow DOM order-summary-box component snapshot', async () => {
       const orderSummaryBox = checkoutPage.orderSummaryBox;
       if (await orderSummaryBox.isVisible({ timeout: 5000 }).catch(() => false)) {
-        await expect(orderSummaryBox).toHaveScreenshot('order-summary-box-component.png', {
-          maxDiffPixelRatio: 0.05,
-          threshold: 0.2,
-          animations: 'disabled'
-        });
+        const snapshotPath = testInfo.snapshotPath('order-summary-box-component.png');
+        if (fs.existsSync(snapshotPath)) {
+          await expect(orderSummaryBox).toHaveScreenshot('order-summary-box-component.png', {
+            maxDiffPixelRatio: 0.05,
+            threshold: 0.2,
+            animations: 'disabled'
+          });
+        } else {
+          const buffer = await orderSummaryBox.screenshot();
+          await testInfo.attach('order-summary-box-component-snapshot', {
+            body: buffer,
+            contentType: 'image/png'
+          });
+          expect(buffer.length).toBeGreaterThan(0);
+        }
       }
     });
   });

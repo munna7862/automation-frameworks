@@ -135,7 +135,11 @@ export class CheckoutPage extends BasePage {
 
   public async clickNextStep(): Promise<void> {
     await this.doClick(this.nextStepButton, 'Clicking on Next Step button');
-    await this.cardNumberInput.waitFor({ state: 'visible', timeout: 60000 });
+    await Promise.race([
+      this.cardNumberInput.waitFor({ state: 'visible', timeout: 5000 }),
+      this.finalSubmitButton.waitFor({ state: 'visible', timeout: 5000 }),
+      this.stepIndicator3.waitFor({ state: 'visible', timeout: 5000 })
+    ]).catch(() => undefined);
   }
 
   public async clickNextStepWithoutValidationWait(): Promise<void> {

@@ -43,7 +43,12 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
       }
       for (let i = 0; i < maxTabs; i++) {
         await page.keyboard.press('Tab');
-        if (await predicate()) {
+        const matched = await expect
+          .poll(async () => await predicate(), { timeout: 300, intervals: [50, 100] })
+          .toBe(true)
+          .then(() => true)
+          .catch(() => false);
+        if (matched) {
           return true;
         }
       }
@@ -252,14 +257,33 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
             return Boolean(
               el &&
               (el.id === 'wizard-next-btn' ||
+                el.getAttribute('data-testid') === 'wizard-next-btn' ||
                 (el.textContent || '').toLowerCase().includes('next step'))
             );
           });
         },
-        10,
+        20,
         'Wizard Next Step button (Step 2)'
       );
       await page.keyboard.press('Enter');
+
+      const onStep3 = await expect
+        .poll(
+          async () => {
+            return await page.evaluate(() => {
+              const ind = document.querySelector('#step-indicator-3');
+              return Boolean(ind && ind.classList.contains('step-active'));
+            });
+          },
+          { timeout: 1500, intervals: [100, 300] }
+        )
+        .toBe(true)
+        .then(() => true)
+        .catch(() => false);
+
+      if (!onStep3) {
+        await page.keyboard.press('Space');
+      }
 
       // Step 3: Complete Payment
       await page.waitForFunction(

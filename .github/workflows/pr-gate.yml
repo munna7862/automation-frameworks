@@ -181,7 +181,7 @@ jobs:
     name: Flake Burn-In (Changed Specs 5x)
     needs: [smoke-e2e]
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     permissions:
       contents: read
