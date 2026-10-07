@@ -112,7 +112,29 @@ jobs:
       E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 
   # ============================================================================
-  # 5. Consolidated Nightly Summary
+  # 5. Playwright AppSec Security Suite (@security, DOCKER)
+  # ============================================================================
+  security-appsec-suite:
+    name: Playwright AppSec Suite (DOCKER)
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/_reusable-e2e.yml
+    with:
+      framework: playwright
+      target-env: DOCKER
+      grep: '@security'
+      shards: 1
+      publish-allure: true
+      allure-namespace: Security
+      headless: ${{ inputs.headless || 'true' }}
+    secrets:
+      E2E_USER_NAME: ${{ secrets.E2E_USER_NAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+  # ============================================================================
+  # 6. Consolidated Nightly Summary
   # ============================================================================
   nightly-summary:
     name: Nightly Quality Matrix Summary
@@ -121,6 +143,7 @@ jobs:
       - staging-contract-check
       - selenium-regression
       - wdio-regression
+      - security-appsec-suite
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     permissions:
@@ -133,6 +156,7 @@ jobs:
           STAGING_RESULT: ${{ needs.staging-contract-check.result }}
           SEL_RESULT: ${{ needs.selenium-regression.result }}
           WDIO_RESULT: ${{ needs.wdio-regression.result }}
+          SEC_RESULT: ${{ needs.security-appsec-suite.result }}
         run: |
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
           OWNER="${GITHUB_REPOSITORY%/*}"
@@ -141,6 +165,7 @@ jobs:
           STAGING_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Staging-Contract/"
           SEL_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Selenium/"
           WDIO_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/WDIO/"
+          SEC_URL="https://${OWNER}.github.io/${REPO_NAME}/AutomationReports/Security/"
 
           format_status() {
             if [ "$1" = "success" ]; then
@@ -156,14 +181,16 @@ jobs:
           STAGING_STATUS=$(format_status "$STAGING_RESULT")
           SEL_STATUS=$(format_status "$SEL_RESULT")
           WDIO_STATUS=$(format_status "$WDIO_RESULT")
+          SEC_STATUS=$(format_status "$SEC_RESULT")
 
           echo "## 🌙 BuggyBooks Nightly Multi-Framework Quality Matrix" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "> **Execution Topology**: Dual-target verification combining ephemeral containerized execution (\`ENV=DOCKER\`) for full multi-framework regression with scheduled staging contract probing (\`ENV=STAGING\`)." >> $GITHUB_STEP_SUMMARY
+          echo "> **Execution Topology**: Dual-target verification combining ephemeral containerized execution (\`ENV=DOCKER\`) for full multi-framework regression and AppSec testing with scheduled staging contract probing (\`ENV=STAGING\`)." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Suite / Discipline | Outcome | Strategy | Target Environment | Allure Dashboard |" >> $GITHUB_STEP_SUMMARY
           echo "| :--- | :--- | :--- | :--- | :--- |" >> $GITHUB_STEP_SUMMARY
           echo "| **Playwright E2E** | ${PW_STATUS} | 4 Native Shards (Chrome + API) | Ephemeral (DOCKER) | [View Allure](${PW_URL}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **AppSec Security Suite** | ${SEC_STATUS} | 1 Shard (\`@security\`) | Ephemeral (DOCKER) | [View Allure](${SEC_URL}) |" >> $GITHUB_STEP_SUMMARY
           echo "| **Staging Contract Check** | ${STAGING_STATUS} | 1 Shard (\`@staging-contract\`) | Render Staging | [View Allure](${STAGING_URL}) |" >> $GITHUB_STEP_SUMMARY
           echo "| **Selenium WebDriver** | ${SEL_STATUS} | 1 Shard (Chrome Headless) | Ephemeral (DOCKER) | [View Allure](${SEL_URL}) |" >> $GITHUB_STEP_SUMMARY
           echo "| **WebdriverIO** | ${WDIO_STATUS} | 1 Shard (Chrome Headless) | Ephemeral (DOCKER) | [View Allure](${WDIO_URL}) |" >> $GITHUB_STEP_SUMMARY
@@ -171,7 +198,7 @@ jobs:
           echo "🏛️ **Unified Portal**: [BuggyBooks Executive Quality Portal](${PORTAL_URL})" >> $GITHUB_STEP_SUMMARY
 
       - name: Enforce Nightly Regression Outcome Gate
-        if: always() && (needs.playwright-docker-regression.result == 'failure' || needs.staging-contract-check.result == 'failure' || needs.selenium-regression.result == 'failure' || needs.wdio-regression.result == 'failure')
+        if: always() && (needs.playwright-docker-regression.result == 'failure' || needs.staging-contract-check.result == 'failure' || needs.selenium-regression.result == 'failure' || needs.wdio-regression.result == 'failure' || needs.security-appsec-suite.result == 'failure')
         shell: bash
         run: |
           echo "::error::Nightly regression failed — one or more frameworks reported failing tests."

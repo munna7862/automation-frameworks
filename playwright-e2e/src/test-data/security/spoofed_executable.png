@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "PWN: Executable binary disguised as a PNG file"
+exit 0

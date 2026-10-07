@@ -44,6 +44,7 @@
     "test:pw": "cross-env ENV=DOCKER BASE_URL=http://localhost:5173 API_BASE_URL=http://localhost:4000 npm run test:e2e:all --workspace=playwright-e2e",
     "test:selenium": "cross-env ENV=DOCKER BASE_URL=http://localhost:5173 API_BASE_URL=http://localhost:4000 npm test --workspace=selenium-e2e",
     "test:wdio": "cross-env ENV=DOCKER BASE_URL=http://localhost:5173 API_BASE_URL=http://localhost:4000 npm test --workspace=wdio-e2e",
+    "test:security": "npm run test:security --workspace=playwright-e2e",
     "perf:jmeter": "jmeter -n -t jmeter/Tests/BuggyBooks_Catalog_Load.jmx -l jmeter/Results/catalog_report.jtl -e -o jmeter/Results/html-dashboard -Jserver.host=localhost -Jserver.port=4000",
     "report:allure": "npm run report --workspace=playwright-e2e",
     "security:scan": "node scripts/run-security-scan.js",

@@ -83,6 +83,10 @@ export default defineConfig({
             style: { background: '#ffc107', color: '#000' },
             description: 'Accessibility Scans'
           },
+          security: {
+            style: { background: '#d63384', color: '#fff' },
+            description: 'AppSec & DAST Security Tests'
+          },
           quarantine: {
             style: { background: '#6c757d', color: '#fff' },
             description: 'Quarantined Tests'

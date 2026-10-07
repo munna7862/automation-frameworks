@@ -65,3 +65,47 @@ export async function createValidToken(
     .setExpirationTime('1h')
     .sign(secretBytes);
 }
+
+/**
+ * Creates an unsigned JWT token with alg: 'none' in header.
+ */
+export function createNoneAlgorithmToken(username = 'testuser'): string {
+  const header = Buffer.from(JSON.stringify({ alg: 'none', typ: 'JWT' })).toString('base64url');
+  const payload = Buffer.from(
+    JSON.stringify({ username, type: 'access', exp: Math.floor(Date.now() / 1000) + 3600 })
+  ).toString('base64url');
+  return `${header}.${payload}.`;
+}
+
+/**
+ * Creates a JWT token with tampered kid header (e.g. path traversal or key confusion).
+ */
+export async function createKidTamperedToken(
+  username = 'testuser',
+  kid = '../../../../dev/null',
+  secret = DEFAULT_SECRET
+): Promise<string> {
+  const secretBytes = new TextEncoder().encode(secret);
+  return new jose.SignJWT({ username, type: 'access' })
+    .setProtectedHeader({ alg: 'HS256', typ: 'JWT', kid })
+    .setIssuedAt()
+    .setExpirationTime('1h')
+    .sign(secretBytes);
+}
+
+/**
+ * Creates a JWT token where the payload has been tampered with but the original signature is retained.
+ */
+export function createTamperedPayloadToken(
+  validToken: string,
+  tamperedPayload: Record<string, any>
+): string {
+  const parts = validToken.split('.');
+  if (parts.length !== 3) {
+    throw new Error('Invalid JWT format');
+  }
+  const originalPayload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
+  const mergedPayload = { ...originalPayload, ...tamperedPayload };
+  const encodedTamperedPayload = Buffer.from(JSON.stringify(mergedPayload)).toString('base64url');
+  return `${parts[0]}.${encodedTamperedPayload}.${parts[2]}`;
+}

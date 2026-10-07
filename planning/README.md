@@ -155,7 +155,7 @@ Suggested order: `6.1 → 6.2 → 7.1 → 6.3 → 6.4 → 7.2 → 8.1 → 10.1 �
 | **SPRINT-8.2** | [API Coverage Gaps & Negative Matrix](Sprints/sprint_8_2_api_coverage_gaps_and_negative_matrix.md) | Phase 8 | 5 SP | Playwright QA Lead | Done |
 | **SPRINT-8.3** | [OpenAPI Specification & Contract Testing](Sprints/sprint_8_3_openapi_specification_and_contract_testing.md) | Phase 8 | 4 SP | SDET Architect | Done |
 | **SPRINT-9.1** | [DAST Pipeline with OWASP ZAP](Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md) | Phase 9 | 4 SP | Security Test Engineer | Done |
-| **SPRINT-9.2** | [AppSec Security Test Suite](Sprints/sprint_9_2_appsec_security_test_suite.md) | Phase 9 | 6 SP | Security Test Engineer | Not Started |
+| **SPRINT-9.2** | [AppSec Security Test Suite](Sprints/sprint_9_2_appsec_security_test_suite.md) | Phase 9 | 6 SP | Security Test Engineer | Done |
 | **SPRINT-10.1** | [UI Determinism & Lint Enforcement](Sprints/sprint_10_1_ui_determinism_and_lint_enforcement.md) | Phase 10 | 4 SP | Playwright QA Lead | Not Started |
 | **SPRINT-10.2** | [Accessibility, Web Vitals & Visual Hardening](Sprints/sprint_10_2_accessibility_web_vitals_and_visual_hardening.md) | Phase 10 | 5 SP | Playwright QA Lead | Not Started |
 | **SPRINT-10.3** | [Selenium & WDIO Parity Expansion](Sprints/sprint_10_3_selenium_and_wdio_parity_expansion.md) | Phase 10 | 4 SP | Selenium Specialist | Not Started |
@@ -165,7 +165,7 @@ Suggested order: `6.1 → 6.2 → 7.1 → 6.3 → 6.4 → 7.2 → 8.1 → 10.1 �
 | **SPRINT-12.1** | [Test Analytics & Failure Intelligence](Sprints/sprint_12_1_test_analytics_and_failure_intelligence.md) | Phase 12 | 5 SP | SDET Architect | Not Started |
 | **SPRINT-12.2** | [AI-Assisted Triage & Self-Healing Loop](Sprints/sprint_12_2_ai_assisted_triage_and_self_healing_loop.md) | Phase 12 | 4 SP | SDET Architect | Not Started |
 | **SPRINT-12.3** | [Free Cloud-Native Execution Platform](Sprints/sprint_12_3_free_cloud_native_execution_platform.md) | Phase 12 | 4 SP | DevOps Engineer | Not Started |
-| **TOTAL** | **21 Sprints across 7 Phases** | **6–12** | **95 SP** | **Virtual Sprint Team + Claude review** | **In Progress (39/95 SP)** |
+| **TOTAL** | **21 Sprints across 7 Phases** | **6–12** | **95 SP** | **Virtual Sprint Team + Claude review** | **In Progress (45/95 SP)** |
 
 ---
 

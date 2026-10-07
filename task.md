@@ -1,93 +1,100 @@
 # Task Backlog: AutomationFrameworks Sprint Execution
 
-## Current Focus: Sprint 9.1 — DAST Pipeline with OWASP ZAP
+## Current Focus: Sprint 9.2 — AppSec Security Test Suite
 
-**Sprint Identifier**: `SPRINT-9.1-DAST-PIPELINE-OWASP-ZAP`  
+**Sprint Identifier**: `SPRINT-9.2-APPSEC-SECURITY-TEST-SUITE`  
 **Phase**: Phase 9 (Security Testing: DAST & AppSec)  
-**Story Points**: 4 SP  
-**Branch**: `feat/sprint-9.1-dast-zap`  
-**Goal**: Run OWASP ZAP passive scans on every PR and active API scans nightly against the disposable BuggyBooks instance, with SARIF results in GitHub code scanning and managed risk acceptance.
+**Story Points**: 6 SP  
+**Branch**: `feat/sprint-9.2-appsec-suite`  
+**Goal**: Build a `@security` test suite of deterministic tests covering authentication, authorization, injection, file upload, transport and headers, cookies, CORS, CSRF, brute force, and information leakage, each mapped to OWASP.
 
 ---
 
 ## 1. Persona Roles & Ownership Matrix
 
-| Persona                    | Role Assignment          | Responsibilities for this Sprint                                                                | Status    |
-| :------------------------- | :----------------------- | :---------------------------------------------------------------------------------------------- | :-------- |
-| **Scrum Master**           | `role-scrum-master`      | Sprint planning, `task.md` governance, DoR verification, DoD auditing, velocity accounting.     | `ACTIVE`  |
-| **Security Test Engineer** | `role-security-engineer` | ZAP configuration, rules file triage, persona skill authoring, security testing guide skeleton. | `ACTIVE`  |
-| **SDET Architect**         | `role-sdet-architect`    | Risk acceptance review, dual-catalog sync (`DAST-ZAP-*`), architecture alignment.               | `ACTIVE`  |
-| **DevOps Engineer**        | `role-devops-engineer`   | GitHub Actions DAST workflow (`security-dast.yml`), SARIF upload, portal metadata integration.  | `ACTIVE`  |
-| **Product Owner**          | Human Tech Lead (`User`) | Backlog prioritization, sprint kickoff, and final PR review & merge.                            | `STANDBY` |
+| Persona                    | Role Assignment              | Responsibilities for this Sprint                                                                      | Status    |
+| :------------------------- | :--------------------------- | :---------------------------------------------------------------------------------------------------- | :-------- |
+| **Scrum Master**           | `role-scrum-master`          | Sprint kick-off, ceremony governance, `task.md` tracking, DoR validation, DoD audit, velocity sync.   | `ACTIVE`  |
+| **SDET Architect**         | `role-sdet-architect`        | AppSec architecture, dual-catalog sync (`SEC-*`), code review checklist audit, Quality Gate sign-off. | `ACTIVE`  |
+| **Security Test Engineer** | `role-security-engineer`     | Security fixtures (`securityApi`), attack payloads, OWASP mapping, AppSec API & UI test authoring.    | `ACTIVE`  |
+| **Playwright QA Lead**     | `role-playwright-automation` | Playwright test harness, UI XSS test spec, npm script `test:security`, browser policy enforcement.    | `ACTIVE`  |
+| **DevOps Engineer**        | `role-devops-engineer`       | Workflow integration, PR release lifecycle, CI check monitoring, gh pr create.                        | `ACTIVE`  |
+| **Product Owner**          | Human Tech Lead (`User`)     | Backlog prioritization, review gate approvals, final PR merge to `main`.                              | `STANDBY` |
 
 ---
 
 ## 2. Granular Task Breakdown
 
-### US-AF-911: Security Persona & Testing Guide (0.5 SP)
+### US-AF-921: Authentication & Session Security (1 SP) — `Test_002_JwtAndSessionSecurity.spec.ts`
 
-- [x] **US-AF-911.1** (`Security Test Engineer`): Author `.agents/skills/role-security-engineer/SKILL.md` following standard persona structure: responsibilities, scope guard, tools (ZAP, Playwright `@security`, Phase 6 scanners), code review checklist, OWASP mapping rules.
-- [x] **US-AF-911.2** (`SDET Architect`): Update `AGENTS.md` §7 to register the 8th persona (`role-security-engineer`); update `planning/README.md` team matrix and architecture diagram.
-- [x] **US-AF-911.3** (`Security Test Engineer`): Author `docs/security/security_testing_guide.md` skeleton covering scope guard, DAST architecture, manual verification commands, and triage procedures.
+- [x] **US-AF-921.1** (`Security Test Engineer`): Implement `securityApi` fixture in `playwright-e2e/src/core/base/security.fixture.ts` omitting bypass headers (`x-bypass-rate-limit`, `x-bypass-csrf`).
+- [x] **US-AF-921.2** (`Security Test Engineer`): Author `Test_002_JwtAndSessionSecurity.spec.ts` in `playwright-e2e/src/tests/api/Security/` testing `alg: none` rejection, `alg`/`kid` tampering, payload tampering (`sub`/`username`), token reuse after logout, refresh token rotation, and password non-echoing / username enumeration prevention.
+- [x] **US-AF-921.3** (`SDET Architect`): Map tests to OWASP API2:2023 / A07:2021 and register in catalogs.
 
-### US-AF-912: ZAP Baseline Passive Scan on PR (1.5 SP)
+### US-AF-922: Authorization / BOLA Security (1 SP) — `Test_003_ObjectLevelAuthorization.spec.ts`
 
-- [x] **US-AF-912.1** (`Security Test Engineer`): Create `security/zap-rules.tsv` with baseline passive scan rule configurations, justifications, and review dates.
-- [x] **US-AF-912.2** (`DevOps Engineer`): Author `scripts/zap-to-sarif.js` for converting ZAP JSON vulnerability output to standardized SARIF v2.1.0 format with rule descriptions, severity mapping, and artifact links.
-- [x] **US-AF-912.3** (`DevOps Engineer`): Implement `zap-baseline` job in `.github/workflows/security-dast.yml` triggered on pull requests to `main`:
-  - Ephemeral environment launch via `.github/actions/buggybooks-up`.
-  - Target guard step enforcing `^http://localhost(:\d+)?/`.
-  - SHA-pinned `zaproxy/action-baseline` execution against `http://localhost:5173` with `-a`, `rules_file_name: security/zap-rules.tsv`, `fail_action: true`.
-  - SARIF conversion & upload via `github/codeql-action/upload-sarif` (`category: zap-baseline`).
-  - Report upload as GitHub Actions artifact.
-  - Ephemeral teardown via `.github/actions/buggybooks-down`.
+- [x] **US-AF-922.1** (`Security Test Engineer`): Author `Test_003_ObjectLevelAuthorization.spec.ts` testing BOLA / IDOR across `/orders`, `/profile`, `/cart` across User A and User B.
+- [x] **US-AF-922.2** (`Security Test Engineer`): Test `x-test-session-id` spoofing isolation between distinct users.
+- [x] **US-AF-922.3** (`Security Test Engineer`): Test Mass Assignment (BOPLA / `@owasp-api3`) in `POST /register` with administrative privilege flags (`role: 'admin'`, `isAdmin: true`).
+- [x] **US-AF-922.4** (`SDET Architect`): Map tests to OWASP API1:2023 / API3:2023 and register in catalogs.
 
-### US-AF-913: ZAP API Active Scan Nightly (1.5 SP)
+### US-AF-923: Injection & XSS (1 SP) — API & UI Specs
 
-- [x] **US-AF-913.1** (`Security Test Engineer`): Author scan configuration and rule overrides in `security/zap-api-rules.tsv` and `security/zap-api-context.context` to exclude chaos `/api/test/*` routes and inject seeded JWT `Authorization: Bearer <token>` without any bypass headers (`x-bypass-rate-limit`, `x-bypass-csrf`).
-- [x] **US-AF-913.2** (`DevOps Engineer`): Implement `zap-api-scan` job in `.github/workflows/security-dast.yml` triggered nightly at 04:00 UTC and on `workflow_dispatch`:
-  - Target guard step enforcing `^http://localhost(:\d+)?/`.
-  - Ephemeral environment setup & state reset.
-  - Seeded authentication token acquisition (`admin` / `password123`) without bypass headers.
-  - SHA-pinned `zaproxy/action-api-scan` targeting `docs/api/openapi.yaml` with `-f openapi`, excluded regex `^/api/test/`, custom rules, and bearer token replacer.
-  - SARIF upload via `github/codeql-action/upload-sarif` (`category: zap-api`).
-  - Report artifact upload & stage for portal at `AutomationReports/Security/ZAP/latest/`.
-  - Teardown & state reset.
-- [x] **US-AF-913.3** (`DevOps Engineer`): Add optional `zap-proxy-crawl` job triggered via `zap_proxy_crawl` dispatch input.
+- [x] **US-AF-923.1** (`Security Test Engineer`): Author `Test_004_InjectionPayloads.spec.ts` for SQL, NoSQL (`{"$gt": ""}`), OS command, and path-traversal payloads in `search`, `username`, `fullName`, `bookId` ensuring no 5xx or unhandled stack traces.
+- [x] **US-AF-923.2** (`Playwright QA Lead`): Author `Test_001_StoredXss.spec.ts` in `playwright-e2e/src/tests/ui/Security/` testing stored XSS in profile full name and reflected XSS in search query using inert marker `window.__xss`.
+- [x] **US-AF-923.3** (`SDET Architect`): Map tests to OWASP A03:2021 / API8:2023 and register in catalogs.
 
-### US-AF-914: Portal & Documentation Integration (0.5 SP)
+### US-AF-924: File Upload Security (1 SP) — `Test_005_AvatarUploadSecurity.spec.ts`
 
-- [x] **US-AF-914.1** (`DevOps Engineer`): Update `scripts/generate-portal-metadata.js` to aggregate security metrics (last ZAP run date, severity breakdown, links) and display the Security Quality card on the executive portal; update `docs/portal/index.html` and `scripts/test-portal.js` for 7 interactive framework cards.
-- [x] **US-AF-914.2** (`Security Test Engineer`): Update `docs/security/repo_security_controls.md` with DAST governance rows (ZAP baseline, ZAP API scan, rules review, scope guard).
-- [x] **US-AF-914.3** (`SDET Architect`): Add `DAST-ZAP-001` and `DAST-ZAP-002` to both catalogs (`docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md`) in 100% lockstep parity and verify via `npm run test:verify-catalog`.
-- [x] **US-AF-914.4** (`Scrum Master`): Update sprint status in `planning/README.md`, `planning/Sprints/sprint_9_1_dast_pipeline_with_owasp_zap.md`, and Phase 9 overview.
+- [x] **US-AF-924.1** (`Security Test Engineer`): Create security test data payloads under `playwright-e2e/src/test-data/security/` (executable disguised as PNG, SVG with embedded script, path traversal filename `../../evil.png`).
+- [x] **US-AF-924.2** (`Security Test Engineer`): Author `Test_005_AvatarUploadSecurity.spec.ts` testing MIME spoofing, malicious SVG handling/headers, oversize files (413/4xx), and path traversal filename sanitization.
+- [x] **US-AF-924.3** (`SDET Architect`): Map tests to OWASP API4:2023 / A03:2021 and register in catalogs.
+
+### US-AF-925: Transport, Headers, Cookies & CORS (0.5 SP) — `Test_006_SecurityHeadersAndCors.spec.ts`
+
+- [x] **US-AF-925.1** (`Security Test Engineer`): Author `Test_006_SecurityHeadersAndCors.spec.ts` testing Helmet headers (`Content-Security-Policy`, `Strict-Transport-Security` on STAGING, `X-Content-Type-Options: nosniff`, `X-Frame-Options`, `Referrer-Policy`, absence of `X-Powered-By`).
+- [x] **US-AF-925.2** (`Security Test Engineer`): Test cookie attributes (`HttpOnly`, `SameSite`, `Secure` on STAGING) and CORS origin reflections (`Origin: https://evil.example` preflight rejected).
+- [x] **US-AF-925.3** (`SDET Architect`): Map tests to OWASP API8:2023 / A05:2021 and register in catalogs.
+
+### US-AF-926: CSRF, Rate Limiting & Information Leakage (1 SP)
+
+- [x] **US-AF-926.1** (`Security Test Engineer`): Author `Test_007_CsrfEnforcement.spec.ts` testing CSRF enforcement (`x-enforce-csrf: true`), token verification (`GET /api/csrf-token`), and bypass header finding.
+- [x] **US-AF-926.2** (`Security Test Engineer`): Author `Test_008_BruteForceRateLimit.spec.ts` testing >600 requests/min to `/api/login` returning 429 with `Retry-After` (tagged `@slow`, DOCKER only).
+- [x] **US-AF-926.3** (`Security Test Engineer`): Author `Test_009_InformationLeakage.spec.ts` testing 404/500 error responses and `/api/metrics` leakage.
+- [x] **US-AF-926.4** (`SDET Architect`): Map tests to OWASP API4:2023 / API8:2023 / A01:2021 and register in catalogs.
+
+### US-AF-927: Documentation, Tooling & Dual-Catalog Sync (0.5 SP)
+
+- [x] **US-AF-927.1** (`SDET Architect`): Add npm script `test:security` in `playwright-e2e/package.json` (`playwright test --grep @security`).
+- [x] **US-AF-927.2** (`SDET Architect`): Add all `SEC-*` catalog entries to `docs/test_cases_catalog.md` and `playwright-e2e/test_cases_catalog.md` in 100% lockstep parity.
+- [x] **US-AF-927.3** (`Security Test Engineer`): Expand `docs/security/security_testing_guide.md` with AppSec test suite documentation, fixture usage, OWASP mapping, and finding triage.
+- [x] **US-AF-927.4** (`Scrum Master`): Update `planning/README.md`, `planning/Sprints/sprint_9_2_appsec_security_test_suite.md`, and Phase 9 overview.
+- [x] **US-AF-927.5** (`DevOps Engineer`): Verify CI integration, create pull request via `gh pr create`, monitor CI checks.
 
 ---
 
 ## 3. Sprint Review Comments & Refinement Loop
 
-| Gate / Reviewer                  | Target Role     | Review Feedback & Comments                                                                                   | Gate Status |
-| :------------------------------- | :-------------- | :----------------------------------------------------------------------------------------------------------- | :---------: |
-| **Pre-Flight Architecture Gate** | SDET Architect  | Verified DoR: DOCKER env ready, openapi.yaml generated, branch feat/sprint-9.1-dast-zap.                     | `[PASSED]`  |
-| **Code Acceptance Review Gate**  | SDET Architect  | Enforce scope guard (localhost only), no bypass headers in API scan, chaos route exclusion.                  | `[PASSED]`  |
-| **Scrum Master DoD Gate**        | Scrum Master    | 4-point DoD: static analysis clean, catalog parity clean, SARIF schema valid, docs sync.                     | `[PASSED]`  |
-| **DevOps Release Gate**          | DevOps Engineer | Workflow syntax valid, action pinning verified, gh pr created with verification proofs, all CI checks green. | `[PASSED]`  |
-| **Final Human Sign-Off**         | Human Tech Lead | Final PR review and merge to main.                                                                           | `[PENDING]` |
+| Gate / Reviewer                  | Target Role     | Review Feedback & Comments                                                         | Gate Status |
+| :------------------------------- | :-------------- | :--------------------------------------------------------------------------------- | :---------: |
+| **Pre-Flight Architecture Gate** | SDET Architect  | Test strategy, scope guard validation, dual-catalog sync design.                   | `[PASSED]`  |
+| **Code Acceptance Review Gate**  | SDET Architect  | Code review checklist: securityApi fixture, single-browser, inert XSS, OWASP tags. | `[PASSED]`  |
+| **Scrum Master DoD Gate**        | Scrum Master    | 4-point DoD: static analysis clean, test passes, catalog parity, docs sync.        | `[PASSED]`  |
+| **DevOps Release Gate**          | DevOps Engineer | Workflow verification, PR creation, green CI status.                               | `[PASSED]`  |
+| **Final Human Sign-Off**         | Human Tech Lead | Final PR review and merge to `main` (PR #49).                                      | `[PENDING]` |
 
 ---
 
 ## 4. Definition of Done (DoD) Checklist
 
 - [x] `npm run lint:all` and `npm run typecheck:all` pass across all workspaces with 0 errors.
-- [x] Target guard step verified: fails immediately if target is not `^http://localhost(:\d+)?/`.
-- [x] ZAP baseline workflow configured with SHA-pinned actions, `-a`, `zap-rules.tsv`, and SARIF upload.
-- [x] ZAP API scan excludes `/api/test/*` and injects seed auth token without bypass headers.
-- [x] Distinct SARIF categories (`zap-baseline`, `zap-api`) prevent collision with CodeQL or OSV.
-- [x] `security/zap-rules.tsv` and `security/zap-api-rules.tsv` document rule levels with review dates.
+- [x] ≥ 30 `@security` tests authored with proper skip conditions (`ENV=DOCKER` for attack payloads).
+- [x] Attack tests strictly use `securityApi` fixture without bypass headers.
 - [x] Dual-catalog parity confirmed: `npm run test:verify-catalog` exits 0.
-- [x] Portal metadata script produces security card metrics and `npm run test:portal` passes across desktop and mobile.
-- [x] Documentation updated (`repo_security_controls.md`, `security_testing_guide.md`, `AGENTS.md`, `planning/README.md`, `phase_9_security_testing_dast_and_appsec.md`).
-- [x] Pull request opened with structured summary and verification evidence: PR [#48](https://github.com/munna7862/automation-frameworks/pull/48).
+- [x] Single-browser execution policy strictly preserved (Google Chrome UI + API only).
+- [x] Documentation updated (`security_testing_guide.md`, `planning/Sprints/sprint_9_2_appsec_security_test_suite.md`, `planning/README.md`).
+- [x] Pull request opened with structured summary and verification evidence (`gh pr create` -> PR #49).
+- [x] All CI workflow checks green.
 
 ---
 
@@ -98,13 +105,10 @@
 npm run test:verify-catalog
 
 # Command 2: Static analysis
-npm run lint:all; npm run typecheck:all
+npm run typecheck:all
+npm run lint:all
 
-# Command 3: Portal metadata & portal integration test
-node scripts/generate-portal-metadata.js
-npm run test:portal
-
-# Command 4: GitHub PR CI checks
-gh pr checks 48
-# All 14 checks passed green including ZAP Baseline Passive Scan, CodeQL, Smoke Tests, Linting
+# Command 3: Security test list and execution
+cd playwright-e2e
+npm run test:security -- --list
 ```
