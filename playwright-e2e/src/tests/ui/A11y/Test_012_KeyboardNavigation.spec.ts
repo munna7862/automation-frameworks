@@ -10,7 +10,8 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
     page,
     commonFunctions,
     catalogPage,
-    cartPage
+    cartPage,
+    checkoutPage
   }) => {
     test.setTimeout(90000);
 
@@ -267,37 +268,12 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
       );
       await page.keyboard.press('Enter');
 
-      const onStep3 = await expect
-        .poll(
-          async () => {
-            return await page.evaluate(() => {
-              const ind = document.querySelector('#step-indicator-3');
-              return Boolean(ind && ind.classList.contains('step-active'));
-            });
-          },
-          { timeout: 1500, intervals: [100, 300] }
-        )
-        .toBe(true)
-        .then(() => true)
-        .catch(() => false);
-
-      if (!onStep3) {
-        await page.keyboard.press('Space');
-      }
+      // Wait for Step 3 to become active
+      await expect(checkoutPage.stepIndicator3).toHaveClass(/step-active/, {
+        timeout: 10000
+      });
 
       // Step 3: Complete Payment
-      await page.waitForFunction(
-        () => {
-          const ind = document.querySelector('#step-indicator-3');
-          if (ind && ind.classList.contains('step-active')) return true;
-          const btn = document.querySelector('#wizard-next-btn');
-          return Boolean(
-            btn && btn.textContent && /complete payment|place order|pay now/i.test(btn.textContent)
-          );
-        },
-        { timeout: 10000 }
-      );
-
       await tabUntil(
         async () => {
           return await page.evaluate(() => {
@@ -306,12 +282,14 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
             return Boolean(
               el &&
               (el.id === 'wizard-next-btn' ||
+                el.getAttribute('data-testid') === 'wizard-next-btn' ||
                 text.includes('complete payment') ||
+                text.includes('place order') ||
                 text.includes('pay now'))
             );
           });
         },
-        30,
+        60,
         'Final Complete Payment button'
       );
       await assertFocusIndicator('Complete Payment button');

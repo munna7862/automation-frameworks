@@ -64,7 +64,7 @@ export class CheckoutPage extends BasePage {
     return this.page.locator('#step-indicator-2');
   }
 
-  private get stepIndicator3(): Locator {
+  public get stepIndicator3(): Locator {
     return this.page.locator('#step-indicator-3');
   }
 

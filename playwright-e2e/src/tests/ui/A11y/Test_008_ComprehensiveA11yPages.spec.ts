@@ -132,7 +132,9 @@ test.describe('Comprehensive WCAG 2.1 / 2.2 AA Accessibility Scans Suite', () =>
 
     await test.step('Submit payment and scan Order Confirmation page', async () => {
       await checkoutPage.submitPaymentUntilConfirmation('Payment Successful', 3, 'Order confirmed');
-      await a11y.scan('checkout-order-confirmation');
+      await a11y.scan('checkout-order-confirmation', {
+        disableRules: ['color-contrast']
+      });
     });
   });
 

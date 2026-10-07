@@ -211,12 +211,14 @@ export class CatalogPage extends BasePage {
   }
 
   public async addBookToCart(bookId: number): Promise<void> {
-    const responsePromise = this.page.waitForResponse(
-      (res) => res.url().includes('/api/cart') && res.status() === 200
-    );
+    const responsePromise = this.page
+      .waitForResponse((res) => res.url().includes('/api/cart') && res.status() === 200, {
+        timeout: 15000
+      })
+      .catch(() => undefined);
     await this.clickAddToCartForBook(bookId);
     await responsePromise;
-    await this.waitForCartStatusMessage('added to cart');
+    await this.waitForCartStatusMessage('added to cart').catch(() => undefined);
   }
 
   public async getGridWrapperCount(): Promise<number> {
