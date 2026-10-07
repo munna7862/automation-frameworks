@@ -32,7 +32,7 @@
     "@wdio/spec-reporter": "^9.3.9",
     "@wdio/types": "^9.3.9",
     "allure-commandline": "^2.32.0",
-    "allure-js-commons": "^3.4.1",
+    "allure-js-commons": "^3.13.0",
     "appium": "^2.16.1",
     "appium-uiautomator2-driver": "^3.8.0",
     "appium-xcuitest-driver": "^7.26.0",
