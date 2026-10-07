@@ -74,7 +74,7 @@ test.describe('Comprehensive WCAG 2.1 / 2.2 AA Accessibility Scans Suite', () =>
     await test.step('Add book and scan Populated Cart page', async () => {
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardSelector();
-      await catalogPage.clickAddToCartForBook(1);
+      await catalogPage.addBookToCart(1);
       await page.goto(`${envConfig.baseUrl}/cart`);
       await cartPage.waitForCartItemOrEmpty();
       await a11y.scan('cart-populated');
@@ -90,7 +90,7 @@ test.describe('Comprehensive WCAG 2.1 / 2.2 AA Accessibility Scans Suite', () =>
     await test.step('Ensure item in cart and navigate to Checkout', async () => {
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardSelector();
-      await catalogPage.clickAddToCartForBook(1);
+      await catalogPage.addBookToCart(1);
       await page.goto(`${envConfig.baseUrl}/checkout`);
       await checkoutPage.waitForNextStepButton();
     });
@@ -102,7 +102,7 @@ test.describe('Comprehensive WCAG 2.1 / 2.2 AA Accessibility Scans Suite', () =>
     await test.step('Trigger and scan Checkout Step 1 Validation Errors state', async () => {
       await checkoutPage.clickNextStepWithoutValidationWait();
       await expect
-        .poll(async () => (await checkoutPage.getFieldErrors()).length, { timeout: 5000 })
+        .poll(async () => (await checkoutPage.getFieldErrors()).length, { timeout: 10000 })
         .toBeGreaterThan(0);
       await a11y.scan('checkout-step-1-validation-errors', {
         disableRules: ['color-contrast']

@@ -362,7 +362,7 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
       await syncVisualChaos(request, false);
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardSelector();
-      await catalogPage.clickAddToCartForBook(1);
+      await catalogPage.addBookToCart(1);
       await page.goto(`${envConfig.baseUrl}/cart`);
       await cartPage.waitForCartHeader();
     });
@@ -401,7 +401,7 @@ test.describe('Visual Regression & Layout Chaos Suite', () => {
       await syncVisualChaos(request, false);
       await page.goto(envConfig.baseUrl);
       await catalogPage.waitForBookCardSelector();
-      await catalogPage.clickAddToCartForBook(1);
+      await catalogPage.addBookToCart(1);
       await page.goto(`${envConfig.baseUrl}/checkout`);
       await checkoutPage.waitForNextStepButton();
     });

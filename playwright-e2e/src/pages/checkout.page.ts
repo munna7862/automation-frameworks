@@ -147,7 +147,10 @@ export class CheckoutPage extends BasePage {
   }
 
   public async getFieldErrors(): Promise<string[]> {
-    await this.fieldErrorMessages.first().waitFor({ state: 'visible', timeout: 10000 });
+    await this.fieldErrorMessages
+      .first()
+      .waitFor({ state: 'visible', timeout: 5000 })
+      .catch(() => undefined);
     return await this.fieldErrorMessages.allTextContents();
   }
 
