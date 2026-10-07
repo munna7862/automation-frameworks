@@ -27,7 +27,8 @@
     "merge:monocart": "node scripts/merge-monocart.js",
     "test:contract:consumer": "tsx contract-tests/consumer/run-consumer-tests.ts",
     "test:contract:provider": "tsx contract-tests/provider/provider.verify.ts",
-    "test:contract": "npm run test:contract:consumer && npm run test:contract:provider"
+    "test:contract": "npm run test:contract:consumer && npm run test:contract:provider",
+    "har:record": "tsx scripts/record-har.ts"
   },
   "keywords": [],
   "author": "",

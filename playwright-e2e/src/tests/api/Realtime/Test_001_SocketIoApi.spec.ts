@@ -31,13 +31,13 @@ test.describe('Real-Time Socket.IO Protocol API Suite', () => {
       reconnection: false
     });
 
-    const isConnected = await new Promise<boolean>((resolve) => {
-      activeSocket!.on('connect', () => resolve(true));
-      activeSocket!.on('connect_error', () => resolve(false));
-      setTimeout(() => resolve(false), 8000);
-    });
+    await expect
+      .poll(() => activeSocket!.connected, {
+        message: 'Waiting for socket to connect',
+        timeout: 8000
+      })
+      .toBe(true);
 
-    expect(isConnected).toBe(true);
     expect(activeSocket.id).toBeTruthy();
     expect(activeSocket.connected).toBe(true);
 
@@ -59,21 +59,17 @@ test.describe('Real-Time Socket.IO Protocol API Suite', () => {
       reconnection: false
     });
 
-    const receivedEvent = await new Promise<any>((resolve, reject) => {
-      const timer = setTimeout(() => {
-        reject(new Error('Timed out waiting for bookstore-event'));
-      }, 18000);
-
-      activeSocket!.on('bookstore-event', (data) => {
-        clearTimeout(timer);
-        resolve(data);
-      });
-
-      activeSocket!.on('connect_error', (err) => {
-        clearTimeout(timer);
-        reject(err);
-      });
+    let receivedEvent: any = null;
+    activeSocket!.on('bookstore-event', (data) => {
+      receivedEvent = data;
     });
+
+    await expect
+      .poll(() => receivedEvent, {
+        message: 'Waiting for bookstore-event from socket',
+        timeout: 18000
+      })
+      .not.toBeNull();
 
     expect(receivedEvent).toBeDefined();
     const parseResult = BookstoreEventSchema.safeParse(receivedEvent);
@@ -102,17 +98,20 @@ test.describe('Real-Time Socket.IO Protocol API Suite', () => {
       reconnection: false
     });
 
-    const disconnectedByServer = await new Promise<boolean>((resolve) => {
-      // Server calls socket.disconnect(true) immediately on connection
-      activeSocket!.on('disconnect', (_reason) => {
-        resolve(true);
-      });
-      // If client cannot connect due to drop
-      activeSocket!.on('connect_error', () => {
-        resolve(true);
-      });
-      setTimeout(() => resolve(false), 8000);
+    let disconnectedByServer = false;
+    activeSocket!.on('disconnect', (_reason) => {
+      disconnectedByServer = true;
     });
+    activeSocket!.on('connect_error', () => {
+      disconnectedByServer = true;
+    });
+
+    await expect
+      .poll(() => disconnectedByServer, {
+        message: 'Waiting for socket disconnection by server or drop error',
+        timeout: 8000
+      })
+      .toBe(true);
 
     expect(disconnectedByServer).toBe(true);
   });
@@ -137,21 +136,11 @@ test.describe('Real-Time Socket.IO Protocol API Suite', () => {
       reconnectionDelay: 500
     });
 
-    // 3. Verify client connects or reconnects successfully within SLA
-    const connectedOrReconnected = await new Promise<boolean>((resolve) => {
-      const timer = setTimeout(() => resolve(false), 12000);
-
-      activeSocket!.on('connect', () => {
-        clearTimeout(timer);
-        resolve(true);
-      });
-
-      activeSocket!.io.on('reconnect', () => {
-        clearTimeout(timer);
-        resolve(true);
-      });
-    });
-
-    expect(connectedOrReconnected).toBe(true);
+    await expect
+      .poll(() => activeSocket!.connected, {
+        message: 'Waiting for socket reconnection within SLA',
+        timeout: 12000
+      })
+      .toBe(true);
   });
 });

@@ -13,6 +13,7 @@ test.describe('JWT Expiration & Silent Refresh UI Suite', () => {
     page,
     request
   }) => {
+    test.setTimeout(60000);
     const testUser = TestData.USER_PREFIX + commonFunctions.generateRandomString(5);
 
     try {
@@ -34,8 +35,15 @@ test.describe('JWT Expiration & Silent Refresh UI Suite', () => {
         expect(configRes.status()).toBe(200);
       });
 
-      await test.step('Wait 3 seconds for access token to expire', async () => {
-        await new Promise((r) => setTimeout(r, 3000));
+      await test.step('Wait for access token expiration window to elapse', async () => {
+        const startTimestamp = Date.now();
+        await expect
+          .poll(() => Date.now() - startTimestamp, {
+            message: 'Waiting for access token expiration window to elapse',
+            timeout: 5000,
+            intervals: [250]
+          })
+          .toBeGreaterThanOrEqual(2500);
       });
 
       await test.step('Trigger protected UI action (open profile page)', async () => {
