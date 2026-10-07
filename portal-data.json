@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-07T06:02:26.237Z",
+  "generatedAt": "2026-10-07T07:30:17.344Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -13,7 +13,7 @@
     "commit": "6ec39c5",
     "branch": "main",
     "message": "feat(playwright): UI Determinism, Hard Wait Elimination, and Lint Enforcement (Sprint 10.1) (#50)",
-    "ciRun": "11"
+    "ciRun": "2"
   },
   "kpis": {
     "totalTests": 276,
@@ -22,7 +22,7 @@
     "totalSkipped": 0,
     "overallPassRate": "99.6%",
     "activeFrameworks": 7,
-    "totalDurationMs": 296060,
+    "totalDurationMs": 293659,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -93,7 +93,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "durationMs": 11269,
+        "durationMs": 8868,
         "passRate": "100.0%"
       },
       "highlights": [
