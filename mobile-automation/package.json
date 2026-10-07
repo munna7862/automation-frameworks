@@ -33,7 +33,7 @@
     "@wdio/types": "^9.3.9",
     "allure-commandline": "^2.32.0",
     "allure-js-commons": "^3.4.1",
-    "appium": "^2.16.1",
+    "appium": "^3.8.0",
     "appium-uiautomator2-driver": "^3.8.0",
     "appium-xcuitest-driver": "^7.26.0",
     "eslint": "^10.10.0",
