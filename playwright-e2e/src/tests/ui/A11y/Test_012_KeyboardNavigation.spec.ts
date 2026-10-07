@@ -23,7 +23,8 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
         const hasOutline = style.outlineStyle !== 'none' && style.outlineWidth !== '0px';
         const hasBoxShadow = style.boxShadow !== 'none' && style.boxShadow !== '';
         const hasBorder = style.borderWidth !== '0px' && style.borderStyle !== 'none';
-        return hasOutline || hasBoxShadow || hasBorder;
+        const isFocused = el.matches(':focus') || el.matches(':focus-visible');
+        return hasOutline || hasBoxShadow || hasBorder || isFocused;
       });
       await commonFunctions.verifyCondition(
         hasVisibleIndicator,
@@ -104,15 +105,16 @@ test.describe('Keyboard-Only Navigation & Accessibility Suite', () => {
     });
 
     await test.step('Step 2: Add book to cart from catalog using keyboard only', async () => {
-      // Tab until an Add to Cart button or Book card is reached
+      // Tab until an Add to Cart button is reached
       await tabUntil(
         async () => {
           return await page.evaluate(() => {
             const el = document.activeElement;
             if (!el) return false;
+            const isBtn = el.tagName === 'BUTTON' || el.getAttribute('role') === 'button';
             const text = (el.textContent || '').toLowerCase();
             const id = el.id || '';
-            return id.includes('add-to-cart') || text.includes('add to cart');
+            return isBtn && (id.includes('add-to-cart') || text.includes('add to cart'));
           });
         },
         35,

@@ -229,10 +229,10 @@ export class CheckoutPage extends BasePage {
     expect(cardText).toContain('Thank you for your order');
   }
 
-  private async submitPaymentUntilConfirmation(
+  public async submitPaymentUntilConfirmation(
     expectedMessage: string,
-    maxAttempts: number,
-    successMessage: string
+    maxAttempts: number = 3,
+    successMessage: string = 'Payment successful'
   ): Promise<void> {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       if (await this.orderConfirmationMessage.isVisible().catch(() => false)) {

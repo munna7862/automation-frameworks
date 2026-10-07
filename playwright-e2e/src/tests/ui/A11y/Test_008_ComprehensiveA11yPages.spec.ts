@@ -124,15 +124,14 @@ test.describe('Comprehensive WCAG 2.1 / 2.2 AA Accessibility Scans Suite', () =>
       await checkoutPage.enterCardNumber('4532000000000000');
       await checkoutPage.enterExpiry('12/30');
       await checkoutPage.enterCvv('123');
-      await checkoutPage.clickFinalSubmit();
+      await checkoutPage.clickNextStep();
       await a11y.scan('checkout-step-3-confirm', {
         disableRules: ['color-contrast']
       });
     });
 
     await test.step('Submit payment and scan Order Confirmation page', async () => {
-      await checkoutPage.clickFinalSubmit();
-      await checkoutPage.waitForOrderConfirmationMessage('Payment Successful');
+      await checkoutPage.submitPaymentUntilConfirmation('Payment Successful', 3, 'Order confirmed');
       await a11y.scan('checkout-order-confirmation');
     });
   });

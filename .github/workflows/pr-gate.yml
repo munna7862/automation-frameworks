@@ -246,10 +246,10 @@ jobs:
         run: |
           if [ -n "${{ steps.check-changes.outputs.specs }}" ]; then
             npx playwright test --config=src/config/playwright.config.ts \
-              ${{ steps.check-changes.outputs.specs }} --repeat-each=5 --retries=0 --workers=4
+              ${{ steps.check-changes.outputs.specs }} --repeat-each=5 --retries=0 --workers=1
           else
             npx playwright test --config=src/config/playwright.config.ts \
-              --only-changed=origin/main --repeat-each=5 --retries=0 --workers=4
+              --only-changed=origin/main --repeat-each=5 --retries=0 --workers=1
           fi
         continue-on-error: true
 
