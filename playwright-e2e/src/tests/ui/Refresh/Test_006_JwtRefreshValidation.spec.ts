@@ -36,9 +36,9 @@ test.describe('JWT Expiration & Silent Refresh UI Suite', () => {
       });
 
       await test.step('Wait for access token expiration window to elapse', async () => {
-        const startTimestamp = Date.now();
+        const sessionStartTime = Date.now();
         await expect
-          .poll(() => Date.now() - startTimestamp, {
+          .poll(() => Date.now() - sessionStartTime, {
             message: 'Waiting for access token expiration window to elapse',
             timeout: 5000,
             intervals: [250]

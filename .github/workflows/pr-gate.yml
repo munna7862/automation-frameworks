@@ -211,14 +211,22 @@ jobs:
       - name: Check for Changed Test Specs
         id: check-changes
         run: |
-          CHANGED_SPECS=$(git diff --name-only origin/main...HEAD -- 'playwright-e2e/src/tests/**/*.spec.ts' || true)
-          if [ -z "$CHANGED_SPECS" ]; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "No Playwright test specs modified in this PR. Burn-in no-op."
-          else
+          SPEC_FILES=$(git diff --name-only origin/main...HEAD -- 'playwright-e2e/src/tests/**/*.spec.ts' | sed 's|^playwright-e2e/||' | tr '\n' ' ' || true)
+          SPEC_FILES_TRIMMED=$(echo "$SPEC_FILES" | xargs)
+          if [ -n "$SPEC_FILES_TRIMMED" ]; then
             echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "Detected changed specs:"
-            echo "$CHANGED_SPECS"
+            echo "specs=$SPEC_FILES_TRIMMED" >> $GITHUB_OUTPUT
+            echo "Detected explicitly changed specs: $SPEC_FILES_TRIMMED"
+          else
+            OTHER_CHANGES=$(git diff --name-only origin/main...HEAD -- 'playwright-e2e/src/**/*.ts' || true)
+            if [ -n "$(echo "$OTHER_CHANGES" | xargs)" ]; then
+              echo "has_changes=true" >> $GITHUB_OUTPUT
+              echo "specs=" >> $GITHUB_OUTPUT
+              echo "Detected internal Playwright src changes without direct spec edits. Using --only-changed."
+            else
+              echo "has_changes=false" >> $GITHUB_OUTPUT
+              echo "No Playwright specs or source files modified in this PR. Burn-in no-op."
+            fi
           fi
 
       - name: Start Ephemeral BuggyBooks Environment
@@ -236,8 +244,13 @@ jobs:
         id: burnin
         working-directory: playwright-e2e
         run: |
-          npx playwright test --config=src/config/playwright.config.ts \
-            --only-changed=origin/main --repeat-each=5 --retries=0 --workers=4
+          if [ -n "${{ steps.check-changes.outputs.specs }}" ]; then
+            npx playwright test --config=src/config/playwright.config.ts \
+              ${{ steps.check-changes.outputs.specs }} --repeat-each=5 --retries=0 --workers=4
+          else
+            npx playwright test --config=src/config/playwright.config.ts \
+              --only-changed=origin/main --repeat-each=5 --retries=0 --workers=4
+          fi
         continue-on-error: true
 
       - name: Teardown State Reset
