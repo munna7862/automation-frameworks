@@ -1,0 +1,5 @@
+[2026-10-08 18:13:43] INFO:  Registration setup status Success !! Actual and Expected Values are:: 201
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:43] INFO:  Security status for SQL injection pattern in username Success !! Actual and Expected Values are:: true
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:43] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1791445423296-d8b178b1
