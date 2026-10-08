@@ -1,0 +1,6 @@
+[2026-10-08 18:13:47] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w7-2-1791445427649-623dc99c
+[2026-10-08 18:13:47] INFO: Network interception enabled with mode: api-only
+[2026-10-08 18:13:49] INFO: Verifying orphaned form label and unlinked input ID under chaos mode - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:49] INFO: Captured 5 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/A11y-Test_007_A11yScanVali-97906-ilure-regression-chaos-a11y-chrome/network-log.json
+[2026-10-08 18:13:49] INFO: Cleaned up ephemeral test session: pw-w7-2-1791445427649-623dc99c

@@ -1,0 +1,33 @@
+[2026-10-08 18:13:42] INFO:  Response status Success !! Actual and Expected Values are:: 201
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Registration response is an object Success !! Actual and Expected Values are:: object
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Registration response is not null Success !! Actual and Expected Values are:: true
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Message is a string Success !! Actual and Expected Values are:: string
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Username is a string Success !! Actual and Expected Values are:: string
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Token is a string Success !! Actual and Expected Values are:: string
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  RefreshToken is a string Success !! Actual and Expected Values are:: string
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Registration response contains only expected contract fields Success !! Actual and Expected Values are:: ["message","refreshToken","token","username"]
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Login response status after registration Success !! Actual and Expected Values are:: 200
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Login response is an object Success !! Actual and Expected Values are:: object
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Login response is not null Success !! Actual and Expected Values are:: true
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Message is a string Success !! Actual and Expected Values are:: string
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Username is a string Success !! Actual and Expected Values are:: string
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Token is a string Success !! Actual and Expected Values are:: string
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  RefreshToken is a string Success !! Actual and Expected Values are:: string
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO:  Login response contains only expected contract fields Success !! Actual and Expected Values are:: ["message","refreshToken","token","username"]
+no test runtime is found. Please check test framework configuration
+[2026-10-08 18:13:42] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1791445422434-08fc73e3
