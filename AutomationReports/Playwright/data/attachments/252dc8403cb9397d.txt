@@ -1,0 +1,5 @@
+[2026-10-09 18:10:02] INFO:  Registration setup status Success !! Actual and Expected Values are:: 201
+no test runtime is found. Please check test framework configuration
+[2026-10-09 18:10:02] INFO:  Status code for unregistered user Success !! Actual and Expected Values are:: true
+no test runtime is found. Please check test framework configuration
+[2026-10-09 18:10:02] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1791531602057-98cd62cd
