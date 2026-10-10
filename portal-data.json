@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-10T07:32:42.952Z",
+  "generatedAt": "2026-10-10T09:48:19.824Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -13,16 +13,16 @@
     "commit": "6ec39c5",
     "branch": "main",
     "message": "feat(playwright): UI Determinism, Hard Wait Elimination, and Lint Enforcement (Sprint 10.1) (#50)",
-    "ciRun": "5"
+    "ciRun": "9"
   },
   "kpis": {
-    "totalTests": 547,
-    "totalPassed": 535,
+    "totalTests": 527,
+    "totalPassed": 515,
     "totalFailed": 9,
     "totalSkipped": 3,
     "overallPassRate": "98.3%",
     "activeFrameworks": 7,
-    "totalDurationMs": 305956,
+    "totalDurationMs": 343306,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -89,12 +89,12 @@
       "reportPath": "./AutomationReports/Selenium/",
       "status": "FAILED",
       "metrics": {
-        "total": 137,
-        "passed": 133,
+        "total": 117,
+        "passed": 113,
         "failed": 3,
         "skipped": 1,
-        "durationMs": 26932,
-        "passRate": "97.1%"
+        "durationMs": 64282,
+        "passRate": "96.6%"
       },
       "highlights": [
         "W3C standardized browser automation commands",
