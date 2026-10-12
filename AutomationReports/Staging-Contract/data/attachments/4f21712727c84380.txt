@@ -1,0 +1,5 @@
+[2026-10-12 18:09:31] INFO: Verifying GET /api/test/config status is 200
+no test runtime is found. Please check test framework configuration
+[2026-10-12 18:09:31] INFO: Verifying visualChaos default value is false
+no test runtime is found. Please check test framework configuration
+[2026-10-12 18:09:31] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1791790771926-9d6230b1
