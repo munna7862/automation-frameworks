@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-12T07:45:23.016Z",
+  "generatedAt": "2026-10-12T10:40:13.934Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -13,16 +13,16 @@
     "commit": "6ec39c5",
     "branch": "main",
     "message": "feat(playwright): UI Determinism, Hard Wait Elimination, and Lint Enforcement (Sprint 10.1) (#50)",
-    "ciRun": "7"
+    "ciRun": "11"
   },
   "kpis": {
-    "totalTests": 562,
-    "totalPassed": 550,
+    "totalTests": 617,
+    "totalPassed": 605,
     "totalFailed": 9,
     "totalSkipped": 3,
-    "overallPassRate": "98.4%",
+    "overallPassRate": "98.5%",
     "activeFrameworks": 7,
-    "totalDurationMs": 298346,
+    "totalDurationMs": 253036,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -113,12 +113,12 @@
       "reportPath": "./AutomationReports/WDIO/",
       "status": "FAILED",
       "metrics": {
-        "total": 117,
-        "passed": 113,
+        "total": 172,
+        "passed": 168,
         "failed": 3,
         "skipped": 1,
-        "durationMs": 64282,
-        "passRate": "96.6%"
+        "durationMs": 18972,
+        "passRate": "97.7%"
       },
       "highlights": [
         "Deep shadow root locator piercing (>>> syntax)",
