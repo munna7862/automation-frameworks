@@ -1,0 +1,11 @@
+[2026-10-12 18:09:32] INFO: Verifying user registration status is 201
+no test runtime is found. Please check test framework configuration
+[2026-10-12 18:09:32] INFO: Verifying user login status is 200
+no test runtime is found. Please check test framework configuration
+[2026-10-12 18:09:32] INFO: Verifying add to cart status is 200
+no test runtime is found. Please check test framework configuration
+[2026-10-12 18:09:32] INFO: Verifying process checkout status is 200
+no test runtime is found. Please check test framework configuration
+[2026-10-12 18:09:32] INFO: Verifying correlation ID preserved in checkout response
+no test runtime is found. Please check test framework configuration
+[2026-10-12 18:09:32] INFO: Cleaned up ephemeral API test session: pw-api-w2-2-1791790772051-872bb954
