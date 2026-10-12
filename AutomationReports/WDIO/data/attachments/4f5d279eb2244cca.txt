@@ -1,0 +1,7 @@
+[2026-10-12 18:09:30] INFO:  Status code should be 200 for Standard page 1 Success !! Actual and Expected Values are:: 200
+no test runtime is found. Please check test framework configuration
+[2026-10-12 18:09:30] INFO:  Response page should be 1 for Standard page 1 Success !! Actual and Expected Values are:: 1
+no test runtime is found. Please check test framework configuration
+[2026-10-12 18:09:30] INFO:  Books array length should be less than or equal to limit 5 Success !! Actual and Expected Values are:: true
+no test runtime is found. Please check test framework configuration
+[2026-10-12 18:09:30] INFO: Cleaned up ephemeral API test session: pw-api-w2-2-1791790770524-3ce1db73
