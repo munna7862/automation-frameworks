@@ -1,0 +1,6 @@
+[2026-10-15 16:38:11] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w6-3-1792044491927-a5472789
+[2026-10-15 16:38:11] INFO: Network interception enabled with mode: api-only
+[2026-10-15 16:38:12] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-15 16:38:13] INFO: Captured 7 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/EdgeStates-Test_001_Mocked-4b3a9--and-Settle-regression-mock-chrome/network-log.json
+[2026-10-15 16:38:13] INFO: Cleaned up ephemeral test session: pw-w6-3-1792044491927-a5472789
