@@ -1,0 +1,5 @@
+[2026-10-15 16:36:30] INFO: Verifying POST /api/test/config status is 200
+no test runtime is found. Please check test framework configuration
+[2026-10-15 16:36:30] INFO: Verifying visualChaos field is true in response config
+no test runtime is found. Please check test framework configuration
+[2026-10-15 16:36:30] INFO: Cleaned up ephemeral API test session: pw-api-w1-1-1792044390856-02d2d2c3

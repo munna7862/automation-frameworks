@@ -1,0 +1,7 @@
+[2026-10-15 16:36:30] INFO:  Status code should be 200 when no query parameters are provided Success !! Actual and Expected Values are:: 200
+no test runtime is found. Please check test framework configuration
+[2026-10-15 16:36:30] INFO:  should provide all books count 15 Success !! Actual and Expected Values are:: 15
+no test runtime is found. Please check test framework configuration
+[2026-10-15 16:36:30] INFO:  Response should be an array Success !! Actual and Expected Values are:: true
+no test runtime is found. Please check test framework configuration
+[2026-10-15 16:36:30] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1792044390081-4f20d6e3
