@@ -1,0 +1,4 @@
+[2026-10-16 16:35:31] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1792130731498-8bf3e5d6
+[2026-10-16 16:35:31] INFO: Network interception enabled with mode: api-only
+[2026-10-16 16:35:32] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Security-Test_001_StoredXs-867c0--browser-security-owasp-a03-chrome/network-log.json
+[2026-10-16 16:35:32] INFO: Cleaned up ephemeral test session: pw-w4-3-1792130731498-8bf3e5d6

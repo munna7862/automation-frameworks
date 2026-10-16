@@ -1,0 +1,3 @@
+[2026-10-16 16:34:24] INFO: Inventory report request took: 3010 ms
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:24] INFO: Cleaned up ephemeral API test session: pw-api-w0-0-1792130661659-308c59bb

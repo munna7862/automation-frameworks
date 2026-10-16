@@ -1,0 +1,7 @@
+[2026-10-16 16:34:20] INFO:  Status code should be 200 for Exceeding total pages Success !! Actual and Expected Values are:: 200
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:20] INFO:  Response page should be 9999 for Exceeding total pages Success !! Actual and Expected Values are:: 9999
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:20] INFO:  Books array should be empty for out-of-bounds page 9999 Success !! Actual and Expected Values are:: 0
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:20] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1792130660593-923a978e

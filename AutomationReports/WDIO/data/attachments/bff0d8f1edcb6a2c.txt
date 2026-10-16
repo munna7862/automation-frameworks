@@ -1,0 +1,70 @@
+[2026-10-16 16:34:49] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w1-0-1792130689432-04e1b01a
+[2026-10-16 16:34:49] INFO: Network interception enabled with mode: api-only
+[2026-10-16 16:34:50] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:50] INFO: Entering full name: Full wiz_user_eqAc6
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:50] INFO: Entering username: wiz_user_eqAc6
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:50] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:50] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:50] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:51] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:51] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:51] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:51] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:51] INFO: Total Books displayed in Catalog page are: 8
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:51] INFO: Clicking on Add to Cart button for book id: 1
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:52] INFO: Waiting for cart status message: added to cart
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Cart status message "added to cart" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Clicking on Cart link
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Clicking on Proceed to Checkout button
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Clicking on Next Step button to trigger validation
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Verifying First Name required error on Step 1 - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Verifying Last Name required error on Step 1 - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Verifying Address required error on Step 1 - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Verifying City required error on Step 1 - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Entering first name: John
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Entering last name: Doe
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Entering shipping address: 123 Buggy Lane
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:53] INFO: Entering city: Stack City
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:54] INFO: Clicking on Next Step button to trigger validation
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:54] INFO: Entering card number
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:54] INFO: Entering card expiry: 99/99
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:54] INFO: Entering card CVV: 12
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:54] INFO: Clicking on Next Step button to trigger validation
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:54] INFO: Verifying Credit Card 16-digit error on Step 2 - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:54] INFO: Verifying Expiry MM/YY format error on Step 2 - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:54] INFO: Verifying CVV 3-digit error on Step 2 - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:54] INFO: Captured 21 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Checkout-Test_004_Checkout-86218-aging-Validation-regression-chrome/network-log.json
+[2026-10-16 16:34:54] INFO: Cleaned up ephemeral test session: pw-w1-0-1792130689432-04e1b01a
