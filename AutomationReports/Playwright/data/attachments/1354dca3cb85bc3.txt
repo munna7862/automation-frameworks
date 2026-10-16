@@ -1,0 +1,3 @@
+[2026-10-16 16:34:21] INFO: Verifying 400 Bad Request returned for invalid data type
+no test runtime is found. Please check test framework configuration
+[2026-10-16 16:34:21] INFO: Cleaned up ephemeral API test session: pw-api-w2-2-1792130661785-11eb65b5
