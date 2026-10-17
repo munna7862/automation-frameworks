@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-17T05:55:51.945Z",
+  "generatedAt": "2026-10-17T07:49:58.753Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -13,16 +13,16 @@
     "commit": "6ec39c5",
     "branch": "main",
     "message": "feat(playwright): UI Determinism, Hard Wait Elimination, and Lint Enforcement (Sprint 10.1) (#50)",
-    "ciRun": "12"
+    "ciRun": "16"
   },
   "kpis": {
-    "totalTests": 619,
-    "totalPassed": 606,
-    "totalFailed": 10,
+    "totalTests": 507,
+    "totalPassed": 495,
+    "totalFailed": 9,
     "totalSkipped": 3,
-    "overallPassRate": "98.4%",
+    "overallPassRate": "98.2%",
     "activeFrameworks": 7,
-    "totalDurationMs": 378272,
+    "totalDurationMs": 295321,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -38,12 +38,12 @@
       "reportPath": "./AutomationReports/Playwright/",
       "status": "FAILED",
       "metrics": {
-        "total": 229,
-        "passed": 224,
-        "failed": 4,
+        "total": 117,
+        "passed": 113,
+        "failed": 3,
         "skipped": 1,
-        "durationMs": 119243,
-        "passRate": "97.8%"
+        "durationMs": 36292,
+        "passRate": "96.6%"
       },
       "highlights": [
         "55 REST API tests with JWT session reuse",
