@@ -1,0 +1,3 @@
+[2026-10-18 16:45:12] INFO:  Security status for SQL injection pattern in username Success !! Actual and Expected Values are:: true
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:12] INFO: Cleaned up ephemeral API test session: pw-api-w2-2-1792304112289-bc3e7521
