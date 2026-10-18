@@ -1,0 +1,64 @@
+[2026-10-18 16:45:31] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1792304131028-4896b657
+[2026-10-18 16:45:31] INFO: Network interception enabled with mode: api-only
+[2026-10-18 16:45:31] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:32] INFO: Checking if Logout button is visible on Catalog page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:32] INFO: Verifying user is pre-authenticated via storageState - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:32] INFO: Clicking on Cart link
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:38] INFO: Clicking on Catalog link
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:38] INFO: Clicking on Add to Cart button for book id: 1
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:39] INFO: Waiting for cart status message: added to cart
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:39] INFO: Cart status message "added to cart" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:39] INFO: Waiting for cart status message: Added to cart!
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:39] INFO: Cart status message "Added to cart!" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:39] INFO: Clicking on Cart link
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:40] INFO: Getting cart item text
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:40] INFO: Getting cart total text
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:40] INFO: Clicking on Proceed to Checkout button
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:40] INFO: Waiting for checkout order total amount: $10.99
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:40] INFO: Entering first name: john
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:40] INFO: Entering last name: cena
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:40] INFO: Entering shipping address: 123 Buggy Lane
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:40] INFO: Entering city: Stack City
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:40] INFO: Clicking on Next Step button
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:41] INFO: Entering card number
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:41] INFO: Entering card expiry: 12/30
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:41] INFO: Entering card CVV: 123
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:41] INFO: Checking if Next Step button is visible on Payment Step - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:41] INFO: Clicking on Next Step button on Payment page to advance to Confirm step
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:56] INFO: Waiting for confirmation message containing: Payment Successful! Thank you for your order.
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:56] INFO: Payment completed successfully and order confirmation message is displayed.
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:56] INFO: Clicking on Logout button
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:57] INFO: Checking if Login link is visible on Catalog page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:57] INFO: Verifying if user logged out successfully - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:45:57] INFO: Captured 25 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Checkout-Test_001_Complete-602c4-ccessfully-smoke-regression-chrome/network-log.json
+[2026-10-18 16:45:57] INFO: Cleaned up ephemeral test session: pw-w3-2-1792304131028-4896b657

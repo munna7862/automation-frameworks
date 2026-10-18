@@ -1,0 +1,24 @@
+[2026-10-18 16:46:30] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1792304190384-680a1e1b
+[2026-10-18 16:46:30] INFO: Network interception enabled with mode: api-only
+[2026-10-18 16:46:31] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:32] INFO: Entering full name: autoTestUser8p1Pr
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:32] INFO: Entering username: autoTestUser0jasE
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:32] INFO: Entering password: AutoTest@123
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:32] INFO: Entering confirming password: AutoTest@123
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:32] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:32] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:33] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:33] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:33] INFO: Verifying if user registered successfully - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:33] INFO: Captured 7 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_001_Re-35c76-r-New-User-smoke-regression-chrome/network-log.json
+[2026-10-18 16:46:33] INFO: Cleaned up ephemeral test session: pw-w3-2-1792304190384-680a1e1b

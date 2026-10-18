@@ -1,0 +1,30 @@
+[2026-10-18 16:46:20] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w6-0-1792304180071-6af0f582
+[2026-10-18 16:46:20] INFO: Network interception enabled with mode: api-only
+[2026-10-18 16:46:21] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:21] INFO: Entering full name: Full refresh_ui_user_Psc8E
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:21] INFO: Entering username: refresh_ui_user_Psc8E
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:22] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:22] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:22] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:22] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:22] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:22] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:25] INFO: Clicking on Profile navbar link
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:25] INFO: Getting profile avatar preview image src
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:30] INFO: Verifying profile page opened successfully post silent token refresh - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:30] INFO: Verifying user is retained on profile page without logout - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:31] INFO: Captured 13 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Refresh-Test_006_JwtRefres-ba952-nt-Request-Retry-regression-chrome/network-log.json
+[2026-10-18 16:46:31] INFO: Cleaned up ephemeral test session: pw-w6-0-1792304180071-6af0f582

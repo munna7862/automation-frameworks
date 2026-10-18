@@ -1,0 +1,22 @@
+[2026-10-18 16:46:42] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1792304202119-cdbf8040
+[2026-10-18 16:46:42] INFO: Network interception enabled with mode: api-only
+[2026-10-18 16:46:43] INFO: Clicking on Login link
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:44] INFO: Entering username: chaosUser_1792304202558
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:44] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:44] INFO: Clicking on Sign In button
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:45] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:45] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:45] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:45] INFO: Clicking on Checkout link
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:46] INFO: Asserting checkout button has margin-left: 15px, actual: 15px - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:46:46] INFO: Captured 11 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/VisualRegression-Test_010_-25843-rgin-Shift-regression-chaos-chrome/network-log.json
+[2026-10-18 16:46:46] INFO: Cleaned up ephemeral test session: pw-w3-2-1792304202119-cdbf8040

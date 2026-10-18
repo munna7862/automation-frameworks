@@ -1,0 +1,5 @@
+[2026-10-18 16:47:31] INFO: Verifying status code is 400 Bad Request
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:47:31] INFO: Verifying error response body contains exact same correlationId
+no test runtime is found. Please check test framework configuration
+[2026-10-18 16:47:31] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1792304251516-a04ef47c
