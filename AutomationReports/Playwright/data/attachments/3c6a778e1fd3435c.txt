@@ -1,0 +1,26 @@
+[2026-10-19 16:59:27] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w6-3-1792391367644-4151aa10
+[2026-10-19 16:59:27] INFO: Network interception enabled with mode: api-only
+[2026-10-19 16:59:29] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:29] INFO: Entering full name: Full refresh_ui_user_6X2EK
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:29] INFO: Entering username: refresh_ui_user_6X2EK
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:29] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:29] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:29] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:30] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:30] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:30] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:30] INFO: Clicking on Profile navbar link
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:30] INFO: Verifying unauthenticated access redirects user to /login page - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:30] INFO: Captured 12 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Refresh-Test_006_JwtRefres-85e86-edirection-smoke-regression-chrome/network-log.json
+[2026-10-19 16:59:30] INFO: Cleaned up ephemeral test session: pw-w6-3-1792391367644-4151aa10

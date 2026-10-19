@@ -1,0 +1,82 @@
+[2026-10-19 16:59:03] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1792391343515-3b88f4c7
+[2026-10-19 16:59:03] INFO: Network interception enabled with mode: api-only
+[2026-10-19 16:59:03] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:04] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:04] INFO: Entering full name: Cart Quantity User
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:04] INFO: Entering username: tierra_w4_mvevj02c_57c304_1
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:04] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:04] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:04] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:05] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:05] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:05] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:05] INFO: Clicking on Catalog link
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:05] INFO: Filling search input with: Mockingbird
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:05] INFO: Clicking Search button
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:05] INFO: Clicking on Add to Cart button for book id: 2
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:06] INFO: Waiting for cart status message: added to cart
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:06] INFO: Cart status message "added to cart" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:06] INFO: Waiting for cart status message: added to cart
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:06] INFO: Cart status message "added to cart" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:06] INFO: Clicking on Cart link
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:06] INFO: Getting cart total text
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:06] INFO: Verifying 1 item in cart - Matched: [1]
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:06] INFO: Verifying non-zero initial cart total price - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:06] INFO: Clicking on Catalog link
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:07] INFO: Filling search input with: Gatsby
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:07] INFO: Clicking Search button
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:07] INFO: Clicking on Add to Cart button for book id: 1
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Waiting for cart status message: added to cart
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Cart status message "added to cart" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Waiting for cart status message: added to cart
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Cart status message "added to cart" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Clicking on Cart link
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Getting cart total text
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Verifying cart item count increased to 2 - Matched: [2]
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Verifying grand total updated dynamically upon adding second item - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Getting cart total text
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Clicking Remove item button
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Getting cart total text
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Verifying cart item count decreased to 1 - Matched: [1]
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Verifying grand total reduced dynamically after item removal - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:08] INFO: Captured 20 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Checkout-Test_006_CartQuan-fea13--and-order-total-regression-chrome/network-log.json
+[2026-10-19 16:59:08] INFO: Cleaned up ephemeral test session: pw-w4-3-1792391343515-3b88f4c7

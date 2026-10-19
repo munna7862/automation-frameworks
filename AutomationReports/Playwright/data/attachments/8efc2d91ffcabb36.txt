@@ -1,0 +1,8 @@
+[2026-10-19 16:59:34] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w6-3-1792391374424-861e8017
+[2026-10-19 16:59:34] INFO: Network interception enabled with mode: api-only
+[2026-10-19 16:59:35] INFO: Verifying --bg CSS variable in light mode equals #f8fafc or hsl (actual: #f8fafc) - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:36] INFO: Verifying --bg CSS variable in dark mode equals #090d15 or hsl (actual: #090d15) - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:36] INFO: Captured 14 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Styling-Test_009_UIStyleAn-c19cc-eme-Verification-regression-chrome/network-log.json
+[2026-10-19 16:59:36] INFO: Cleaned up ephemeral test session: pw-w6-3-1792391374424-861e8017

@@ -1,0 +1,6 @@
+[2026-10-19 16:59:47] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1792391387982-a973d35d
+[2026-10-19 16:59:47] INFO: Network interception enabled with mode: api-only
+[2026-10-19 16:59:49] INFO: Asserting book card h3 text line-height multiplier is ~3.2, actual: 3.2 (lineHeight: 57.6px, fontSize: 18px) - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-19 16:59:49] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/VisualRegression-Test_010_-b9d0b-ight-Chaos-regression-chaos-chrome/network-log.json
+[2026-10-19 16:59:49] INFO: Cleaned up ephemeral test session: pw-w2-1-1792391387982-a973d35d
