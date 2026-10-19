@@ -227,7 +227,7 @@ jobs:
 
       - name: Upload JMeter Dashboard & Results Artifact
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v4.6.1
         with:
           name: jmeter-${{ steps.prep.outputs.test_plan }}-report
           path: |
