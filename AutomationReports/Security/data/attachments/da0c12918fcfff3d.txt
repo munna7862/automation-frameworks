@@ -1,0 +1,32 @@
+[2026-10-21 16:46:39] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1792563399719-0bc9b15b
+[2026-10-21 16:46:39] INFO: Network interception enabled with mode: api-only
+[2026-10-21 16:46:40] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:40] INFO: Entering full name: Full profile_user_IIcTF
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:40] INFO: Entering username: profile_user_IIcTF
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:40] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:40] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:40] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:41] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:41] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:41] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:41] INFO: Clicking on Profile navbar link
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:41] INFO: Selecting file for avatar upload: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/src/test-data/ui/Profile/large_image.png
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:41] INFO: Clicking Upload Image button
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:42] INFO: Getting upload error message text
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:42] INFO: Verifying file size limit 400 error message - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:42] INFO: Captured 12 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Profile-Test_005_ProfilePi-14e58-Validation-smoke-regression-chrome/network-log.json
+[2026-10-21 16:46:42] INFO: Cleaned up ephemeral test session: pw-w2-1-1792563399719-0bc9b15b
