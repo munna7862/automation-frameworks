@@ -1,0 +1,46 @@
+[2026-10-21 16:46:50] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1792563410474-6d580687
+[2026-10-21 16:46:50] INFO: Network interception enabled with mode: api-only
+[2026-10-21 16:46:51] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:51] INFO: Entering full name: autoTestUserToBkp
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:51] INFO: Entering username: autoTestUserFzlYQ
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:51] INFO: Entering password: AutoTest@123
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:51] INFO: Entering confirming password: AutoTest@123
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:51] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:52] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:52] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:52] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:52] INFO: Clicking on Logout button
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:52] INFO: Clicking on Login link
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:52] INFO: Entering username: autoTestUserFzlYQ
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:53] INFO: Entering password: AutoTest@123
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:53] INFO: Clicking on Sign In button
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:53] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:53] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:53] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:53] INFO: Verifying if user logged in successfully - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:53] INFO: Clicking on Logout button
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:54] INFO: Checking if Login link is visible on Catalog page - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:54] INFO: Verifying if user logged out successfully - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-21 16:46:54] INFO: Captured 14 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_001_Re-e41e4-and-Logout-smoke-regression-chrome/network-log.json
+[2026-10-21 16:46:54] INFO: Cleaned up ephemeral test session: pw-w3-2-1792563410474-6d580687
