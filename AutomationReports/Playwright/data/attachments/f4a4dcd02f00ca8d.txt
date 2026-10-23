@@ -1,0 +1,6 @@
+[2026-10-23 16:44:54] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1792736094927-f9f9bbb1
+[2026-10-23 16:44:54] INFO: Network interception enabled with mode: api-only
+[2026-10-23 16:44:56] INFO: Asserting price tag has rotation transform, actual: matrix(0.99863, -0.052336, 0.052336, 0.99863, 7.98904, -0.418688) - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-23 16:44:56] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/VisualRegression-Test_010_-71eb9--Assertion-regression-chaos-chrome/network-log.json
+[2026-10-23 16:44:56] INFO: Cleaned up ephemeral test session: pw-w4-3-1792736094927-f9f9bbb1
