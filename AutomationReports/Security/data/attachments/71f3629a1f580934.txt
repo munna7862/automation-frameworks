@@ -1,0 +1,7 @@
+[2026-10-24 16:38:26] INFO: Verifying Set-Cookie contains access token
+no test runtime is found. Please check test framework configuration
+[2026-10-24 16:38:26] INFO: Verifying Set-Cookie contains refresh token
+no test runtime is found. Please check test framework configuration
+[2026-10-24 16:38:26] INFO: Verifying Set-Cookie includes HttpOnly security flag
+no test runtime is found. Please check test framework configuration
+[2026-10-24 16:38:26] INFO: Cleaned up ephemeral API test session: pw-api-w4-0-1792822105928-7974141a
