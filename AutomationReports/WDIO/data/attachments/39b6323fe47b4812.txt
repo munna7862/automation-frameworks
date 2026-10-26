@@ -1,0 +1,16 @@
+[2026-10-26 17:10:06] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1792996806600-585a4fc2
+[2026-10-26 17:10:06] INFO: Network interception enabled with mode: api-only
+[2026-10-26 17:10:07] INFO: Clicking on Login link
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:10:08] INFO: Entering username: admin
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:10:08] INFO: Entering password: wrongPassword123@
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:10:08] INFO: Clicking on Sign In button
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:10:09] INFO: Getting error banner text
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:10:09] INFO: Verifying if error message is correct - Matched: [Unauthorized: Invalid credentials]
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:10:09] INFO: Captured 7 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_002_Lo-aafd7-alidation-Errors-regression-chrome/network-log.json
+[2026-10-26 17:10:09] INFO: Cleaned up ephemeral test session: pw-w3-2-1792996806600-585a4fc2

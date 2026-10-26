@@ -1,0 +1,44 @@
+[2026-10-26 17:09:32] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1792996772280-34c8c3b9
+[2026-10-26 17:09:32] INFO: Network interception enabled with mode: api-only
+[2026-10-26 17:09:32] INFO: Navigating to catalog page: http://localhost:5173
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:32] INFO: Clicking on Cart link
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:38] INFO: Clicking on Catalog link
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:38] INFO: Clicking on Add to Cart button for book id: 1
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:39] INFO: Waiting for cart status message: added to cart
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:39] INFO: Cart status message "added to cart" is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:39] INFO: Clicking on Cart link
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:39] INFO: Clicking on Proceed to Checkout button
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:39] INFO: Entering first name: Edge
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:39] INFO: Entering last name: Tester
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:39] INFO: Entering shipping address: 123 Buggy Lane
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:39] INFO: Entering city: Stack City
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:39] INFO: Clicking on Next Step button
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:40] INFO: Entering card number
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:40] INFO: Entering card expiry: 12/30
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:40] INFO: Entering card CVV: 123
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:40] INFO: Checking if Next Step button is visible - Element is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:40] INFO: Clicking on Next Step button on Payment page
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:40] INFO: Checking if Next Step button is visible - Element is not visible
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:40] INFO: Clicking on Complete Payment button on Confirm page
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:41] INFO: Captured 19 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/EdgeStates-Test_001_Mocked-90d34-e-and-Retry-regression-mock-chrome/network-log.json
+[2026-10-26 17:09:41] INFO: Cleaned up ephemeral test session: pw-w3-2-1792996772280-34c8c3b9

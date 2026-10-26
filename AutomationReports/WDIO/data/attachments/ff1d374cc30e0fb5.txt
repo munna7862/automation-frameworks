@@ -1,0 +1,36 @@
+[2026-10-26 17:09:42] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1792996782037-df78fbf4
+[2026-10-26 17:09:42] INFO: Network interception enabled with mode: api-only
+[2026-10-26 17:09:43] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:43] INFO: Entering full name: Full profile_user_gOgFq
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:43] INFO: Entering username: profile_user_gOgFq
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:43] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:43] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:44] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:44] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:44] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:44] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:44] INFO: Clicking on Profile navbar link
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:45] INFO: Selecting file for avatar upload: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/src/test-data/ui/Profile/valid_avatar.png
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:45] INFO: Clicking Upload Image button
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:45] INFO: Getting profile avatar preview image src
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:45] INFO: Verifying avatar preview image src points to uploads path - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:45] INFO: Getting upload success message text
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:45] INFO: Verifying avatar upload success status message - Matched: [Avatar updated successfully!]
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:09:46] INFO: Captured 13 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Profile-Test_005_ProfilePi-426ac-ure-Upload-smoke-regression-chrome/network-log.json
+[2026-10-26 17:09:46] INFO: Cleaned up ephemeral test session: pw-w3-2-1792996782037-df78fbf4

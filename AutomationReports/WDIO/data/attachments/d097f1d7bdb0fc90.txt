@@ -1,0 +1,7 @@
+[2026-10-26 17:08:09] INFO:  Registration setup status Success !! Actual and Expected Values are:: 201
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:08:09] INFO:  Response status code should be 401 Success !! Actual and Expected Values are:: 401
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:08:09] INFO:  Error message for missing token Success !! Actual and Expected Values are:: Unauthorized: Token required
+no test runtime is found. Please check test framework configuration
+[2026-10-26 17:08:09] INFO: Cleaned up ephemeral API test session: pw-api-w2-2-1792996689007-1589ddf6
