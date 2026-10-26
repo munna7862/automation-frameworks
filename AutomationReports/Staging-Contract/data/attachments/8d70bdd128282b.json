@@ -1,0 +1,210 @@
+[
+  {
+    "id": "1792996696494-1",
+    "startedAt": "2026-10-26T06:38:16.494Z",
+    "url": "http://localhost:4000/socket.io/?EIO=4&transport=polling&t=vxt8xwew",
+    "method": "GET",
+    "resourceType": "xhr",
+    "navigationRequest": false,
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "http://localhost:5173/",
+      "accept-language": "en-US",
+      "sec-ch-ua": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"",
+      "sec-ch-ua-mobile": "?0",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.7632.6 Safari/537.36",
+      "accept": "*/*",
+      "x-test-session-id": "pw-w7-2-1792996694963-1fb7e67a"
+    },
+    "postData": null,
+    "endedAt": "2026-10-26T06:38:16.698Z",
+    "durationMs": 204,
+    "response": {
+      "status": 200,
+      "statusText": "OK",
+      "ok": true,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost:5173",
+        "connection": "keep-alive",
+        "content-length": "118",
+        "content-type": "text/plain; charset=UTF-8",
+        "date": "Mon, 26 Oct 2026 06:38:16 GMT",
+        "keep-alive": "timeout=5",
+        "vary": "Origin",
+        "cache-control": "no-store"
+      },
+      "body": "0{\"sid\":\"qEHuoMz0kBRx36xJAAAH\",\"upgrades\":[\"websocket\"],\"pingInterval\":25000,\"pingTimeout\":20000,\"maxPayload\":1000000}"
+    }
+  },
+  {
+    "id": "1792996696502-2",
+    "startedAt": "2026-10-26T06:38:16.502Z",
+    "url": "http://localhost:4000/api/test/config",
+    "method": "GET",
+    "resourceType": "fetch",
+    "navigationRequest": false,
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "http://localhost:5173/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.7632.6 Safari/537.36",
+      "sec-ch-ua": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"",
+      "x-test-session-id": "pw-w7-2-1792996694963-1fb7e67a",
+      "accept-language": "en-US",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "postData": null,
+    "endedAt": "2026-10-26T06:38:16.743Z",
+    "durationMs": 241,
+    "response": {
+      "status": 200,
+      "statusText": "OK",
+      "ok": true,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost:5173",
+        "connection": "keep-alive",
+        "content-length": "186",
+        "content-security-policy": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests",
+        "content-type": "application/json; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "date": "Mon, 26 Oct 2026 06:38:16 GMT",
+        "etag": "W/\"ba-rCO1wHgmhnycHR4Yvl4Np7VG7Co\"",
+        "keep-alive": "timeout=5",
+        "origin-agent-cluster": "?1",
+        "ratelimit-limit": "600",
+        "ratelimit-policy": "600;w=60",
+        "ratelimit-remaining": "585",
+        "ratelimit-reset": "45",
+        "referrer-policy": "no-referrer",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "vary": "Origin",
+        "x-content-type-options": "nosniff",
+        "x-dns-prefetch-control": "off",
+        "x-download-options": "noopen",
+        "x-frame-options": "SAMEORIGIN",
+        "x-permitted-cross-domain-policies": "none",
+        "x-xss-protection": "0",
+        "x-correlation-id": "5d60c6ec-edd6-429f-b794-7d88b46d6248",
+        "x-test-session-id": "pw-w7-2-1792996694963-1fb7e67a"
+      },
+      "body": "{\"checkoutFailureRate\":0,\"inventoryDelayMs\":0,\"jwtExpirySeconds\":900,\"websocketDropRate\":0,\"uploadFailureRate\":0,\"injectA11yViolations\":true,\"visualChaos\":false,\"inventoryLockingRate\":0}"
+    }
+  },
+  {
+    "id": "1792996696611-3",
+    "startedAt": "2026-10-26T06:38:16.611Z",
+    "url": "http://localhost:4000/socket.io/?EIO=4&transport=polling&t=vxtc9lld&sid=qEHuoMz0kBRx36xJAAAH",
+    "method": "POST",
+    "resourceType": "xhr",
+    "navigationRequest": false,
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "http://localhost:5173/",
+      "accept-language": "en-US",
+      "sec-ch-ua": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"",
+      "sec-ch-ua-mobile": "?0",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.7632.6 Safari/537.36",
+      "accept": "*/*",
+      "x-test-session-id": "pw-w7-2-1792996694963-1fb7e67a",
+      "content-type": "text/plain;charset=UTF-8"
+    },
+    "postData": "40",
+    "endedAt": "2026-10-26T06:38:16.744Z",
+    "durationMs": 133,
+    "response": {
+      "status": 200,
+      "statusText": "OK",
+      "ok": true,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost:5173",
+        "connection": "keep-alive",
+        "content-length": "2",
+        "content-type": "text/html",
+        "date": "Mon, 26 Oct 2026 06:38:16 GMT",
+        "keep-alive": "timeout=5",
+        "vary": "Origin",
+        "cache-control": "no-store"
+      },
+      "body": "ok"
+    }
+  },
+  {
+    "id": "1792996696611-4",
+    "startedAt": "2026-10-26T06:38:16.611Z",
+    "url": "http://localhost:4000/socket.io/?EIO=4&transport=polling&t=vxtcln9q&sid=qEHuoMz0kBRx36xJAAAH",
+    "method": "GET",
+    "resourceType": "xhr",
+    "navigationRequest": false,
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "http://localhost:5173/",
+      "accept-language": "en-US",
+      "sec-ch-ua": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"",
+      "sec-ch-ua-mobile": "?0",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.7632.6 Safari/537.36",
+      "accept": "*/*",
+      "x-test-session-id": "pw-w7-2-1792996694963-1fb7e67a"
+    },
+    "postData": null,
+    "endedAt": "2026-10-26T06:38:16.748Z",
+    "durationMs": 137,
+    "response": {
+      "status": 200,
+      "statusText": "OK",
+      "ok": true,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost:5173",
+        "connection": "keep-alive",
+        "content-length": "32",
+        "content-type": "text/plain; charset=UTF-8",
+        "date": "Mon, 26 Oct 2026 06:38:16 GMT",
+        "keep-alive": "timeout=5",
+        "vary": "Origin",
+        "cache-control": "no-store"
+      },
+      "body": "40{\"sid\":\"TjHhGZYwUwLtJji0AAAJ\"}"
+    }
+  },
+  {
+    "id": "1792996696662-5",
+    "startedAt": "2026-10-26T06:38:16.662Z",
+    "url": "http://localhost:4000/socket.io/?EIO=4&transport=polling&t=vxtd816w&sid=qEHuoMz0kBRx36xJAAAH",
+    "method": "GET",
+    "resourceType": "xhr",
+    "navigationRequest": false,
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "http://localhost:5173/",
+      "accept-language": "en-US",
+      "sec-ch-ua": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"",
+      "sec-ch-ua-mobile": "?0",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.7632.6 Safari/537.36",
+      "accept": "*/*",
+      "x-test-session-id": "pw-w7-2-1792996694963-1fb7e67a"
+    },
+    "postData": null,
+    "endedAt": "2026-10-26T06:38:16.765Z",
+    "durationMs": 103,
+    "response": {
+      "status": 200,
+      "statusText": "OK",
+      "ok": true,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost:5173",
+        "connection": "keep-alive",
+        "content-length": "199",
+        "content-type": "text/plain; charset=UTF-8",
+        "date": "Mon, 26 Oct 2026 06:38:16 GMT",
+        "keep-alive": "timeout=5",
+        "vary": "Origin",
+        "cache-control": "no-store"
+      },
+      "body": "42[\"bookstore-event\",{\"id\":\"evt-1792996696599-euhd9\",\"type\":\"views\",\"message\":\"16 developers are currently debugging Harry Potter and the Infinite Recursion.\",\"timestamp\":\"2026-10-26T06:38:16.599Z\"}]"
+    }
+  }
+]
