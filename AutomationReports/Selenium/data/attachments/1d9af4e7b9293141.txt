@@ -1,0 +1,20 @@
+[2026-10-27 17:03:57] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-0-1793082837623-1c236a0e
+[2026-10-27 17:03:57] INFO: Network interception enabled with mode: api-only
+[2026-10-27 17:03:58] INFO: Total Books displayed in Catalog page are: 8
+no test runtime is found. Please check test framework configuration
+[2026-10-27 17:03:58] INFO: Verifying if Books count in Catalog page is correct - Matched: [8]
+no test runtime is found. Please check test framework configuration
+[2026-10-27 17:03:58] INFO: Clicking on Pagination button number 2
+no test runtime is found. Please check test framework configuration
+[2026-10-27 17:03:59] INFO: Total Books displayed in Catalog page are: 7
+no test runtime is found. Please check test framework configuration
+[2026-10-27 17:03:59] INFO: Verifying if Books count in Catalog page is correct - Matched: [7]
+no test runtime is found. Please check test framework configuration
+[2026-10-27 17:03:59] INFO: Clicking on Pagination button number 1
+no test runtime is found. Please check test framework configuration
+[2026-10-27 17:03:59] INFO: Total Books displayed in Catalog page are: 8
+no test runtime is found. Please check test framework configuration
+[2026-10-27 17:03:59] INFO: Verifying if Books count in Catalog page is correct - Matched: [8]
+no test runtime is found. Please check test framework configuration
+[2026-10-27 17:03:59] INFO: Captured 9 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/BookCatalog-Test_001_Initi-648d9-regression-staging-contract-chrome/network-log.json
+[2026-10-27 17:03:59] INFO: Cleaned up ephemeral test session: pw-w4-0-1793082837623-1c236a0e
