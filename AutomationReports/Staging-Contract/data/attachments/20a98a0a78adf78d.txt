@@ -1,0 +1,11 @@
+.........Console Logs.........
+
+[32m[2026-10-28 17:32:50] INFO: Navigating to login page: http://localhost:5173/login[39m
+[32m[2026-10-28 17:32:50] INFO: Checking if user is logged in - Element is not visible[39m
+[32m[2026-10-28 17:32:50] INFO: Clicking Login link in navbar[39m
+[32m[2026-10-28 17:32:51] INFO: Cleared input value[39m
+[32m[2026-10-28 17:32:51] INFO: Set input value to admin[39m
+[32m[2026-10-28 17:32:51] INFO: Cleared input value[39m
+[32m[2026-10-28 17:32:51] INFO: Set input value to invalidSecretPass123![39m
+[32m[2026-10-28 17:32:51] INFO: Clicking Sign In button[39m
+[32m[2026-10-28 17:32:51] INFO: Getting error banner text[39m
