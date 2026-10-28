@@ -1,0 +1,6 @@
+[2026-10-28 17:33:32] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1793171012233-5332b151
+[2026-10-28 17:33:32] INFO: Network interception enabled with mode: api-only
+[2026-10-28 17:33:35] INFO: Verifying visual pixel diff detected under chaos mode - Matched: [true]
+no test runtime is found. Please check test framework configuration
+[2026-10-28 17:33:35] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/VisualRegression-Test_010_-9331e-Pixel-Diff-regression-chaos-chrome/network-log.json
+[2026-10-28 17:33:35] INFO: Cleaned up ephemeral test session: pw-w4-3-1793171012233-5332b151
