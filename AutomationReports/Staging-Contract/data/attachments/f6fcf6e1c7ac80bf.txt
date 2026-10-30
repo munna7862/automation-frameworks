@@ -1,0 +1,32 @@
+[2026-10-30 17:57:58] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1793345278853-2c6427ad
+[2026-10-30 17:57:58] INFO: Network interception enabled with mode: api-only
+[2026-10-30 17:57:59] INFO: Clicking on Sign Up link
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:57:59] INFO: Entering full name: Full profile_user_Bb1jf
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:57:59] INFO: Entering username: profile_user_Bb1jf
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:57:59] INFO: Entering password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:57:59] INFO: Entering confirming password: Password123!
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:57:59] INFO: Clicking on Create Account button
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:58:00] INFO: Verifying landing on Checkout Page
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:58:00] INFO: Checking if Checkout label is visible
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:58:00] INFO: Landed on Checkout Page successfully and Text is: Checkout
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:58:00] INFO: Clicking on Profile navbar link
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:58:00] INFO: Selecting file for avatar upload: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/src/test-data/ui/Profile/valid_avatar.png
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:58:00] INFO: Clicking Upload Image button
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:58:01] INFO: Getting upload error message text
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:58:01] INFO: Verifying upload chaos 500 error message - Condition met (true)
+no test runtime is found. Please check test framework configuration
+[2026-10-30 17:58:01] INFO: Captured 12 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Profile-Test_005_ProfilePi-c5438-e-Recovery-regression-chaos-chrome/network-log.json
+[2026-10-30 17:58:01] INFO: Cleaned up ephemeral test session: pw-w3-2-1793345278853-2c6427ad
