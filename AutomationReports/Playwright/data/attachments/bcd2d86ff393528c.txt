@@ -1,0 +1,2 @@
+[2026-11-01 00:00:00] INFO:  Security status for script tag in fullName Success !! Actual and Expected Values are:: true
+[2026-11-01 00:00:00] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1793453400199-bd29e6d9

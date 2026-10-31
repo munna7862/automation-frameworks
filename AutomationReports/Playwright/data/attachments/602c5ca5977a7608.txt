@@ -1,0 +1,24 @@
+[2026-11-01 00:00:44] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1793453444055-0d060b73
+[2026-11-01 00:00:44] INFO: Network interception enabled with mode: api-only
+[2026-11-01 00:00:44] INFO: Navigating to catalog page: http://localhost:5173
+[2026-11-01 00:00:44] INFO: Clicking on Cart link
+[2026-11-01 00:00:50] INFO: Clicking on Catalog link
+[2026-11-01 00:00:50] INFO: Clicking on Add to Cart button for book id: 1
+[2026-11-01 00:00:52] INFO: Waiting for cart status message: added to cart
+[2026-11-01 00:00:52] INFO: Cart status message "added to cart" is visible
+[2026-11-01 00:00:52] INFO: Clicking on Cart link
+[2026-11-01 00:00:52] INFO: Clicking on Proceed to Checkout button
+[2026-11-01 00:00:52] INFO: Entering first name: Edge
+[2026-11-01 00:00:52] INFO: Entering last name: Tester
+[2026-11-01 00:00:52] INFO: Entering shipping address: 123 Buggy Lane
+[2026-11-01 00:00:52] INFO: Entering city: Stack City
+[2026-11-01 00:00:52] INFO: Clicking on Next Step button
+[2026-11-01 00:00:52] INFO: Entering card number
+[2026-11-01 00:00:52] INFO: Entering card expiry: 12/30
+[2026-11-01 00:00:52] INFO: Entering card CVV: 123
+[2026-11-01 00:00:52] INFO: Checking if Next Step button is visible - Element is visible
+[2026-11-01 00:00:52] INFO: Clicking on Next Step button on Payment page
+[2026-11-01 00:00:53] INFO: Checking if Next Step button is visible - Element is not visible
+[2026-11-01 00:00:53] INFO: Clicking on Complete Payment button on Confirm page
+[2026-11-01 00:00:53] INFO: Captured 19 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/EdgeStates-Test_001_Mocked-90d34-e-and-Retry-regression-mock-chrome/network-log.json
+[2026-11-01 00:00:53] INFO: Cleaned up ephemeral test session: pw-w4-3-1793453444055-0d060b73

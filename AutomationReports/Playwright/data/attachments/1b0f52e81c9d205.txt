@@ -1,0 +1,19 @@
+[2026-11-01 00:01:08] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1793453468719-396081b4
+[2026-11-01 00:01:08] INFO: Network interception enabled with mode: api-only
+[2026-11-01 00:01:11] INFO: Checking if Login page title is visible - Element is visible
+[2026-11-01 00:01:11] INFO: Checking if Username input field is visible on Login page - Element is visible
+[2026-11-01 00:01:11] INFO: Checking if Password input field is visible on Login page - Element is visible
+[2026-11-01 00:01:11] INFO: Checking if Sign In button is visible on Login page - Element is visible
+[2026-11-01 00:01:11] INFO: Verifying direct navigation to /checkout redirects to /login and Login page elements are fully loaded - Condition met (true)
+[2026-11-01 00:01:12] INFO: Checking if Login page title is visible - Element is visible
+[2026-11-01 00:01:12] INFO: Checking if Username input field is visible on Login page - Element is visible
+[2026-11-01 00:01:12] INFO: Checking if Password input field is visible on Login page - Element is visible
+[2026-11-01 00:01:12] INFO: Checking if Sign In button is visible on Login page - Element is visible
+[2026-11-01 00:01:12] INFO: Verifying direct navigation to /profile redirects to /login and Login page elements are fully loaded - Condition met (true)
+[2026-11-01 00:01:13] INFO: Checking if Login page title is visible - Element is visible
+[2026-11-01 00:01:13] INFO: Checking if Username input field is visible on Login page - Element is visible
+[2026-11-01 00:01:13] INFO: Checking if Password input field is visible on Login page - Element is visible
+[2026-11-01 00:01:13] INFO: Checking if Sign In button is visible on Login page - Element is visible
+[2026-11-01 00:01:13] INFO: Verifying direct navigation to /cart redirects to /login and Login page elements are fully loaded - Condition met (true)
+[2026-11-01 00:01:13] INFO: Captured 33 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_003_Pr-be7bf-s-to-Login-smoke-regression-chrome/network-log.json
+[2026-11-01 00:01:13] INFO: Cleaned up ephemeral test session: pw-w2-1-1793453468719-396081b4

@@ -1,0 +1,3 @@
+[2026-11-01 00:00:00] INFO:  Registration setup status Success !! Actual and Expected Values are:: 201
+[2026-11-01 00:00:00] INFO:  Unsupported login method status Success !! Actual and Expected Values are:: true
+[2026-11-01 00:00:00] INFO: Cleaned up ephemeral API test session: pw-api-w2-2-1793453400818-167cc2b3

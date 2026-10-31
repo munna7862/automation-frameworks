@@ -1,0 +1,7 @@
+[2026-11-01 00:01:05] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1793453465761-0ea74376
+[2026-11-01 00:01:05] INFO: Network interception enabled with mode: api-only
+[2026-11-01 00:01:07] INFO: Verifying .catalog-book-cover has transform CSS property before hover (value: none) - Condition met (true)
+[2026-11-01 00:01:07] INFO: Hovering over first book card
+[2026-11-01 00:01:07] INFO: Verifying .catalog-book-cover transform contains matrix values after hover (value: matrix(1.0411, 0.0124711, -0.0124711, 1.0411, 0, 0)) - Condition met (true)
+[2026-11-01 00:01:07] INFO: Captured 7 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Styling-Test_009_UIStyleAn-752e6-CSS-Verification-regression-chrome/network-log.json
+[2026-11-01 00:01:07] INFO: Cleaned up ephemeral test session: pw-w4-3-1793453465761-0ea74376

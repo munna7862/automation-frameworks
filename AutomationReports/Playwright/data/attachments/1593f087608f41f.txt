@@ -1,0 +1,6 @@
+[2026-10-31 23:59:58] INFO: Verifying user registration status is 201
+[2026-10-31 23:59:58] INFO: Verifying user login status is 200
+[2026-10-31 23:59:58] INFO: Verifying add to cart status is 200
+[2026-10-31 23:59:58] INFO: Verifying process checkout status is 200
+[2026-10-31 23:59:58] INFO: Verifying correlation ID preserved in checkout response
+[2026-10-31 23:59:58] INFO: Cleaned up ephemeral API test session: pw-api-w0-0-1793453398727-b1b30c57

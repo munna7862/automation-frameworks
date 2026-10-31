@@ -1,0 +1,2 @@
+[2026-10-31 23:59:58] INFO: Verifying 400 Bad Request returned for invalid data type
+[2026-10-31 23:59:58] INFO: Cleaned up ephemeral API test session: pw-api-w2-2-1793453398605-2c6ef085

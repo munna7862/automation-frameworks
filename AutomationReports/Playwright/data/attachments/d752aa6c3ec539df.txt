@@ -1,0 +1,2 @@
+[2026-10-31 23:59:58] INFO: Verifying API preserves custom x-correlation-id header
+[2026-10-31 23:59:58] INFO: Cleaned up ephemeral API test session: pw-api-w0-0-1793453398692-fb8e29ad
