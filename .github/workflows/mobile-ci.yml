@@ -1,9 +1,27 @@
+# ==============================================================================
+# QUARANTINED (2026-10-31): nightly schedule disabled, workflow_dispatch only.
+#
+# This suite (Screen Objects, specs, this CI pipeline) was ported from the sibling
+# `buggy-books` repo's mobile-automation framework, but no BuggyBooks native/hybrid
+# mobile app (.apk, AndroidManifest.xml, build.gradle, Capacitor/Cordova config) has
+# ever existed in either repo. `appPackage: com.buggybooks.app` / `appActivity:
+# .MainActivity` in wdio.android.conf.ts point at an app that was never built, so
+# the Android Appium E2E Specs job cannot succeed -- the emulator has nothing to
+# install or launch. It is not test flakiness (docs/quarantine_lifecycle_guide.md's
+# @quarantine tag + weekly stability audit does not apply here) -- it is a missing
+# application artifact.
+#
+# Re-enable the `schedule:` trigger below once a real BuggyBooks mobile app build
+# (or a prebuilt test APK) is wired into this workflow ahead of "Run Android
+# Emulator Tests". Until then this runs only via manual workflow_dispatch, so it
+# stops reporting a false nightly failure for a job that was never runnable.
+# ==============================================================================
 name: Mobile Appium Automation CI
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 3 * * *'
+  # schedule:
+  #   - cron: '0 3 * * *'
 
 concurrency:
   group: mobile-ci-${{ github.ref }}
