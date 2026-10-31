@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T10:51:41.869Z",
+  "generatedAt": "2026-10-31T10:59:57.323Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,10 +10,10 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "f0156b4",
+    "commit": "170e83d",
     "branch": "fix/ci-concurrency-controls",
-    "message": "fix(mobile): specify appium command in wdio appium-service",
-    "ciRun": "33"
+    "message": "fix(mobile): add noReset true to android wdio capabilities",
+    "ciRun": "34"
   },
   "kpis": {
     "totalTests": 339,
