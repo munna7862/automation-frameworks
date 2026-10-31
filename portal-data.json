@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T05:47:36.507Z",
+  "generatedAt": "2026-10-31T06:19:03.772Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,10 +10,10 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "cdee5b4",
+    "commit": "d954fbf",
     "branch": "main",
-    "message": "chore(deps): bump the minor-and-patch group across 1 directory with 19 updates (#59)",
-    "ciRun": "12"
+    "message": "fix(security): remediate dependabot, template injection, and SAST races (#64)",
+    "ciRun": "14"
   },
   "kpis": {
     "totalTests": 339,
@@ -22,7 +22,7 @@
     "totalSkipped": 1,
     "overallPassRate": "98.5%",
     "activeFrameworks": 7,
-    "totalDurationMs": 348463,
+    "totalDurationMs": 350033,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -117,7 +117,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "durationMs": 18516,
+        "durationMs": 20086,
         "passRate": "100.0%"
       },
       "highlights": [
@@ -131,7 +131,7 @@
       "name": "Appium Mobile Automation",
       "category": "mobile",
       "badge": "Android & iOS Mobile",
-      "engine": "Appium 2.x + WebdriverIO",
+      "engine": "Appium 3.x + WebdriverIO",
       "runner": "UiAutomator2 / XCUITest",
       "target": "Android Emulator (Pixel 6 - API 33)",
       "reportPath": "./AutomationReports/Mobile/",
