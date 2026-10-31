@@ -54,7 +54,7 @@
     "typescript-eslint": "^8.72.0"
   },
   "dependencies": {
-    "@asteasolutions/zod-to-openapi": "^7.3.4",
+    "@asteasolutions/zod-to-openapi": "^9.1.0",
     "@automationframeworks/playwright-utils": "*",
     "@automationframeworks/test-data": "*",
     "@pact-foundation/pact": "^17.1.4",
