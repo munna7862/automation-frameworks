@@ -13,10 +13,10 @@ When acting as the **Performance Engineer**, your primary mission is to assess, 
 
 The monorepo operates a two-tier performance testing strategy:
 
-| Engine                 | Location          | Primary Purpose                                                                                               | Execution Speed & Scope                                                          |
-| :--------------------- | :---------------- | :------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------- |
-| **Apache JMeter 5.6+** | `jmeter/Tests/`   | High-concurrency enterprise load, spike, capacity, and stress testing. Generates full HTML report dashboards. | Heavy load (10–50+ threads), scheduled nightlies or on-demand workflow dispatch. |
-| **k6 Benchmarking**    | `k6-performance/` | Fast-feedback developer benchmarking and PR latency regression gates comparing against `baseline-perf.json`.  | Lightweight (1–10 VUs), runs in < 60 seconds on pull requests in CI.             |
+| Engine                 | Location          | Primary Purpose                                                                                                                    | Execution Speed & Scope                                                          |
+| :--------------------- | :---------------- | :--------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------- |
+| **Apache JMeter 5.6+** | `jmeter/Tests/`   | High-concurrency enterprise load, spike, capacity, and stress testing. Generates full HTML report dashboards.                      | Heavy load (10–50+ threads), scheduled nightlies or on-demand workflow dispatch. |
+| **k6 Benchmarking**    | `k6-performance/` | Fast-feedback developer benchmarking and PR latency regression gates comparing against `k6-performance/baselines/baseline-*.json`. | Lightweight (1–10 VUs), runs in < 60 seconds on pull requests in CI.             |
 
 ---
 
@@ -50,7 +50,7 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Catalog_Load.jmx \
 ### A. Configuration & Baseline Drift Gate
 
 - `k6-performance/config/options.js`: Defines virtual user topologies (smoke, average, stress, spike, soak).
-- `k6-performance/baseline-perf.json`: Golden baseline thresholds (p95 response times) committed to source control.
+- `k6-performance/baselines/baseline-*.json`: Golden per-scenario baseline thresholds (p95 response times) committed to source control.
 - `scripts/report-perf-summary.js`: Evaluates current run against baseline:
   $$\text{Drift \%} = \frac{\text{Current p95} - \text{Baseline p95}}{\text{Baseline p95}} \times 100$$
   If drift exceeds **20%**, the test fails and triggers an automated regression alert.

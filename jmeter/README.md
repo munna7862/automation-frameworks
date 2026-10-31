@@ -42,6 +42,17 @@ jmeter/
 - Java 17+ installed and on `PATH`.
 - Apache JMeter 5.6+ installed and `jmeter` binary on `PATH`.
 
+### Plan Properties (`-J<name>=<value>`):
+
+| Property                                    | Default                                      | Notes                                                                                       |
+| :------------------------------------------ | :------------------------------------------- | :------------------------------------------------------------------------------------------ |
+| `host` / `protocol` / `basePath`            | `buggy-books.onrender.com` / `https` / `api` | The plans have no port property, so they cannot target the local Docker API on `:4000` yet. |
+| `THREAD_COUNT` / `RAMP_TIME` / `ITERATIONS` | `5` / `5` / `5` (journey: `2` / `5` / `2`)   | Load shape.                                                                                 |
+| `CSV_FILE`                                  | `TestData/<dataset>.csv`                     | Pass an absolute path (as CI does); relative paths resolve from the `.jmx` directory.       |
+| `RESULTS_FILE`                              | `Results/output.jtl`                         | Per-plan results sink.                                                                      |
+
+> Staging sleeps when idle: warm it up first (`npx wait-on -t 90000 https://buggy-books.onrender.com/api/books`).
+
 ### Execution Examples:
 
 #### 1. Catalog Load Benchmark:
@@ -57,7 +68,7 @@ jmeter -n \
   -JTHREAD_COUNT=5 \
   -JRAMP_TIME=5 \
   -JITERATIONS=5 \
-  -JCSV_FILE=TestData/catalog_search.csv
+  -JCSV_FILE="$PWD/TestData/catalog_search.csv"
 ```
 
 #### 2. Authentication Stress Test:
@@ -73,7 +84,7 @@ jmeter -n \
   -JTHREAD_COUNT=10 \
   -JRAMP_TIME=10 \
   -JITERATIONS=5 \
-  -JCSV_FILE=TestData/users.csv
+  -JCSV_FILE="$PWD/TestData/users.csv"
 ```
 
 #### 3. E-Commerce Purchasing Journey:
@@ -89,7 +100,7 @@ jmeter -n \
   -JTHREAD_COUNT=2 \
   -JRAMP_TIME=5 \
   -JITERATIONS=2 \
-  -JCSV_FILE=TestData/users.csv
+  -JCSV_FILE="$PWD/TestData/users.csv"
 ```
 
 ---
@@ -98,7 +109,7 @@ jmeter -n \
 
 The GitHub Actions workflow [`.github/workflows/jmeter-performance.yaml`](../.github/workflows/jmeter-performance.yaml) automates running these benchmarks on-demand:
 
-- **Selectable Test Plan**: Dropdown to choose any BuggyBooks test plan or CRUD sample.
-- **Configurable Virtual Users**: Parameterize `thread_count`, `ramp_time`, and `iterations`.
+- **Selectable Test Plan**: Dropdown to choose any of the four BuggyBooks test plans (the legacy CRUD sample is not wired into CI).
+- **Configurable Virtual Users & Target**: Parameterize `thread_count`, `ramp_time`, `iterations`, `target_host`, and `target_protocol`.
 - **Pre-Flight Render Wake-Up**: Wakes up sleeping Render free-tier instances prior to load generation.
 - **HTML Dashboard Reporting**: Generates interactive charts and publishes Step Summaries.

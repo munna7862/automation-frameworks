@@ -94,9 +94,9 @@ If you prefer to run directly on your host operating system (Windows, macOS, or 
    ```bash
    npm ci
    ```
-2. **Install Chrome browser dependencies for Playwright**:
+2. **Install Google Chrome for Playwright** (installs Chrome stable plus its OS dependencies; on Windows/macOS you can install Chrome normally instead):
    ```bash
-   npx playwright install-deps chrome
+   npx playwright install --with-deps chrome
    ```
 3. **Verify Google Chrome**:
    Playwright runs exclusively against Google Chrome (`channel: 'chrome'`). Ensure Google Chrome is installed on your operating system.
@@ -105,19 +105,19 @@ If you prefer to run directly on your host operating system (Windows, macOS, or 
 
 ## ⚡ Daily Development Workflows & Task Runner
 
-The repository provides a unified [go-task](https://taskfile.dev) runner (`Taskfile.yml`), with **100% mirrored npm scripts** in root `package.json` for engineers without `task`:
+The repository provides a unified [go-task](https://taskfile.dev) runner (`Taskfile.yml`), with mirrored npm scripts in root `package.json` for engineers without `task`:
 
 | Workflow Goal | Using `task` | Using `npm` | What it Does |
 | :--- | :--- | :--- | :--- |
 | **Start BuggyBooks Stack** | `task env:up` | `npm run env:up` | Launches backend (`:4000`) & frontend (`:5173`) via Docker Compose and awaits health checks. |
 | **Stop BuggyBooks Stack** | `task env:down` | `npm run env:down` | Tears down containers and purges volumes for a clean state. |
 | **Tail Container Logs** | `task env:logs` | `npm run env:logs` | Streams live container logs from backend and frontend. |
-| **Run PR Quality Gate** | `task test:pr` | `npm run test:pr` | Runs lint, typecheck, catalog verification, and DOCKER smoke tests. |
+| **Run PR Quality Gate** | `task test:pr` | `npm run test:pr` | Runs lint, typecheck, catalog verification, and DOCKER smoke tests. The `task` variant also runs `format:check` (Prettier), matching CI. |
 | **Playwright Full Suite** | `task test:pw` | `npm run test:pw` | Runs all Chrome UI and API tests against local `ENV=DOCKER`. |
 | **Selenium Full Suite** | `task test:selenium` | `npm run test:selenium` | Runs all Selenium WebDriver tests against local `ENV=DOCKER`. |
 | **WebdriverIO Full Suite** | `task test:wdio` | `npm run test:wdio` | Runs all WebdriverIO tests against local `ENV=DOCKER`. |
 | **k6 Performance Smoke** | `task perf:smoke` | `npm run perf:smoke` | Executes k6 smoke scenario against local backend. |
-| **JMeter Catalog Test** | `task perf:jmeter` | `npm run perf:jmeter` | Runs headless JMeter catalog benchmark against localhost:4000. |
+| **JMeter Catalog Test** | `task perf:jmeter` | `npm run perf:jmeter` | Runs headless JMeter catalog benchmark. **Note**: it passes `-Jserver.host`/`-Jserver.port`, which the plans do not read, so it currently targets Render staging, not localhost:4000. |
 | **Allure Report** | `task report:allure` | `npm run report:allure` | Generates and opens local Playwright Allure HTML report. |
 | **Local Security Scan** | `task security:scan` | `npm run security:scan` | Executes Gitleaks secret detection and OSV dependency scanner. |
 
@@ -129,7 +129,7 @@ For automated local spec development where you don't want to manually run `task 
 
 ```bash
 cd playwright-e2e
-cross-env ENV=DOCKER BUGGYBOOKS_AUTOSTART=true npx playwright test --grep @smoke
+npx cross-env ENV=DOCKER BUGGYBOOKS_AUTOSTART=true npx playwright test --grep @smoke
 ```
 
 ### How Testcontainers Mode Works
@@ -175,12 +175,12 @@ cross-env ENV=DOCKER BUGGYBOOKS_AUTOSTART=true npx playwright test --grep @smoke
 ### 3. Google Chrome Channel Missing
 
 - **Symptoms**: `browserType.launch: Chromium distribution 'chrome' not found`.
-- **Root Cause**: Running with bundled Chromium instead of Google Chrome stable.
+- **Root Cause**: Google Chrome stable is not installed on the machine (Playwright's bundled Chromium does not satisfy `channel: 'chrome'`).
 - **Resolution**:
   Per monorepo policy (AGENTS.md §1), all browser suites run exclusively on Google Chrome:
   ```bash
-  # Install Google Chrome stable on Linux:
-  npx playwright install-deps chrome
+  # Install Google Chrome stable (plus OS dependencies) on Linux:
+  npx playwright install --with-deps chrome
 
   # On Windows / macOS:
   # Download and install Google Chrome from https://www.google.com/chrome/

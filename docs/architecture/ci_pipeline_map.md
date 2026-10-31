@@ -24,6 +24,8 @@ graph TD
 
     subgraph Composite Actions
         SetupAction[.github/actions/setup-monorepo<br/>Node 24 LTS + Cache + Chrome]
+        UpAction[.github/actions/buggybooks-up<br/>Ephemeral GHCR Stack ENV=DOCKER]
+        DownAction[.github/actions/buggybooks-down<br/>Logs Artifact + Teardown]
         WarmupAction[.github/actions/staging-warmup<br/>Render Staging Pre-Flight]
         ResetAction[.github/actions/chaos-reset<br/>Config, Reset & Restock]
     end
@@ -35,8 +37,9 @@ graph TD
     end
 
     PRGate --> SetupAction
-    PRGate --> WarmupAction
+    PRGate --> UpAction
     PRGate --> ResetAction
+    PRGate --> DownAction
 
     PWCI -->|framework: playwright| Reusable
     SelCI -->|framework: selenium| Reusable
@@ -44,7 +47,8 @@ graph TD
     Nightly -->|parallel dispatch| Reusable
 
     Reusable --> SetupAction
-    Reusable --> WarmupAction
+    Reusable -->|target-env: DOCKER| UpAction
+    Reusable -->|target-env: STAGING| WarmupAction
     Reusable --> ResetAction
 
     Reusable --> AllurePages
@@ -69,7 +73,7 @@ The reusable workflow is triggered via `workflow_call` with zero copy-pasting ac
 | `use-docker-image` | boolean | `false` | Run inside container `mcr.microsoft.com/playwright:v1.58.0-jammy`. |
 | `publish-allure` | boolean | `true` | Generate Allure dashboard and deploy to GitHub Pages. |
 | `allure-namespace` | string | `Playwright` | Subdirectory destination under `AutomationReports/<namespace>/`. |
-| `target-env` | string | `STAGING` | Environment configuration profile (`STAGING`, `DOCKER` in Phase 7). |
+| `target-env` | string | `STAGING` | Environment configuration profile (`STAGING` or `DOCKER`; `DOCKER` starts the stack via `buggybooks-up`). Nightly regression passes `DOCKER` for every job except the `@staging-contract` check. |
 | `headless` | string | `'true'` | Run browser in headless mode. |
 | `branch` | string | `''` | Specific branch reference for checkout. |
 

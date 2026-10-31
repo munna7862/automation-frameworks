@@ -34,7 +34,7 @@ A test automation change is complete ONLY when all apply:
 - [ ] Action methods call custom `BasePage` wrappers (`doClick`, `doEnterText`, `doGetText`, etc.) with descriptive log messages.
 - [ ] Soft-then-hard assertion pattern used (`commonFunctions.compareTwoValues(...)` + final consolidated hard assertion).
 - [ ] Test data JSON exists under `src/test-data/` mirroring the spec path.
-- [ ] When adding a new test suite directory under `src/tests/ui/`, update matrix shard definitions in `.github/workflows/playwright-docker.yml` so Docker CI executes it.
+- [ ] New suite directories under `src/tests/ui/` are picked up automatically by the `chrome` project and native sharding in `.github/workflows/_reusable-e2e.yml`; confirm with `npx playwright test --list`.
 - [ ] No TypeScript compilation or lint errors.
 - [ ] Targeted spec passes locally in isolation (`--workers=1`).
 - [ ] Branch pushed and PR created with structured description.

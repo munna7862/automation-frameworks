@@ -8,55 +8,52 @@ This repository contains a TypeScript-based Playwright automation framework for 
 - Axios for API automation
 - Page Object Model for UI automation
 - Custom Playwright fixtures for reusable test setup
-- Winston for framework logging
-- Allure Playwright for execution reports
-- dotenv for environment-driven configuration
+- Winston for framework logging (via `@automationframeworks/playwright-utils`)
+- Allure Playwright and Monocart for execution reports
+- dotenv + Zod-validated environment configuration (via `@automationframeworks/test-data`)
 
 ## Application Under Test
 
-| Layer | Default URL                            |
-| ----- | -------------------------------------- |
-| UI    | `https://buggy-books-fe.onrender.com/` |
-| API   | `https://buggy-books.onrender.com`     |
+| Layer | `ENV=DOCKER` (default)  | `ENV=STAGING` / `INTEROP`              |
+| ----- | ----------------------- | -------------------------------------- |
+| UI    | `http://localhost:5173` | `https://buggy-books-fe.onrender.com/` |
+| API   | `http://localhost:4000` | `https://buggy-books.onrender.com`     |
 
-These values are configurable through environment variables.
+These values are configurable through environment variables. Start the local Docker stack with `npm run env:up` from the repository root.
 
 ## Framework Structure
 
 ```text
 playwright-e2e/
+  playwright.config.ts        # re-exports src/config/playwright.config.ts
+  contract-tests/             # Pact consumer & provider verification
+  scripts/                    # snapshot, HAR recording, quarantine audit, Monocart merge
   src/
+    api/                      # typed API clients, schemas, custom matchers
     config/
       env.config.ts
+      global-setup.ts         # Testcontainers autostart (BUGGYBOOKS_AUTOSTART)
+      global-teardown.ts
       playwright.config.ts
     core/
-      base/
-        base.fixture.ts
-        base.page.ts
-        base.test.ts
-      logger/
-        logger.ts
+      base/                   # base, api, auth, data, security fixtures + failure hook
       network/
         network.interceptor.ts
-    pages/
-      cart.page.ts
-      catalog.page.ts
-      checkout.page.ts
-      notification-center.component.ts
-      profile.page.ts
-      signup-login.page.ts
+    pages/                    # page objects extending BasePage from playwright-utils
     test-data/
       api/
+      security/
       ui/
     tests/
+      auth.setup.ts
       api/
       ui/
+    types/
     utils/
       api.util.ts
       auth.util.ts
-      common.util.ts
-  reports/
-  logs/
+      delay.ts
+      dom-cleaner.ts
   package.json
   tsconfig.json
 ```
@@ -81,18 +78,18 @@ playwright-e2e/
 
 Install the following before running the framework:
 
-- Node.js 18 or higher
+- Node.js 24 LTS (see the root `.nvmrc`)
 - npm
 - Google Chrome
 - Java Runtime Environment, required only for Allure report generation
 
 ## Setup
 
-From the `playwright-e2e` directory:
+This package is an npm workspace. Install from the repository root:
 
 ```bash
-npm install
-npx playwright install
+npm ci
+npx playwright install chrome   # Google Chrome only; never install other browsers
 ```
 
 The configured Playwright project uses the local Chrome channel:
@@ -108,7 +105,7 @@ Make sure Google Chrome is installed on the execution machine.
 Create a `.env` file inside `playwright-e2e/` when local overrides or credentials are required.
 
 ```env
-ENV=INTEROP
+ENV=STAGING
 BASE_URL=https://buggy-books-fe.onrender.com/
 API_BASE_URL=https://buggy-books.onrender.com
 ELEMENT_TIMEOUT=15000
@@ -118,27 +115,38 @@ USER_NAME=your_existing_user
 PASSWORD=your_password
 ```
 
-Configuration defaults are defined in `src/config/env.config.ts`.
+Configuration is validated by the shared schema in `packages/test-data/src/config/schema.ts` and exposed through `src/config/env.config.ts`.
 
-| Variable          | Purpose                                    | Default                  |
-| ----------------- | ------------------------------------------ | ------------------------ |
-| `ENV`             | Logical environment name used in reports   | `INTEROP`                |
-| `BASE_URL`        | BuggyBooks UI base URL                     | Render UI URL            |
-| `API_BASE_URL`    | BuggyBooks API base URL                    | Render API URL           |
-| `ELEMENT_TIMEOUT` | Default action and locator timeout in ms   | `15000`                  |
-| `HEADLESS`        | Runs browser in headless mode when `true`  | `false`                  |
-| `BROWSER`         | Browser identifier for future extension    | `chrome`                 |
-| `USER_NAME`       | Existing user for login and checkout tests | Required for login tests |
-| `PASSWORD`        | Password for existing user                 | Required for login tests |
+| Variable               | Purpose                                                 | Default                                   |
+| ---------------------- | ------------------------------------------------------- | ----------------------------------------- |
+| `ENV`                  | Profile: `DOCKER`, `STAGING`, or `INTEROP`              | `DOCKER`                                  |
+| `BASE_URL`             | BuggyBooks UI base URL                                  | Profile URL                               |
+| `API_BASE_URL`         | BuggyBooks API origin (no `/api` suffix)                | Profile URL                               |
+| `ELEMENT_TIMEOUT`      | Default action and locator timeout in ms                | `15000`                                   |
+| `HEADLESS`             | Headless unless set to `false`                          | `true`                                    |
+| `BROWSER`              | Browser identifier (Chrome only)                        | `chrome`                                  |
+| `USER_NAME`            | Existing user for login and checkout tests              | `admin` (must be set for `STAGING`)       |
+| `PASSWORD`             | Password for existing user                              | `password123` (must be set for `STAGING`) |
+| `BUGGYBOOKS_AUTOSTART` | Auto-start the Docker stack for local `ENV=DOCKER` runs | unset                                     |
 
 ## Running Tests
 
 ### Complete Test Suite (Dynamic Discovery)
 
-Run all 26 UI and API specs:
+Run every project (`setup`, `api`, `chrome`): 229 tests in 47 files as of 2026-10-31. Run `npx playwright test --list` for the current count.
 
 ```bash
 npm test
+```
+
+Per-project and tag shortcuts:
+
+```bash
+npm run test:smoke        # @smoke, excluding @quarantine
+npm run test:api          # api project only
+npm run test:e2e:chrome   # chrome UI project only
+npm run test:security     # @security
+npm run test:contract     # Pact consumer + provider
 ```
 
 ### Tag-Based Execution Filtering
@@ -209,14 +217,16 @@ npm run clean-reports
 
 Generated output:
 
-| Path                      | Description                                  |
-| ------------------------- | -------------------------------------------- |
-| `playwright-report/`      | Playwright HTML report                       |
-| `reports/allure-results/` | Raw Allure results                           |
-| `reports/allure-report/`  | Generated Allure report                      |
-| `reports/test-artifacts/` | Screenshots, videos, traces, and attachments |
-| `logs/framework.log`      | Framework execution logs                     |
-| `logs/errors.log`         | Error-level framework logs                   |
+| Path                        | Description                                                   |
+| --------------------------- | ------------------------------------------------------------- |
+| `playwright-report/`        | Playwright HTML report (local runs; CI writes `blob-report/`) |
+| `allure-results/`           | Raw Allure results                                            |
+| `allure-report/`            | Generated Allure report                                       |
+| `reports/monocart-report/`  | Monocart single-file HTML report                              |
+| `reports/test-artifacts/`   | Screenshots, videos, traces, and attachments                  |
+| `test-results/results.json` | JSON reporter output                                          |
+| `logs/framework.log`        | Framework execution logs                                      |
+| `logs/errors.log`           | Error-level framework logs                                    |
 
 ## Network Logging
 
@@ -248,7 +258,7 @@ The current checkout and login flows read credentials using:
 getLoginCredentials();
 ```
 
-Credentials must be supplied through `USER_NAME` and `PASSWORD`.
+Credentials come from `USER_NAME` and `PASSWORD` (or `E2E_USER_NAME` / `E2E_USER_PASSWORD`). They default to the seeded `admin` account for `DOCKER` and `INTEROP`, and must be set explicitly for `STAGING`.
 
 ## Test Data Strategy
 
@@ -262,10 +272,12 @@ src/test-data/
     ChaosAndTesting/
     Logging/
     UserManagement/
+  security/
   ui/
     A11y/
     BookCatalog/
     Checkout/
+    Diagnostic/
     Profile/
     Refresh/
     Styling/
@@ -278,7 +290,7 @@ Keep static input data, expected messages, and reusable scenario values in JSON 
 
 ## Page Object Strategy
 
-Page classes live under `src/pages` and inherit common browser actions and dynamically configured timeouts from `BasePage`.
+Page classes live under `src/pages` and inherit common browser actions and dynamically configured timeouts from `BasePage` (exported by `@automationframeworks/playwright-utils`).
 
 Use page objects for:
 

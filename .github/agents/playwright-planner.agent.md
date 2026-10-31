@@ -20,7 +20,7 @@ Goals:
 - Page Objects: `playwright-e2e/src/pages/`.
 - Test data: `playwright-e2e/src/test-data/<ui|api>/`.
 - Fixtures and failure capture: `playwright-e2e/src/core/base/`.
-- CI coverage and shards: `.github/workflows/playwright-docker.yml` and other Playwright workflows.
+- CI coverage and shards: `.github/workflows/_reusable-e2e.yml` (called by `playwright-ci.yml` and `nightly-regression.yml`) and the smoke/burn-in jobs in `.github/workflows/pr-gate.yml`.
 - Available commands: `playwright-e2e/package.json`.
 
 ## Required planning workflow

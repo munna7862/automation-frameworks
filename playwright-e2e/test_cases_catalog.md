@@ -42,7 +42,7 @@ These test cases verify user-facing interfaces and behaviors inside a real brows
 | **UI_CART_04** | Cart Item Quantity Adjustment | In `/cart`, adjust item quantities using increment/decrement controls. Assert that item subtotals and grand totals update dynamically without full page reload. | Regression | Playwright UI | `@regression` | **Yes**<br>- File: `Checkout/Test_006_CartQuantityAdjustment.spec.ts`<br>- Test: `UI_CART_04: Cart item addition and removal dynamically recalculates item count and order total @regression` |
 
 ### **Suite: Multi-Step Checkout Wizard**
-*Spec Source: [checkout_wizard_and_validation_tests.md](file:///c:/BuggyBooks/buggy-books/specs/checkout_wizard_and_validation_tests.md)*
+*Spec Source: `checkout_wizard_and_validation_tests.md` (BuggyBooks app repo; not published)*
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **UI_WIZ_01** | Stepper Transition Validation | Complete Step 1 shipping, click Next. Verify `step-indicator-2` is active, shipping inputs are hidden, and payment inputs appear. | Smoke | Playwright UI | `@smoke` `@regression` | **Yes**<br>- File: `Checkout/Test_004_CheckoutWizardValidation.spec.ts`<br>- Test: `UI_WIZ_01: Stepper Transition Validation @smoke @regression` |
@@ -52,7 +52,7 @@ These test cases verify user-facing interfaces and behaviors inside a real brows
 
 
 ### **Suite: Profile Picture Upload**
-*Spec Source: [file_upload_and_validation_tests.md](file:///c:/BuggyBooks/buggy-books/specs/file_upload_and_validation_tests.md)*
+*Spec Source: `file_upload_and_validation_tests.md` (BuggyBooks app repo; not published)*
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **UI_UPL_01** | Valid Profile Picture Upload | Choose a valid PNG/JPEG image under 2MB. Click Upload. Assert that the preview image source points to the new path, and a success message renders. | Smoke | Playwright UI | `@smoke` `@regression` | **Yes**<br>- File: `Profile/Test_005_ProfilePictureUpload.spec.ts`<br>- Test: `UI_UPL_01: Valid Profile Picture Upload @smoke @regression` |
@@ -63,7 +63,7 @@ These test cases verify user-facing interfaces and behaviors inside a real brows
 
 
 ### **Suite: JWT Expiration & Silent Refresh UI**
-*Spec Source: [jwt_expiration_and_refresh_tests.md](file:///c:/BuggyBooks/buggy-books/specs/jwt_expiration_and_refresh_tests.md)*
+*Spec Source: `jwt_expiration_and_refresh_tests.md` (BuggyBooks app repo; not published)*
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **UI_REF_01** | Transparent Client Request Retry | Set access token to expire in 2 seconds. Trigger an action in the UI (e.g. Add to Cart) after 3 seconds. Verify the action completes successfully (API client silently refreshed the token and retried). | Regression | Playwright UI | `@regression` | **Yes**<br>- File: `Refresh/Test_006_JwtRefreshValidation.spec.ts`<br>- Test: `UI_REF_01: Transparent Client Request Retry @regression` |
@@ -71,7 +71,7 @@ These test cases verify user-facing interfaces and behaviors inside a real brows
 
 
 ### **Suite: Accessibility (a11y) Scans**
-*Spec Source: [a11y_violation_injector_tests.md](file:///c:/BuggyBooks/buggy-books/specs/a11y_violation_injector_tests.md)*
+*Spec Source: `a11y_violation_injector_tests.md` (BuggyBooks app repo; not published)*
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **A11Y_01** | Standard Accessibility Compliance | Verify that when `injectA11yViolations` is `false`, the book catalog, login screen, and checkout step forms pass Axe scans with zero violations. | Smoke | Playwright UI | `@smoke` `@regression` `@a11y` | **Yes**<br>- File: `A11y/Test_007_A11yScanValidation.spec.ts`<br>- Test: `A11Y_01: Standard Accessibility Compliance @smoke @regression @a11y` |
@@ -81,7 +81,7 @@ These test cases verify user-facing interfaces and behaviors inside a real brows
 
 
 ### **Suite: Modern UI Styling & Layout**
-*Spec Source: [ui_styling_and_transition_tests.md](file:///c:/BuggyBooks/buggy-books/specs/ui_styling_and_transition_tests.md)*
+*Spec Source: `ui_styling_and_transition_tests.md` (BuggyBooks app repo; not published)*
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **UI_STYLE_01** | Retained Automation Selectors | Search and list books. Assert that all legacy automation classnames and element IDs exist on the new semantic `div` nodes. | Smoke | Playwright UI | `@smoke` `@regression` | **Yes**<br>- File: `Styling/Test_009_UIStyleAndLayoutValidation.spec.ts`<br>- Test: `UI_STYLE_01: Retained Automation Selectors @smoke @regression` |
@@ -90,7 +90,7 @@ These test cases verify user-facing interfaces and behaviors inside a real brows
 | **UI_STYLE_04** | HSL CSS Variable Theme Verification | Emulate light and dark mode preferences. Assert that root variables (like `--bg` and `--card-bg`) resolve to their correct HSL values. | Regression | Playwright UI | `@regression` | **Yes**<br>- File: `Styling/Test_009_UIStyleAndLayoutValidation.spec.ts`<br>- Test: `UI_STYLE_04: HSL CSS Variable Theme Verification @regression` |
 
 ### **Suite: Visual Regression & Layout Chaos**
-*Spec Source: [visual_regression_chaos_tests.md](file:///c:/BuggyBooks/buggy-books/specs/visual_regression_chaos_tests.md)*
+*Spec Source: `visual_regression_chaos_tests.md` (BuggyBooks app repo; not published)*
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **VIS_REG_01** | Baseline Catalog Screenshot | Navigate to `/`. Capture a screenshot when `visualChaos` is `false`. Assert screenshot matches the approved baseline file. | Smoke | Playwright UI | `@smoke` `@regression` | **Yes**<br>- File: `VisualRegression/Test_010_VisualRegressionChaos.spec.ts`<br>- Test: `VIS_REG_01: Baseline Catalog Screenshot @smoke @regression` |
@@ -104,7 +104,7 @@ These test cases verify user-facing interfaces and behaviors inside a real brows
 | **VIS_REG_09** | Reset Restores Visual Baseline | After enabling chaos and capturing diff screenshot, call `POST /api/test/reset`. Re-capture screenshot. Assert it matches original baseline. | E2E | Playwright UI | `@regression` `@chaos` | **Yes**<br>- File: `VisualRegression/Test_010_VisualRegressionChaos.spec.ts`<br>- Test: `VIS_REG_09: Reset Restores Visual Baseline @regression @chaos` |
 
 ### **Suite: WebSockets Event & Resilience**
-*Spec Source: [websocket_event_and_resilience_tests.md](file:///c:/BuggyBooks/buggy-books/specs/websocket_event_and_resilience_tests.md)*
+*Spec Source: `websocket_event_and_resilience_tests.md` (BuggyBooks app repo; not published)*
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **WS_CONN_01** | WebSocket State Indicator | Open page. Assert that `ws-status-dot` is present and contains the class `status-connected` (indicating successful handshakes). | Smoke | Playwright UI | `@smoke` `@regression` | **Yes**<br>- File: `WebSockets/Test_008_WebSocketResilienceValidation.spec.ts`<br>- Test: `WS_CONN_01: WebSocket State Indicator @smoke @regression` |
@@ -168,7 +168,7 @@ These test cases verify the logic, security, and integrity of backend endpoints 
 
 
 ### **Suite: Structured JSON Logging & Correlation**
-*Spec Source: [logging_and_correlation_tests.md](file:///c:/BuggyBooks/buggy-books/specs/logging_and_correlation_tests.md)*
+*Spec Source: `logging_and_correlation_tests.md` (BuggyBooks app repo; not published)*
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **API_LOG_01** | Correlation ID Header Generation | Send any HTTP request. Verify `x-correlation-id` is returned in response headers and is a valid UUIDv4. | Smoke | Playwright API | `@smoke` `@regression` | **Yes**<br>- File: `api/Logging/Test_001_LoggingAndCorrelationApi.spec.ts`<br>- Test: `API_LOG_01: Correlation ID Header Generation @smoke @regression` |
@@ -269,7 +269,7 @@ These test cases verify the logic, security, and integrity of backend endpoints 
 These test cases isolate frontend logic and UI pages by mocking backend API responses. Written inside the frontend directory using **Vitest** + **React Testing Library** + **Mock Service Worker (MSW)**.
 
 ### **Suite: API Mocking via MSW**
-*Spec Source: [dockerization_and_ci_tests.md](file:///c:/BuggyBooks/buggy-books/specs/dockerization_and_ci_tests.md)*
+*Spec Source: `dockerization_and_ci_tests.md` (BuggyBooks app repo; not published)*
 | ID | Title | Description | Priority | Target Coverage | Tags | Covered |
 |:---|:---|:---|:---|:---|:---|:---|
 | **MSW_01** | Mock Books Endpoint | In a Vitest component test, import `server` from `src/mocks/server.ts`. Assert `GET /api/books` returns the 3 mock books without a real backend. | Smoke | Frontend Component (Vitest) | `@smoke` | **Yes**<br>- File: `frontend/src/__tests__/msw-api-mocking.test.tsx`<br>- Test: `MSW_01: Mock Books Endpoint returns the 3 mock books` |
@@ -312,7 +312,7 @@ These test cases isolate frontend logic and UI pages by mocking backend API resp
 
 ## 5. Session Sandboxing & Parallel Isolation Tests
 
-*Sprint Source: [Sprint 3.1: Multi-User Session Isolation & Parallel Sandboxing](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_3_1_multi_user_isolation_and_sandboxing.md)*
+*Sprint Source: [Sprint 3.1: Multi-User Session Isolation & Parallel Sandboxing](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_3_1_multi_user_isolation_and_sandboxing.md)*
 
 These test cases validate multi-user ephemeral session isolation and parallel worker sandboxing infrastructure.
 
@@ -328,7 +328,7 @@ These test cases validate multi-user ephemeral session isolation and parallel wo
 
 ## 6. Chaos Dashboard & Concurrency Race Condition Tests
 
-*Sprint Source: [Sprint 3.2: Interactive Chaos Dashboard & Dynamic Fault Injection](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_3_2_interactive_chaos_dashboard.md)*
+*Sprint Source: [Sprint 3.2: Interactive Chaos Dashboard & Dynamic Fault Injection](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_3_2_interactive_chaos_dashboard.md)*
 
 These test cases validate the interactive Chaos Control Dashboard UI and backend optimistic stock locking under high-concurrency race conditions.
 
@@ -348,7 +348,7 @@ These test cases validate the interactive Chaos Control Dashboard UI and backend
 
 ## 7. Automated API Performance & Lighthouse CI Quality Gates
 
-*Sprint Source: [Sprint 3.3: Automated API Performance Testing & Lighthouse CI Quality Gates](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_3_3_automated_performance_and_lighthouse.md)*
+*Sprint Source: [Sprint 3.3: Automated API Performance Testing & Lighthouse CI Quality Gates](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_3_3_automated_performance_and_lighthouse.md)*
 
 These test cases validate automated API performance benchmarking with k6 and frontend quality gate enforcement with Lighthouse CI.
 
@@ -379,10 +379,10 @@ These test cases validate automated API performance benchmarking with k6 and fro
 ## 8. CI/CD Pipeline Optimization, Fast-Feedback Gates & Concurrency Control
 
 *Sprint Sources:*
-- *[Sprint 4.1: Pipeline Deduplication & Build Artifact Sharing](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_4_1_pipeline_deduplication_and_artifact_sharing.md)*
-- *[Sprint 4.2: Fast-Feedback Parallelization & Concurrency Control](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_4_2_fast_feedback_parallelization_and_concurrency.md)*
-- *[Sprint 4.3: Performance Runner Resilience & Consolidated Test Reporting](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_4_3_performance_resilience_and_test_reporting.md)*
-- *[Sprint 5.1: Ephemeral Playwright E2E Smoke Gate & Strict Failure Enforcement](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_5_1_ephemeral_e2e_smoke_and_strict_gates.md)*
+- *[Sprint 4.1: Pipeline Deduplication & Build Artifact Sharing](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_4_1_pipeline_deduplication_and_artifact_sharing.md)*
+- *[Sprint 4.2: Fast-Feedback Parallelization & Concurrency Control](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_4_2_fast_feedback_parallelization_and_concurrency.md)*
+- *[Sprint 4.3: Performance Runner Resilience & Consolidated Test Reporting](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_4_3_performance_resilience_and_test_reporting.md)*
+- *[Sprint 5.1: Ephemeral Playwright E2E Smoke Gate & Strict Failure Enforcement](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_5_1_ephemeral_e2e_smoke_and_strict_gates.md)*
 
 These test cases validate CI/CD pipeline deduplication, GitHub Actions artifact upload/download sharing, deterministic `npm ci` execution, Stage 1 parallel static quality gates, workflow concurrency auto-cancellation, path-based trigger filtering, tiered performance gates (PR smoke vs main stress), consolidated test & coverage Step Summaries, ephemeral Playwright E2E smoke gates against pre-built artifacts, and strict zero-tolerance failure gate enforcement.
 
@@ -402,7 +402,7 @@ These test cases validate CI/CD pipeline deduplication, GitHub Actions artifact 
 
 ## 9. Ephemeral WebServer Orchestration & Cross-Browser Matrix Tests
 
-*Sprint Source: [Sprint 5.2: Self-Contained Local WebServer Orchestration & Multi-Browser Matrix](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_5_2_local_webserver_and_multi_browser_matrix.md)*
+*Sprint Source: [Sprint 5.2: Self-Contained Local WebServer Orchestration & Multi-Browser Matrix](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_5_2_local_webserver_and_multi_browser_matrix.md)*
 
 These test cases validate zero-dependency local developer execution via native Playwright `webServer` orchestration, automated fallback mock seed credentials, and multi-browser and mobile device emulation (Chromium, Firefox, WebKit, Pixel 5, and iPhone 13).
 
@@ -416,7 +416,7 @@ These test cases validate zero-dependency local developer execution via native P
 
 ## 10. Hermetic Regression Orchestration, Session Chaos Isolation & Auth State Optimization
 
-*Sprint Source: [Sprint 6.1: Hermetic Regression Environments, Session Chaos Isolation & Auth State Optimization](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_6_1_hermetic_regression_and_auth_optimization.md)*
+*Sprint Source: [Sprint 6.1: Hermetic Regression Environments, Session Chaos Isolation & Auth State Optimization](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_6_1_hermetic_regression_and_auth_optimization.md)*
 
 These test cases validate decoupling regression from shared staging environments into containerized/ephemeral local stacks, session-partitioned chaos state isolation via `x-test-session-id`, global Playwright `storageState` authentication caching (`auth.setup.ts`), and migrating API test suites from Axios to native `APIRequestContext`.
 
@@ -430,7 +430,7 @@ These test cases validate decoupling regression from shared staging environments
 
 ## 11. Multi-Tiered Performance Baselines, Endurance Telemetry & Quarantine Governance
 
-*Sprint Source: [Sprint 6.3: Multi-Tiered Performance Baselines, Endurance Telemetry & Quarantine Governance](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_6_3_performance_telemetry_baselines_and_quarantine_governance.md)*
+*Sprint Source: [Sprint 6.3: Multi-Tiered Performance Baselines, Endurance Telemetry & Quarantine Governance](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_6_3_performance_telemetry_baselines_and_quarantine_governance.md)*
 
 These test cases validate scenario-specific k6 golden baselines (`smoke`, `catalog`, `soak`), Node.js memory drift and event loop telemetry assertions (< 30% drift), production-mode benchmark execution, automated Playwright failure summaries in GitHub Step Summaries, universal failure trace uploads, and closed-loop quarantine stability index audits with `--repeat-each=5`.
 
@@ -444,7 +444,7 @@ These test cases validate scenario-specific k6 golden baselines (`smoke`, `catal
 
 ## 12. Interactive Performance Reporting, Unified Exporters & Dynamic Baseline Governance
 
-*Sprint Source: [Sprint 8.1: Interactive HTML Reporting, Unified Exporters & CI Baseline Alignment](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_8_1_interactive_html_reporting_and_baseline_governance.md)*
+*Sprint Source: [Sprint 8.1: Interactive HTML Reporting, Unified Exporters & CI Baseline Alignment](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_8_1_interactive_html_reporting_and_baseline_governance.md)*
 
 These test cases validate standalone interactive HTML performance reporting dashboards, universal summary exporters across all k6 execution tiers, golden baseline alignment for inventory stress benchmarks, and dynamic metric regression gating.
 
@@ -458,7 +458,7 @@ These test cases validate standalone interactive HTML performance reporting dash
 
 ## 13. Monorepo Workspaces Orchestration, Secret Hygiene & Artifact Cleanliness
 
-*Sprint Source: [Sprint 9.1: Monorepo Workspaces, Dependency Governance & Secret Hygiene](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_9_1_monorepo_workspaces_dependency_governance_and_secret_hygiene.md)*
+*Sprint Source: [Sprint 9.1: Monorepo Workspaces, Dependency Governance & Secret Hygiene](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_9_1_monorepo_workspaces_dependency_governance_and_secret_hygiene.md)*
 
 These test cases validate native npm workspaces orchestration across all five subprojects, elimination of cross-platform shell script fragility, git secret hygiene (purging committed auth token artifacts and isolating storage state), and repository cleanliness with linter ignore alignment.
 
@@ -473,7 +473,7 @@ These test cases validate native npm workspaces orchestration across all five su
 
 ## 14. Backend Atomic Persistence, Concurrency Mutex & Security Hardening
 
-*Sprint Source: [Sprint 9.2: Backend Atomic Persistence, Concurrency Mutex & Security Hardening](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_9_2_backend_atomic_persistence_concurrency_mutex_and_security_hardening.md)*
+*Sprint Source: [Sprint 9.2: Backend Atomic Persistence, Concurrency Mutex & Security Hardening](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_9_2_backend_atomic_persistence_concurrency_mutex_and_security_hardening.md)*
 
 These test cases validate atomic file persistence with Windows-safe file replacement fallbacks, serialized FIFO write queues preventing data loss under concurrency, multi-tenant CORS wildcard hardening, background timer lifecycle unreferencing, and LRU memory-bounded session caching.
 
@@ -488,7 +488,7 @@ These test cases validate atomic file persistence with Windows-safe file replace
 
 ## 15. Frontend Dynamic CSRF Lifecycle, Route Safety & Mock Harmonization
 
-*Sprint Source: [Sprint 9.3: Frontend Dynamic CSRF Lifecycle, Route Safety & Mock Harmonization](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_9_3_frontend_dynamic_csrf_route_safety_and_mock_harmonization.md)*
+*Sprint Source: [Sprint 9.3: Frontend Dynamic CSRF Lifecycle, Route Safety & Mock Harmonization](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_9_3_frontend_dynamic_csrf_route_safety_and_mock_harmonization.md)*
 
 These test cases validate the self-healing CSRF token lifecycle, non-destructive React Router navigation callbacks upon authentication expiration, unified Mock Service Worker (MSW) component test mock harmonization, and baseline ARIA landmark accessibility inside the Shadow DOM component.
 
@@ -504,7 +504,7 @@ These test cases validate the self-healing CSRF token lifecycle, non-destructive
 
 ## 16. Diagnostic Assertion Architecture, Step-by-Step Logging & Native Actionability
 
-*Sprint Source: [Sprint 10.1: Diagnostic Assertion Architecture, Step-by-Step Logging & Native Actionability](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_10_1_diagnostic_assertion_architecture_and_step_logging.md)*
+*Sprint Source: [Sprint 10.1: Diagnostic Assertion Architecture, Step-by-Step Logging & Native Actionability](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_10_1_diagnostic_assertion_architecture_and_step_logging.md)*
 
 These test cases validate the diagnostic verification engine, direct Playwright failure diff generation, structured Winston step logging and Allure timeline persistence, native auto-waiting across Page Object action wrappers, and the complete elimination of boolean accumulator anti-patterns.
 
@@ -520,7 +520,7 @@ These test cases validate the diagnostic verification engine, direct Playwright 
 
 ## 17. Playwright Timeout Calibration, API Project Decoupling & Static Quality Linter
 
-*Sprint Source: [Sprint 10.2: Playwright Timeout Calibration, API Project Decoupling & Static Quality Linter](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_10_2_playwright_timeout_calibration_api_decoupling_and_linter.md)*
+*Sprint Source: [Sprint 10.2: Playwright Timeout Calibration, API Project Decoupling & Static Quality Linter](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_10_2_playwright_timeout_calibration_api_decoupling_and_linter.md)*
 
 These test cases validate calibrated 30s test timeouts and 10s expectation timeouts with fail-fast protection, dedicated headless API test project execution without browser dependencies or UI authentication bottlenecks, and static code quality governance using ESLint (`eslint-plugin-playwright`) and enhanced AST quality checks in `finalize-spec.ts`.
 
@@ -535,7 +535,7 @@ These test cases validate calibrated 30s test timeouts and 10s expectation timeo
 
 ## 18. CI/CD Pipeline Hermetic Isolation, Process Management & Report Deployment
 
-*Sprint Source: [Sprint 10.3: CI/CD Pipeline Hermetic Isolation, Process Management & Report Deployment](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_10_3_cicd_pipeline_hermetic_isolation_and_report_governance.md)*
+*Sprint Source: [Sprint 10.3: CI/CD Pipeline Hermetic Isolation, Process Management & Report Deployment](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_10_3_cicd_pipeline_hermetic_isolation_and_report_governance.md)*
 
 These test cases validate native Playwright managed `webServer` lifecycle orchestration across CI and local workflows without shell background process traps, database snapshotting and isolation across sequential k6 performance benchmark tiers, resilient repository name and owner URL interpolation for Allure and Monocart publishing, and staging environment warm-up checks preventing cold-start timeout failures.
 
@@ -550,7 +550,7 @@ These test cases validate native Playwright managed `webServer` lifecycle orches
 ---
 ## 19. Dual-Mode Mobile Authentication & Expo Scaffolding
 
-*Sprint Source: [Sprint 11.1: Backend Dual-Auth & Expo Monorepo Scaffolding](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_11_1_backend_dual_auth_and_expo_monorepo_scaffolding.md)*
+*Sprint Source: [Sprint 11.1: Backend Dual-Auth & Expo Monorepo Scaffolding](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_11_1_backend_dual_auth_and_expo_monorepo_scaffolding.md)*
 
 These test cases validate the backend dual-authentication architecture supporting both web cookie sessions and mobile Bearer tokens, silent refresh token rotation via JSON payloads and cookies, double-submit cookie CSRF exemption for Bearer token requests, authenticated Multer avatar uploads, and Expo React Native workspace integrity.
 
@@ -566,7 +566,7 @@ These test cases validate the backend dual-authentication architecture supportin
 ---
 ## 20. Mobile Core Navigation, Authentication & Catalog Flow
 
-*Sprint Source: [Sprint 11.2: Core Navigation, Authentication & Catalog Flow](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_11_2_core_navigation_authentication_and_catalog_flow.md)*
+*Sprint Source: [Sprint 11.2: Core Navigation, Authentication & Catalog Flow](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_11_2_core_navigation_authentication_and_catalog_flow.md)*
 
 These test cases validate hardware-backed token persistence in `expo-secure-store`, the mobile Axios API client with 401/403 refresh interceptor mutex queue serialization, offline session hydration in `AuthContext`, root and tab navigation hierarchies, and full user journeys for Login, Registration, Catalog browsing, debounced search, pull-to-refresh, and Book Detail interaction.
 
@@ -586,7 +586,7 @@ These test cases validate hardware-backed token persistence in `expo-secure-stor
 ---
 ## 21. Mobile Cart, Checkout, Profile & Chaos Control Center
 
-*Sprint Source: [Sprint 11.3: Cart, Checkout, Profile & Chaos Control Center](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_11_3_cart_checkout_profile_and_chaos_control_center.md)*
+*Sprint Source: [Sprint 11.3: Cart, Checkout, Profile & Chaos Control Center](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_11_3_cart_checkout_profile_and_chaos_control_center.md)*
 
 These test cases validate mobile shopping cart management, real-time bottom tab badge updates, multi-step checkout form validation, resilient order placement with chaos error handling, native camera and photo library avatar uploads using `expo-image-picker`, and the in-app Chaos Control Center for dynamic backend configuration and test data resets.
 
@@ -617,7 +617,7 @@ These test cases validate mobile shopping cart management, real-time bottom tab 
 ---
 ## 22. Mobile Intentional Anti-Patterns & Chaos Injection (MOB-B1 to MOB-B6)
 
-*Sprint Source: [Sprint 12.1: Intentional Mobile Anti-Patterns & Chaos Injection](file:///c:/BuggyBooks/buggy-books/planning/Sprints/sprint_12_1_intentional_mobile_anti_patterns_and_chaos_injection.md)*
+*Sprint Source: [Sprint 12.1: Intentional Mobile Anti-Patterns & Chaos Injection](https://github.com/munna7862/buggy-books/blob/main/planning/Sprints/sprint_12_1_intentional_mobile_anti_patterns_and_chaos_injection.md)*
 
 These test cases validate deliberate mobile anti-patterns and testing obstacles implemented to serve as realistic automation targets for Appium and Maestro test suites, including obfuscated locators, soft keyboard occlusion, dynamic add-to-cart latency, stochastic checkout recovery, simulated offline network interruptions, and landscape orientation layout shifts.
 
