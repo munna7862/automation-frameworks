@@ -14,13 +14,33 @@ const crypto = require('crypto');
 // the OpenAPI spec describing the scanned surface; the scanned URL stays in the message.
 const DEFAULT_ANCHOR = 'docs/api/openapi.yaml';
 
+function parseRulesFile(rulesFilePath) {
+  const ignoredRules = new Set();
+  if (!rulesFilePath || !fs.existsSync(rulesFilePath)) return ignoredRules;
+  const content = fs.readFileSync(rulesFilePath, 'utf-8');
+  for (const line of content.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const parts = trimmed.split(/\t+/);
+    if (parts.length >= 2) {
+      const ruleId = parts[0].trim();
+      const threshold = parts[1].trim().toUpperCase();
+      if (threshold === 'IGNORE') {
+        ignoredRules.add(ruleId);
+      }
+    }
+  }
+  return ignoredRules;
+}
+
 function parseArgs() {
   const args = process.argv.slice(2);
   const options = {
     input: null,
     output: null,
     category: 'zap-dast',
-    anchor: DEFAULT_ANCHOR
+    anchor: DEFAULT_ANCHOR,
+    rules: null
   };
 
   for (const arg of args) {
@@ -32,12 +52,28 @@ function parseArgs() {
       options.category = arg.split('=')[1];
     } else if (arg.startsWith('--anchor=')) {
       options.anchor = arg.split('=')[1];
+    } else if (arg.startsWith('--rules=')) {
+      options.rules = path.resolve(process.cwd(), arg.split('=')[1]);
+    }
+  }
+
+  if (!options.rules) {
+    if (
+      options.category === 'zap-baseline' &&
+      fs.existsSync(path.resolve(process.cwd(), 'security/zap-rules.tsv'))
+    ) {
+      options.rules = path.resolve(process.cwd(), 'security/zap-rules.tsv');
+    } else if (
+      options.category === 'zap-api' &&
+      fs.existsSync(path.resolve(process.cwd(), 'security/zap-api-rules.tsv'))
+    ) {
+      options.rules = path.resolve(process.cwd(), 'security/zap-api-rules.tsv');
     }
   }
 
   if (!options.input || !options.output) {
     console.error(
-      'Usage: node scripts/zap-to-sarif.js --input=<zap-json> --output=<output-sarif> [--category=<category>] [--anchor=<repo-relative-file>]'
+      'Usage: node scripts/zap-to-sarif.js --input=<zap-json> --output=<output-sarif> [--category=<category>] [--anchor=<repo-relative-file>] [--rules=<rules-tsv>]'
     );
     process.exit(1);
   }
@@ -118,7 +154,13 @@ function findAnchorLine(uri, pathIndex) {
   return hit ? hit.line : 1;
 }
 
-function convertZapToSarif(zapData, category, anchor = DEFAULT_ANCHOR, anchorText = '') {
+function convertZapToSarif(
+  zapData,
+  category,
+  anchor = DEFAULT_ANCHOR,
+  anchorText = '',
+  ignoredRules = new Set()
+) {
   const pathIndex = buildPathLineIndex(anchorText);
   const rules = [];
   const results = [];
@@ -133,10 +175,15 @@ function convertZapToSarif(zapData, category, anchor = DEFAULT_ANCHOR, anchorTex
     }
   }
 
+  let ignoredCount = 0;
   for (const site of sites) {
     const alerts = site.alerts || [];
     for (const alert of alerts) {
       const ruleId = String(alert.pluginid || alert.alertRef || alert.name);
+      if (ignoredRules.has(ruleId)) {
+        ignoredCount++;
+        continue;
+      }
       const ruleName = alert.alert || alert.name || 'OWASP ZAP Finding';
       const cleanDesc = cleanText(alert.desc) || ruleName;
       const cleanSolution = cleanText(alert.solution) || 'Review endpoint configuration';
@@ -278,7 +325,20 @@ function main() {
     );
   }
 
-  const sarif = convertZapToSarif(zapData, options.category, options.anchor, anchorText);
+  const ignoredRules = parseRulesFile(options.rules);
+  if (options.rules) {
+    console.log(
+      `[ZAP-SARIF] Loaded rules policy from: ${options.rules} (${ignoredRules.size} ignored rules)`
+    );
+  }
+
+  const sarif = convertZapToSarif(
+    zapData,
+    options.category,
+    options.anchor,
+    anchorText,
+    ignoredRules
+  );
   const outDir = path.dirname(options.output);
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
