@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T05:46:30.205Z",
+  "generatedAt": "2026-10-31T05:47:36.507Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -13,16 +13,16 @@
     "commit": "cdee5b4",
     "branch": "main",
     "message": "chore(deps): bump the minor-and-patch group across 1 directory with 19 updates (#59)",
-    "ciRun": "13"
+    "ciRun": "12"
   },
   "kpis": {
-    "totalTests": 507,
-    "totalPassed": 495,
-    "totalFailed": 10,
-    "totalSkipped": 2,
-    "overallPassRate": "98.0%",
+    "totalTests": 339,
+    "totalPassed": 333,
+    "totalFailed": 5,
+    "totalSkipped": 1,
+    "overallPassRate": "98.5%",
     "activeFrameworks": 7,
-    "totalDurationMs": 465446,
+    "totalDurationMs": 348463,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -87,14 +87,14 @@
       "runner": "TypeScript + Mocha + Chai",
       "target": "Google Chrome (ChromeDriver Headless)",
       "reportPath": "./AutomationReports/Selenium/",
-      "status": "FAILED",
+      "status": "PASSED",
       "metrics": {
-        "total": 173,
-        "passed": 167,
-        "failed": 5,
-        "skipped": 1,
-        "durationMs": 125965,
-        "passRate": "96.5%"
+        "total": 5,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 8982,
+        "passRate": "100.0%"
       },
       "highlights": [
         "W3C standardized browser automation commands",
