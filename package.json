@@ -86,7 +86,6 @@
     "@xmldom/xmldom": "^0.9.12",
     "js-yaml": "^4.3.2",
     "serialize-javascript": "^7.0.5",
-    "brace-expansion": "^1.1.21",
     "qs": "^6.16.2",
     "body-parser": "^2.4.0",
     "ip-address": "^10.7.5",

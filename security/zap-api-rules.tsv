@@ -10,3 +10,10 @@
 10038	WARN	Content Security Policy (CSP) Header Not Set — Non-HTML JSON REST API; review: 2026-11-01
 10096	WARN	Timestamp Disclosure — Unix timestamps in inventory/reports; review: 2026-11-01
 10202	IGNORE	Absence of Anti-CSRF Tokens — Stateless JWT bearer token authentication; review: 2026-11-01
+10049	IGNORE	Non-Storable Content — Authenticated JSON API responses are intentionally uncacheable; review: 2026-11-01
+10054	IGNORE	Cookie with SameSite Attribute None — Cross-origin SPA/API auth cookies (Secure + HttpOnly) require SameSite=None; review: 2026-11-01
+10104	IGNORE	User Agent Fuzzer — Informational scan-behaviour output, no vulnerability; review: 2026-11-01
+10111	IGNORE	Authentication Request Identified — Informational: ZAP recognised the login endpoint; review: 2026-11-01
+10112	IGNORE	Session Management Response Identified — Informational: ZAP recognised token/CSRF cookies; review: 2026-11-01
+100000	IGNORE	Client Error response code (4xx) — Expected 404/429 from forced-browse probes and the API rate limiter under active scan; review: 2026-11-01
+100001	IGNORE	Unexpected Content-Type — text/html is the framework 404/429 error body returned to fuzzed requests; review: 2026-11-01
