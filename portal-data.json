@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T06:19:03.772Z",
+  "generatedAt": "2026-10-31T06:27:10.582Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,10 +10,10 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "d954fbf",
+    "commit": "fdf21d8",
     "branch": "main",
-    "message": "fix(security): remediate dependabot, template injection, and SAST races (#64)",
-    "ciRun": "14"
+    "message": "chore(deps): bump @asteasolutions/zod-to-openapi to 9.1.0 and zod to 4 (#68)",
+    "ciRun": "15"
   },
   "kpis": {
     "totalTests": 339,
@@ -22,7 +22,7 @@
     "totalSkipped": 1,
     "overallPassRate": "98.5%",
     "activeFrameworks": 7,
-    "totalDurationMs": 350033,
+    "totalDurationMs": 350022,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -93,7 +93,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "durationMs": 8982,
+        "durationMs": 8971,
         "passRate": "100.0%"
       },
       "highlights": [
