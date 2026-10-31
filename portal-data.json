@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T10:59:57.323Z",
+  "generatedAt": "2026-10-31T11:09:35.886Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,10 +10,10 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "170e83d",
-    "branch": "fix/ci-concurrency-controls",
-    "message": "fix(mobile): add noReset true to android wdio capabilities",
-    "ciRun": "34"
+    "commit": "23ef076",
+    "branch": "main",
+    "message": "fix(ci): add concurrency controls to CI workflows missing them (#75)",
+    "ciRun": "14"
   },
   "kpis": {
     "totalTests": 339,
