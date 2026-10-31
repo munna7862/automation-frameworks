@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T13:34:40.815Z",
+  "generatedAt": "2026-10-31T14:07:13.717Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,19 +10,19 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "58bbaf6",
+    "commit": "3b3274d",
     "branch": "main",
-    "message": "fix(ci): stop shard self-cancellation and repair false-failing nightly tests (#81)",
-    "ciRun": "48"
+    "message": "fix(wdio): read checkout summary before the Next click places the order (#83)",
+    "ciRun": "17"
   },
   "kpis": {
-    "totalTests": 339,
-    "totalPassed": 333,
-    "totalFailed": 5,
+    "totalTests": 396,
+    "totalPassed": 394,
+    "totalFailed": 1,
     "totalSkipped": 1,
-    "overallPassRate": "98.5%",
+    "overallPassRate": "99.7%",
     "activeFrameworks": 7,
-    "totalDurationMs": 354767,
+    "totalDurationMs": 361011,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -36,14 +36,14 @@
       "runner": "Playwright Test Runner",
       "target": "Google Chrome (UI) + RequestContext (API)",
       "reportPath": "./AutomationReports/Playwright/",
-      "status": "FAILED",
+      "status": "PASSED",
       "metrics": {
-        "total": 173,
-        "passed": 168,
-        "failed": 4,
+        "total": 230,
+        "passed": 229,
+        "failed": 0,
         "skipped": 1,
-        "durationMs": 111183,
-        "passRate": "97.1%"
+        "durationMs": 117427,
+        "passRate": "99.6%"
       },
       "highlights": [
         "55 REST API tests with JWT session reuse",
