@@ -19,7 +19,9 @@ export const ApiErrorResponseSchema = z
     message: z.string().optional(),
     correlationId: z.string().optional(),
     errorName: z.string().optional(),
-    details: z.union([z.string(), z.array(ApiErrorDetailSchema), z.record(z.unknown())]).optional()
+    details: z
+      .union([z.string(), z.array(ApiErrorDetailSchema), z.record(z.string(), z.unknown())])
+      .optional()
   })
   .strict();
 

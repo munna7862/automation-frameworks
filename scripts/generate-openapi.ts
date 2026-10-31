@@ -27,19 +27,14 @@
  * ============================================================================
  */
 
+// Must be imported before any Zod schema is constructed (Zod v4 per-instance methods)
+import './zod-openapi-setup';
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
-import {
-  OpenAPIRegistry,
-  OpenApiGeneratorV31,
-  extendZodWithOpenApi
-} from '@asteasolutions/zod-to-openapi';
+import { OpenAPIRegistry, OpenApiGeneratorV31 } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 import * as yaml from 'yaml';
-
-// Extend Zod prototypes with OpenAPI metadata helpers
-extendZodWithOpenApi(z);
 
 // Import schemas from playwright-e2e
 import {
