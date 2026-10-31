@@ -17,7 +17,7 @@ jobs:
     concurrency:
       group: buggybooks-staging-state
       cancel-in-progress: false
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     timeout-minutes: 30
 
     permissions:
@@ -37,6 +37,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.2.2
         with:
           persist-credentials: false
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
 
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -103,7 +109,7 @@ jobs:
           JOB_STATUS: ${{ job.status }}
         run: |
           echo "### 📱 Mobile Appium CI Execution Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- **Runner**: macos-14 (Hardware Accelerated)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Runner**: ubuntu-latest (Hardware Accelerated KVM)" >> $GITHUB_STEP_SUMMARY
           echo "- **Target Device**: Pixel 6 (API Level 31, x86_64)" >> $GITHUB_STEP_SUMMARY
           echo "- **Appium Driver**: UiAutomator2" >> $GITHUB_STEP_SUMMARY
           echo "- **Test Command**: \`npm run test:mobile:smoke\`" >> $GITHUB_STEP_SUMMARY
