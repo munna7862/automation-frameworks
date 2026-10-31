@@ -36,3 +36,5 @@ docs/
 **/test_cases_catalog.md
 *.har
 **/*.har
+CHANGELOG.md
+**/CHANGELOG.md
