@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T14:07:13.717Z",
+  "generatedAt": "2026-10-31T14:22:47.710Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,21 +10,21 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "3b3274d",
+    "commit": "f30a3ac",
     "branch": "main",
-    "message": "fix(wdio): read checkout summary before the Next click places the order (#83)",
-    "ciRun": "17"
+    "message": "chore: release main (#80)",
+    "ciRun": "49"
   },
   "kpis": {
     "totalTests": 396,
-    "totalPassed": 394,
-    "totalFailed": 1,
+    "totalPassed": 395,
+    "totalFailed": 0,
     "totalSkipped": 1,
-    "overallPassRate": "99.7%",
+    "overallPassRate": "100.0%",
     "activeFrameworks": 7,
-    "totalDurationMs": 361011,
+    "totalDurationMs": 330113,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
-    "qualityGateStatus": "ACTION REQUIRED"
+    "qualityGateStatus": "PASSED"
   },
   "frameworks": {
     "playwright": {
@@ -111,14 +111,14 @@
       "runner": "TypeScript + Mocha",
       "target": "Google Chrome (DevTools / WebDriver)",
       "reportPath": "./AutomationReports/WDIO/",
-      "status": "FAILED",
+      "status": "PASSED",
       "metrics": {
         "total": 5,
-        "passed": 4,
-        "failed": 1,
+        "passed": 5,
+        "failed": 0,
         "skipped": 0,
-        "durationMs": 41470,
-        "passRate": "80.0%"
+        "durationMs": 10572,
+        "passRate": "100.0%"
       },
       "highlights": [
         "Deep shadow root locator piercing (>>> syntax)",
