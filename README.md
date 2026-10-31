@@ -64,7 +64,7 @@ _(Requires Docker Desktop running locally. Automatically reuses existing stack i
 | **`packages/test-data`**        | `@automationframeworks/test-data`           | Shared data factories, builders, API seeders, cleanup registry, and Zod configuration schema.      |
 | **`selenium-e2e`**              | Selenium WebDriver, TypeScript, Mocha, Chai | W3C compliant E2E web automation on Google Chrome with WebDriverWait & Shadow DOM piercing.        |
 | **`wdio-e2e`**                  | WebdriverIO, TypeScript, Mocha, Allure      | Modern WebdriverIO web automation targeting BuggyBooks with `shadow$` selectors.                   |
-| **`mobile-automation`**         | Appium 2.x, WebdriverIO                     | Android (`UiAutomator2`) & iOS (`XCUITest`) Screen Objects & mobile chaos resilience.              |
+| **`mobile-automation`**         | Appium 3.x, WebdriverIO                     | Android (`UiAutomator2`) & iOS (`XCUITest`) Screen Objects & mobile chaos resilience.              |
 | **`jmeter`**                    | Apache JMeter 5.6+                          | Enterprise stress, high-concurrency load, and HTML reporting dashboards.                           |
 | **`k6-performance`**            | k6 (JavaScript)                             | Fast PR baseline drift regression gates (`<= 20%` drift threshold).                                |
 

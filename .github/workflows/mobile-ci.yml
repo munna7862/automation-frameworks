@@ -51,7 +51,7 @@ jobs:
 
       - name: Install Appium & UiAutomator2 Driver
         run: |
-          npm install -g appium
+          npm install -g appium@3
           appium driver install uiautomator2
 
       - name: Render Staging Warm-Up Pre-Flight Probe

@@ -144,6 +144,7 @@ The repository permits only approved, permissive open-source licenses for depend
 | `0BSD` | Permissive | Zero-clause BSD (Public Domain equivalent) |
 | `CC0-1.0` | Permissive | Creative Commons Zero Public Domain Dedication |
 | `Python-2.0` | Permissive | Python Software Foundation License |
+| `PSF-2.0` | Permissive | Python Software Foundation License v2 (OSI-approved); used by `argparse@3.x`, the Python `argparse` port Appium 3 depends on |
 | `BlueOak-1.0.0` | Permissive | Modern permissive license |
 | `Unlicense` | Permissive | Public domain dedication |
 | `WTFPL` | Permissive | Permissive public license |
@@ -162,7 +163,7 @@ Dual licenses combining these permissive options (e.g. `(MIT OR CC0-1.0)`, `(MIT
 | :--- | :--- | :--- | :---: | :--- | :--- |
 | **AR-631-01** | `packages/playwright-utils/src/security/redact.test.ts` | Gitleaks flagged JWT token | `ACCEPTED` | RFC 7519 standard public example JWT used strictly as a test fixture to unit test `redactSecrets()` utility. Explicitly allow-listed in `.gitleaks.toml`. | 2026-10-05 |
 | **AR-631-02** | `.env.example`, `jmeter/TestData/` | Test account passwords (`Password123!`, `password123`) | `ACCEPTED` | Public dummy credentials for test accounts against shared staging/sandbox environment. Real credentials injected exclusively via GitHub Secrets (`E2E_USER_NAME`, `E2E_PASSWORD`). | 2026-10-05 |
-| **AR-632-01** | `mobile-automation` (Appium 2.x sub-dependencies) | Transitive advisories (`yaml`, `yauzl`, `path-to-regexp`, `ws`, `serialize-javascript`) | `TRIAGED` | Upgrading requires breaking changes (`appium@3.8.0`, `mocha@12.0.3`). Tracked in Dependabot grouped PRs. Handled non-blocking in `security-deps.yml` second opinion. | 2026-11-01 |
+| **AR-632-01** | `mobile-automation` (WDIO/Mocha sub-dependencies) | Transitive advisories (`path-to-regexp`, `serialize-javascript`, `undici`) | `TRIAGED` | Appium upgraded to 3.x (`appium@^3.8.0`, `appium-xcuitest-driver@^12.13.3`, `appium-uiautomator2-driver@^8.7.3`), clearing the Appium 2.x advisories (`appium`, `@appium/base-driver`, `@appium/support`, `ws`, `axios`, `express`). Remaining findings need `mocha@12` / WDIO upgrades; tracked in Dependabot grouped PRs. Handled non-blocking in `security-deps.yml` second opinion. | 2026-11-01 |
 | **AR-632-02** | `@img/sharp-libvips-linux-x64` | `LGPL-3.0-or-later` binary package | `ACCEPTED` | Pre-built binary dependency used exclusively in CI Linux runners for Allure/Monocart chart image processing. Dynamically linked; no copyleft contagion to test framework source. | 2026-10-05 |
 | **AR-633-01** | `@axe-core/playwright` | Mozilla Public License (`MPL-2.0`) | `ACCEPTED` | Industry standard accessibility testing engine owned by Deque Systems. MPL-2.0 is file-level copyleft and does not taint monorepo test frameworks. | 2026-10-05 |
 | **AR-633-02** | Reusable Workflow Internal Delegation | Caller secrets passed explicitly | `RESOLVED` | Eliminated `secrets: inherit` across all workflows; callers explicitly map only `E2E_USER_NAME` and `E2E_PASSWORD`. | 2026-10-05 |

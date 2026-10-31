@@ -263,7 +263,7 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 
 ### C. Appium Mobile Automation (`mobile-automation/`)
 
-- **Architecture**: Appium 2.x with `UiAutomator2` (Android) and `XCUITest` (iOS).
+- **Architecture**: Appium 3.x with `UiAutomator2` (Android) and `XCUITest` (iOS).
 - **Screen Objects**: All screens extend `BaseMobileScreen.ts` with touch gesture helpers (`swipeUp`, `scrollToText`).
 - **Chaos Resilience**: Automated specs for orientation shifts (`driver.setOrientation('LANDSCAPE')`), network latency, and app backgrounding.
 
@@ -282,7 +282,7 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 | :------------ | :------------------------ | :------------------------------------------------------------------------------------------ |
 | **Pillar 1**  | Multi-Framework Parity    | Migrate Selenium and WDIO away from dummy sites to BuggyBooks.                              |
 | **Pillar 2**  | Workspaces & Utilities    | Unify `@automationframeworks/playwright-utils` under `packages/` via npm workspaces.        |
-| **Pillar 3**  | Mobile Automation         | Import Appium 2.x suite from `buggy-books` with Screen Objects and chaos specs.             |
+| **Pillar 3**  | Mobile Automation         | Import Appium 3.x suite from `buggy-books` with Screen Objects and chaos specs.             |
 | **Pillar 4**  | Chaos Testing Guide       | Author `docs/intentional_bugs.md` detailing all 8 anti-patterns and safe reset recipes.     |
 | **Pillar 5**  | CI/CD Hygiene             | Purge 4 dead extensionless workflow files and standardize on valid YAML syntax.             |
 | **Pillar 6**  | Environment Templates     | Standardize `.env.example` templates in root and all sub-projects.                          |
@@ -301,7 +301,7 @@ The monorepo operates with 7 specialized virtual agent personas in `.agents/skil
 2. [**`role-sdet-architect`**](../role-sdet-architect/SKILL.md): Strategy, dual-catalog sync, monorepo workspaces, review gates.
 3. [**`role-playwright-automation`**](../role-playwright-automation/SKILL.md): Google Chrome UI + API specs, POMs, self-healing, visual regression.
 4. [**`role-selenium-specialist`**](../role-selenium-specialist/SKILL.md): Selenium WebDriver TypeScript, BuggyBooks POMs, ChromeDriver headless, Shadow DOM.
-5. [**`role-mobile-appium-specialist`**](../role-mobile-appium-specialist/SKILL.md): Appium 2.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
+5. [**`role-mobile-appium-specialist`**](../role-mobile-appium-specialist/SKILL.md): Appium 3.x + WebdriverIO, Screen Objects, gestures, mobile chaos.
 6. [**`role-performance-engineer`**](../role-performance-engineer/SKILL.md): Dual-engine performance: Apache JMeter 5.6+ stress plans and k6 baseline drift gates.
 7. [**`role-devops-engineer`**](../role-devops-engineer/SKILL.md): CI/CD pipelines, Render warm-up probes, Allure Pages deployment, PR release lifecycle.
 
@@ -362,9 +362,9 @@ The entire roadmap is organized under [`planning/`](../../planning/):
 
 ---
 
-## 15. Appium 2.x Mobile Automation Ecosystem & Driver Decoupling
+## 15. Appium 3.x Mobile Automation Ecosystem & Driver Decoupling
 
-- **Driver Decoupling**: Appium 2.x does not bundle drivers. CI environments and developer workstations must install drivers explicitly:
+- **Driver Decoupling**: Appium 3.x does not bundle drivers. CI environments and developer workstations must install drivers explicitly:
   ```bash
   appium driver install uiautomator2
   appium driver install xcuitest
