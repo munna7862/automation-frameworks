@@ -113,6 +113,9 @@ ZAP rules are triaged through a tab-separated file (`security/zap-rules.tsv`) wi
 | `10096` | `WARN` | Timestamp Disclosure | Unix epoch timestamps returned in API inventory telemetry. Low sensitivity. Review: 2026-11-01. |
 | `10054` | `WARN` | Cookie without SameSite Attribute | Test session cookies in local container environment. Review: 2026-11-01. |
 | `10021` | `WARN` | X-Content-Type-Options Header Missing | Static files served without explicit nosniff in dev container. Review: 2026-11-01. |
+| `10049` / `10104` / `10111` / `10112` | `IGNORE` | Informational ZAP detections (non-storable content, UA fuzzer, auth/session identified) | Scanner informational output for the API scan, no vulnerability. Review: 2026-11-01. |
+| `10054` | `IGNORE` | Cookie with SameSite Attribute None (API scan) | SPA and API are cross-origin, so auth cookies must be `SameSite=None; Secure; HttpOnly`. Review: 2026-11-01. |
+| `100000` / `100001` | `IGNORE` | Client Error response / Unexpected Content-Type | Expected 404/429 (HTML error bodies) from forced-browse probes and the rate limiter during active scan. Review: 2026-11-01. |
 
 ---
 
