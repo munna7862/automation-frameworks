@@ -50,6 +50,13 @@ updates:
         update-types:
           - 'minor'
           - 'patch'
+    ignore:
+      # TypeScript 7 (native Go compiler) drops the JS Compiler API that
+      # typescript-eslint (peer typescript <6.1.0) and ts-node depend on.
+      # Remove once typescript-eslint publishes TS 7 support.
+      - dependency-name: 'typescript'
+        update-types:
+          - 'version-update:semver-major'
     cooldown:
       default-days: 7
 
