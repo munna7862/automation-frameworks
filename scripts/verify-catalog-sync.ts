@@ -129,18 +129,20 @@ function main(): void {
   console.log(`📁 Duplicate Catalog : ${path.relative(ROOT_DIR, PLAYWRIGHT_CATALOG_PATH)}`);
   console.log('-'.repeat(78));
 
-  // Check file existence
-  if (!fs.existsSync(DOC_CATALOG_PATH)) {
+  let rawDoc = '';
+  let rawPw = '';
+  try {
+    rawDoc = fs.readFileSync(DOC_CATALOG_PATH, 'utf8');
+  } catch {
     console.error(`❌ ERROR: Primary catalog missing at: ${DOC_CATALOG_PATH}`);
     process.exit(1);
   }
-  if (!fs.existsSync(PLAYWRIGHT_CATALOG_PATH)) {
+  try {
+    rawPw = fs.readFileSync(PLAYWRIGHT_CATALOG_PATH, 'utf8');
+  } catch {
     console.error(`❌ ERROR: Playwright catalog missing at: ${PLAYWRIGHT_CATALOG_PATH}`);
     process.exit(1);
   }
-
-  const rawDoc = fs.readFileSync(DOC_CATALOG_PATH, 'utf8');
-  const rawPw = fs.readFileSync(PLAYWRIGHT_CATALOG_PATH, 'utf8');
 
   // If --fix was passed and they differ, synchronize immediately
   if (IS_FIX) {

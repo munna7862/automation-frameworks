@@ -105,24 +105,23 @@ function recalibrateTier(tierKey, customSummaryPath = null) {
     ? path.resolve(customSummaryPath)
     : path.resolve(process.cwd(), config.summaryFile);
 
-  if (!fs.existsSync(summaryPath)) {
+  let summaryData;
+  try {
+    const rawSummary = fs.readFileSync(summaryPath, 'utf8');
+    summaryData = JSON.parse(rawSummary);
+  } catch {
     throw new Error(
       `Summary JSON not found for tier "${tierKey}" at ${summaryPath}. Ensure k6 run completed.`
     );
   }
-
-  const rawSummary = fs.readFileSync(summaryPath, 'utf8');
-  const summaryData = JSON.parse(rawSummary);
   const metrics = summaryData.metrics || {};
 
   // Read existing baseline if present
   let oldBaseline = null;
-  if (fs.existsSync(baselinePath)) {
-    try {
-      oldBaseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8'));
-    } catch {
-      // ignore
-    }
+  try {
+    oldBaseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8'));
+  } catch {
+    // ignore missing or unparseable baseline
   }
 
   // Construct new metrics

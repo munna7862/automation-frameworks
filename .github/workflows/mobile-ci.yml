@@ -95,13 +95,15 @@ jobs:
 
       - name: Generate Mobile CI Summary
         if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
         run: |
           echo "### 📱 Mobile Appium CI Execution Summary" >> $GITHUB_STEP_SUMMARY
           echo "- **Runner**: macos-14 (Hardware Accelerated)" >> $GITHUB_STEP_SUMMARY
           echo "- **Target Device**: Pixel 6 (API Level 31, x86_64)" >> $GITHUB_STEP_SUMMARY
           echo "- **Appium Driver**: UiAutomator2" >> $GITHUB_STEP_SUMMARY
           echo "- **Test Command**: \`npm run test:mobile:smoke\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **Outcome**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Outcome**: $JOB_STATUS" >> $GITHUB_STEP_SUMMARY
 
   deploy-report:
     name: Deploy Mobile Allure Report

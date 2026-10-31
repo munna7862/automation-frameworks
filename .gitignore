@@ -3,6 +3,8 @@ node_modules/
 npm-debug.log*
 dist/
 packages/*/dist/
+*/package-lock.json
+
 
 # Playwright
 playwright-report/
