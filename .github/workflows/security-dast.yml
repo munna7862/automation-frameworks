@@ -260,6 +260,7 @@ jobs:
           target: 'docs/api/openapi.yaml'
           format: 'openapi'
           rules_file_name: 'security/zap-api-rules.tsv'
+          allow_issue_writing: false
           cmd_options: >-
             -O ${{ env.ZAP_API_TARGET }}
             -n security/zap-api-context.context
