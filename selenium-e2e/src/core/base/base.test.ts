@@ -61,26 +61,22 @@ export class BaseTest {
 
     try {
       const resultsDir = path.resolve(process.cwd(), 'allure-results');
-      if (!fs.existsSync(resultsDir)) {
-        fs.mkdirSync(resultsDir, { recursive: true });
-      }
+      fs.mkdirSync(resultsDir, { recursive: true });
       const envPropsPath = path.join(resultsDir, 'environment.properties');
-      if (!fs.existsSync(envPropsPath)) {
-        const props =
-          [
-            `Framework=Selenium WebDriver (TypeScript + Mocha)`,
-            `Framework.Version=^4.43.0`,
-            `Test.Environment=${envConfig.env || 'STAGING'}`,
-            `Base.URL=${envConfig.baseUrl}`,
-            `Browser.Target=Google Chrome (ChromeDriver)`,
-            `Operating.System=${process.platform} (${process.arch})`,
-            `Node.Version=${process.version}`,
-            `Timestamp=${new Date().toISOString()}`
-          ].join('\n') + '\n';
-        fs.writeFileSync(envPropsPath, props, 'utf-8');
-      }
+      const props =
+        [
+          `Framework=Selenium WebDriver (TypeScript + Mocha)`,
+          `Framework.Version=^4.43.0`,
+          `Test.Environment=${envConfig.env || 'STAGING'}`,
+          `Base.URL=${envConfig.baseUrl}`,
+          `Browser.Target=Google Chrome (ChromeDriver)`,
+          `Operating.System=${process.platform} (${process.arch})`,
+          `Node.Version=${process.version}`,
+          `Timestamp=${new Date().toISOString()}`
+        ].join('\n') + '\n';
+      fs.writeFileSync(envPropsPath, props, { encoding: 'utf-8', flag: 'wx' });
     } catch {
-      // Non-blocking environment properties generation
+      // Non-blocking environment properties generation (exclusive write flag wx safely no-ops if already exists)
     }
   }
 

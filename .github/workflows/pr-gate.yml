@@ -243,10 +243,12 @@ jobs:
         if: steps.check-changes.outputs.has_changes == 'true'
         id: burnin
         working-directory: playwright-e2e
+        env:
+          CHANGED_SPECS: ${{ steps.check-changes.outputs.specs }}
         run: |
-          if [ -n "${{ steps.check-changes.outputs.specs }}" ]; then
+          if [ -n "$CHANGED_SPECS" ]; then
             npx playwright test --config=src/config/playwright.config.ts \
-              ${{ steps.check-changes.outputs.specs }} --repeat-each=5 --retries=0 --workers=4
+              $CHANGED_SPECS --repeat-each=5 --retries=0 --workers=4
           else
             npx playwright test --config=src/config/playwright.config.ts \
               --only-changed=origin/main --repeat-each=5 --retries=0 --workers=4
@@ -276,13 +278,16 @@ jobs:
 
       - name: Generate Burn-In Step Summary
         if: always()
+        env:
+          HAS_CHANGES: ${{ steps.check-changes.outputs.has_changes }}
+          BURNIN_OUTCOME: ${{ steps.burnin.outcome }}
         run: |
           {
             echo "### 🔥 PR Flake Burn-In Results"
             echo ""
-            if [ "${{ steps.check-changes.outputs.has_changes }}" != "true" ]; then
+            if [ "$HAS_CHANGES" != "true" ]; then
               echo "ℹ️ **No test specs changed against \`origin/main\`** — Burn-in test execution skipped (no-op)."
-            elif [ "${{ steps.burnin.outcome }}" == "success" ]; then
+            elif [ "$BURNIN_OUTCOME" == "success" ]; then
               echo "✅ **All changed test specs passed 5x repeats deterministically with 0 retries!**"
               echo "- **Target Environment**: Ephemeral BuggyBooks (\`ENV=DOCKER\`)"
               echo "- **Repetitions**: 5 per changed spec (\`--repeat-each=5 --retries=0\`)"
