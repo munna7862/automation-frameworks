@@ -1,0 +1,7 @@
+[2026-10-31 17:45:51] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1793430951339-f51d04d2
+[2026-10-31 17:45:51] INFO: Network interception enabled with mode: api-only
+[2026-10-31 17:45:51] INFO: Navigating to catalog page: http://localhost:5173
+[2026-10-31 17:45:52] INFO: Total Books displayed in Catalog page are: 8
+[2026-10-31 17:45:52] INFO: Verifying initial catalog book count - Matched: [8]
+[2026-10-31 17:45:52] INFO: Captured 7 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Diagnostic-Test_011_Diagno-52b32-ructured-logging-regression-chrome/network-log.json
+[2026-10-31 17:45:52] INFO: Cleaned up ephemeral test session: pw-w3-2-1793430951339-f51d04d2

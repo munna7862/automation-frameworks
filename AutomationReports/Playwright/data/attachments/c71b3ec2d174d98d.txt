@@ -1,0 +1,16 @@
+[2026-10-31 17:45:22] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1793430922429-7b6035ab
+[2026-10-31 17:45:22] INFO: Network interception enabled with mode: api-only
+[2026-10-31 17:45:22] INFO: Navigating to catalog page: http://localhost:5173
+[2026-10-31 17:45:23] INFO: Total Books displayed in Catalog page are: 8
+[2026-10-31 17:45:23] INFO: Filling search input with: Mockingbird
+[2026-10-31 17:45:23] INFO: Clicking Search button
+[2026-10-31 17:45:24] INFO: Verifying search results books count - Matched: [1]
+[2026-10-31 17:45:24] INFO: Getting catalog result count text
+[2026-10-31 17:45:24] INFO: Verifying result count text contains search query - Condition met (true)
+[2026-10-31 17:45:24] INFO: Getting first book title in catalog
+[2026-10-31 17:45:24] INFO: Verifying search result book title - Matched: [To Kill a Mockingbird Exception]
+[2026-10-31 17:45:24] INFO: Clicking Clear search button
+[2026-10-31 17:45:24] INFO: Total Books displayed in Catalog page are: 8
+[2026-10-31 17:45:24] INFO: Verifying catalog count after search clear - Matched: [8]
+[2026-10-31 17:45:24] INFO: Captured 9 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/BookCatalog-Test_002_Searc-d5fa1-Search-Filtering-regression-chrome/network-log.json
+[2026-10-31 17:45:24] INFO: Cleaned up ephemeral test session: pw-w2-1-1793430922429-7b6035ab

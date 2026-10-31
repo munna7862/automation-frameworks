@@ -1,0 +1,14 @@
+[2026-10-31 17:46:05] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w6-3-1793430965470-90affc18
+[2026-10-31 17:46:05] INFO: Network interception enabled with mode: api-only
+[2026-10-31 17:46:05] INFO: Clicking on Sign Up link
+[2026-10-31 17:46:06] INFO: Entering full name: Full refresh_ui_user_iZpVi
+[2026-10-31 17:46:06] INFO: Entering username: refresh_ui_user_iZpVi
+[2026-10-31 17:46:06] INFO: Entering password: Password123!
+[2026-10-31 17:46:06] INFO: Entering confirming password: Password123!
+[2026-10-31 17:46:06] INFO: Clicking on Create Account button
+[2026-10-31 17:46:07] INFO: Verifying landing on Checkout Page
+[2026-10-31 17:46:07] INFO: Checking if Checkout label is visible
+[2026-10-31 17:46:07] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-10-31 17:46:07] INFO: Clicking on Profile navbar link
+[2026-10-31 17:46:22] INFO: Captured 15 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Refresh-Test_006_JwtRefres-85e86-edirection-smoke-regression-chrome/network-log.json
+[2026-10-31 17:46:22] INFO: Cleaned up ephemeral test session: pw-w6-3-1793430965470-90affc18
