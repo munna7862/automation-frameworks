@@ -124,7 +124,8 @@ jobs:
           node scripts/zap-to-sarif.js \
             --input="$INPUT_JSON" \
             --output=zap-baseline.sarif \
-            --category=zap-baseline
+            --category=zap-baseline \
+            --rules=security/zap-rules.tsv
 
       - name: Upload ZAP Baseline SARIF Report
         if: always()
@@ -278,7 +279,8 @@ jobs:
           node scripts/zap-to-sarif.js \
             --input="$INPUT_JSON" \
             --output=zap-api.sarif \
-            --category=zap-api
+            --category=zap-api \
+            --rules=security/zap-api-rules.tsv
 
       - name: Upload ZAP API SARIF Report
         if: always()
