@@ -89,11 +89,18 @@ jobs:
         env:
           FRAMEWORK: ${{ inputs.framework }}
           SHARDS: ${{ inputs.shards }}
+          TARGET_ENV: ${{ inputs.target-env }}
         run: |
           node -e '
             const fw = (process.env.FRAMEWORK || "playwright").toLowerCase();
             let count = parseInt(process.env.SHARDS || "1", 10);
             if (isNaN(count) || count < 1 || fw !== "playwright") {
+              count = 1;
+            }
+            // Non-DOCKER shards all share the buggybooks-staging-state concurrency group, and
+            // GitHub keeps only one running + one pending job per group, cancelling the rest.
+            if (process.env.TARGET_ENV !== "DOCKER" && count > 1) {
+              console.log(`::warning::${process.env.TARGET_ENV} runs serialize on the shared staging lock; using 1 shard instead of ${count}.`);
               count = 1;
             }
             const indices = Array.from({ length: count }, (_, i) => i + 1);
@@ -112,7 +119,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     concurrency:
-      group: ${{ inputs.target-env == 'DOCKER' && format('buggybooks-docker-{0}-{1}', github.run_id, matrix.shardIndex) || 'buggybooks-staging-state' }}
+      # Reusable workflows share the caller's run_id, so framework + namespace keep sibling
+      # callers in one run (e.g. nightly Playwright, Selenium, WDIO, AppSec) from colliding.
+      group: ${{ inputs.target-env == 'DOCKER' && format('buggybooks-docker-{0}-{1}-{2}-{3}', github.run_id, inputs.framework, inputs.allure-namespace, matrix.shardIndex) || 'buggybooks-staging-state' }}
       cancel-in-progress: false
     permissions:
       contents: read
@@ -271,7 +280,7 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.58.0-jammy
     concurrency:
-      group: ${{ inputs.target-env == 'DOCKER' && format('buggybooks-docker-ct-{0}-{1}', github.run_id, matrix.shardIndex) || 'buggybooks-staging-state' }}
+      group: ${{ inputs.target-env == 'DOCKER' && format('buggybooks-docker-ct-{0}-{1}-{2}-{3}', github.run_id, inputs.framework, inputs.allure-namespace, matrix.shardIndex) || 'buggybooks-staging-state' }}
       cancel-in-progress: false
     permissions:
       contents: read

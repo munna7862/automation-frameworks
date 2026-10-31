@@ -95,6 +95,14 @@ test.describe('Diagnostic Assertion Engine & Step Logging Suite', () => {
         'Verifying legacy compareTwoValues returns true'
       );
     });
+  });
+
+  // compareTwoValues records an expect.soft failure on mismatch (soft-then-hard pattern), so this
+  // test must fail; if the soft assertion is ever dropped, Playwright reports it as unexpectedly passing.
+  test('TC-ASSERT-003: compareTwoValues records a soft failure on mismatch @regression', async ({
+    commonFunctions
+  }) => {
+    test.fail(true, 'compareTwoValues must record a soft assertion failure on mismatch');
 
     await test.step('Verify compareTwoValues returns false on mismatch without throwing hard failure', async () => {
       const mismatchResult = await commonFunctions.compareTwoValues(

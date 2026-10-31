@@ -36,7 +36,13 @@ test.describe('SEC-AUTH: JWT & Session Security Suite', () => {
   test('SEC-AUTH-02: Tampered kid header token rejected on protected endpoints @security @owasp-api2 @owasp-a07', async ({
     securityApi
   }) => {
-    const kidToken = await createKidTamperedToken('attacker', '../../../../dev/null');
+    // Sign with an attacker-controlled key, as a real kid-injection attempt would; signing with
+    // the server secret would produce a genuinely valid token. (jose rejects the empty /dev/null key.)
+    const kidToken = await createKidTamperedToken(
+      'attacker',
+      '../../../../dev/null',
+      'attacker-controlled-key'
+    );
 
     const res = await securityApi.profile.get({
       headers: { Authorization: `Bearer ${kidToken}` },

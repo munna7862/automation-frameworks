@@ -37,6 +37,14 @@ on:
         required: false
         default: false
         type: boolean
+      target-env:
+        description: 'DOCKER (hermetic GHCR images) or STAGING (shared Render, runs as 1 shard)'
+        required: false
+        default: 'DOCKER'
+        type: choice
+        options:
+          - DOCKER
+          - STAGING
 
 concurrency:
   group: playwright-ci-${{ github.ref }}
@@ -53,6 +61,7 @@ jobs:
     uses: ./.github/workflows/_reusable-e2e.yml
     with:
       framework: playwright
+      target-env: ${{ inputs.target-env || 'DOCKER' }}
       project: ${{ inputs.project || '' }}
       grep: ${{ inputs.grep || '' }}
       shards: ${{ inputs.shards || 4 }}

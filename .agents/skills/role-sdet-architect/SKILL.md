@@ -30,7 +30,7 @@ The SDET Architect oversees the comparative multi-framework test automation ecos
 ### A. Strict Single-Browser Policy
 
 - **Rule**: All Web UI automation across Playwright, Selenium, and WebdriverIO **must target Google Chrome exclusively** (`channel: 'chrome'` or Chrome headless).
-- Multi-browser projects (Firefox, WebKit, Mobile Safari, Mobile Chrome) are strictly forbidden. The target count for Playwright is 229 tests as of 2026-10-31 (167 API + 61 Chrome UI + 1 auth setup).
+- Multi-browser projects (Firefox, WebKit, Mobile Safari, Mobile Chrome) are strictly forbidden. The target count for Playwright is 230 tests as of 2026-10-31 (167 API + 62 Chrome UI + 1 auth setup).
 
 ### B. Dual-Catalog Strict Parity
 

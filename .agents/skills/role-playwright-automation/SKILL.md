@@ -23,8 +23,8 @@ When acting as the **Playwright QA Specialist**, your primary mission is to auth
   1. `setup`: Runs `auth.setup.ts` using `channel: 'chrome'` to cache storage state (`.auth/user.json`).
   2. `api`: Runs `src/tests/api/` purely via Playwright `request` context (no browser launched).
   3. `chrome`: Runs `src/tests/ui/` in Google Chrome (`channel: 'chrome'`), dependent on `setup`.
-- **Test Count**: **229 tests** as of 2026-10-31 (167 API + 61 Chrome UI + 1 auth setup). Never introduce multi-browser projects (`firefox`, `webkit`, or duplicate `chromium`).
-- **Setup Project Trap**: `auth.setup.ts` **must** specify `use: { channel: 'chrome' }`. Omitting this causes Playwright to default to bundled `chromium_headless_shell` (which is absent in CI), causing `setup` to crash and all 61 UI tests to skip!
+- **Test Count**: **230 tests** as of 2026-10-31 (167 API + 62 Chrome UI + 1 auth setup). Never introduce multi-browser projects (`firefox`, `webkit`, or duplicate `chromium`).
+- **Setup Project Trap**: `auth.setup.ts` **must** specify `use: { channel: 'chrome' }`. Omitting this causes Playwright to default to bundled `chromium_headless_shell` (which is absent in CI), causing `setup` to crash and all 62 UI tests to skip!
 
 ### C. Locator Strategy for BuggyBooks
 
@@ -60,7 +60,7 @@ When acting as the **Playwright QA Specialist**, your primary mission is to auth
 # Warm up staging backend
 npx wait-on -t 90000 https://buggy-books.onrender.com/api/books
 
-# Run all tests on Chrome UI + API (229 tests)
+# Run all tests on Chrome UI + API (230 tests)
 npm test
 
 # Run only UI tests on Chrome

@@ -67,7 +67,7 @@ This skill is the **comprehensive reference manual** for the `AutomationFramewor
 
 - **Issue**: `setup` project executes `src/tests/auth.setup.ts` using `{ page }` to authenticate the user and save `.auth/user.json`.
 - **Trap**: If `use: { channel: 'chrome' }` is omitted from `setup`, Playwright defaults to looking for bundled `chromium_headless_shell`. In CI (Ubuntu), running `npx playwright install --with-deps chrome` installs the Google Chrome deb package, **not** `chromium_headless_shell`.
-- **Result of Trap**: `setup` crashes immediately with `Executable doesn't exist`, and Playwright skips **all 61 UI tests** because they depend on `setup`.
+- **Result of Trap**: `setup` crashes immediately with `Executable doesn't exist`, and Playwright skips **all 62 UI tests** because they depend on `setup`.
 - **Fix**: Always ensure `setup` project specifies `channel: 'chrome'`.
 
 ### C. Standard NPM Test Runners (`playwright-e2e/package.json`)
@@ -242,7 +242,7 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
    ## 🧪 Verification
 
    - Exact CLI commands executed.
-   - Test results (e.g. "229 passed, 0 failed").
+   - Test results (e.g. "230 passed, 0 failed").
    ```
 
 ---
@@ -358,7 +358,7 @@ The entire roadmap is organized under [`planning/`](../../../planning/):
   - Purpose: Immediate developer feedback; blocks merges on broken contracts or styling regressions without incurring heavy execution overhead.
 - **Post-Merge & Scheduled Regression**:
   - Target: Push to `main`, nightly schedules, or manual `workflow_dispatch`.
-  - Scope: Full Playwright suite (229 tests), multi-framework E2E runs, Apache JMeter load tests, and Allure report publishing.
+  - Scope: Full Playwright suite (230 tests), multi-framework E2E runs, Apache JMeter load tests, and Allure report publishing.
 
 ---
 
