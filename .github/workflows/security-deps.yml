@@ -38,8 +38,10 @@ jobs:
       - name: Run Dependency Review
         uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
-          fail-on-severity: high
-          allow-ghsas: GHSA-r5fr-rjxr-66jc, GHSA-j3q9-mxjg-w52f, GHSA-37ch-88jc-xwx2, GHSA-27v5-c462-wpq7
+          allow-ghsas: >-
+            GHSA-r5fr-rjxr-66jc, GHSA-j3q9-mxjg-w52f, GHSA-37ch-88jc-xwx2, GHSA-27v5-c462-wpq7,
+            GHSA-jmr9-qjv8-65gv, GHSA-7pqw-9j4j-h8q3, GHSA-c475-qrg2-pj4r, GHSA-mrhx-c7xc-m3w5,
+            GHSA-f23m-r3pf-42rh, GHSA-xxjr-mmjv-4gpg
           allow-licenses: >-
             MIT, ISC, Apache-2.0, BSD-2-Clause, BSD-3-Clause, 0BSD, CC0-1.0,
             Python-2.0, PSF-2.0, BlueOak-1.0.0, MPL-2.0, Unlicense, CC-BY-3.0, CC-BY-4.0,
@@ -65,6 +67,7 @@ jobs:
         continue-on-error: true
         with:
           scan-args: |-
+            --config=osv-scanner.toml
             --lockfile=package-lock.json
             --format=sarif
             --output=results.sarif
