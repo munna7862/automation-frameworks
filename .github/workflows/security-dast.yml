@@ -99,7 +99,7 @@ jobs:
           chmod 777 report_html.html report_json.json || true
 
       - name: Run OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@2b5fc7f98d837319798ab7f128ea50b7d40563b6 # v0.14.0
+        uses: zaproxy/action-baseline@7c4deb10e6261301961c86d65d54a516394f9aed # v0.14.0
         with:
           target: 'http://localhost:5173'
           rules_file_name: 'security/zap-rules.tsv'
@@ -128,7 +128,7 @@ jobs:
 
       - name: Upload ZAP Baseline SARIF Report
         if: always()
-        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         continue-on-error: true
         with:
           sarif_file: zap-baseline.sarif
@@ -136,7 +136,7 @@ jobs:
 
       - name: Upload ZAP Baseline Artifacts
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v4.6.1
         with:
           name: zap-baseline-report
           path: |
@@ -249,7 +249,7 @@ jobs:
           chmod 777 report_html.html report_json.json || true
 
       - name: Run OWASP ZAP API Active Scan
-        uses: zaproxy/action-api-scan@bd24b11e76da11ab60302c8ae87f091cbb11f034 # v0.10.0
+        uses: zaproxy/action-api-scan@5158fe4d9d8fcc75ea204db81317cce7f9e5453d # v0.10.0
         env:
           AUTH_TOKEN: ${{ steps.auth.outputs.token }}
         with:
@@ -282,7 +282,7 @@ jobs:
 
       - name: Upload ZAP API SARIF Report
         if: always()
-        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         continue-on-error: true
         with:
           sarif_file: zap-api.sarif
@@ -290,7 +290,7 @@ jobs:
 
       - name: Upload ZAP API Artifacts
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v4.6.1
         with:
           name: zap-api-report
           path: |
