@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T11:09:35.886Z",
+  "generatedAt": "2026-10-31T12:31:41.333Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,10 +10,10 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "23ef076",
+    "commit": "654517a",
     "branch": "main",
-    "message": "fix(ci): add concurrency controls to CI workflows missing them (#75)",
-    "ciRun": "14"
+    "message": "docs: correct stale README, docs, and agent guidance to match code (#79)",
+    "ciRun": "15"
   },
   "kpis": {
     "totalTests": 339,
@@ -22,7 +22,7 @@
     "totalSkipped": 1,
     "overallPassRate": "98.8%",
     "activeFrameworks": 7,
-    "totalDurationMs": 336327,
+    "totalDurationMs": 333125,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -117,7 +117,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "durationMs": 20086,
+        "durationMs": 16884,
         "passRate": "100.0%"
       },
       "highlights": [
