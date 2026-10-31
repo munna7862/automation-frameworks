@@ -18,12 +18,12 @@ graph TD
 ```
 
 ### Source Files to Copy:
-1. **DOM Cleaner:** [dom-cleaner.ts](file:///c:/AutomationFrameworks/playwright-e2e/src/utils/dom-cleaner.ts)
-2. **Snapshot Script:** [save-snapshot.ts](file:///c:/AutomationFrameworks/playwright-e2e/scripts/save-snapshot.ts)
-3. **Failure Hook:** [failure-hook.ts](file:///c:/AutomationFrameworks/playwright-e2e/src/core/base/failure-hook.ts)
-4. **AI Page Object Guidelines:** [AI_POM_GUIDELINES.md](file:///c:/AutomationFrameworks/docs/AI_POM_GUIDELINES.md)
-5. **AI User Guide:** [AI_TESTING_USER_GUIDE.md](file:///c:/AutomationFrameworks/docs/AI_TESTING_USER_GUIDE.md)
-6. **Agent Skill:** [SKILL.md](file:///c:/AutomationFrameworks/.agents/skills/playwright-ai-assistant/SKILL.md)
+1. **DOM Cleaner:** [dom-cleaner.ts](../playwright-e2e/src/utils/dom-cleaner.ts)
+2. **Snapshot Script:** [save-snapshot.ts](../playwright-e2e/scripts/save-snapshot.ts)
+3. **Failure Hook:** [failure-hook.ts](../playwright-e2e/src/core/base/failure-hook.ts)
+4. **AI Page Object Guidelines:** [AI_POM_GUIDELINES.md](AI_POM_GUIDELINES.md)
+5. **AI User Guide:** [AI_TESTING_USER_GUIDE.md](AI_TESTING_USER_GUIDE.md)
+6. **Agent Skill:** [SKILL.md](../.agents/skills/playwright-ai-assistant/SKILL.md)
 
 ---
 

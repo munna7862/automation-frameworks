@@ -13,15 +13,15 @@ When acting as the **DevOps & Release Engineer**, your primary mission is to mai
 
 All workflow files in `.github/workflows/` must follow kebab-case naming (`.yml` or `.yaml`). Dead or extensionless files are strictly prohibited.
 
-| Workflow File                 | Trigger Events                             | Purpose & Core Jobs                                                                                            |
-| :---------------------------- | :----------------------------------------- | :------------------------------------------------------------------------------------------------------------- |
-| **`pr-gate.yml`**             | `pull_request: [main]`                     | Fast PR Quality Gate (< 3 min): parallel linting, typechecking, Render warm-up, and Chrome UI+API smoke tests. |
-| **`playwright-ci.yml`**       | `push: [main]`, `workflow_dispatch`        | Full Playwright regression suite (~110 tests), Allure report generation, and deployment to GitHub Pages.       |
-| **`playwright-docker.yml`**   | `workflow_dispatch`                        | Containerized, sharded Playwright execution in official Playwright Docker containers.                          |
-| **`jmeter-performance.yaml`** | `workflow_dispatch`                        | On-demand Apache JMeter load execution with parameterized threads/iterations and HTML dashboard generation.    |
-| **`k6-performance.yaml`**     | `pull_request`, `workflow_dispatch`        | k6 performance benchmarking with automated drift regression gate (`<= 20%`).                                   |
-| **`mobile-ci.yml`**           | `schedule: [nightly]`, `workflow_dispatch` | Headless Appium Android emulator test execution with artifact archival.                                        |
-| **`quarantine-audit.yml`**    | `schedule: [weekly]`, `workflow_dispatch`  | Runs quarantined tests 10x to measure flakiness and automate de-quarantine recommendations.                    |
+| Workflow File                 | Trigger Events                            | Purpose & Core Jobs                                                                                                                                                                  |
+| :---------------------------- | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`pr-gate.yml`**             | `pull_request: [main]`                    | PR Quality Gate: linting, typechecking, Prettier, catalog parity, commitlint, Chrome UI+API smoke against ephemeral `ENV=DOCKER` (`buggybooks-up`), and 5x burn-in of changed specs. |
+| **`playwright-ci.yml`**       | `push: [main]`, `workflow_dispatch`       | Full Playwright regression suite (229 tests), Allure report generation, and deployment to GitHub Pages.                                                                              |
+| **`_reusable-e2e.yml`**       | `workflow_call`                           | Shared engine for Playwright (sharded, optional Playwright Docker image), Selenium, and WDIO. Replaced the retired `playwright-docker.yml` / `playwright-on-demand.yml`.             |
+| **`jmeter-performance.yaml`** | `workflow_dispatch`                       | On-demand Apache JMeter load execution with parameterized threads/iterations and HTML dashboard generation.                                                                          |
+| **`k6-performance.yaml`**     | `pull_request`, `workflow_dispatch`       | k6 performance benchmarking with automated drift regression gate (`<= 20%`).                                                                                                         |
+| **`mobile-ci.yml`**           | `workflow_dispatch` only (quarantined)    | Appium Android emulator run; nightly schedule disabled until a BuggyBooks mobile app build exists.                                                                                   |
+| **`quarantine-audit.yml`**    | `schedule: [weekly]`, `workflow_dispatch` | Runs quarantined tests 10x to measure flakiness and automate de-quarantine recommendations.                                                                                          |
 
 ---
 

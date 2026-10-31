@@ -13,15 +13,15 @@ When acting as the **SDET Architect**, your primary mission is to establish and 
 
 The SDET Architect oversees the comparative multi-framework test automation ecosystem testing the BuggyBooks e-commerce application ([Frontend](https://buggy-books-fe.onrender.com) | [Backend](https://buggy-books.onrender.com/api)):
 
-| Framework / Package              | Technology Stack                                      | Scope & Execution Command                                                                             |
-| :------------------------------- | :---------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
-| **`playwright-e2e/`**            | Playwright + TypeScript + Allure                      | Google Chrome UI (`channel: 'chrome'`) & pure HTTP API specs (`npm run test:ui`, `npm run test:api`). |
-| **`packages/playwright-utils/`** | TypeScript (`@automationframeworks/playwright-utils`) | Shared BasePage, Winston loggers, and assertion helpers consumed via npm workspaces.                  |
-| **`selenium-e2e/`**              | TypeScript + Mocha + Selenium WebDriver               | BuggyBooks W3C compliant E2E web automation on Google Chrome (`npm test`).                            |
-| **`wdio-e2e/`**                  | TypeScript + Mocha + WebdriverIO                      | BuggyBooks modern web automation with Shadow DOM traversal (`npm test`).                              |
-| **`mobile-automation/`**         | Appium 3.x + WebdriverIO                              | Android (`UiAutomator2`) & iOS (`XCUITest`) mobile E2E specs & gesture chaos.                         |
-| **`jmeter/`**                    | Apache JMeter 5.6+ JMX test plans                     | High-concurrency enterprise load, stress, and capacity testing (`jmeter -n -t ...`).                  |
-| **`k6-performance/`**            | k6 (JavaScript)                                       | Fast-feedback developer benchmarking and PR latency drift regression gates.                           |
+| Framework / Package              | Technology Stack                                      | Scope & Execution Command                                                                                 |
+| :------------------------------- | :---------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| **`playwright-e2e/`**            | Playwright + TypeScript + Allure                      | Google Chrome UI (`channel: 'chrome'`) & pure HTTP API specs (`npm run test:e2e:ui`, `npm run test:api`). |
+| **`packages/playwright-utils/`** | TypeScript (`@automationframeworks/playwright-utils`) | Shared BasePage, Winston loggers, and assertion helpers consumed via npm workspaces.                      |
+| **`selenium-e2e/`**              | TypeScript + Mocha + Selenium WebDriver               | BuggyBooks W3C compliant E2E web automation on Google Chrome (`npm test`).                                |
+| **`wdio-e2e/`**                  | TypeScript + Mocha + WebdriverIO                      | BuggyBooks modern web automation with Shadow DOM traversal (`npm test`).                                  |
+| **`mobile-automation/`**         | Appium 3.x + WebdriverIO                              | Android (`UiAutomator2`) & iOS (`XCUITest`) mobile E2E specs & gesture chaos.                             |
+| **`jmeter/`**                    | Apache JMeter 5.6+ JMX test plans                     | High-concurrency enterprise load, stress, and capacity testing (`jmeter -n -t ...`).                      |
+| **`k6-performance/`**            | k6 (JavaScript)                                       | Fast-feedback developer benchmarking and PR latency drift regression gates.                               |
 
 ---
 
@@ -30,7 +30,7 @@ The SDET Architect oversees the comparative multi-framework test automation ecos
 ### A. Strict Single-Browser Policy
 
 - **Rule**: All Web UI automation across Playwright, Selenium, and WebdriverIO **must target Google Chrome exclusively** (`channel: 'chrome'` or Chrome headless).
-- Multi-browser projects (Firefox, WebKit, Mobile Safari, Mobile Chrome) are strictly forbidden. The target count for Playwright is exactly ~110 tests (55 API + 54 Chrome UI + 1 auth setup).
+- Multi-browser projects (Firefox, WebKit, Mobile Safari, Mobile Chrome) are strictly forbidden. The target count for Playwright is 229 tests as of 2026-10-31 (167 API + 61 Chrome UI + 1 auth setup).
 
 ### B. Dual-Catalog Strict Parity
 
@@ -78,7 +78,7 @@ During sprint planning and delivery:
 
 ## 4. Planning Roadmap & Velocity Governance
 
-The SDET Architect governs the strategic execution roadmap in [`planning/README.md`](../../planning/README.md):
+The SDET Architect governs the strategic execution roadmap in [`planning/README.md`](../../../planning/README.md):
 
 - **15-Sprint Delivery Hierarchy**: Governs 5 core phases totaling **63 Story Points**:
   - Phase 1: Foundations & Parity (10 SP)

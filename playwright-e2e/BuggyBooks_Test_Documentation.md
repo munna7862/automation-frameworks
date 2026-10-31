@@ -1,5 +1,8 @@
 # BuggyBooks E2E Test Suite Documentation
 
+> [!WARNING]
+> **Superseded / historical.** This document describes an early prototype of the suite. The page objects (`buggy-books.*.page.ts`), base classes, spec paths, `npm run test:interop` command, and `POSTS_BASE_URL` variable it references no longer exist. For the current framework see [`README.md`](README.md); for test coverage see [`test_cases_catalog.md`](test_cases_catalog.md).
+
 ## Overview
 
 This test suite provides comprehensive end-to-end testing for the BuggyBooks e-commerce application (https://buggy-books-fe.onrender.com/). The suite tests the complete user journey from browsing the catalog, adding items to cart, and completing a checkout process.

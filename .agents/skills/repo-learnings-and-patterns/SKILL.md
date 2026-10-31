@@ -67,7 +67,7 @@ This skill is the **comprehensive reference manual** for the `AutomationFramewor
 
 - **Issue**: `setup` project executes `src/tests/auth.setup.ts` using `{ page }` to authenticate the user and save `.auth/user.json`.
 - **Trap**: If `use: { channel: 'chrome' }` is omitted from `setup`, Playwright defaults to looking for bundled `chromium_headless_shell`. In CI (Ubuntu), running `npx playwright install --with-deps chrome` installs the Google Chrome deb package, **not** `chromium_headless_shell`.
-- **Result of Trap**: `setup` crashes immediately with `Executable doesn't exist`, and Playwright skips **all 54 UI tests** because they depend on `setup`.
+- **Result of Trap**: `setup` crashes immediately with `Executable doesn't exist`, and Playwright skips **all 61 UI tests** because they depend on `setup`.
 - **Fix**: Always ensure `setup` project specifies `channel: 'chrome'`.
 
 ### C. Standard NPM Test Runners (`playwright-e2e/package.json`)
@@ -206,8 +206,8 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
 ### A. The Dual-Catalog Parity Rule
 
 - Every test added, updated, or retired must be updated in **two files** in exact parity:
-  1. [`docs/test_cases_catalog.md`](../../docs/test_cases_catalog.md)
-  2. [`playwright-e2e/test_cases_catalog.md`](../../playwright-e2e/test_cases_catalog.md)
+  1. [`docs/test_cases_catalog.md`](../../../docs/test_cases_catalog.md)
+  2. [`playwright-e2e/test_cases_catalog.md`](../../../playwright-e2e/test_cases_catalog.md)
 - Verify zero diff between the two files using:
   ```bash
   git diff docs/test_cases_catalog.md playwright-e2e/test_cases_catalog.md
@@ -242,7 +242,7 @@ jmeter -n -t jmeter/Tests/BuggyBooks_Inventory_Stress.jmx -l jmeter/Results/inve
    ## 🧪 Verification
 
    - Exact CLI commands executed.
-   - Test results (e.g. "110 passed, 0 failed in 12s").
+   - Test results (e.g. "229 passed, 0 failed").
    ```
 
 ---
@@ -309,12 +309,12 @@ The monorepo operates with 7 specialized virtual agent personas in `.agents/skil
 
 ## 10. Sprint Roadmap Navigation & Planning Structure
 
-The entire roadmap is organized under [`planning/`](../../planning/):
+The entire roadmap is organized under [`planning/`](../../../planning/):
 
-- **Master Plan**: [`planning/Master/master_plan.md`](../../planning/Master/master_plan.md)
-- **5 Delivery Phases**: [`planning/Phases/`](../../planning/Phases/)
-- **15 Granular Sprints**: [`planning/Sprints/`](../../planning/Sprints/)
-- **Executive Sitemap**: [`planning/README.md`](../../planning/README.md)
+- **Master Plan**: [`planning/Master/master_plan.md`](../../../planning/Master/master_plan.md)
+- **5 Delivery Phases**: [`planning/Phases/`](../../../planning/Phases/)
+- **15 Granular Sprints**: [`planning/Sprints/`](../../../planning/Sprints/)
+- **Executive Sitemap**: [`planning/README.md`](../../../planning/README.md)
 
 ---
 
@@ -358,7 +358,7 @@ The entire roadmap is organized under [`planning/`](../../planning/):
   - Purpose: Immediate developer feedback; blocks merges on broken contracts or styling regressions without incurring heavy execution overhead.
 - **Post-Merge & Scheduled Regression**:
   - Target: Push to `main`, nightly schedules, or manual `workflow_dispatch`.
-  - Scope: Full ~110 Playwright tests, multi-framework E2E runs, Apache JMeter load tests, and Allure report publishing.
+  - Scope: Full Playwright suite (229 tests), multi-framework E2E runs, Apache JMeter load tests, and Allure report publishing.
 
 ---
 

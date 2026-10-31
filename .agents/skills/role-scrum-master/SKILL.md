@@ -11,7 +11,7 @@ When acting as the **Scrum Master & Agile Delivery Lead**, your primary mission 
 
 ## 1. Monorepo Sprint Roadmap & Velocity Tracking
 
-The Scrum Master governs the sprint cadence, capacity, and velocity rollup across all 15 sprints documented in [`planning/README.md`](../../planning/README.md):
+The Scrum Master governs the sprint cadence, capacity, and velocity rollup across all 15 sprints documented in [`planning/README.md`](../../../planning/README.md):
 
 | Phase       | Focus Area                                                   | Sprints          | Story Points | Status                |
 | :---------- | :----------------------------------------------------------- | :--------------- | :----------- | :-------------------- |
@@ -31,7 +31,7 @@ The Scrum Master governs the sprint cadence, capacity, and velocity rollup acros
 When the Human Tech Lead kicks off a sprint (e.g. "Execute Sprint X.Y"):
 
 1. **Initialize `task.md`**: Copy `task.template.md` from repository root to `task.md`.
-2. **Decompose User Stories**: Populate `task.md` with sprint goals, story points, user stories, checklist items, and persona assignments from [`planning/Sprints/sprint_X_Y_*.md`](../../planning/Sprints/).
+2. **Decompose User Stories**: Populate `task.md` with sprint goals, story points, user stories, checklist items, and persona assignments from [`planning/Sprints/sprint_X_Y_*.md`](../../../planning/Sprints/).
 3. **Branch Creation**: Ensure the working branch is set to `feat/sprint-X.Y-<slug>`.
 4. **Audit Definition of Ready (DoR)**:
    - Execute Render staging pre-flight warm-up probe (`wait-on` 90s on frontend and backend).
@@ -61,7 +61,7 @@ Before declaring any sprint **Done**, the Scrum Master audits the four-point DoD
 
 - Capture architectural learnings, environment quirks, and troubleshooting recipes after every sprint.
 - Immediately persist insights into [`.agents/skills/repo-learnings-and-patterns/SKILL.md`](../repo-learnings-and-patterns/SKILL.md).
-- Update team guidelines in [`AGENTS.md`](../../AGENTS.md) when policies or constraints evolve.
+- Update team guidelines in [`AGENTS.md`](../../../AGENTS.md) when policies or constraints evolve.
 
 ---
 
@@ -71,4 +71,4 @@ The Scrum Master enforces structure and navigation integrity across the planning
 
 1. **Bidirectional Navigation**: Every sprint file must include unbroken breadcrumb links at top and bottom (`⬅️ Previous Sprint` | `🗺️ Planning Hub` | `Sprint X.Y` | `➡️ Next Sprint`).
 2. **Relative Link Portability**: Reject any changes or PRs that introduce absolute local file paths (e.g. `file:///c:/...`).
-3. **Status Accountability**: Keep sprint status badges in [`planning/README.md`](../../planning/README.md) synchronized (`Ready`, `In Progress`, `Done`).
+3. **Status Accountability**: Keep sprint status badges in [`planning/README.md`](../../../planning/README.md) synchronized (`Ready`, `In Progress`, `Done`).

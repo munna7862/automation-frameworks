@@ -204,7 +204,7 @@ Two distinct concurrency groups protect repository infrastructure from race cond
      group: buggybooks-staging-state
      cancel-in-progress: false
    ```
-   - Workflows protected: `pr-gate.yml` (smoke test job), `playwright-ci.yml`, `playwright-on-demand.yml`, `mobile-ci.yml`, and `quarantine-audit.yml`.
+   - Workflows protected: `_reusable-e2e.yml` test jobs when `target-env` is `STAGING` (DOCKER runs get a per-run, per-shard group instead), `mobile-ci.yml`, and `quarantine-audit.yml`. The PR gate runs against hermetic `ENV=DOCKER` containers and no longer needs the lock.
    - `cancel-in-progress: false`: Enqueues concurrent PRs and workflow runs sequentially, completely eliminating shared database race conditions and false-positive test failures caused by competing chaos states.
 
 ### C. Automated GitHub Step Summaries (`scripts/summarize-test-results.js`)
@@ -260,5 +260,5 @@ npm run report:allure --workspace=mobile-automation
 ## 7. Next Steps & Phase 5 Integration
 
 With the standardized Allure result aggregation architecture in place:
-1. **[Sprint 5.2: GitHub Pages Portal Landing Page & Executive KPI Badging](../Sprints/sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md)**: Authors `docs/portal/index.html` at the root of GitHub Pages, providing executive cards, real-time KPI badging, and seamless links to all 5 namespaced sub-reports.
-2. **[Sprint 5.3: Automated Monorepo Health Auditing & Closed-Loop Governance](../Sprints/sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md)**: Enforces automated dual-catalog byte parity validation in CI and establishes automated weekly quarantine flakiness audits.
+1. **[Sprint 5.2: GitHub Pages Portal Landing Page & Executive KPI Badging](../../planning/Sprints/sprint_5_2_github_pages_portal_landing_page_and_kpi_badging.md)**: Authors `docs/portal/index.html` at the root of GitHub Pages, providing executive cards, real-time KPI badging, and seamless links to all 5 namespaced sub-reports.
+2. **[Sprint 5.3: Automated Monorepo Health Auditing & Closed-Loop Governance](../../planning/Sprints/sprint_5_3_automated_monorepo_health_auditing_and_closed_loop_governance.md)**: Enforces automated dual-catalog byte parity validation in CI and establishes automated weekly quarantine flakiness audits.
