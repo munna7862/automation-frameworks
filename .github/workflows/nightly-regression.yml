@@ -23,6 +23,13 @@ on:
         required: false
         default: 'true'
 
+# cancel-in-progress is false (unlike the other CI workflows) because this suite's
+# "Staging Deployment Contract (STAGING)" job mutates shared staging state; killing it
+# mid-run would skip its chaos-config reset. See AGENTS.md's Staging Concurrency Lock rule.
+concurrency:
+  group: nightly-regression-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions: {}
 
 jobs:

@@ -16,6 +16,7 @@ export const sharedConfig: Options.Testrunner = {
     [
       'appium',
       {
+        command: 'appium',
         args: {
           relaxedSecurity: true,
           log: path.join(process.cwd(), 'logs', 'appium.log')

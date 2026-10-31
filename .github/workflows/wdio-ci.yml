@@ -19,6 +19,10 @@ on:
         required: false
         default: 'true'
 
+concurrency:
+  group: wdio-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions: {}
 
 jobs:

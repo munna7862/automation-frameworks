@@ -38,6 +38,10 @@ on:
         default: false
         type: boolean
 
+concurrency:
+  group: playwright-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions: {}
 
 jobs:
