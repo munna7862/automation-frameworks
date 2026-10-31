@@ -7,13 +7,20 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+
+// Code Scanning only accepts repo-relative file locations (an http:// URI is rejected with
+// "SARIF URI scheme did not match the checkout URI scheme"), so DAST findings are anchored to
+// the OpenAPI spec describing the scanned surface; the scanned URL stays in the message.
+const DEFAULT_ANCHOR = 'docs/api/openapi.yaml';
 
 function parseArgs() {
   const args = process.argv.slice(2);
   const options = {
     input: null,
     output: null,
-    category: 'zap-dast'
+    category: 'zap-dast',
+    anchor: DEFAULT_ANCHOR
   };
 
   for (const arg of args) {
@@ -23,12 +30,14 @@ function parseArgs() {
       options.output = path.resolve(process.cwd(), arg.split('=')[1]);
     } else if (arg.startsWith('--category=')) {
       options.category = arg.split('=')[1];
+    } else if (arg.startsWith('--anchor=')) {
+      options.anchor = arg.split('=')[1];
     }
   }
 
   if (!options.input || !options.output) {
     console.error(
-      'Usage: node scripts/zap-to-sarif.js --input=<zap-json> --output=<output-sarif> [--category=<category>]'
+      'Usage: node scripts/zap-to-sarif.js --input=<zap-json> --output=<output-sarif> [--category=<category>] [--anchor=<repo-relative-file>]'
     );
     process.exit(1);
   }
@@ -76,7 +85,41 @@ function mapRiskToLevel(riskCode) {
   }
 }
 
-function convertZapToSarif(zapData, category) {
+/**
+ * Builds a lookup from OpenAPI path templates (e.g. /api/books/{id}) to their 1-based line
+ * numbers in the anchor file, so findings land on the matching endpoint definition.
+ */
+function buildPathLineIndex(anchorText) {
+  const index = [];
+  if (!anchorText) return index;
+  anchorText.split(/\r?\n/).forEach((line, i) => {
+    const match = /^ {2}(\/[^:\s]*):\s*$/.exec(line);
+    if (match) {
+      const pattern = match[1]
+        .split('/')
+        .map((seg) =>
+          /^\{[^}]+\}$/.test(seg) ? '[^/]+' : seg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        )
+        .join('/');
+      index.push({ regex: new RegExp(`^${pattern}/?$`), line: i + 1 });
+    }
+  });
+  return index;
+}
+
+function findAnchorLine(uri, pathIndex) {
+  let pathname;
+  try {
+    pathname = new URL(uri, 'http://localhost').pathname;
+  } catch {
+    return 1;
+  }
+  const hit = pathIndex.find((entry) => entry.regex.test(pathname));
+  return hit ? hit.line : 1;
+}
+
+function convertZapToSarif(zapData, category, anchor = DEFAULT_ANCHOR, anchorText = '') {
+  const pathIndex = buildPathLineIndex(anchorText);
   const rules = [];
   const results = [];
   const seenRuleIds = new Set();
@@ -142,6 +185,11 @@ function convertZapToSarif(zapData, category) {
         const method = inst.method || 'GET';
         const param = inst.param ? ` (Parameter: ${inst.param})` : '';
         const evidence = inst.evidence ? ` Evidence: "${inst.evidence}"` : '';
+        // Many URLs share one anchor line, so fingerprint by rule + request to keep alerts distinct
+        const fingerprint = crypto
+          .createHash('sha256')
+          .update(`${ruleId}|${method}|${uri}|${inst.param || ''}`)
+          .digest('hex');
 
         results.push({
           ruleId,
@@ -153,18 +201,22 @@ function convertZapToSarif(zapData, category) {
             {
               physicalLocation: {
                 artifactLocation: {
-                  uri: uri.startsWith('http') ? uri : `http://localhost/${uri}`,
+                  uri: anchor,
                   uriBaseId: '%SRCROOT%'
                 },
                 region: {
-                  startLine: 1,
+                  startLine: findAnchorLine(uri, pathIndex),
                   startColumn: 1
                 }
               }
             }
           ],
+          partialFingerprints: {
+            zapRequestHash: fingerprint
+          },
           properties: {
             category,
+            url: uri,
             confidence: alert.confidence || 'Medium',
             risk: alert.riskdesc || 'Medium',
             method,
@@ -216,7 +268,17 @@ function main() {
     );
   }
 
-  const sarif = convertZapToSarif(zapData, options.category);
+  let anchorText = '';
+  const anchorPath = path.resolve(process.cwd(), options.anchor);
+  if (fs.existsSync(anchorPath)) {
+    anchorText = fs.readFileSync(anchorPath, 'utf-8');
+  } else {
+    console.warn(
+      `[ZAP-SARIF] Anchor file not found: ${options.anchor}. Findings will point at line 1.`
+    );
+  }
+
+  const sarif = convertZapToSarif(zapData, options.category, options.anchor, anchorText);
   const outDir = path.dirname(options.output);
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
