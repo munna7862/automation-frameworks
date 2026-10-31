@@ -62,7 +62,7 @@
     ]
   },
   "devDependencies": {
-    "@asteasolutions/zod-to-openapi": "^7.3.4",
+    "@asteasolutions/zod-to-openapi": "^9.1.0",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.3",
     "@redocly/cli": "^2.71.0",

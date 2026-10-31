@@ -73,6 +73,7 @@ components:
         - author
         - price
         - image
+      additionalProperties: {}
     CartItem:
       type: object
       properties:
@@ -86,6 +87,7 @@ components:
         - id
         - title
         - price
+      additionalProperties: {}
     PaginatedBooks:
       type: object
       properties:
@@ -118,6 +120,7 @@ components:
               - author
               - price
               - image
+            additionalProperties: {}
         total:
           type: number
         page:
@@ -132,6 +135,7 @@ components:
         - page
         - totalPages
         - limit
+      additionalProperties: {}
     AuthTokensResponse:
       type: object
       properties:
@@ -201,6 +205,7 @@ components:
           - author
           - price
           - image
+        additionalProperties: {}
     CartClearResponse:
       type: object
       properties:
@@ -208,6 +213,7 @@ components:
           type: boolean
       required:
         - success
+      additionalProperties: {}
     Order:
       type: object
       properties:
@@ -242,6 +248,7 @@ components:
               - author
               - price
               - image
+            additionalProperties: {}
         total:
           type: number
         customerName:
@@ -254,6 +261,7 @@ components:
         - total
         - customerName
         - date
+      additionalProperties: {}
     OrdersList:
       type: array
       items:
@@ -290,6 +298,7 @@ components:
                 - author
                 - price
                 - image
+              additionalProperties: {}
           total:
             type: number
           customerName:
@@ -302,6 +311,7 @@ components:
           - total
           - customerName
           - date
+        additionalProperties: {}
     CheckoutResponse:
       type: object
       properties:
@@ -314,6 +324,7 @@ components:
       required:
         - success
         - message
+      additionalProperties: {}
     UserProfile:
       type: object
       properties:
@@ -329,6 +340,7 @@ components:
             - "null"
       required:
         - username
+      additionalProperties: {}
     AvatarUploadResponse:
       type: object
       properties:
@@ -340,6 +352,7 @@ components:
           type: string
       required:
         - avatarUrl
+      additionalProperties: {}
     InventoryReport:
       type: object
       properties:
@@ -353,6 +366,7 @@ components:
         - totalBooks
         - totalValue
         - timestamp
+      additionalProperties: {}
     Health:
       type: object
       properties:
@@ -377,9 +391,11 @@ components:
             - heapUsed
             - heapTotal
             - rss
+          additionalProperties: {}
       required:
         - status
         - uptime
+      additionalProperties: {}
     Metrics:
       type: object
       properties:
@@ -404,9 +420,11 @@ components:
             - heapUsed
             - heapTotal
             - rss
+          additionalProperties: {}
       required:
         - status
         - uptime
+      additionalProperties: {}
     CsrfToken:
       type: object
       properties:
@@ -414,6 +432,7 @@ components:
           type: string
       required:
         - csrfToken
+      additionalProperties: {}
     ApiErrorDetail:
       type: object
       properties:
@@ -429,6 +448,7 @@ components:
               - type: number
         message:
           type: string
+      additionalProperties: {}
     ApiErrorResponse:
       type: object
       properties:
@@ -459,6 +479,7 @@ components:
                         - type: number
                   message:
                     type: string
+                additionalProperties: {}
             - type: object
               additionalProperties: {}
       required:
@@ -483,6 +504,7 @@ components:
           type: boolean
         inventoryLockingRate:
           type: number
+      additionalProperties: {}
     TestConfigPostResponse:
       type: object
       properties:
@@ -509,8 +531,10 @@ components:
               type: boolean
             inventoryLockingRate:
               type: number
+          additionalProperties: {}
       required:
         - config
+      additionalProperties: {}
     TestResetResponse:
       type: object
       properties:
@@ -521,6 +545,7 @@ components:
       required:
         - success
         - message
+      additionalProperties: {}
     TestSessionDeleteResponse:
       type: object
       properties:
@@ -535,6 +560,7 @@ components:
       required:
         - success
         - message
+      additionalProperties: {}
     BookstoreEvent:
       type: object
       properties:
@@ -556,6 +582,7 @@ components:
         - type
         - message
         - timestamp
+      additionalProperties: {}
     RegisterRequest:
       type: object
       properties:
@@ -634,12 +661,14 @@ paths:
             type: string
             description: Search term filtering by title or author
           required: false
+          description: Search term filtering by title or author
           name: search
           in: query
         - schema:
             type: string
             description: Filter books by genre/category
           required: false
+          description: Filter books by genre/category
           name: category
           in: query
         - schema:
@@ -647,6 +676,7 @@ paths:
             exclusiveMinimum: 0
             description: Page number for paginated results
           required: false
+          description: Page number for paginated results
           name: page
           in: query
         - schema:
@@ -654,6 +684,7 @@ paths:
             exclusiveMinimum: 0
             description: Number of items per page
           required: false
+          description: Number of items per page
           name: limit
           in: query
       responses:
@@ -694,6 +725,7 @@ paths:
             type: string
             description: Unique book identifier (UUID or numeric ID)
           required: true
+          description: Unique book identifier (UUID or numeric ID)
           name: id
           in: path
       responses:
@@ -999,6 +1031,7 @@ paths:
             type: string
             description: Book ID to remove from cart
           required: true
+          description: Book ID to remove from cart
           name: bookId
           in: path
       responses:
@@ -1253,8 +1286,8 @@ paths:
               properties:
                 avatar:
                   type: string
-                  description: Avatar image file
                   format: binary
+                  description: Avatar image file
       responses:
         "200":
           description: Avatar image uploaded and profile updated
@@ -1369,6 +1402,7 @@ paths:
                   type: boolean
                 inventoryLockingRate:
                   type: number
+              additionalProperties: {}
       responses:
         "200":
           description: Chaos configuration updated successfully
@@ -1432,6 +1466,7 @@ paths:
             type: string
             description: Book ID to update stock
           required: true
+          description: Book ID to update stock
           name: id
           in: path
       requestBody:
@@ -1487,6 +1522,7 @@ paths:
             type: string
             description: Test session identifier
           required: true
+          description: Test session identifier
           name: id
           in: path
       responses:
