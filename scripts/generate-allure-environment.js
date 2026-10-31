@@ -29,7 +29,7 @@ const frameworkConfigs = {
     driverVersion: '^9.0.0'
   },
   mobile: {
-    name: 'Appium 2.x + WebdriverIO Mobile',
+    name: 'Appium 3.x + WebdriverIO Mobile',
     targetDir: path.join(rootDir, 'mobile-automation', 'allure-results'),
     browser: 'UiAutomator2 (Android Emulator - Pixel 6)',
     driverVersion: '^2.16.1'

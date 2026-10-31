@@ -117,7 +117,7 @@ const defaultFrameworkMetrics = {
     name: 'Appium Mobile Automation',
     category: 'mobile',
     badge: 'Android & iOS Mobile',
-    engine: 'Appium 2.x + WebdriverIO',
+    engine: 'Appium 3.x + WebdriverIO',
     runner: 'UiAutomator2 / XCUITest',
     target: 'Android Emulator (Pixel 6 - API 33)',
     reportPath: './AutomationReports/Mobile/',

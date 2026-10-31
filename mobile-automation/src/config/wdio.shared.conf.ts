@@ -46,7 +46,7 @@ export const sharedConfig: Options.Testrunner = {
       const envPropsPath = path.join(resultsDir, 'environment.properties');
       const props =
         [
-          `Framework=Appium 2.x + WebdriverIO Mobile`,
+          `Framework=Appium 3.x + WebdriverIO Mobile`,
           `Framework.Version=^2.16.1`,
           `Test.Environment=${process.env.ENVIRONMENT || process.env.ENV || 'STAGING'}`,
           `Base.URL=${process.env.BASE_URL || 'https://buggy-books-fe.onrender.com/'}`,

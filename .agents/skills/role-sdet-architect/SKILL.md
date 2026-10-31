@@ -19,7 +19,7 @@ The SDET Architect oversees the comparative multi-framework test automation ecos
 | **`packages/playwright-utils/`** | TypeScript (`@automationframeworks/playwright-utils`) | Shared BasePage, Winston loggers, and assertion helpers consumed via npm workspaces.                  |
 | **`selenium-e2e/`**              | TypeScript + Mocha + Selenium WebDriver               | BuggyBooks W3C compliant E2E web automation on Google Chrome (`npm test`).                            |
 | **`wdio-e2e/`**                  | TypeScript + Mocha + WebdriverIO                      | BuggyBooks modern web automation with Shadow DOM traversal (`npm test`).                              |
-| **`mobile-automation/`**         | Appium 2.x + WebdriverIO                              | Android (`UiAutomator2`) & iOS (`XCUITest`) mobile E2E specs & gesture chaos.                         |
+| **`mobile-automation/`**         | Appium 3.x + WebdriverIO                              | Android (`UiAutomator2`) & iOS (`XCUITest`) mobile E2E specs & gesture chaos.                         |
 | **`jmeter/`**                    | Apache JMeter 5.6+ JMX test plans                     | High-concurrency enterprise load, stress, and capacity testing (`jmeter -n -t ...`).                  |
 | **`k6-performance/`**            | k6 (JavaScript)                                       | Fast-feedback developer benchmarking and PR latency drift regression gates.                           |
 

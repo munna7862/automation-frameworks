@@ -6,7 +6,7 @@ The **BuggyBooks** automated testing ecosystem encompasses multiple industry-sta
 - **`playwright-e2e/`**: Primary E2E and pure HTTP API automation framework (Playwright, TypeScript).
 - **`selenium-e2e/`**: W3C-compliant browser automation (Selenium WebDriver, TypeScript, Mocha, Chai).
 - **`wdio-e2e/`**: Modern web automation with Shadow DOM piercing (WebdriverIO, TypeScript, Mocha).
-- **`mobile-automation/`**: Android (`UiAutomator2`) & iOS (`XCUITest`) mobile automation (Appium 2.x, WebdriverIO).
+- **`mobile-automation/`**: Android (`UiAutomator2`) & iOS (`XCUITest`) mobile automation (Appium 3.x, WebdriverIO).
 - **`jmeter/`**: Enterprise load and stress testing test plans (Apache JMeter 5.6+).
 - **`k6-performance/`**: Developer performance benchmarking and PR drift regression gates.
 
@@ -180,7 +180,7 @@ with:
 | [`.github/workflows/playwright-ci.yml`](../../.github/workflows/playwright-ci.yml) | Playwright (Chrome UI + API) | `AutomationReports/Playwright` | Yes | `pages-deploy-allure` |
 | [`.github/workflows/selenium-ci.yml`](../../.github/workflows/selenium-ci.yml) | Selenium WebDriver | `AutomationReports/Selenium` | Yes | `pages-deploy-allure` |
 | [`.github/workflows/wdio-ci.yml`](../../.github/workflows/wdio-ci.yml) | WebdriverIO E2E | `AutomationReports/WDIO` | Yes | `pages-deploy-allure` |
-| [`.github/workflows/mobile-ci.yml`](../../.github/workflows/mobile-ci.yml) | Appium 2.x Mobile | `AutomationReports/Mobile` | Yes | `pages-deploy-allure` |
+| [`.github/workflows/mobile-ci.yml`](../../.github/workflows/mobile-ci.yml) | Appium 3.x Mobile | `AutomationReports/Mobile` | Yes | `pages-deploy-allure` |
 | [`.github/workflows/jmeter-performance.yaml`](../../.github/workflows/jmeter-performance.yaml) | Apache JMeter 5.6+ | `AutomationReports/JMeter` | N/A (Static HTML) | `pages-deploy-allure` |
 
 ### B. Concurrency Mutex Locks & Staging Isolation
