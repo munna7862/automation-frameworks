@@ -1,6 +1,6 @@
 {
   "name": "@automationframeworks/playwright-utils",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Base classes and utilities for Playwright automation frameworks",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
