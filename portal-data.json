@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T10:39:51.674Z",
+  "generatedAt": "2026-10-31T10:45:11.281Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,10 +10,10 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "8a3a7d8",
-    "branch": "fix/appium-minimatch-brace-expansion",
-    "message": "fix(deps): remove invalid brace-expansion root override to resolve appium crash",
-    "ciRun": "31"
+    "commit": "06c58ae",
+    "branch": "fix/ci-concurrency-controls",
+    "message": "fix(mobile): migrate Android emulator runner to ubuntu-latest with KVM",
+    "ciRun": "32"
   },
   "kpis": {
     "totalTests": 339,
