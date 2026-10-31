@@ -88,13 +88,8 @@ describe('BuggyBooks WDIO Cart & Checkout — TC-WDIO-003, TC-WDIO-004, TC-WDIO-
     // 4. Complete Step 2: Payment
     await checkoutPage.fillPaymentDetails(CheckoutPage.DEFAULT_TEST_CARD, '12/30', '123');
 
-    // Advance to confirmation / summary step if next button is present
-    const nextBtn = $('button#wizard-next-btn');
-    if (await nextBtn.isDisplayed().catch(() => false)) {
-      await nextBtn.click();
-    }
-
-    // 5. Pierce native Shadow DOM on <order-summary-box> Web Component
+    // 5. Pierce native Shadow DOM on <order-summary-box> Web Component. Read it on the payment
+    // step: advancing from here places the order, and the success screen replaces the summary.
     const isHostPresent = await checkoutPage.isOrderSummaryBoxPresent();
     expect(isHostPresent).toBe(true);
     const summaryTotal = await checkoutPage.getOrderSummaryTotal();

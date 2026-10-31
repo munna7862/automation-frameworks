@@ -159,6 +159,14 @@ export class CheckoutPage extends BasePage {
       await browser.pause(1000);
     }
 
+    // BuggyBooks renders Next and Submit in the same slot, so React flips the clicked button's
+    // type to "submit" mid-click and the Next click itself places the order. On a fast backend
+    // the success screen (with no submit button) is already showing by now.
+    if (await this.isOrderConfirmed()) {
+      await this.logMessage('INFO', 'Order already confirmed by the Next click');
+      return;
+    }
+
     const submitBtn = $(
       'button.primary-x2, button.submit-action-btn, button[name="btn_submit_rnd"]'
     );
@@ -193,12 +201,24 @@ export class CheckoutPage extends BasePage {
 
   public async getOrderSummaryTotal(): Promise<string> {
     await this.logMessage('INFO', 'Piercing Shadow DOM to extract total from <order-summary-box>');
-    await this.orderSummaryHost.waitForDisplayed({ timeout: 15000 });
-    const shadowTotal = this.orderSummaryHost.shadow$(
-      '.total-amount, .summary-total, .summary-box, p'
+    // React re-renders can detach the host or its shadow root between lookups (fast on the
+    // local DOCKER stack), so re-query both on every attempt instead of holding a handle.
+    let total = '';
+    await browser.waitUntil(
+      async () => {
+        try {
+          const shadowTotal = this.orderSummaryHost.shadow$(
+            '.total-amount, .summary-total, .summary-box, p'
+          );
+          if (!(await shadowTotal.isDisplayed())) return false;
+          total = await shadowTotal.getText();
+          return total.length > 0;
+        } catch {
+          return false;
+        }
+      },
+      { timeout: 15000, timeoutMsg: 'Could not read the total inside <order-summary-box>' }
     );
-    await shadowTotal.waitForDisplayed({ timeout: 15000 });
-    const total = await shadowTotal.getText();
     await this.logMessage('INFO', `Extracted Shadow DOM summary total: ${total}`);
     return total;
   }
