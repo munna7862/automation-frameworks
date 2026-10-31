@@ -1,0 +1,11 @@
+.........Console Logs.........
+
+[32m[2026-10-31 21:37:26] INFO: Navigating to login page: https://buggy-books-fe.onrender.com/login[39m
+[32m[2026-10-31 21:37:26] INFO: Checking if user is logged in - Element is not visible[39m
+[32m[2026-10-31 21:37:26] INFO: Clicking Login link in navbar[39m
+[32m[2026-10-31 21:37:26] INFO: Cleared input value[39m
+[32m[2026-10-31 21:37:26] INFO: Set input value to admin[39m
+[32m[2026-10-31 21:37:26] INFO: Cleared input value[39m
+[32m[2026-10-31 21:37:26] INFO: Set input value to invalidSecretPass123![39m
+[32m[2026-10-31 21:37:26] INFO: Clicking Sign In button[39m
+[32m[2026-10-31 21:37:27] INFO: Getting error banner text[39m
