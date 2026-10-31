@@ -1,0 +1,145 @@
+# ==============================================================================
+# BuggyBooks — OSV Vulnerability Scanner Policy Configuration
+# ==============================================================================
+# Accepted and triaged risks for test execution dependencies.
+# All dependencies listed below are isolated to test execution, local build
+# tooling, or sandboxed CI environments, with no exposure to public web traffic
+# or untrusted user input.
+# ==============================================================================
+
+# minimatch: Algorithmic complexity in test file pattern matching
+[[IgnoredVulns]]
+id = "CVE-2026-118764"
+reason = "Transitive test tooling dependency (minimatch): pattern amplification DoS not exploitable in test execution."
+
+[[IgnoredVulns]]
+id = "GHSA-g3hv-75wg-m249"
+reason = "Transitive test tooling dependency (minimatch): pattern amplification DoS not exploitable in test execution."
+
+# glob: Abort signal background walk in test file traversals
+[[IgnoredVulns]]
+id = "CVE-2026-118773"
+reason = "Transitive test tooling dependency (glob): abort signal walk not exploitable in test execution."
+
+[[IgnoredVulns]]
+id = "GHSA-3g3m-2fjr-6pw4"
+reason = "Transitive test tooling dependency (glob): abort signal walk not exploitable in test execution."
+
+# fast-uri: URI validation in Appium / AJV driver internals
+[[IgnoredVulns]]
+id = "CVE-2026-110095"
+reason = "Transitive validation dependency in Appium ajv (fast-uri): test execution only, no untrusted URI inputs."
+
+[[IgnoredVulns]]
+id = "GHSA-xhq7-xmqj-769h"
+reason = "Transitive validation dependency in Appium ajv (fast-uri): test execution only, no untrusted URI inputs."
+
+[[IgnoredVulns]]
+id = "CVE-2026-110180"
+reason = "Transitive validation dependency in Appium ajv (fast-uri): test execution only, no untrusted URI inputs."
+
+[[IgnoredVulns]]
+id = "GHSA-wjr9-j795-jxcr"
+reason = "Transitive validation dependency in Appium ajv (fast-uri): test execution only, no untrusted URI inputs."
+
+[[IgnoredVulns]]
+id = "CVE-2026-110306"
+reason = "Transitive validation dependency in Appium ajv (fast-uri): test execution only, no untrusted URI inputs."
+
+[[IgnoredVulns]]
+id = "GHSA-w74x-v6f9-j3xg"
+reason = "Transitive validation dependency in Appium ajv (fast-uri): test execution only, no untrusted URI inputs."
+
+[[IgnoredVulns]]
+id = "CVE-2026-110725"
+reason = "Transitive validation dependency in Appium ajv (fast-uri): test execution only, no untrusted URI inputs."
+
+[[IgnoredVulns]]
+id = "GHSA-333x-w4r6-6crp"
+reason = "Transitive validation dependency in Appium ajv (fast-uri): test execution only, no untrusted URI inputs."
+
+# zod: Oversized constrained collections in test-data configuration schema
+[[IgnoredVulns]]
+id = "CVE-2023-54404"
+reason = "Configuration validation schema in test-data (zod v3): parses local process.env only, no untrusted array input."
+
+[[IgnoredVulns]]
+id = "GHSA-mrhx-c7xc-m3w5"
+reason = "Configuration validation schema in test-data (zod v3): parses local process.env only, no untrusted array input."
+
+# lodash: Prototype pollution in legacy test reporters
+[[IgnoredVulns]]
+id = "CVE-2026-4800"
+reason = "Transitive test tooling dependency (lodash 4.17.21): accepted development risk in test runners."
+
+[[IgnoredVulns]]
+id = "GHSA-r5fr-rjxr-66jc"
+reason = "Transitive test tooling dependency (lodash 4.17.21): accepted development risk in test runners."
+
+[[IgnoredVulns]]
+id = "CVE-2026-2950"
+reason = "Transitive test tooling dependency (lodash 4.17.21): accepted development risk in test runners."
+
+[[IgnoredVulns]]
+id = "GHSA-f23m-r3pf-42rh"
+reason = "Transitive test tooling dependency (lodash 4.17.21): accepted development risk in test runners."
+
+[[IgnoredVulns]]
+id = "CVE-2025-13465"
+reason = "Transitive test tooling dependency (lodash 4.17.21): accepted development risk in test runners."
+
+[[IgnoredVulns]]
+id = "GHSA-xxjr-mmjv-4gpg"
+reason = "Transitive test tooling dependency (lodash 4.17.21): accepted development risk in test runners."
+
+# extract-zip: Directory traversal in browser binary extraction
+[[IgnoredVulns]]
+id = "CVE-2026-56876"
+reason = "Transitive test tooling dependency (extract-zip 2.0.1): used only for downloading trusted browser binaries in CI."
+
+[[IgnoredVulns]]
+id = "GHSA-jmr9-qjv8-65gv"
+reason = "Transitive test tooling dependency (extract-zip 2.0.1): used only for downloading trusted browser binaries in CI."
+
+[[IgnoredVulns]]
+id = "CVE-2026-19693"
+reason = "Transitive test tooling dependency (extract-zip 2.0.1): used only for downloading trusted browser binaries in CI."
+
+[[IgnoredVulns]]
+id = "GHSA-7pqw-9j4j-h8q3"
+reason = "Transitive test tooling dependency (extract-zip 2.0.1): used only for downloading trusted browser binaries in CI."
+
+# path-to-regexp: ReDoS in test route definitions
+[[IgnoredVulns]]
+id = "CVE-2026-4926"
+reason = "Transitive test routing dependency (path-to-regexp 8.2.0): accepted development risk in local test routes."
+
+[[IgnoredVulns]]
+id = "GHSA-j3q9-mxjg-w52f"
+reason = "Transitive test routing dependency (path-to-regexp 8.2.0): accepted development risk in local test routes."
+
+[[IgnoredVulns]]
+id = "CVE-2026-4923"
+reason = "Transitive test routing dependency (path-to-regexp 8.2.0): accepted development risk in local test routes."
+
+[[IgnoredVulns]]
+id = "GHSA-27v5-c462-wpq7"
+reason = "Transitive test routing dependency (path-to-regexp 8.2.0): accepted development risk in local test routes."
+
+# basic-ftp: Carriage return injection in test FTP utilities
+[[IgnoredVulns]]
+id = "CVE-2026-102990"
+reason = "Transitive test runner dependency (basic-ftp 5.3.1): accepted development risk in test tooling."
+
+[[IgnoredVulns]]
+id = "GHSA-c475-qrg2-pj4r"
+reason = "Transitive test runner dependency (basic-ftp 5.3.1): accepted development risk in test tooling."
+
+# ajv: Prototype pollution in test schema validation
+[[IgnoredVulns]]
+id = "CVE-2025-69873"
+reason = "Transitive validation dependency (ajv 8.17.1): accepted development risk in test schema validation."
+
+[[IgnoredVulns]]
+id = "GHSA-2g4f-4pwh-qvx6"
+reason = "Transitive validation dependency (ajv 8.17.1): accepted development risk in test schema validation."

@@ -1,0 +1,18 @@
+# ==============================================================================
+# BuggyBooks — Zizmor Workflow Linter Configuration
+# ==============================================================================
+# Configures accepted rules for local monorepo composite actions and test tools.
+# ==============================================================================
+
+rules:
+  # Monorepo uses standard local composite actions ('./.github/actions/setup-monorepo')
+  self-repository:
+    disable: true
+
+  # Version comments alongside pinned SHAs (e.g. # v4.2.2) are informational
+  ref-version-mismatch:
+    disable: true
+
+  # Global test CLI installations in isolated CI runners (allure-commandline, etc.)
+  adhoc-packages:
+    disable: true
