@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T07:20:59.241Z",
+  "generatedAt": "2026-10-31T09:25:40.960Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,10 +10,10 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "63e4f43",
+    "commit": "9306a0f",
     "branch": "main",
-    "message": "fix(security): remediate undici cves, zizmor lints, and osv policies (#70)",
-    "ciRun": "26"
+    "message": "fix(security): filter ignored rules in zap-to-sarif converter (#71)",
+    "ciRun": "30"
   },
   "kpis": {
     "totalTests": 339,
