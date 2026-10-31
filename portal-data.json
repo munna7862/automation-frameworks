@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T12:31:41.333Z",
+  "generatedAt": "2026-10-31T13:32:27.360Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -10,19 +10,19 @@
     "healthStatus": "HEALTHY"
   },
   "git": {
-    "commit": "654517a",
+    "commit": "58bbaf6",
     "branch": "main",
-    "message": "docs: correct stale README, docs, and agent guidance to match code (#79)",
-    "ciRun": "15"
+    "message": "fix(ci): stop shard self-cancellation and repair false-failing nightly tests (#81)",
+    "ciRun": "17"
   },
   "kpis": {
     "totalTests": 339,
-    "totalPassed": 334,
-    "totalFailed": 4,
+    "totalPassed": 333,
+    "totalFailed": 5,
     "totalSkipped": 1,
-    "overallPassRate": "98.8%",
+    "overallPassRate": "98.5%",
     "activeFrameworks": 7,
-    "totalDurationMs": 333125,
+    "totalDurationMs": 343626,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -111,14 +111,14 @@
       "runner": "TypeScript + Mocha",
       "target": "Google Chrome (DevTools / WebDriver)",
       "reportPath": "./AutomationReports/WDIO/",
-      "status": "PASSED",
+      "status": "FAILED",
       "metrics": {
         "total": 5,
-        "passed": 5,
-        "failed": 0,
+        "passed": 4,
+        "failed": 1,
         "skipped": 0,
-        "durationMs": 16884,
-        "passRate": "100.0%"
+        "durationMs": 27385,
+        "passRate": "80.0%"
       },
       "highlights": [
         "Deep shadow root locator piercing (>>> syntax)",
