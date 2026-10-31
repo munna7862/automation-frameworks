@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-10-31T13:32:27.360Z",
+  "generatedAt": "2026-10-31T13:33:39.426Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -13,7 +13,7 @@
     "commit": "58bbaf6",
     "branch": "main",
     "message": "fix(ci): stop shard self-cancellation and repair false-failing nightly tests (#81)",
-    "ciRun": "17"
+    "ciRun": "16"
   },
   "kpis": {
     "totalTests": 339,
@@ -22,7 +22,7 @@
     "totalSkipped": 1,
     "overallPassRate": "98.5%",
     "activeFrameworks": 7,
-    "totalDurationMs": 343626,
+    "totalDurationMs": 340682,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "ACTION REQUIRED"
   },
@@ -93,7 +93,7 @@
         "passed": 5,
         "failed": 0,
         "skipped": 0,
-        "durationMs": 10058,
+        "durationMs": 7114,
         "passRate": "100.0%"
       },
       "highlights": [
