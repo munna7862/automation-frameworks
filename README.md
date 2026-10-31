@@ -60,7 +60,7 @@ _(Requires Docker Desktop running locally. Automatically reuses existing stack i
 
 | Framework / Package             | Technology Stack                            | Scope & Status                                                                                                                                |
 | :------------------------------ | :------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`playwright-e2e`**            | Playwright, TypeScript, Allure              | **Primary Web & API**: Strictly Google Chrome (`channel: 'chrome'`) and headless API (229 tests across 3 projects).                           |
+| **`playwright-e2e`**            | Playwright, TypeScript, Allure              | **Primary Web & API**: Strictly Google Chrome (`channel: 'chrome'`) and headless API (230 tests across 3 projects).                           |
 | **`packages/playwright-utils`** | `@automationframeworks/playwright-utils`    | Shared BasePage, Winston loggers, and typed assertion helpers.                                                                                |
 | **`packages/test-data`**        | `@automationframeworks/test-data`           | Shared data factories, builders, API seeders, cleanup registry, and Zod configuration schema.                                                 |
 | **`selenium-e2e`**              | Selenium WebDriver, TypeScript, Mocha, Chai | W3C compliant E2E web automation on Google Chrome with WebDriverWait & Shadow DOM piercing.                                                   |

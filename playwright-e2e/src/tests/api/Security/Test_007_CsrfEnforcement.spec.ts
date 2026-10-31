@@ -27,10 +27,11 @@ test.describe('SEC-CSRF: CSRF Enforcement & Bypass Protection Suite', () => {
   test('SEC-CSRF-01: State-changing POST rejected with 403 when x-enforce-csrf is active and token is missing @security @owasp-a01', async ({
     securityApi
   }) => {
-    // Attempt state mutation with CSRF enforcement turned on, but without providing CSRF token
+    // Attempt state mutation with CSRF enforcement turned on, but without providing CSRF token.
+    // Authenticate via the session cookie set at registration, not a Bearer header: CSRF only
+    // threatens cookie auth, so the backend (correctly) skips CSRF for Bearer-token requests.
     const res = await securityApi.cart.add('1', {
       headers: {
-        Authorization: `Bearer ${authToken}`,
         'x-enforce-csrf': 'true'
       },
       expectStatus: [403]

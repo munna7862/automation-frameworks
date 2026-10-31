@@ -25,8 +25,8 @@ This document serves as the **always-on memory and operational baseline** for al
   1. `setup`: Runs `src/tests/auth.setup.ts` using `channel: 'chrome'` to cache storage state (`.auth/user.json`).
   2. `api`: Runs `src/tests/api/` (pure HTTP via Playwright `request` context, no browser launched).
   3. `chrome`: Runs `src/tests/ui/` in Google Chrome (`channel: 'chrome'`), dependent on `setup`.
-- **Expected Test Count**: **229 tests** as of 2026-10-31 (167 API + 61 Chrome UI + 1 auth setup; check with `npx playwright test --list`). The UI count appearing more than once (e.g. 61 UI tests duplicated per extra browser project) means redundant multi-browser projects have leaked back into the config.
-- **Setup Project Trap**: `auth.setup.ts` **must** declare `use: { channel: 'chrome' }`. If omitted, Playwright defaults to bundled `chromium_headless_shell` (which is not installed in CI), causing `setup` to crash and all 61 UI tests to skip!
+- **Expected Test Count**: **230 tests** as of 2026-10-31 (167 API + 62 Chrome UI + 1 auth setup; check with `npx playwright test --list`). The UI count appearing more than once (e.g. 62 UI tests duplicated per extra browser project) means redundant multi-browser projects have leaked back into the config.
+- **Setup Project Trap**: `auth.setup.ts` **must** declare `use: { channel: 'chrome' }`. If omitted, Playwright defaults to bundled `chromium_headless_shell` (which is not installed in CI), causing `setup` to crash and all 62 UI tests to skip!
 
 ### 2. Render Staging Cold-Start Latency & Pre-Flight Probe
 

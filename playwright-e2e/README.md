@@ -133,7 +133,7 @@ Configuration is validated by the shared schema in `packages/test-data/src/confi
 
 ### Complete Test Suite (Dynamic Discovery)
 
-Run every project (`setup`, `api`, `chrome`): 229 tests in 47 files as of 2026-10-31. Run `npx playwright test --list` for the current count.
+Run every project (`setup`, `api`, `chrome`): 230 tests in 47 files as of 2026-10-31. Run `npx playwright test --list` for the current count.
 
 ```bash
 npm test

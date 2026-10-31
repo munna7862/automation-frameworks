@@ -1,5 +1,6 @@
 import { test, expect } from '../../../core/base/security.fixture';
 import { envConfig } from '../../../config/env.config';
+import { createApiClient } from '../../../api/clients';
 import { randomBytes } from 'crypto';
 
 test.describe('SEC-AUTHZ: Broken Object Level Authorization (BOLA/BOPLA) Suite', () => {
@@ -119,6 +120,7 @@ test.describe('SEC-AUTHZ: Broken Object Level Authorization (BOLA/BOPLA) Suite',
   });
 
   test('SEC-AUTHZ-04: Spoofing x-test-session-id to another user session does not leak data @security @owasp-api1', async ({
+    playwright,
     securityApi
   }) => {
     const sessionB = `session-victim-${Date.now()}-${randomBytes(4).toString('hex')}`;
@@ -139,13 +141,20 @@ test.describe('SEC-AUTHZ: Broken Object Level Authorization (BOLA/BOPLA) Suite',
       }
     });
 
-    // Attacker without tokenB attempts to access victim session cart
-    const attackerRes = await securityApi.cart.get({
+    // Attacker without tokenB attempts to access victim session cart. The attacker needs its own
+    // request context: securityApi's cookie jar holds the victim's session cookie from registration.
+    const attackerContext = await playwright.request.newContext({
+      baseURL: envConfig.apiBaseUrl,
+      extraHTTPHeaders: { Accept: 'application/json' }
+    });
+    const attackerApi = createApiClient(attackerContext, { omitBypassHeaders: true });
+    const attackerRes = await attackerApi.cart.get({
       headers: {
         'x-test-session-id': sessionB
       },
       expectStatus: [200, 401, 403]
     });
+    await attackerContext.dispose();
 
     // Without token, either 401/403 or unauthenticated session sandbox (cannot view authenticated victim items)
     if (attackerRes.status === 200) {
