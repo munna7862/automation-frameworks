@@ -1,0 +1,3 @@
+[2026-11-01 00:48:12] INFO:  Initial registration response status Success !! Actual and Expected Values are:: 201
+[2026-11-01 00:48:12] INFO:  Duplicate registration status Success !! Actual and Expected Values are:: true
+[2026-11-01 00:48:13] INFO: Cleaned up ephemeral API test session: pw-api-w1-1-1793456292755-7373bca1

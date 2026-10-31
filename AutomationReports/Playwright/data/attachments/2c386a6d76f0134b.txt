@@ -1,0 +1,5 @@
+[2026-11-01 00:49:13] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1793456353818-f36152ca
+[2026-11-01 00:49:13] INFO: Network interception enabled with mode: api-only
+[2026-11-01 00:49:14] INFO: Verifying WebSocket status dot has status-connected class - Matched: [true]
+[2026-11-01 00:49:14] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/WebSockets-Test_008_WebSoc-d0077--Indicator-smoke-regression-chrome/network-log.json
+[2026-11-01 00:49:14] INFO: Cleaned up ephemeral test session: pw-w4-3-1793456353818-f36152ca

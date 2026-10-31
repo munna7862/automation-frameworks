@@ -1,0 +1,4 @@
+[2026-11-01 00:48:21] INFO: Verifying POST /api/test/config status is 200
+[2026-11-01 00:48:21] INFO: Verifying visualChaos saved as true
+[2026-11-01 00:48:21] INFO: Verifying checkoutFailureRate saved as 0.5
+[2026-11-01 00:48:21] INFO: Cleaned up ephemeral API test session: pw-api-w2-2-1793456301152-8861d553

@@ -1,0 +1,16 @@
+[2026-11-01 00:48:50] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w1-0-1793456330486-071edebf
+[2026-11-01 00:48:50] INFO: Network interception enabled with mode: api-only
+[2026-11-01 00:48:51] INFO: Navigating to catalog page: http://localhost:5173
+[2026-11-01 00:48:51] INFO: Clicking on Login link
+[2026-11-01 00:48:52] INFO: Entering username: franco_w1_mvwhlde2_db853b_2
+[2026-11-01 00:48:52] INFO: Entering password: Password123!
+[2026-11-01 00:48:52] INFO: Clicking on Sign In button
+[2026-11-01 00:48:52] INFO: Verifying landing on Checkout Page
+[2026-11-01 00:48:52] INFO: Checking if Checkout label is visible
+[2026-11-01 00:48:53] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-01 00:48:53] INFO: Clicking on Profile navbar link
+[2026-11-01 00:48:53] INFO: Getting profile info section text
+[2026-11-01 00:48:53] INFO: Getting profile avatar preview image src
+[2026-11-01 00:48:58] INFO: Verifying profile page renders registered full name, username, and avatar preview - Condition met (true)
+[2026-11-01 00:48:58] INFO: Captured 12 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Profile-Test_006_ProfileSu-b3f10--correctly-smoke-regression-chrome/network-log.json
+[2026-11-01 00:48:58] INFO: Cleaned up ephemeral test session: pw-w1-0-1793456330486-071edebf

@@ -1,0 +1,18 @@
+[2026-11-01 00:48:47] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w1-0-1793456327255-6bb24b17
+[2026-11-01 00:48:47] INFO: Network interception enabled with mode: api-only
+[2026-11-01 00:48:47] INFO: Clicking on Sign Up link
+[2026-11-01 00:48:48] INFO: Entering full name: Full profile_user_nktzu
+[2026-11-01 00:48:48] INFO: Entering username: profile_user_nktzu
+[2026-11-01 00:48:48] INFO: Entering password: Password123!
+[2026-11-01 00:48:48] INFO: Entering confirming password: Password123!
+[2026-11-01 00:48:48] INFO: Clicking on Create Account button
+[2026-11-01 00:48:49] INFO: Verifying landing on Checkout Page
+[2026-11-01 00:48:49] INFO: Checking if Checkout label is visible
+[2026-11-01 00:48:49] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-01 00:48:49] INFO: Clicking on Profile navbar link
+[2026-11-01 00:48:49] INFO: Selecting file for avatar upload: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/src/test-data/ui/Profile/invalid_file.txt
+[2026-11-01 00:48:49] INFO: Clicking Upload Image button
+[2026-11-01 00:48:50] INFO: Getting upload error message text
+[2026-11-01 00:48:50] INFO: Verifying file extension filter 400 error message - Condition met (true)
+[2026-11-01 00:48:50] INFO: Captured 12 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Profile-Test_005_ProfilePi-c3535-Validation-smoke-regression-chrome/network-log.json
+[2026-11-01 00:48:50] INFO: Cleaned up ephemeral test session: pw-w1-0-1793456327255-6bb24b17

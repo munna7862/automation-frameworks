@@ -1,0 +1,17 @@
+[2026-11-01 00:48:12] INFO:  Response status Success !! Actual and Expected Values are:: 201
+[2026-11-01 00:48:12] INFO:  Registration response is an object Success !! Actual and Expected Values are:: object
+[2026-11-01 00:48:12] INFO:  Registration response is not null Success !! Actual and Expected Values are:: true
+[2026-11-01 00:48:12] INFO:  Message is a string Success !! Actual and Expected Values are:: string
+[2026-11-01 00:48:12] INFO:  Username is a string Success !! Actual and Expected Values are:: string
+[2026-11-01 00:48:12] INFO:  Token is a string Success !! Actual and Expected Values are:: string
+[2026-11-01 00:48:12] INFO:  RefreshToken is a string Success !! Actual and Expected Values are:: string
+[2026-11-01 00:48:12] INFO:  Registration response contains only expected contract fields Success !! Actual and Expected Values are:: ["message","refreshToken","token","username"]
+[2026-11-01 00:48:12] INFO:  Login response status after registration Success !! Actual and Expected Values are:: 200
+[2026-11-01 00:48:12] INFO:  Login response is an object Success !! Actual and Expected Values are:: object
+[2026-11-01 00:48:12] INFO:  Login response is not null Success !! Actual and Expected Values are:: true
+[2026-11-01 00:48:12] INFO:  Message is a string Success !! Actual and Expected Values are:: string
+[2026-11-01 00:48:12] INFO:  Username is a string Success !! Actual and Expected Values are:: string
+[2026-11-01 00:48:12] INFO:  Token is a string Success !! Actual and Expected Values are:: string
+[2026-11-01 00:48:12] INFO:  RefreshToken is a string Success !! Actual and Expected Values are:: string
+[2026-11-01 00:48:12] INFO:  Login response contains only expected contract fields Success !! Actual and Expected Values are:: ["message","refreshToken","token","username"]
+[2026-11-01 00:48:12] INFO: Cleaned up ephemeral API test session: pw-api-w2-2-1793456292469-43d5302c

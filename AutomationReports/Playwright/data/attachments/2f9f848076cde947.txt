@@ -1,0 +1,47 @@
+[2026-11-01 00:48:31] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1793456311374-e33c9cb4
+[2026-11-01 00:48:31] INFO: Network interception enabled with mode: api-only
+[2026-11-01 00:48:31] INFO: Navigating to catalog page: http://localhost:5173
+[2026-11-01 00:48:31] INFO: Clicking on Sign Up link
+[2026-11-01 00:48:32] INFO: Entering full name: E2E Test User
+[2026-11-01 00:48:32] INFO: Entering username: e2e_customer_1793456311500_ff12a5a4
+[2026-11-01 00:48:32] INFO: Entering password: Password123!
+[2026-11-01 00:48:32] INFO: Entering confirming password: Password123!
+[2026-11-01 00:48:32] INFO: Clicking on Create Account button
+[2026-11-01 00:48:33] INFO: Verifying landing on Checkout Page
+[2026-11-01 00:48:33] INFO: Checking if Checkout label is visible
+[2026-11-01 00:48:33] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-01 00:48:33] INFO: Verifying new user registered and logged in successfully - Matched: [true]
+[2026-11-01 00:48:33] INFO: Clicking on Catalog link
+[2026-11-01 00:48:33] INFO: Filling search input with: Mockingbird
+[2026-11-01 00:48:33] INFO: Clicking Search button
+[2026-11-01 00:48:33] INFO: Getting catalog result count text
+[2026-11-01 00:48:33] INFO: Verifying catalog search results for 'Mockingbird' - Condition met (true)
+[2026-11-01 00:48:33] INFO: Clicking on book title link for book ID: 2
+[2026-11-01 00:48:33] INFO: Getting book detail title
+[2026-11-01 00:48:33] INFO: Getting book detail price
+[2026-11-01 00:48:33] INFO: Verifying book detail title and price are displayed - Condition met (true)
+[2026-11-01 00:48:33] INFO: Clicking Add to Cart button on Book Detail page
+[2026-11-01 00:48:33] INFO: Waiting for cart status message: added to cart
+[2026-11-01 00:48:33] INFO: Cart status message "added to cart" is visible
+[2026-11-01 00:48:33] INFO: Clicking on Cart link
+[2026-11-01 00:48:33] INFO: Getting cart item text
+[2026-11-01 00:48:33] INFO: Getting cart total text
+[2026-11-01 00:48:33] INFO: Verifying cart contains item and order total - Condition met (true)
+[2026-11-01 00:48:33] INFO: Clicking on Proceed to Checkout button
+[2026-11-01 00:48:33] INFO: Entering first name: Alex
+[2026-11-01 00:48:33] INFO: Entering last name: Rivera
+[2026-11-01 00:48:33] INFO: Entering shipping address: 123 Buggy Lane
+[2026-11-01 00:48:33] INFO: Entering city: Stack City
+[2026-11-01 00:48:34] INFO: Clicking on Next Step button
+[2026-11-01 00:48:34] INFO: Entering card number
+[2026-11-01 00:48:34] INFO: Entering card expiry: 12/30
+[2026-11-01 00:48:34] INFO: Entering card CVV: 123
+[2026-11-01 00:48:34] INFO: Checking if Next Step button is visible on Payment Step - Element is visible
+[2026-11-01 00:48:34] INFO: Clicking on Next Step button on Payment page to advance to Confirm step
+[2026-11-01 00:48:49] INFO: Waiting for confirmation message containing: Order placed successfully
+[2026-11-01 00:48:49] INFO: Payment completed successfully and order confirmation message is displayed.
+[2026-11-01 00:48:49] INFO: Clicking on Logout button
+[2026-11-01 00:48:49] INFO: Checking if Login link is visible on Catalog page - Element is visible
+[2026-11-01 00:48:49] INFO: Verifying user logged out successfully after completing order - Matched: [true]
+[2026-11-01 00:48:49] INFO: Captured 23 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Checkout-Test_005_EndToEnd-32cb3-o-Checkout-smoke-regression-chrome/network-log.json
+[2026-11-01 00:48:49] INFO: Cleaned up ephemeral test session: pw-w3-2-1793456311374-e33c9cb4

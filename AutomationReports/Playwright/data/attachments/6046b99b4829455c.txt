@@ -1,0 +1,10 @@
+[2026-11-01 00:49:08] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w1-0-1793456348207-b718135c
+[2026-11-01 00:49:08] INFO: Network interception enabled with mode: api-only
+[2026-11-01 00:49:08] INFO: Clicking on Login link
+[2026-11-01 00:49:09] INFO: Entering username: admin
+[2026-11-01 00:49:09] INFO: Entering password: wrongPassword123@
+[2026-11-01 00:49:09] INFO: Clicking on Sign In button
+[2026-11-01 00:49:10] INFO: Getting error banner text
+[2026-11-01 00:49:10] INFO: Verifying if error message is correct - Matched: [Unauthorized: Invalid credentials]
+[2026-11-01 00:49:10] INFO: Captured 7 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_002_Lo-aafd7-alidation-Errors-regression-chrome/network-log.json
+[2026-11-01 00:49:10] INFO: Cleaned up ephemeral test session: pw-w1-0-1793456348207-b718135c

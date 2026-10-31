@@ -1,0 +1,5 @@
+[2026-11-01 00:48:18] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w6-1-1793456298879-0de5032c
+[2026-11-01 00:48:18] INFO: Network interception enabled with mode: api-only
+[2026-11-01 00:48:23] INFO: Verifying Axe detects missing image alt text under chaos mode - Condition met (true)
+[2026-11-01 00:48:23] INFO: Captured 7 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/A11y-Test_007_A11yScanVali-9f589-ilure-regression-chaos-a11y-chrome/network-log.json
+[2026-11-01 00:48:23] INFO: Cleaned up ephemeral test session: pw-w6-1-1793456298879-0de5032c

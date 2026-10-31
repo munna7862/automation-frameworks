@@ -1,0 +1,16 @@
+[2026-11-01 00:49:02] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w1-0-1793456342782-4133f08b
+[2026-11-01 00:49:02] INFO: Network interception enabled with mode: api-only
+[2026-11-01 00:49:03] INFO: Clicking on Login link
+[2026-11-01 00:49:04] INFO: Entering username: admin
+[2026-11-01 00:49:04] INFO: Entering password: password123
+[2026-11-01 00:49:04] INFO: Clicking on Sign In button
+[2026-11-01 00:49:04] INFO: Verifying landing on Checkout Page
+[2026-11-01 00:49:04] INFO: Checking if Checkout label is visible
+[2026-11-01 00:49:04] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-01 00:49:04] INFO: Verifying if user logged in successfully - Matched: [true]
+[2026-11-01 00:49:04] INFO: ✅ Authentication state saved to: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/.auth/user.json
+[2026-11-01 00:49:04] INFO: Clicking on Logout button
+[2026-11-01 00:49:05] INFO: Checking if Login link is visible on Catalog page - Element is visible
+[2026-11-01 00:49:05] INFO: Verifying if user logged out successfully - Matched: [true]
+[2026-11-01 00:49:05] INFO: Captured 10 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_002_Lo-5491b-sting-User-smoke-regression-chrome/network-log.json
+[2026-11-01 00:49:05] INFO: Cleaned up ephemeral test session: pw-w1-0-1793456342782-4133f08b
