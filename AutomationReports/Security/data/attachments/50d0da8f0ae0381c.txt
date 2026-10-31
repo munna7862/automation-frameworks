@@ -1,0 +1,11 @@
+[2026-10-31 17:45:51] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1793430951015-4c9420b5
+[2026-10-31 17:45:51] INFO: Network interception enabled with mode: api-only
+[2026-10-31 17:45:51] INFO: Validating matching string scalar values - Matched: [BuggyBooks Diagnostic Test]
+[2026-10-31 17:45:51] INFO: Validating matching number scalar values - Matched: [42]
+[2026-10-31 17:45:51] INFO: Validating positive number condition - Condition met (true)
+[2026-10-31 17:45:51] ERROR: Testing intentional mismatch failure diff - Expected: [42] but Received: [99]
+[2026-10-31 17:45:51] ERROR: Testing intentional mismatch failure diff - Expected: [42] but Received: [99]
+[2026-10-31 17:45:51] ERROR: Testing intentional false condition - Condition failed (false)
+[2026-10-31 17:45:51] ERROR: Testing intentional false condition - Condition failed (false)
+[2026-10-31 17:45:51] INFO: Captured 0 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Diagnostic-Test_011_Diagno-a3b00-assertions-smoke-regression-chrome/network-log.json
+[2026-10-31 17:45:51] INFO: Cleaned up ephemeral test session: pw-w3-2-1793430951015-4c9420b5
