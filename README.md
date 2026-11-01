@@ -21,16 +21,16 @@ Plans: [planning/README.md](planning/README.md), [master plan](planning/Master/m
 
 ## Frameworks
 
-| Folder | Stack | What it covers |
-| --- | --- | --- |
-| `playwright-e2e/` | Playwright, TypeScript, Allure, Monocart | Main suite: 230 tests in 3 projects (1 auth setup, 167 API, 62 UI in Google Chrome), plus Pact contract tests and AppSec tests |
-| `selenium-e2e/` | Selenium WebDriver, TypeScript, Mocha, Chai | UI tests in Chrome, including Shadow DOM |
-| `wdio-e2e/` | WebdriverIO, TypeScript, Mocha, Allure | UI tests in Chrome using `shadow$` selectors |
-| `mobile-automation/` | Appium 3, WebdriverIO | Android (UiAutomator2) and iOS (XCUITest) screen objects; quarantined |
-| `k6-performance/` | k6 | PR performance baseline with a 20% drift gate |
-| `jmeter/` | Apache JMeter 5.6+ | Catalog load, auth stress, e-commerce journey and inventory stress plans with HTML dashboards |
-| `packages/playwright-utils/` | `@automationframeworks/playwright-utils` | Shared base page, logger and assertion helpers |
-| `packages/test-data/` | `@automationframeworks/test-data` | Data factories, API seeders, cleanup registry, Zod config schema |
+| Folder                       | Stack                                       | What it covers                                                                                                                 |
+| ---------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `playwright-e2e/`            | Playwright, TypeScript, Allure, Monocart    | Main suite: 230 tests in 3 projects (1 auth setup, 167 API, 62 UI in Google Chrome), plus Pact contract tests and AppSec tests |
+| `selenium-e2e/`              | Selenium WebDriver, TypeScript, Mocha, Chai | UI tests in Chrome, including Shadow DOM                                                                                       |
+| `wdio-e2e/`                  | WebdriverIO, TypeScript, Mocha, Allure      | UI tests in Chrome using `shadow$` selectors                                                                                   |
+| `mobile-automation/`         | Appium 3, WebdriverIO                       | Android (UiAutomator2) and iOS (XCUITest) screen objects; quarantined                                                          |
+| `k6-performance/`            | k6                                          | PR performance baseline with a 20% drift gate                                                                                  |
+| `jmeter/`                    | Apache JMeter 5.6+                          | Catalog load, auth stress, e-commerce journey and inventory stress plans with HTML dashboards                                  |
+| `packages/playwright-utils/` | `@automationframeworks/playwright-utils`    | Shared base page, logger and assertion helpers                                                                                 |
+| `packages/test-data/`        | `@automationframeworks/test-data`           | Data factories, API seeders, cleanup registry, Zod config schema                                                               |
 
 All browser tests run in Google Chrome only. This is a project rule (see [AGENTS.md](AGENTS.md)).
 
@@ -92,10 +92,10 @@ Details per framework: [playwright-e2e](playwright-e2e/README.md), [wdio-e2e](wd
 
 ## Environments
 
-| Profile | Frontend | API | Used by |
-| --- | --- | --- | --- |
-| `DOCKER` (default) | `http://localhost:5173` | `http://localhost:4000` | Local runs and the PR gate, using BuggyBooks images from GHCR (`infra/docker-compose.test.yml`) |
-| `STAGING` / `INTEROP` | `https://buggy-books-fe.onrender.com` | `https://buggy-books.onrender.com` | Nightly staging contract checks, Selenium default |
+| Profile               | Frontend                              | API                                | Used by                                                                                         |
+| --------------------- | ------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `DOCKER` (default)    | `http://localhost:5173`               | `http://localhost:4000`            | Local runs and the PR gate, using BuggyBooks images from GHCR (`infra/docker-compose.test.yml`) |
+| `STAGING` / `INTEROP` | `https://buggy-books-fe.onrender.com` | `https://buggy-books.onrender.com` | Nightly staging contract checks, Selenium default                                               |
 
 Render's free tier sleeps after about 15 minutes idle and the first request can take 30-60 seconds. Wake it before a staging run:
 
@@ -106,25 +106,25 @@ npx wait-on -t 90000 https://buggy-books-fe.onrender.com/
 
 All frameworks validate their environment through one Zod schema (`packages/test-data/src/config/schema.ts`). Main variables:
 
-| Variable | Purpose | Default |
-| --- | --- | --- |
-| `TARGET_ENV` / `ENV` / `ENVIRONMENT` | Profile: `DOCKER`, `STAGING` or `INTEROP` (first one set wins) | `DOCKER` |
-| `BASE_URL` / `E2E_BASE_URL` | UI base URL override | from profile |
-| `API_BASE_URL` / `E2E_API_URL` | API origin override, without `/api` | from profile |
-| `USER_NAME`, `PASSWORD` | Login for authenticated tests; required for `STAGING` | `admin` / `password123` outside staging |
-| `HEADLESS`, `ELEMENT_TIMEOUT`, `SUITENAME` | Headless mode, locator timeout (ms), report label | `true`, `15000`, `Default` |
-| `BUGGYBOOKS_AUTOSTART` | Playwright only: start the Docker stack for local runs | unset |
+| Variable                                   | Purpose                                                        | Default                                 |
+| ------------------------------------------ | -------------------------------------------------------------- | --------------------------------------- |
+| `TARGET_ENV` / `ENV` / `ENVIRONMENT`       | Profile: `DOCKER`, `STAGING` or `INTEROP` (first one set wins) | `DOCKER`                                |
+| `BASE_URL` / `E2E_BASE_URL`                | UI base URL override                                           | from profile                            |
+| `API_BASE_URL` / `E2E_API_URL`             | API origin override, without `/api`                            | from profile                            |
+| `USER_NAME`, `PASSWORD`                    | Login for authenticated tests; required for `STAGING`          | `admin` / `password123` outside staging |
+| `HEADLESS`, `ELEMENT_TIMEOUT`, `SUITENAME` | Headless mode, locator timeout (ms), report label              | `true`, `15000`, `Default`              |
+| `BUGGYBOOKS_AUTOSTART`                     | Playwright only: start the Docker stack for local runs         | unset                                   |
 
 Template: [.env.example](.env.example).
 
 ## Reports
 
-| Framework | Command | Output |
-| --- | --- | --- |
-| Playwright | `npm run report` | `playwright-e2e/allure-report`, Monocart at `playwright-e2e/reports/monocart-report/index.html` |
-| Selenium | `npm run report` | `selenium-e2e/allure-report` |
-| WebdriverIO | `npm run report` | `wdio-e2e/allure-report` |
-| JMeter | JMeter CLI | `jmeter/Results` (`.jtl`) and `jmeter/Reports` (HTML) |
+| Framework   | Command          | Output                                                                                          |
+| ----------- | ---------------- | ----------------------------------------------------------------------------------------------- |
+| Playwright  | `npm run report` | `playwright-e2e/allure-report`, Monocart at `playwright-e2e/reports/monocart-report/index.html` |
+| Selenium    | `npm run report` | `selenium-e2e/allure-report`                                                                    |
+| WebdriverIO | `npm run report` | `wdio-e2e/allure-report`                                                                        |
+| JMeter      | JMeter CLI       | `jmeter/Results` (`.jtl`) and `jmeter/Reports` (HTML)                                           |
 
 CI publishes the combined Allure report to [GitHub Pages](https://munna7862.github.io/automation-frameworks/).
 
@@ -132,22 +132,22 @@ CI publishes the combined Allure report to [GitHub Pages](https://munna7862.gith
 
 Workflows live in `.github/workflows/` and share composite actions in `.github/actions/` (`setup-monorepo`, `buggybooks-up`, `buggybooks-down`, `staging-warmup`, `chaos-reset`). The full map is in [docs/architecture/ci_pipeline_map.md](docs/architecture/ci_pipeline_map.md).
 
-| Workflow | Trigger | What it does |
-| --- | --- | --- |
-| `pr-gate.yml` | pull request to `main` | Lint, typecheck, Prettier, catalog parity, OpenAPI drift, commitlint, Chrome UI and API smoke against Docker, 5x burn-in of changed specs |
-| `_reusable-e2e.yml` | called by others | Runs Playwright (sharded), Selenium or WDIO with Allure and Monocart reports |
-| `playwright-ci.yml`, `selenium-ci.yml`, `wdio-ci.yml` | push to `main` (path filtered), manual | Callers of the reusable pipeline; Playwright uses 4 shards |
-| `nightly-regression.yml` | daily 01:30 UTC, manual | All three UI frameworks plus the `STAGING` contract job |
-| `contract-tests.yml` | pull request (path filtered), schedule, manual | Pact consumer and provider verification |
-| `api-fuzz.yml` | daily, manual | Schemathesis fuzzing of the OpenAPI operations against Docker |
-| `k6-performance.yaml` | pull request (path filtered), manual | k6 run with baseline drift gate |
-| `jmeter-performance.yaml` | manual | JMeter plans with thread, ramp and iteration inputs and HTML dashboards |
-| `quarantine-audit.yml` | weekly, manual | Runs quarantined tests 10 times to decide release or removal |
-| `security-dast.yml` | pull request (path filtered), nightly | OWASP ZAP baseline and API scans against Docker |
-| `security-codeql.yml`, `security-deps.yml`, `security-secrets.yml` | push and pull request to `main`, weekly | CodeQL, dependency scanning, secret detection |
-| `lint-workflows.yml` | push and pull request to `main` | `actionlint` and `zizmor` on the workflows |
-| `mobile-ci.yml` | manual only | Appium Android emulator run (quarantined) |
-| `release.yml` | push to `main` | Release Please versioning and changelog |
+| Workflow                                                           | Trigger                                        | What it does                                                                                                                              |
+| ------------------------------------------------------------------ | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `pr-gate.yml`                                                      | pull request to `main`                         | Lint, typecheck, Prettier, catalog parity, OpenAPI drift, commitlint, Chrome UI and API smoke against Docker, 5x burn-in of changed specs |
+| `_reusable-e2e.yml`                                                | called by others                               | Runs Playwright (sharded), Selenium or WDIO with Allure and Monocart reports                                                              |
+| `playwright-ci.yml`, `selenium-ci.yml`, `wdio-ci.yml`              | push to `main` (path filtered), manual         | Callers of the reusable pipeline; Playwright uses 4 shards                                                                                |
+| `nightly-regression.yml`                                           | daily 01:30 UTC, manual                        | All three UI frameworks plus the `STAGING` contract job                                                                                   |
+| `contract-tests.yml`                                               | pull request (path filtered), schedule, manual | Pact consumer and provider verification                                                                                                   |
+| `api-fuzz.yml`                                                     | daily, manual                                  | Schemathesis fuzzing of the OpenAPI operations against Docker                                                                             |
+| `k6-performance.yaml`                                              | pull request (path filtered), manual           | k6 run with baseline drift gate                                                                                                           |
+| `jmeter-performance.yaml`                                          | manual                                         | JMeter plans with thread, ramp and iteration inputs and HTML dashboards                                                                   |
+| `quarantine-audit.yml`                                             | weekly, manual                                 | Runs quarantined tests 10 times to decide release or removal                                                                              |
+| `security-dast.yml`                                                | pull request (path filtered), nightly          | OWASP ZAP baseline and API scans against Docker                                                                                           |
+| `security-codeql.yml`, `security-deps.yml`, `security-secrets.yml` | push and pull request to `main`, weekly        | CodeQL, dependency scanning, secret detection                                                                                             |
+| `lint-workflows.yml`                                               | push and pull request to `main`                | `actionlint` and `zizmor` on the workflows                                                                                                |
+| `mobile-ci.yml`                                                    | manual only                                    | Appium Android emulator run (quarantined)                                                                                                 |
+| `release.yml`                                                      | push to `main`                                 | Release Please versioning and changelog                                                                                                   |
 
 ## Project rules
 
