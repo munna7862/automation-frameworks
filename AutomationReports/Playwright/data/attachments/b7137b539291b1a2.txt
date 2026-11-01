@@ -1,0 +1,2 @@
+[2026-11-01 18:17:54] INFO:  Security status for SQL injection pattern in username Success !! Actual and Expected Values are:: true
+[2026-11-01 18:17:54] INFO: Cleaned up ephemeral API test session: pw-api-w1-1-1793519274603-5f52dd76

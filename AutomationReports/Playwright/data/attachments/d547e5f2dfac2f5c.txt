@@ -1,0 +1,3 @@
+[2026-11-01 18:17:54] INFO:  Registration setup status Success !! Actual and Expected Values are:: 201
+[2026-11-01 18:17:54] INFO:  Status code for missing username Success !! Actual and Expected Values are:: true
+[2026-11-01 18:17:54] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1793519274782-a315968d

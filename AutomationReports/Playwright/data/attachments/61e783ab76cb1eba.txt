@@ -1,0 +1,11 @@
+[2026-11-01 18:19:10] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1793519350679-c5222e5a
+[2026-11-01 18:19:10] INFO: Network interception enabled with mode: api-only
+[2026-11-01 18:19:12] INFO: Clicking on Sign Up link
+[2026-11-01 18:19:12] INFO: Entering password: 123
+[2026-11-01 18:19:12] INFO: Getting password strength text
+[2026-11-01 18:19:12] INFO: Verifying if password strength is Weak - Matched: [Weak]
+[2026-11-01 18:19:12] INFO: Entering password: ComplexPass123!
+[2026-11-01 18:19:13] INFO: Getting password strength text
+[2026-11-01 18:19:13] INFO: Verifying if password strength is Strong - Matched: [Strong]
+[2026-11-01 18:19:13] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_001_Re-15364-rength-Indicator-regression-chrome/network-log.json
+[2026-11-01 18:19:13] INFO: Cleaned up ephemeral test session: pw-w2-1-1793519350679-c5222e5a

@@ -1,0 +1,18 @@
+[2026-11-01 18:18:56] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1793519336602-8422ea41
+[2026-11-01 18:18:56] INFO: Network interception enabled with mode: api-only
+[2026-11-01 18:18:57] INFO: Clicking on Sign Up link
+[2026-11-01 18:18:58] INFO: Entering full name: Full profile_user_Mb3Lz
+[2026-11-01 18:18:58] INFO: Entering username: profile_user_Mb3Lz
+[2026-11-01 18:18:58] INFO: Entering password: Password123!
+[2026-11-01 18:18:58] INFO: Entering confirming password: Password123!
+[2026-11-01 18:18:58] INFO: Clicking on Create Account button
+[2026-11-01 18:18:59] INFO: Verifying landing on Checkout Page
+[2026-11-01 18:18:59] INFO: Checking if Checkout label is visible
+[2026-11-01 18:18:59] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-01 18:18:59] INFO: Clicking on Profile navbar link
+[2026-11-01 18:18:59] INFO: Selecting file for avatar upload: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/src/test-data/ui/Profile/valid_avatar.png
+[2026-11-01 18:18:59] INFO: Clicking Upload Image button
+[2026-11-01 18:19:00] INFO: Getting upload error message text
+[2026-11-01 18:19:00] INFO: Verifying upload chaos 500 error message - Condition met (true)
+[2026-11-01 18:19:00] INFO: Captured 13 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Profile-Test_005_ProfilePi-c5438-e-Recovery-regression-chaos-chrome/network-log.json
+[2026-11-01 18:19:00] INFO: Cleaned up ephemeral test session: pw-w4-3-1793519336602-8422ea41

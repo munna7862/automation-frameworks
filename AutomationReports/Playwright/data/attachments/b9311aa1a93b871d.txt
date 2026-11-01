@@ -1,0 +1,6 @@
+[2026-11-01 18:18:50] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1793519330561-a55f47f3
+[2026-11-01 18:18:50] INFO: Network interception enabled with mode: api-only
+[2026-11-01 18:18:50] INFO: Navigating to catalog page: http://localhost:5173
+[2026-11-01 18:18:51] INFO: Getting first book title in catalog
+[2026-11-01 18:18:51] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/EdgeStates-Test_001_Mocked-f113b--Happy-Path-regression-mock-chrome/network-log.json
+[2026-11-01 18:18:51] INFO: Cleaned up ephemeral test session: pw-w4-3-1793519330561-a55f47f3
