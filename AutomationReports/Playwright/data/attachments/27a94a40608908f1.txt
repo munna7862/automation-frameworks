@@ -1,0 +1,3 @@
+[2026-11-02 18:25:15] INFO: Verifying GET /api/test/config status is 200
+[2026-11-02 18:25:15] INFO: Verifying visualChaos default value is false
+[2026-11-02 18:25:15] INFO: Cleaned up ephemeral API test session: pw-api-w0-0-1793606115389-3a19dc5c
