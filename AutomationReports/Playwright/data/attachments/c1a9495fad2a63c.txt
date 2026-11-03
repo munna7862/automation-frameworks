@@ -1,0 +1,31 @@
+[2026-11-03 18:44:26] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w1-0-1793693666449-a656877f
+[2026-11-03 18:44:26] INFO: Network interception enabled with mode: api-only
+[2026-11-03 18:44:27] INFO: Clicking on Sign Up link
+[2026-11-03 18:44:27] INFO: Entering full name: Full ws_user_smalP
+[2026-11-03 18:44:27] INFO: Entering username: ws_user_smalP
+[2026-11-03 18:44:27] INFO: Entering password: Password123!
+[2026-11-03 18:44:27] INFO: Entering confirming password: Password123!
+[2026-11-03 18:44:27] INFO: Clicking on Create Account button
+[2026-11-03 18:44:28] INFO: Verifying landing on Checkout Page
+[2026-11-03 18:44:28] INFO: Checking if Checkout label is visible
+[2026-11-03 18:44:28] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-03 18:44:28] INFO: Clicking on Add to Cart button for book id: 1
+[2026-11-03 18:44:29] INFO: Waiting for cart status message: added to cart
+[2026-11-03 18:44:31] INFO: Cart status message "added to cart" is visible
+[2026-11-03 18:44:31] INFO: Clicking on Cart link
+[2026-11-03 18:44:31] INFO: Clicking on Proceed to Checkout button
+[2026-11-03 18:44:31] INFO: Entering first name: Web
+[2026-11-03 18:44:31] INFO: Entering last name: SocketUser
+[2026-11-03 18:44:31] INFO: Entering shipping address: 123 Buggy Lane
+[2026-11-03 18:44:31] INFO: Entering city: Stack City
+[2026-11-03 18:44:31] INFO: Clicking on Next Step button
+[2026-11-03 18:44:31] INFO: Entering card number
+[2026-11-03 18:44:31] INFO: Entering card expiry: 12/30
+[2026-11-03 18:44:31] INFO: Entering card CVV: 123
+[2026-11-03 18:44:31] INFO: Checking if Next Step button is visible on Payment Step - Element is visible
+[2026-11-03 18:44:31] INFO: Clicking on Next Step button on Payment page to advance to Confirm step
+[2026-11-03 18:44:46] INFO: Waiting for confirmation message containing: Thank you for your order
+[2026-11-03 18:44:46] INFO: Payment completed successfully and order confirmation message is displayed.
+[2026-11-03 18:44:46] INFO: Verifying hot-toast alert banner is rendered for purchase socket event - Matched: [true]
+[2026-11-03 18:44:46] INFO: Captured 28 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/WebSockets-Test_008_WebSoc-c976d-st-Alert-Trigger-regression-chrome/network-log.json
+[2026-11-03 18:44:46] INFO: Cleaned up ephemeral test session: pw-w1-0-1793693666449-a656877f
