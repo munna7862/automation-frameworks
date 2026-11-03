@@ -1,0 +1,210 @@
+[
+  {
+    "id": "1793693614359-1",
+    "startedAt": "2026-11-03T08:13:34.359Z",
+    "url": "http://localhost:4000/socket.io/?EIO=4&transport=polling&t=ev6kbh8e",
+    "method": "GET",
+    "resourceType": "xhr",
+    "navigationRequest": false,
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "http://localhost:5173/",
+      "accept-language": "en-US",
+      "sec-ch-ua": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"",
+      "sec-ch-ua-mobile": "?0",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+      "accept": "*/*",
+      "x-test-session-id": "pw-w7-2-1793693612629-53f1b21c"
+    },
+    "postData": null,
+    "endedAt": "2026-11-03T08:13:34.586Z",
+    "durationMs": 227,
+    "response": {
+      "status": 200,
+      "statusText": "OK",
+      "ok": true,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost:5173",
+        "connection": "keep-alive",
+        "content-length": "118",
+        "content-type": "text/plain; charset=UTF-8",
+        "date": "Tue, 03 Nov 2026 08:13:34 GMT",
+        "keep-alive": "timeout=5",
+        "vary": "Origin",
+        "cache-control": "no-store"
+      },
+      "body": "0{\"sid\":\"Bv-MlM9kUh3vqOMkAAAI\",\"upgrades\":[\"websocket\"],\"pingInterval\":25000,\"pingTimeout\":20000,\"maxPayload\":1000000}"
+    }
+  },
+  {
+    "id": "1793693614369-2",
+    "startedAt": "2026-11-03T08:13:34.369Z",
+    "url": "http://localhost:4000/api/test/config",
+    "method": "GET",
+    "resourceType": "fetch",
+    "navigationRequest": false,
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "http://localhost:5173/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+      "sec-ch-ua": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"",
+      "x-test-session-id": "pw-w7-2-1793693612629-53f1b21c",
+      "accept-language": "en-US",
+      "sec-ch-ua-mobile": "?0"
+    },
+    "postData": null,
+    "endedAt": "2026-11-03T08:13:34.576Z",
+    "durationMs": 207,
+    "response": {
+      "status": 200,
+      "statusText": "OK",
+      "ok": true,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost:5173",
+        "connection": "keep-alive",
+        "content-length": "186",
+        "content-security-policy": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests",
+        "content-type": "application/json; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "date": "Tue, 03 Nov 2026 08:13:34 GMT",
+        "etag": "W/\"ba-rCO1wHgmhnycHR4Yvl4Np7VG7Co\"",
+        "keep-alive": "timeout=5",
+        "origin-agent-cluster": "?1",
+        "ratelimit-limit": "600",
+        "ratelimit-policy": "600;w=60",
+        "ratelimit-remaining": "585",
+        "ratelimit-reset": "48",
+        "referrer-policy": "no-referrer",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "vary": "Origin",
+        "x-content-type-options": "nosniff",
+        "x-dns-prefetch-control": "off",
+        "x-download-options": "noopen",
+        "x-frame-options": "SAMEORIGIN",
+        "x-permitted-cross-domain-policies": "none",
+        "x-xss-protection": "0",
+        "x-correlation-id": "6d5b763f-0ecf-4aa6-86f9-913a1a3ff320",
+        "x-test-session-id": "pw-w7-2-1793693612629-53f1b21c"
+      },
+      "body": "{\"checkoutFailureRate\":0,\"inventoryDelayMs\":0,\"jwtExpirySeconds\":900,\"websocketDropRate\":0,\"uploadFailureRate\":0,\"injectA11yViolations\":true,\"visualChaos\":false,\"inventoryLockingRate\":0}"
+    }
+  },
+  {
+    "id": "1793693614500-3",
+    "startedAt": "2026-11-03T08:13:34.500Z",
+    "url": "http://localhost:4000/socket.io/?EIO=4&transport=polling&t=ev6nllw3&sid=Bv-MlM9kUh3vqOMkAAAI",
+    "method": "POST",
+    "resourceType": "xhr",
+    "navigationRequest": false,
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "http://localhost:5173/",
+      "accept-language": "en-US",
+      "sec-ch-ua": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"",
+      "sec-ch-ua-mobile": "?0",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+      "accept": "*/*",
+      "x-test-session-id": "pw-w7-2-1793693612629-53f1b21c",
+      "content-type": "text/plain;charset=UTF-8"
+    },
+    "postData": "40",
+    "endedAt": "2026-11-03T08:13:34.586Z",
+    "durationMs": 86,
+    "response": {
+      "status": 200,
+      "statusText": "OK",
+      "ok": true,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost:5173",
+        "connection": "keep-alive",
+        "content-length": "2",
+        "content-type": "text/html",
+        "date": "Tue, 03 Nov 2026 08:13:34 GMT",
+        "keep-alive": "timeout=5",
+        "vary": "Origin",
+        "cache-control": "no-store"
+      },
+      "body": "ok"
+    }
+  },
+  {
+    "id": "1793693614500-4",
+    "startedAt": "2026-11-03T08:13:34.500Z",
+    "url": "http://localhost:4000/socket.io/?EIO=4&transport=polling&t=ev6nt9u4&sid=Bv-MlM9kUh3vqOMkAAAI",
+    "method": "GET",
+    "resourceType": "xhr",
+    "navigationRequest": false,
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "http://localhost:5173/",
+      "accept-language": "en-US",
+      "sec-ch-ua": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"",
+      "sec-ch-ua-mobile": "?0",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+      "accept": "*/*",
+      "x-test-session-id": "pw-w7-2-1793693612629-53f1b21c"
+    },
+    "postData": null,
+    "endedAt": "2026-11-03T08:13:34.593Z",
+    "durationMs": 93,
+    "response": {
+      "status": 200,
+      "statusText": "OK",
+      "ok": true,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost:5173",
+        "connection": "keep-alive",
+        "content-length": "32",
+        "content-type": "text/plain; charset=UTF-8",
+        "date": "Tue, 03 Nov 2026 08:13:34 GMT",
+        "keep-alive": "timeout=5",
+        "vary": "Origin",
+        "cache-control": "no-store"
+      },
+      "body": "40{\"sid\":\"FKfIgQbZooEaUY1VAAAJ\"}"
+    }
+  },
+  {
+    "id": "1793693614538-5",
+    "startedAt": "2026-11-03T08:13:34.538Z",
+    "url": "http://localhost:4000/socket.io/?EIO=4&transport=polling&t=ev6p81wc&sid=Bv-MlM9kUh3vqOMkAAAI",
+    "method": "GET",
+    "resourceType": "xhr",
+    "navigationRequest": false,
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "http://localhost:5173/",
+      "accept-language": "en-US",
+      "sec-ch-ua": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"",
+      "sec-ch-ua-mobile": "?0",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+      "accept": "*/*",
+      "x-test-session-id": "pw-w7-2-1793693612629-53f1b21c"
+    },
+    "postData": null,
+    "endedAt": "2026-11-03T08:13:34.682Z",
+    "durationMs": 144,
+    "response": {
+      "status": 200,
+      "statusText": "OK",
+      "ok": true,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://localhost:5173",
+        "connection": "keep-alive",
+        "content-length": "1",
+        "content-type": "text/plain; charset=UTF-8",
+        "date": "Tue, 03 Nov 2026 08:13:34 GMT",
+        "keep-alive": "timeout=5",
+        "vary": "Origin",
+        "cache-control": "no-store"
+      },
+      "body": "6"
+    }
+  }
+]
