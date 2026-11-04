@@ -1,0 +1,7 @@
+[2026-11-04 18:15:36] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1793778336462-99a0dbf6
+[2026-11-04 18:15:36] INFO: Network interception enabled with mode: api-only
+[2026-11-04 18:15:36] ERROR:  Legacy inequality comparison Failed!! Expected Value:: beta || Actual Value:: alpha
+[2026-11-04 18:15:36] ERROR:  Legacy inequality comparison Failed!! Expected Value:: beta || Actual Value:: alpha
+[2026-11-04 18:15:36] INFO: Verifying legacy compareTwoValues returns false on mismatch - Matched: [false]
+[2026-11-04 18:15:36] INFO: Captured 0 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Diagnostic-Test_011_Diagno-03494-lure-on-mismatch-regression-chrome/network-log.json
+[2026-11-04 18:15:36] INFO: Cleaned up ephemeral test session: pw-w2-1-1793778336462-99a0dbf6
