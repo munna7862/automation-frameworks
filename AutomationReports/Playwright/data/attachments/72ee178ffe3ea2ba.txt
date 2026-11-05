@@ -1,0 +1,5 @@
+[2026-11-05 18:38:04] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1793866084930-8da7c7fd
+[2026-11-05 18:38:04] INFO: Network interception enabled with mode: api-only
+[2026-11-05 18:38:05] INFO: Verifying status dot reflects disconnected or reconnecting state under socket chaos - Matched: [true]
+[2026-11-05 18:38:05] INFO: Captured 7 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/WebSockets-Test_008_WebSoc-7a9f5-n-Recovery-regression-chaos-chrome/network-log.json
+[2026-11-05 18:38:05] INFO: Cleaned up ephemeral test session: pw-w2-1-1793866084930-8da7c7fd
