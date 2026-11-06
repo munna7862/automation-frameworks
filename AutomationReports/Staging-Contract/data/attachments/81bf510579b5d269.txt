@@ -1,0 +1,2 @@
+[2026-11-06 18:42:05] INFO: Verifying GET /api/orders returns 200 OK and non-empty array of placed orders
+[2026-11-06 18:42:05] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1793952725614-c204e5be

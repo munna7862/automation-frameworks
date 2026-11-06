@@ -1,0 +1,20 @@
+[2026-11-06 18:42:39] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1793952759646-d5a237a7
+[2026-11-06 18:42:39] INFO: Network interception enabled with mode: api-only
+[2026-11-06 18:42:40] INFO: Clicking on Sign Up link
+[2026-11-06 18:42:40] INFO: Entering full name: Full profile_user_6gcRv
+[2026-11-06 18:42:40] INFO: Entering username: profile_user_6gcRv
+[2026-11-06 18:42:40] INFO: Entering password: Password123!
+[2026-11-06 18:42:40] INFO: Entering confirming password: Password123!
+[2026-11-06 18:42:40] INFO: Clicking on Create Account button
+[2026-11-06 18:42:41] INFO: Verifying landing on Checkout Page
+[2026-11-06 18:42:41] INFO: Checking if Checkout label is visible
+[2026-11-06 18:42:41] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-06 18:42:41] INFO: Clicking on Profile navbar link
+[2026-11-06 18:42:41] INFO: Selecting file for avatar upload: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/src/test-data/ui/Profile/valid_avatar.png
+[2026-11-06 18:42:41] INFO: Clicking Upload Image button
+[2026-11-06 18:42:41] INFO: Getting profile avatar preview image src
+[2026-11-06 18:42:41] INFO: Verifying avatar preview image src points to uploads path - Condition met (true)
+[2026-11-06 18:42:41] INFO: Getting upload success message text
+[2026-11-06 18:42:41] INFO: Verifying avatar upload success status message - Matched: [Avatar updated successfully!]
+[2026-11-06 18:42:41] INFO: Captured 12 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Profile-Test_005_ProfilePi-426ac-ure-Upload-smoke-regression-chrome/network-log.json
+[2026-11-06 18:42:41] INFO: Cleaned up ephemeral test session: pw-w4-3-1793952759646-d5a237a7
