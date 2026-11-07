@@ -1,0 +1,3 @@
+[2026-11-07 17:59:53] INFO: Verifying x-correlation-id header is present in response
+[2026-11-07 17:59:53] INFO: Verifying x-correlation-id matches valid UUIDv4 format
+[2026-11-07 17:59:53] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1794036593304-8d8460a3
