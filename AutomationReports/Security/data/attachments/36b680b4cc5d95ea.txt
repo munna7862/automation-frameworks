@@ -1,0 +1,3 @@
+[2026-11-07 17:59:53] INFO: Verifying status code is 400 Bad Request
+[2026-11-07 17:59:53] INFO: Verifying error response body contains exact same correlationId
+[2026-11-07 17:59:53] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1794036593333-31ec3987
