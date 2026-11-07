@@ -1,0 +1,2 @@
+[2026-11-07 17:59:56] INFO: Inventory report request took: 3004 ms
+[2026-11-07 17:59:56] INFO: Cleaned up ephemeral API test session: pw-api-w0-0-1794036593199-59ef52b8

@@ -1,0 +1,4 @@
+[2026-11-07 17:59:52] INFO:  Status code should be 200 for Minimum limit Success !! Actual and Expected Values are:: 200
+[2026-11-07 17:59:52] INFO:  Response page should be 1 for Minimum limit Success !! Actual and Expected Values are:: 1
+[2026-11-07 17:59:52] INFO:  Books array length should be less than or equal to limit 1 Success !! Actual and Expected Values are:: true
+[2026-11-07 17:59:52] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1794036592332-cda2ce9e
