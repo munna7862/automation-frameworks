@@ -1,0 +1,13 @@
+[2026-11-09 18:50:21] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1794212421500-31ed49e7
+[2026-11-09 18:50:21] INFO: Network interception enabled with mode: api-only
+[2026-11-09 18:50:22] INFO: Clicking on Sign Up link
+[2026-11-09 18:50:23] INFO: Entering full name: <img src=x onerror="window.__xss=1">
+[2026-11-09 18:50:23] INFO: Entering username: xss_user_f4a281a3@security.local
+[2026-11-09 18:50:23] INFO: Entering password: Password123!
+[2026-11-09 18:50:23] INFO: Entering confirming password: Password123!
+[2026-11-09 18:50:23] INFO: Clicking on Create Account button
+[2026-11-09 18:50:24] INFO: Verifying landing on Checkout Page
+[2026-11-09 18:50:24] INFO: Checking if Checkout label is visible
+[2026-11-09 18:50:24] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-09 18:50:25] INFO: Captured 14 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Security-Test_001_StoredXs-c809c-t-in-DOM-security-owasp-a03-chrome/network-log.json
+[2026-11-09 18:50:25] INFO: Cleaned up ephemeral test session: pw-w4-3-1794212421500-31ed49e7

@@ -1,0 +1,2 @@
+[2026-11-09 18:48:50] INFO: Verifying 403 Forbidden returned for expired token
+[2026-11-09 18:48:50] INFO: Cleaned up ephemeral API test session: pw-api-w1-1-1794212328032-1832f6bf
