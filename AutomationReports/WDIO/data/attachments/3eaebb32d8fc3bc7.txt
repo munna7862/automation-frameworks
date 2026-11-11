@@ -1,0 +1,17 @@
+[2026-11-11 18:28:46] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w1-0-1794383926012-88eecb84
+[2026-11-11 18:28:46] INFO: Network interception enabled with mode: api-only
+[2026-11-11 18:28:46] INFO: Clicking on Sign Up link
+[2026-11-11 18:28:46] INFO: Entering full name: Full refresh_ui_user_m1Jyi
+[2026-11-11 18:28:46] INFO: Entering username: refresh_ui_user_m1Jyi
+[2026-11-11 18:28:46] INFO: Entering password: Password123!
+[2026-11-11 18:28:46] INFO: Entering confirming password: Password123!
+[2026-11-11 18:28:46] INFO: Clicking on Create Account button
+[2026-11-11 18:28:47] INFO: Verifying landing on Checkout Page
+[2026-11-11 18:28:47] INFO: Checking if Checkout label is visible
+[2026-11-11 18:28:47] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-11 18:28:50] INFO: Clicking on Profile navbar link
+[2026-11-11 18:28:50] INFO: Getting profile avatar preview image src
+[2026-11-11 18:28:55] INFO: Verifying profile page opened successfully post silent token refresh - Condition met (true)
+[2026-11-11 18:28:55] INFO: Verifying user is retained on profile page without logout - Condition met (true)
+[2026-11-11 18:28:55] INFO: Captured 13 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Refresh-Test_006_JwtRefres-ba952-nt-Request-Retry-regression-chrome/network-log.json
+[2026-11-11 18:28:55] INFO: Cleaned up ephemeral test session: pw-w1-0-1794383926012-88eecb84
