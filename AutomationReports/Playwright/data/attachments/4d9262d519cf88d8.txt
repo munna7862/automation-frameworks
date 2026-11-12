@@ -1,0 +1,4 @@
+[2026-11-12 19:07:35] INFO: Verifying Set-Cookie contains access token
+[2026-11-12 19:07:35] INFO: Verifying Set-Cookie contains refresh token
+[2026-11-12 19:07:35] INFO: Verifying Set-Cookie includes HttpOnly security flag
+[2026-11-12 19:07:35] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1794472655121-1d43e952
