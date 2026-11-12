@@ -1,0 +1,43 @@
+[2026-11-12 19:07:42] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1794472662549-74a55dba
+[2026-11-12 19:07:42] INFO: Network interception enabled with mode: api-only
+[2026-11-12 19:07:42] INFO: Navigating to catalog page: http://localhost:5173
+[2026-11-12 19:07:43] INFO: Clicking on Sign Up link
+[2026-11-12 19:07:43] INFO: Entering full name: Cart Quantity User
+[2026-11-12 19:07:43] INFO: Entering username: dell_w3_mwdaow4l_ef5c2c_1
+[2026-11-12 19:07:43] INFO: Entering password: Password123!
+[2026-11-12 19:07:43] INFO: Entering confirming password: Password123!
+[2026-11-12 19:07:43] INFO: Clicking on Create Account button
+[2026-11-12 19:07:44] INFO: Verifying landing on Checkout Page
+[2026-11-12 19:07:44] INFO: Checking if Checkout label is visible
+[2026-11-12 19:07:44] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-12 19:07:44] INFO: Clicking on Catalog link
+[2026-11-12 19:07:44] INFO: Filling search input with: Mockingbird
+[2026-11-12 19:07:44] INFO: Clicking Search button
+[2026-11-12 19:07:44] INFO: Clicking on Add to Cart button for book id: 2
+[2026-11-12 19:07:46] INFO: Waiting for cart status message: added to cart
+[2026-11-12 19:07:46] INFO: Cart status message "added to cart" is visible
+[2026-11-12 19:07:46] INFO: Waiting for cart status message: added to cart
+[2026-11-12 19:07:46] INFO: Cart status message "added to cart" is visible
+[2026-11-12 19:07:46] INFO: Clicking on Cart link
+[2026-11-12 19:07:46] INFO: Getting cart total text
+[2026-11-12 19:07:46] INFO: Verifying 1 item in cart - Matched: [1]
+[2026-11-12 19:07:46] INFO: Verifying non-zero initial cart total price - Condition met (true)
+[2026-11-12 19:07:46] INFO: Clicking on Catalog link
+[2026-11-12 19:07:46] INFO: Filling search input with: Gatsby
+[2026-11-12 19:07:46] INFO: Clicking Search button
+[2026-11-12 19:07:46] INFO: Clicking on Add to Cart button for book id: 1
+[2026-11-12 19:07:47] INFO: Waiting for cart status message: added to cart
+[2026-11-12 19:07:47] INFO: Cart status message "added to cart" is visible
+[2026-11-12 19:07:47] INFO: Waiting for cart status message: added to cart
+[2026-11-12 19:07:47] INFO: Cart status message "added to cart" is visible
+[2026-11-12 19:07:47] INFO: Clicking on Cart link
+[2026-11-12 19:07:47] INFO: Getting cart total text
+[2026-11-12 19:07:47] INFO: Verifying cart item count increased to 2 - Matched: [2]
+[2026-11-12 19:07:47] INFO: Verifying grand total updated dynamically upon adding second item - Condition met (true)
+[2026-11-12 19:07:47] INFO: Getting cart total text
+[2026-11-12 19:07:47] INFO: Clicking Remove item button
+[2026-11-12 19:07:47] INFO: Getting cart total text
+[2026-11-12 19:07:47] INFO: Verifying cart item count decreased to 1 - Matched: [1]
+[2026-11-12 19:07:47] INFO: Verifying grand total reduced dynamically after item removal - Condition met (true)
+[2026-11-12 19:07:47] INFO: Captured 20 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/Checkout-Test_006_CartQuan-fea13--and-order-total-regression-chrome/network-log.json
+[2026-11-12 19:07:47] INFO: Cleaned up ephemeral test session: pw-w3-2-1794472662549-74a55dba
