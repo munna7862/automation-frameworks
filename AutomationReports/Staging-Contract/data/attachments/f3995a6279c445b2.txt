@@ -1,0 +1,3 @@
+[2026-11-14 18:18:03] INFO:  Registration setup status Success !! Actual and Expected Values are:: 201
+[2026-11-14 18:18:03] INFO:  Status code for unregistered user Success !! Actual and Expected Values are:: true
+[2026-11-14 18:18:03] INFO: Cleaned up ephemeral API test session: pw-api-w1-1-1794642483402-13040427
