@@ -1,0 +1,5 @@
+[2026-11-16 18:45:36] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1794816936072-099daa08
+[2026-11-16 18:45:36] INFO: Network interception enabled with mode: api-only
+[2026-11-16 18:45:37] INFO: Asserting book cover has blur filter, actual: blur(1.5px) - Condition met (true)
+[2026-11-16 18:45:37] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/VisualRegression-Test_010_-1d482--Assertion-regression-chaos-chrome/network-log.json
+[2026-11-16 18:45:37] INFO: Cleaned up ephemeral test session: pw-w2-1-1794816936072-099daa08
