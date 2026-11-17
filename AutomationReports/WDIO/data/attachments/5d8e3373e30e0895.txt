@@ -1,0 +1,3 @@
+[2026-11-17 19:59:56] INFO:  Registration setup status Success !! Actual and Expected Values are:: 201
+[2026-11-17 19:59:56] INFO:  Security status for SQL injection pattern in username Success !! Actual and Expected Values are:: true
+[2026-11-17 19:59:56] INFO: Cleaned up ephemeral API test session: pw-api-w2-2-1794907796090-ed569b2a
