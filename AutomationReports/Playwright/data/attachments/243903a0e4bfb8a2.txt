@@ -1,0 +1,25 @@
+[2026-11-18 19:18:14] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1794991694273-1f9b794f
+[2026-11-18 19:18:14] INFO: Network interception enabled with mode: api-only
+[2026-11-18 19:18:14] INFO: Clicking on Sign Up link
+[2026-11-18 19:18:15] INFO: Entering full name: autoTestUserXwANW
+[2026-11-18 19:18:15] INFO: Entering username: autoTestUseruYhrW
+[2026-11-18 19:18:15] INFO: Entering password: AutoTest@123
+[2026-11-18 19:18:15] INFO: Entering confirming password: AutoTest@123
+[2026-11-18 19:18:15] INFO: Clicking on Create Account button
+[2026-11-18 19:18:16] INFO: Verifying landing on Checkout Page
+[2026-11-18 19:18:16] INFO: Checking if Checkout label is visible
+[2026-11-18 19:18:16] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-18 19:18:16] INFO: Clicking on Logout button
+[2026-11-18 19:18:16] INFO: Clicking on Login link
+[2026-11-18 19:18:16] INFO: Entering username: autoTestUseruYhrW
+[2026-11-18 19:18:16] INFO: Entering password: AutoTest@123
+[2026-11-18 19:18:16] INFO: Clicking on Sign In button
+[2026-11-18 19:18:17] INFO: Verifying landing on Checkout Page
+[2026-11-18 19:18:17] INFO: Checking if Checkout label is visible
+[2026-11-18 19:18:17] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-18 19:18:17] INFO: Verifying if user logged in successfully - Matched: [true]
+[2026-11-18 19:18:17] INFO: Clicking on Logout button
+[2026-11-18 19:18:17] INFO: Checking if Login link is visible on Catalog page - Element is visible
+[2026-11-18 19:18:17] INFO: Verifying if user logged out successfully - Matched: [true]
+[2026-11-18 19:18:17] INFO: Captured 15 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_001_Re-e41e4-and-Logout-smoke-regression-chrome/network-log.json
+[2026-11-18 19:18:18] INFO: Cleaned up ephemeral test session: pw-w2-1-1794991694273-1f9b794f
