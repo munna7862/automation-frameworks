@@ -1,0 +1,5 @@
+[2026-11-19 19:32:52] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1795078972327-3a84ed38
+[2026-11-19 19:32:52] INFO: Network interception enabled with mode: api-only
+[2026-11-19 19:32:53] INFO: Asserting book card border-color is red (red >= 200), actual: rgba(240, 67, 67, 1) - Condition met (true)
+[2026-11-19 19:32:53] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/VisualRegression-Test_010_-c1ecb--Assertion-regression-chaos-chrome/network-log.json
+[2026-11-19 19:32:53] INFO: Cleaned up ephemeral test session: pw-w2-1-1795078972327-3a84ed38

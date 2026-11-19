@@ -1,0 +1,6 @@
+[2026-11-19 19:32:56] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w3-2-1795078976821-3022c93e
+[2026-11-19 19:32:56] INFO: Network interception enabled with mode: api-only
+[2026-11-19 19:32:57] INFO: Clicking on WebSocket Notification Bell button
+[2026-11-19 19:32:58] INFO: Verifying live updates notification dropdown is visible upon clicking bell icon - Matched: [true]
+[2026-11-19 19:32:58] INFO: Captured 6 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/WebSockets-Test_008_WebSoc-5393b--Reception-smoke-regression-chrome/network-log.json
+[2026-11-19 19:32:58] INFO: Cleaned up ephemeral test session: pw-w3-2-1795078976821-3022c93e
