@@ -1,0 +1,14 @@
+[2026-11-19 19:32:46] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w1-0-1795078966765-de60d99e
+[2026-11-19 19:32:46] INFO: Network interception enabled with mode: api-only
+[2026-11-19 19:32:47] INFO: Clicking on Sign Up link
+[2026-11-19 19:32:47] INFO: Entering full name: autoTestUserv9DcM
+[2026-11-19 19:32:47] INFO: Entering username: autoTestUser3JuA6
+[2026-11-19 19:32:47] INFO: Entering password: AutoTest@123
+[2026-11-19 19:32:48] INFO: Entering confirming password: AutoTest@123
+[2026-11-19 19:32:48] INFO: Clicking on Create Account button
+[2026-11-19 19:32:48] INFO: Verifying landing on Checkout Page
+[2026-11-19 19:32:48] INFO: Checking if Checkout label is visible
+[2026-11-19 19:32:48] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-19 19:32:48] INFO: Verifying if user registered successfully - Matched: [true]
+[2026-11-19 19:32:48] INFO: Captured 9 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_001_Re-35c76-r-New-User-smoke-regression-chrome/network-log.json
+[2026-11-19 19:32:48] INFO: Cleaned up ephemeral test session: pw-w1-0-1795078966765-de60d99e
