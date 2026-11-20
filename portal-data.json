@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-11-20T08:53:12.105Z",
+  "generatedAt": "2026-11-20T08:55:09.424Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -16,13 +16,13 @@
     "ciRun": "46"
   },
   "kpis": {
-    "totalTests": 531,
-    "totalPassed": 529,
+    "totalTests": 492,
+    "totalPassed": 490,
     "totalFailed": 0,
     "totalSkipped": 2,
     "overallPassRate": "100.0%",
     "activeFrameworks": 7,
-    "totalDurationMs": 586875,
+    "totalDurationMs": 342088,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "PASSED"
   },
@@ -113,12 +113,12 @@
       "reportPath": "./AutomationReports/WDIO/",
       "status": "PASSED",
       "metrics": {
-        "total": 177,
-        "passed": 176,
+        "total": 138,
+        "passed": 137,
         "failed": 0,
         "skipped": 1,
-        "durationMs": 265891,
-        "passRate": "99.4%"
+        "durationMs": 21104,
+        "passRate": "99.3%"
       },
       "highlights": [
         "Deep shadow root locator piercing (>>> syntax)",
