@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-11-20T08:57:04.727Z",
+  "generatedAt": "2026-11-21T08:35:27.985Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -13,16 +13,16 @@
     "commit": "06c568d",
     "branch": "main",
     "message": "docs(readme): plain-language readme with current status and badges (#84)",
-    "ciRun": "46"
+    "ciRun": "47"
   },
   "kpis": {
-    "totalTests": 492,
-    "totalPassed": 490,
+    "totalTests": 437,
+    "totalPassed": 435,
     "totalFailed": 0,
     "totalSkipped": 2,
     "overallPassRate": "100.0%",
     "activeFrameworks": 7,
-    "totalDurationMs": 342088,
+    "totalDurationMs": 244234,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "PASSED"
   },
@@ -38,12 +38,12 @@
       "reportPath": "./AutomationReports/Playwright/",
       "status": "PASSED",
       "metrics": {
-        "total": 193,
-        "passed": 192,
+        "total": 138,
+        "passed": 137,
         "failed": 0,
         "skipped": 1,
-        "durationMs": 118958,
-        "passRate": "99.5%"
+        "durationMs": 21104,
+        "passRate": "99.3%"
       },
       "highlights": [
         "55 REST API tests with JWT session reuse",
