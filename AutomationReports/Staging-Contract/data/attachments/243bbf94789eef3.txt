@@ -1,0 +1,5 @@
+[2026-11-21 19:02:35] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w2-1-1795249955584-707b8222
+[2026-11-21 19:02:35] INFO: Network interception enabled with mode: api-only
+[2026-11-21 19:02:36] INFO: Asserting search form has translateX(-18px) transform, actual: matrix(1, 0, 0, 1, -18, 0) - Condition met (true)
+[2026-11-21 19:02:36] INFO: Captured 5 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/VisualRegression-Test_010_-0540e--Assertion-regression-chaos-chrome/network-log.json
+[2026-11-21 19:02:36] INFO: Cleaned up ephemeral test session: pw-w2-1-1795249955584-707b8222
