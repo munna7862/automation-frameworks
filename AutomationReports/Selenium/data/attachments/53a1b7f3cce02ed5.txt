@@ -1,0 +1,5 @@
+[2026-11-23 19:55:40] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w7-3-1795425940283-185a4395
+[2026-11-23 19:55:40] INFO: Network interception enabled with mode: api-only
+[2026-11-23 19:55:42] INFO: Verifying Axe detects color contrast ratio violation on result count tag under chaos mode - Condition met (true)
+[2026-11-23 19:55:43] INFO: Captured 7 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/A11y-Test_007_A11yScanVali-66124-ilure-regression-chaos-a11y-chrome/network-log.json
+[2026-11-23 19:55:43] INFO: Cleaned up ephemeral test session: pw-w7-3-1795425940283-185a4395
