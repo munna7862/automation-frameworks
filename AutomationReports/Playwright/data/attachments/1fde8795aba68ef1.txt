@@ -1,0 +1,3 @@
+[2026-11-24 21:49:39] INFO: Verifying POST /api/auth/refresh returns 200 OK
+[2026-11-24 21:49:39] INFO: Verifying new access token issued in Set-Cookie
+[2026-11-24 21:49:39] INFO: Cleaned up ephemeral API test session: pw-api-w1-1-1795519178871-219509c6
