@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "title": "BuggyBooks Quality Engineering Executive Portal",
-  "generatedAt": "2026-11-25T10:08:51.156Z",
+  "generatedAt": "2026-11-25T10:10:56.653Z",
   "environment": {
     "name": "STAGING",
     "targetApp": "BuggyBooks Full-Stack E-Commerce",
@@ -16,13 +16,13 @@
     "ciRun": "51"
   },
   "kpis": {
-    "totalTests": 630,
-    "totalPassed": 627,
+    "totalTests": 683,
+    "totalPassed": 680,
     "totalFailed": 0,
     "totalSkipped": 3,
     "overallPassRate": "100.0%",
     "activeFrameworks": 7,
-    "totalDurationMs": 470540,
+    "totalDurationMs": 522829,
     "p95SlaStatus": "HEALTHY (< 3000ms SLA)",
     "qualityGateStatus": "PASSED"
   },
@@ -89,12 +89,12 @@
       "reportPath": "./AutomationReports/Selenium/",
       "status": "PASSED",
       "metrics": {
-        "total": 120,
-        "passed": 119,
+        "total": 173,
+        "passed": 172,
         "failed": 0,
         "skipped": 1,
-        "durationMs": 57068,
-        "passRate": "99.2%"
+        "durationMs": 109357,
+        "passRate": "99.4%"
       },
       "highlights": [
         "W3C standardized browser automation commands",
