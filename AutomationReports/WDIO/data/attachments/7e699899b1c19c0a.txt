@@ -1,0 +1,4 @@
+[2026-11-26 20:18:26] INFO:  Registration setup status Success !! Actual and Expected Values are:: 201
+[2026-11-26 20:18:26] INFO:  Response status code should be 401 Success !! Actual and Expected Values are:: 401
+[2026-11-26 20:18:26] INFO:  Error message for missing token Success !! Actual and Expected Values are:: Unauthorized: Token required
+[2026-11-26 20:18:26] INFO: Cleaned up ephemeral API test session: pw-api-w3-3-1795686506303-d3d2518f
