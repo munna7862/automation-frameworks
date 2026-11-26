@@ -1,0 +1,10 @@
+[2026-11-26 20:19:04] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1795686544860-2605bfab
+[2026-11-26 20:19:04] INFO: Network interception enabled with mode: api-only
+[2026-11-26 20:19:05] INFO: ✅ New context created with saved authentication state from: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/.auth/user.json
+[2026-11-26 20:19:06] INFO: Checking if Logout button is visible on Catalog page - Element is visible
+[2026-11-26 20:19:06] INFO: Verifying if user is logged in using saved session - Matched: [true]
+[2026-11-26 20:19:06] INFO: Clicking on Logout button
+[2026-11-26 20:19:06] INFO: Checking if Login link is visible on Catalog page - Element is visible
+[2026-11-26 20:19:06] INFO: Verifying if user logged out successfully - Matched: [true]
+[2026-11-26 20:19:07] INFO: Captured 0 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/UserManagement-Test_002_Lo-17748-on-Storage-smoke-regression-chrome/network-log.json
+[2026-11-26 20:19:07] INFO: Cleaned up ephemeral test session: pw-w4-3-1795686544860-2605bfab
