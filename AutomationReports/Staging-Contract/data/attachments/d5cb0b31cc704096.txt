@@ -1,0 +1,3 @@
+[2026-11-27 20:24:32] INFO: Verifying POST /api/test/config status is 200
+[2026-11-27 20:24:32] INFO: Verifying visualChaos field is true in response config
+[2026-11-27 20:24:32] INFO: Cleaned up ephemeral API test session: pw-api-w1-1-1795773272580-943f01e7
