@@ -1,0 +1,2 @@
+[2026-11-27 20:24:31] INFO:  Status code should be 200 when Content-Type header is missing Success !! Actual and Expected Values are:: 200
+[2026-11-27 20:24:31] INFO: Cleaned up ephemeral API test session: pw-api-w1-1-1795773271684-80b227b6
