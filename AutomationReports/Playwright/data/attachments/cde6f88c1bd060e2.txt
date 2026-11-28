@@ -1,0 +1,13 @@
+[2026-11-28 19:38:07] INFO: Session isolation fixture active for worker with x-test-session-id: pw-w4-3-1795856887586-05798f7d
+[2026-11-28 19:38:07] INFO: Network interception enabled with mode: api-only
+[2026-11-28 19:38:08] INFO: Clicking on Login link
+[2026-11-28 19:38:09] INFO: Entering username: chaosUser_1795856887839
+[2026-11-28 19:38:09] INFO: Entering password: Password123!
+[2026-11-28 19:38:09] INFO: Clicking on Sign In button
+[2026-11-28 19:38:10] INFO: Verifying landing on Checkout Page
+[2026-11-28 19:38:10] INFO: Checking if Checkout label is visible
+[2026-11-28 19:38:10] INFO: Landed on Checkout Page successfully and Text is: Checkout
+[2026-11-28 19:38:10] INFO: Clicking on Checkout link
+[2026-11-28 19:38:10] INFO: Asserting checkout button has margin-left: 15px, actual: 15px - Condition met (true)
+[2026-11-28 19:38:10] INFO: Captured 11 network calls. Artifact: /home/runner/work/automation-frameworks/automation-frameworks/playwright-e2e/reports/test-artifacts/VisualRegression-Test_010_-25843-rgin-Shift-regression-chaos-chrome/network-log.json
+[2026-11-28 19:38:10] INFO: Cleaned up ephemeral test session: pw-w4-3-1795856887586-05798f7d
